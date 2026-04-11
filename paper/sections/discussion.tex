@@ -1,0 +1,62 @@
+% ==============================================================================
+% Discussion
+% ==============================================================================
+
+\section{Discussion}
+\label{sec:discussion}
+
+\textbf{[Placeholder: to be completed after results are available.  The
+following is the planned structure.]}
+
+\paragraph{The deliberation gradient.}
+[Discuss: do the results support a graded deliberation-intensity dimension
+rather than a binary S1/S2 dichotomy?  Is the gradient continuous across
+layers?  Does it vary smoothly with task difficulty or show sharp transitions?
+Connect to \citet{melnikoff2018mythical}'s critique of the binary framework
+and \citet{ziabari2025reasoning}'s ``Reasoning on a Spectrum'' finding.]
+
+\paragraph{Standard vs.\ reasoning-trained models.}
+[Discuss: how does reasoning distillation change the deliberation gradient?
+Does R1-Distill-Llama-8B show (a) a stronger S2 signal at the same layers as
+Llama-3.1-8B-Instruct, (b) a qualitatively different layer-wise profile, or
+(c) no meaningful difference?  Relate to the CKA analysis and the
+\citet{codaforno2025dual} finding of overlapping subspaces.]
+
+\paragraph{Comparison with CogBias.}
+[Discuss: how do our probe results compare with \citet{huang2026cogbias}?
+Our probes measure S1/S2 processing mode; theirs target bias susceptibility for
+mitigation.  Do the two approaches identify the same layers and directions?
+Complementary contributions: they demonstrate practical bias reduction via
+steering; we provide a richer mechanistic characterization of the underlying
+computation.]
+
+\paragraph{Implications for AI safety.}
+[Discuss: understanding when models engage in heuristic versus deliberative
+processing has direct implications for trust calibration.  If we can detect
+from internal representations whether a model is ``actually reasoning'' on a
+given input (vs.\ pattern-matching), this enables more targeted oversight.
+However, note the limitation that chain-of-thought faithfulness is low
+\citep{jiang2025aha}---the activation-level signal may be more trustworthy than
+the token-level signal, but we cannot yet guarantee that high deliberation
+intensity entails faithful reasoning.]
+
+\paragraph{Limitations.}
+[Discuss: (i)~Model scale: our largest model is 9B parameters.  The
+deliberation gradient may manifest differently in models with 70B+ parameters.
+(ii)~Benchmark scope: 7 task categories and 284 items cover a limited range of
+cognitive biases.  (iii)~SAE coverage: pre-trained SAEs may not capture all
+relevant features, especially for the distilled models.  (iv)~Causal evidence:
+activation steering demonstrates causal relevance of directions, not circuits.
+(v)~Anthropomorphism risk: our ``deliberation intensity'' language is
+operational, not a claim about phenomenology.]
+
+\paragraph{Future work.}
+[Discuss: (i)~Scaling: apply the framework to 70B+ models.
+(ii)~Broader tasks: extend beyond cognitive biases to other domains where
+heuristic/deliberative processing differs (e.g., moral reasoning, scientific
+reasoning).  (iii)~Circuit-level analysis: move from feature-level to
+circuit-level understanding of the deliberation gradient.  (iv)~Temporal
+dynamics: finer-grained analysis of how deliberation intensity evolves across
+the thinking trace.  (v)~Cross-species comparison: compare the deliberation
+gradient in LLMs to neural signatures of dual-process cognition in humans
+\citep{deneys2023dual}.]

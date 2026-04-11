@@ -1,0 +1,140 @@
+% ==============================================================================
+% Appendix
+% ==============================================================================
+
+\appendix
+
+\section{Benchmark Details}
+\label{app:benchmark}
+
+\subsection{Category Descriptions and Examples}
+
+For each of the 7 task categories, we provide the full specification: the
+cognitive bias being tested, the conflict/no-conflict manipulation, the
+expected S1-lure answer, and a worked example.
+
+\paragraph{CRT variants.}
+A ball and a bat cost \$1.10 together.  The bat costs \$1.00 more than the
+ball.  How much does the ball cost?  \textbf{S1-lure}: \$0.10.
+\textbf{S2-correct}: \$0.05.  Our novel variants replace the surface features
+(e.g., ``A notebook and a pen cost \$2.20\ldots'') while preserving the
+mathematical structure.
+
+\textbf{[Full examples for all 7 categories to be included here.]}
+
+\subsection{Benchmark Construction Details}
+
+\textbf{[Details on the template generation process, Bayesian verification of
+base rate items, human validation on Prolific, inter-annotator agreement
+statistics.]}
+
+\subsection{Paraphrase Generation}
+
+\textbf{[Protocol for generating 2--5 paraphrases per item, and analysis
+showing robustness of behavioral results across paraphrases.]}
+
+% -------------------------------------------------------------------
+\section{Per-Layer Probe Accuracy}
+\label{app:probes}
+
+\textbf{[Full tables: ROC-AUC at every layer $\times$ position $\times$ model
+$\times$ target combination.  Selectivity values.  Leave-one-category-out
+results for all held-out categories.]}
+
+% -------------------------------------------------------------------
+\section{SAE Feature Details}
+\label{app:sae}
+
+\subsection{Top-$K$ Feature Lists}
+
+\textbf{[For each model and layer: the top 20 differentially activated
+features, their activation statistics, top-activating tokens, and
+falsification test results.]}
+
+\subsection{Falsification Protocol Details}
+
+\textbf{[Full description of the Ma et al.\ falsification implementation:
+injection procedure, random text corpus, activation threshold, and
+per-feature pass/fail results.]}
+
+\subsection{Cross-Model Feature Matching}
+
+\textbf{[Cosine similarity of decoder vectors and activation correlation
+for matched features across Llama and Gemma SAEs.]}
+
+% -------------------------------------------------------------------
+\section{Attention Head Classification}
+\label{app:attention}
+
+\textbf{[Full tables: per-head Mann--Whitney $U$ statistics, $p$-values
+(BH-FDR corrected), rank-biserial correlations, and classification
+(S2-specialized / S1-specialized / unspecialized) for all models.
+Results at both query-head and KV-group granularity.]}
+
+% -------------------------------------------------------------------
+\section{Representational Geometry Supplement}
+\label{app:geometry}
+
+\subsection{PCA and UMAP Visualizations}
+
+\textbf{[Full PCA/UMAP plots at every 4th layer for all models.  Random
+projection baselines shown alongside.]}
+
+\subsection{CKA Matrices}
+
+\textbf{[Full layer $\times$ layer CKA heatmaps between Llama-3.1-8B-Instruct
+and R1-Distill-Llama-8B, separately for conflict and no-conflict items.]}
+
+\subsection{Intrinsic Dimensionality}
+
+\textbf{[Two-NN estimates at every layer for S1-like vs.\ S2-like activation
+clouds, with bootstrap confidence intervals.]}
+
+% -------------------------------------------------------------------
+\section{Causal Intervention Details}
+\label{app:causal}
+
+\textbf{[Full dose-response curves for all candidate features.  Side-effect
+analysis on held-out tasks.  Per-category breakdown of steering effects.]}
+
+% -------------------------------------------------------------------
+\section{Reproducibility}
+\label{app:reproducibility}
+
+\subsection{Compute Budget}
+
+\begin{table}[h]
+\centering
+\caption{Compute budget for the full experimental pipeline.}
+\small
+\begin{tabular}{lccr}
+\toprule
+\textbf{Component} & \textbf{Hardware} & \textbf{Time (h)} & \textbf{Cost (\$)} \\
+\midrule
+Activation caching & 1$\times$ A100-80GB & 15--30 & 25--50 \\
+Attention extraction & 1$\times$ H100 & $\sim$4 & $\sim$10 \\
+Probe training & CPU & $\sim$2 & 0 \\
+SAE feature analysis & 1$\times$ A100-80GB & $\sim$2 & $\sim$3 \\
+Causal interventions & 1$\times$ A100-80GB & 10--20 & 15--30 \\
+Geometry analysis & CPU & $\sim$4 & 0 \\
+\midrule
+\textbf{Total} & & $\sim$\textbf{60} & \textbf{80--120} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Hydra Configurations}
+
+\textbf{[List all Hydra config files and their key parameters.  Configs are
+included in the supplementary code release.]}
+
+\subsection{Random Seeds}
+
+All stochastic components use 3 seeds: \{42, 137, 2024\}.  Seeds are set
+globally via \texttt{s1s2.utils.seed.set\_global\_seed()} which seeds
+\texttt{torch}, \texttt{numpy}, and \texttt{random}.
+
+\subsection{Software Versions}
+
+\textbf{[Pin exact versions of PyTorch, Transformers, SAELens, scikit-learn,
+and other key dependencies.  Provided via \texttt{environment.yml}.]}

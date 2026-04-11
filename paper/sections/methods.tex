@@ -1,0 +1,209 @@
+% ==============================================================================
+% Methods
+% ==============================================================================
+
+\section{Methods}
+\label{sec:methods}
+
+\subsection{Models}
+\label{sec:models}
+
+We study four models spanning two architecture families and two training
+regimes (Table~\ref{tab:models}).  The headline comparison is between
+Llama-3.1-8B-Instruct \citep{llama31} and DeepSeek-R1-Distill-Llama-8B
+\citep{deepseekr1}: identical architectures (32 transformer layers, 32
+query heads with 8 KV heads via grouped-query attention, 4096 hidden
+dimensions) differing only in that the latter was distilled from a
+reasoning-trained teacher.  Any representational differences between these
+two models are attributable to reasoning distillation training, not
+architectural confounds.  We include Gemma-2-9B-IT \citep{gemma2} and
+R1-Distill-Qwen-7B \citep{deepseekr1} as cross-architecture controls.
+
+\begin{table}[t]
+\centering
+\caption{Models used in this study.  The Llama pair (rows 1 and 3) shares
+  identical architecture, enabling controlled comparison.}
+\label{tab:models}
+\vspace{4pt}
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Model} & \textbf{Type} & \textbf{Layers} & \textbf{Heads} & \textbf{Hidden} & \textbf{SAE source} \\
+\midrule
+Llama-3.1-8B-Instruct & Standard & 32 & 32 & 4096 & Llama Scope \\
+Gemma-2-9B-IT & Standard & 42 & 16 & 3584 & Gemma Scope \\
+R1-Distill-Llama-8B & Reasoning & 32 & 32 & 4096 & Llama Scope\textsuperscript{$\dagger$} \\
+R1-Distill-Qwen-7B & Reasoning & 28 & 28 & 3584 & Custom \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\raggedright
+\footnotesize{\textsuperscript{$\dagger$}Llama Scope SAEs were trained on the
+base model; we verify reconstruction fidelity on the distilled model before
+use.}
+\end{table}
+
+\subsection{Activation Extraction}
+\label{sec:extraction}
+
+For each model--problem pair, we extract residual stream activations (the
+output of each transformer block, post-MLP and post-residual connection) at
+all layers and at a set of semantically meaningful token positions.  For
+standard models, we extract at two positions: \textbf{P0} (last token of the
+prompt, before generation begins) and \textbf{P2} (the answer token).
+For reasoning models, we additionally extract at positions within the
+thinking trace: \textbf{T0} (first token after \texttt{<think>}),
+\textbf{T25/T50/T75} (25\%/50\%/75\% through the thinking trace), and
+\textbf{Tend} (last token before \texttt{</think>}).
+
+Activations are stored in BFloat16 in a shared HDF5 cache following a
+fixed schema, along with per-head attention entropy metrics computed
+incrementally during generation (we never materialize full attention
+matrices).  The complete schema is specified in our data contract
+documentation.  Total storage for the full benchmark across all four models
+is approximately 4\,GB.
+
+\subsection{Workstream 1: Linear Probes}
+\label{sec:probes}
+
+We train $\ell_2$-regularized logistic regression probes
+(\texttt{LogisticRegressionCV} with 5-fold stratified cross-validation,
+stratified by task category and target label) on residual stream activations
+at each layer and token position.  We probe for four targets:
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+  \item \textbf{Task type}: conflict vs.\ no-conflict condition.
+  \item \textbf{Correctness}: whether the model will answer correctly.
+  \item \textbf{Bias susceptibility}: whether the model will produce the
+  specific S1-lure answer (on conflict items only).
+  \item \textbf{Processing mode}: within matched pairs, distinguishing the
+  conflict from the no-conflict version of structurally identical problems.
+\end{enumerate}
+
+\paragraph{Controls.}  We apply three mandatory controls:
+(i)~\emph{Hewitt--Liang control tasks} \citep{hewitt2019control}: probes
+trained on randomly permuted labels establish a floor for probe
+expressiveness.  Selectivity (true accuracy minus control accuracy) below
+5 percentage points indicates the signal reflects probe capacity, not
+representational structure.
+(ii)~\emph{Permutation tests}: 1000 label shuffles per layer to establish
+significance thresholds, using the North et al.\ correction
+\citep{north2002note}.
+(iii)~\emph{Leave-one-category-out}: training on 6 of 7 task categories and
+testing on the held-out category to assess whether probes learn a
+domain-general S1/S2 signal rather than category-specific features.
+
+We report ROC-AUC as the primary metric with bootstrap 95\% confidence
+intervals (1000 resamples).  We additionally train 2-layer MLP probes
+(hidden dimension 256, ReLU activation) as a nonlinearity check and apply
+Contrast-Consistent Search \citep[CCS;][]{burns2022discovering} as an
+unsupervised corroboration for the correctness target.
+
+\subsection{Workstream 2: SAE Feature Analysis}
+\label{sec:sae}
+
+We use pre-trained sparse autoencoders (Llama Scope for Llama-based models
+\citep{he2024llama}; Gemma Scope for Gemma \citep{lieberum2024gemma}) to
+decompose residual stream activations into sparse feature vectors.  For each
+SAE feature, we compute the mean activation on conflict versus no-conflict
+items and test for differential activation via Mann--Whitney~$U$ tests,
+corrected for multiple comparisons using the Benjamini--Hochberg procedure
+at $q = 0.05$ \citep{benjamini1995controlling}.
+
+\paragraph{Visualization.}  We construct volcano plots (log fold-change vs.\
+$-\log_{10} p$) to identify features with both large effect sizes and
+statistical significance.  Features in the upper corners---large differential
+activation between conditions---are candidate ``deliberation features'' and
+``heuristic features.''
+
+\paragraph{Falsification.}  Following \citet{ma2026falsification}, who
+showed that 45--90\% of claimed SAE reasoning features are spurious
+token-level artifacts, we apply their falsification protocol to every
+candidate feature.  For each feature, we identify its top-3 activating tokens,
+inject those tokens into 100 random non-cognitive-bias texts, and test whether
+the feature still activates.  Features that survive this filter are classified
+as genuine processing-mode features; we report falsification rates for all
+candidates.
+
+\subsection{Workstream 3: Attention Entropy}
+\label{sec:attention}
+
+We quantify attention focus via Shannon entropy
+$H_{l,h,t} = -\sum_i a_i \log_2 a_i$ and the Gini coefficient of attention
+weights, computed per-head per-position during generation.  We normalize
+entropy by $\log_2 t$ (where $t$ is the current sequence length) to control
+for the mechanical effect of longer sequences on entropy.
+
+For each head, we test whether the attention metric distribution differs
+between conflict and no-conflict items using Mann--Whitney~$U$ tests,
+correcting across all heads $\times$ metrics via BH-FDR.  We classify heads
+as \emph{S2-specialized} if they show significantly higher entropy on conflict
+items in $\geq 3$ of 5 metrics with effect size $|r_{\text{rb}}| \geq 0.3$,
+and \emph{S1-specialized} for the opposite pattern.
+
+\paragraph{GQA handling.}  Because Llama uses grouped-query attention (32
+query heads sharing 8 KV heads in groups of~4), heads within the same KV
+group are not statistically independent.  We report results at both the
+query-head and KV-group granularity, with the latter being the conservative
+estimate.
+
+\paragraph{Gemma-2 sliding window.}  Gemma-2's odd-numbered layers use a
+4096-token sliding window for attention.  We analyze odd and even layers
+separately and never pool them.
+
+\subsection{Workstream 4: Representational Geometry}
+\label{sec:geometry}
+
+We analyze the geometric structure of activation point clouds corresponding to
+S1-like and S2-like processing conditions.
+
+\paragraph{Clustering.}  At each layer, we compute the \emph{cosine
+silhouette score} between conflict and no-conflict activation clusters.  We
+first reduce dimensionality to 50--100 principal components to avoid the
+$d \gg N$ pitfall (with $d = 4096$ and $N \approx 284$, any two random
+classes are linearly separable by Cover's theorem).  All silhouette scores
+are compared against a permutation baseline (10,000 label shuffles).
+
+\paragraph{Cross-model comparison.}  We compute layer-matched Centered Kernel
+Alignment \citep[CKA;][]{kornblith2019similarity} between
+Llama-3.1-8B-Instruct and R1-Distill-Llama-8B on conflict and no-conflict
+items separately.  We predict that CKA diverges more between the two models
+on conflict items (where reasoning distillation should produce the largest
+representational changes) than on no-conflict items.
+
+\paragraph{Intrinsic dimensionality.}  We estimate the intrinsic
+dimensionality of S1-like and S2-like activation point clouds using the
+Two-NN estimator \citep{facco2017estimating}.  Lower intrinsic
+dimensionality for S2-like activations would suggest a more stereotyped
+deliberation circuit; higher dimensionality would suggest diverse processing
+strategies.
+
+\paragraph{Random projection baseline.}  For any UMAP visualization, we
+verify that apparent cluster structure survives projection to 2D via random
+Gaussian matrices (100 draws).  If clusters appear in random projections,
+the structure is genuine; otherwise, UMAP may be hallucinating separation.
+
+\subsection{Workstream 5: Causal Interventions}
+\label{sec:causal}
+
+To move from correlation to causation, we intervene on SAE features and
+measure behavioral effects.
+
+\paragraph{Feature steering.}  For each candidate deliberation feature
+identified in Workstream~2 (post-falsification), we perform activation
+steering: we add $\alpha \cdot \hat{f}$ to the residual stream at the
+feature's peak layer during inference, where $\hat{f}$ is the SAE decoder
+direction and $\alpha$ is a steering coefficient.  We vary $\alpha$ over
+$\{0.5, 1.0, 2.0, 3.0, 5.0\}$ to obtain dose-response curves.
+
+\paragraph{Controls.}  We compare against (i)~steering along a randomly
+sampled direction in activation space (same norm), which should produce
+negligible behavioral change if the identified features are causally
+specific; and (ii)~ablating the candidate features (setting their
+activation to zero), which should shift behavior in the opposite direction
+from amplification.
+
+\paragraph{Metrics.}  We measure the change in (i)~probability of the
+correct answer, (ii)~probability of the S1-lure answer, and (iii)~general
+capability on a held-out set of non-bias tasks (to check for side effects).
+All experiments use 3 random seeds.

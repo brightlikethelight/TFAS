@@ -1,0 +1,86 @@
+% ==============================================================================
+% Related Work
+% ==============================================================================
+
+\section{Related Work}
+\label{sec:related_work}
+
+\paragraph{Dual-process theory and LLMs.}
+The application of dual-process theory to artificial systems has generated
+considerable recent interest.  \citet{lampinen2025nature} provide a
+comprehensive review of the connections between dual-process frameworks and
+modern AI, arguing that the distinction is better understood as a continuum of
+processing characteristics rather than a categorical divide.
+\citet{hagendorff2023human} demonstrated that GPT-3.5 reproduces human-like
+performance on the Cognitive Reflection Test (CRT), including susceptibility to
+heuristic lures, while GPT-4 partially overcomes these biases---a pattern
+reminiscent of individual differences in human ``cognitive reflection.''
+\citet{codaforno2025dual} tested whether prompting strategies that differentially
+recruit fast versus slow processing produce distinct internal representations,
+finding overlapping but partially separable subspaces.
+\citet{ziabari2025reasoning} showed that interpolating between a base model and
+a reasoning-fine-tuned model yields a monotonic gradient of behavioral change on
+dual-process tasks, supporting a continuous rather than binary characterization.
+Our work moves from behavioral characterization to mechanistic analysis,
+testing whether these behavioral gradients have identifiable internal
+correlates.
+
+\paragraph{Probing LLM internal states.}
+Linear probing has become a standard tool for studying what information is
+encoded in neural network representations
+\citep{hewitt2019control, burns2022discovering}.  Several recent studies probe
+representations specifically related to reasoning and self-monitoring.
+\citet{zhang2025probing} showed that hidden states in DeepSeek-R1 encode
+self-verification signals---the model's internal state ``knows'' whether its
+answer is correct before producing it.
+\citet{afzal2025knowing} demonstrated that models internally prepare for
+difficult outputs several tokens in advance, suggesting a form of prospective
+processing.
+\citet{fartale2025recall} disentangled attention heads specialized for factual
+recall from those involved in multi-step reasoning.
+Our probing analysis extends this line of work to the S1/S2 distinction
+specifically, asking whether the conflict versus no-conflict condition is
+linearly decodable from residual stream activations and whether this
+decodability varies systematically across layers and models.
+
+\paragraph{SAE-based analysis of reasoning.}
+Sparse autoencoders (SAEs) decompose neural network activations into
+interpretable features, offering finer-grained access to model computation
+than linear probes.
+\citet{goodfire2025r1} identified specific SAE features in DeepSeek-R1
+associated with backtracking, self-reference, and answer urgency, providing
+the first mechanistic decomposition of chain-of-thought reasoning.
+\citet{fang2026sae} demonstrated that steering SAE features can directly
+modulate reasoning quality, while \citet{yang2026step} analyzed how SAE
+feature activations evolve across reasoning steps.
+Critically, \citet{ma2026falsification} showed that 45--90\% of claimed
+``reasoning features'' in SAEs are spurious---they activate in response to
+specific tokens rather than the reasoning process itself.  We adopt their
+falsification framework as a mandatory control throughout our SAE analysis.
+
+\paragraph{Cognitive biases as interpretability benchmarks.}
+Cognitive bias tasks are particularly well-suited to mechanistic interpretability
+because they provide \emph{contrastive} conditions: the same task structure can
+be presented with or without a heuristic lure, enabling clean comparison of
+internal processing on matched stimuli.
+\citet{rao2024cobbler} benchmarked cognitive biases in LLMs-as-evaluators.
+Most relevant to our work, \citet{huang2026cogbias} recently combined linear
+probes with activation steering on a cognitive bias benchmark, achieving
+26--32\% bias reduction via internal intervention.  Our work differs in three
+respects: (i)~we study the nature of the S1/S2-like processing distinction
+rather than steering models away from biases; (ii)~we employ five
+complementary mechanistic methods rather than probes alone; and (iii)~we
+systematically compare standard and reasoning-trained models sharing the
+same architecture.
+
+\paragraph{Chain-of-thought faithfulness.}
+The reliability of CoT reasoning as a window into model computation is a
+prerequisite for interpreting thinking traces.
+\citet{lanham2023measuring} found that many CoT steps can be removed without
+affecting the final answer, suggesting low faithfulness.
+\citet{jiang2025aha} showed that only ${\sim}2.3$\% of reasoning steps
+causally influence model outputs, and that apparent self-correction markers
+(``wait,'' ``actually'') are largely decorative.
+These findings motivate our emphasis on \emph{activation-level} rather than
+\emph{token-level} analysis: we extract representations from the residual
+stream and attention patterns, not from the content of the generated text.

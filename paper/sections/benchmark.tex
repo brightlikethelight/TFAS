@@ -1,0 +1,83 @@
+% ==============================================================================
+% Benchmark
+% ==============================================================================
+
+\section{Benchmark}
+\label{sec:benchmark}
+
+We construct a \emph{contrastive} cognitive bias benchmark designed to elicit
+and control for the S1-like/S2-like processing distinction.  The design follows
+three principles: (1)~every conflict item has a structurally matched no-conflict
+control \citep{deneys2012bias}; (2)~all items use novel surface features to
+resist memorization-based shortcuts \citep{hagendorff2023human}; and (3)~a $2
+\times 2$ difficulty $\times$ congruence design disentangles processing mode
+from task difficulty.
+
+\subsection{Task Categories}
+
+The benchmark spans seven categories, each targeting a well-characterized
+heuristic-deliberative dissociation from the cognitive science literature:
+
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+  \item \textbf{CRT variants} (48 conflict / 48 no-conflict).  Structural
+  isomorphs of the Cognitive Reflection Test with modified surface features
+  (changed objects, domains, and numerical values).  We draw on the 150
+  decontaminated items from \citet{hagendorff2023human}'s OSF repository and
+  generate additional structural variants via controlled template perturbation.
+
+  \item \textbf{Base rate neglect} (22 / 22).  Bayesian reasoning problems
+  where a diagnostic description cues a low-base-rate category.  Conflict
+  items set the base rate against the description; no-conflict items align
+  them.  All posterior probabilities are analytically verified.
+
+  \item \textbf{Belief-bias syllogisms} (20 / 20).  Syllogisms crossing
+  logical validity ($\times 2$) with conclusion believability ($\times 2$),
+  following the Evans taxonomy.  Conflict items have valid--unbelievable or
+  invalid--believable conclusions; controls have congruent
+  validity--believability.
+
+  \item \textbf{Anchoring} (14 / 14).  Numerical estimation tasks preceded by
+  a high or low anchor.  Conflict items use extreme anchors designed to
+  distort estimates; no-conflict items use anchors near the correct value.
+
+  \item \textbf{Framing effects} (14 / 14).  Gain- versus loss-framed
+  decision problems.  Conflict items present logically equivalent options in
+  different frames; controls present options where framing and value align.
+
+  \item \textbf{Conjunction fallacy} (12 / 12).  Probability judgment tasks
+  where a detailed description makes the conjunction of two events seem more
+  likely than a single constituent.  Novel scenarios replace the classic
+  ``Linda problem.''
+
+  \item \textbf{Multi-step arithmetic} (12 / 12).  Graded-difficulty
+  arithmetic (1--5 operations) with and without carrying traps.  Conflict
+  items embed a salient but incorrect shortcut; no-conflict items do not.
+\end{enumerate}
+
+\subsection{Benchmark Statistics}
+
+The final benchmark comprises \textbf{284 items} organized as \textbf{142
+matched pairs} (conflict + no-conflict).  Each item includes 2--5
+paraphrases for a total of \textbf{558 unique prompts}, allowing us to
+assess robustness to surface variation.  Items are presented in two formats:
+constrained free-response (``Answer with just a number:'') for activation
+analysis, and multiple-choice for behavioral validation.
+
+\paragraph{Scoring.}  We use a three-tier scoring system: (1)~\emph{binary}
+(correct/incorrect); (2)~\emph{categorical} (correct / S1-lure / other-wrong
+/ refusal)---the primary target for probing; and (3)~\emph{continuous}
+(distance from the S2-correct vs.\ S1-predicted answer).
+
+\paragraph{Contamination controls.}  We include classic problems (e.g., the
+original bat-and-ball) as contamination baselines only---they are excluded from
+all primary analyses.  We test memorization by prompting models to complete the
+original CRT verbatim and comparing performance on classic versus novel variants.
+
+\subsection{Behavioral Validation}
+
+\textbf{[Placeholder: behavioral results on all four models.]}  We report the
+proportion of S1-lure responses on conflict versus no-conflict items, broken
+down by category and model.  The benchmark is validated if (i)~models produce
+$>30$\% lure responses on conflict items and (ii)~standard models show
+significantly higher lure rates than reasoning-trained models.
+% Expected: Table 1 with behavioral accuracy by model x category x condition

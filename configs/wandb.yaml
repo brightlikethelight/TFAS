@@ -1,0 +1,14 @@
+# W&B experiment tracking configuration for s1s2.
+#
+# Set ``enabled: false`` or ``mode: disabled`` to turn off all W&B logging
+# globally. Individual workstreams respect this config via wandb_utils.
+
+defaults:
+  - _self_
+
+enabled: true
+project: s1s2
+entity: null        # set to your W&B team name if applicable
+mode: online        # online | offline | disabled
+tags: []
+notes: null

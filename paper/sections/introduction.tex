@@ -1,0 +1,91 @@
+% ==============================================================================
+% Introduction
+% ==============================================================================
+
+\section{Introduction}
+\label{sec:introduction}
+
+Humans solve problems using qualitatively different modes of processing.
+Kahneman's influential dual-process framework distinguishes a fast, effortless,
+heuristic mode (``System~1'') from a slow, effortful, deliberative mode
+(``System~2'') \citep{kahneman2011thinking}.  While the binary framing has
+faced sustained criticism---Melnikoff and Bargh argue that the ``mythical number
+two'' obscures what is better understood as a continuum of processing intensity
+\citep{melnikoff2018mythical}---the core observation remains: cognitive systems
+flexibly allocate effort, and this allocation has measurable consequences for
+accuracy, latency, and susceptibility to systematic biases
+\citep{evans2013dual, deneys2012bias}.
+
+Large language models (LLMs) now exhibit strikingly analogous behavioral
+patterns.  On classic cognitive bias tasks, instruction-tuned models reproduce
+human-like errors on conflict items---problems where a salient heuristic cue
+diverges from the normatively correct answer---while succeeding on structurally
+matched controls where heuristic and deliberative cues converge
+\citep{hagendorff2023human}.  Reasoning-trained models, such as those distilled
+from DeepSeek-R1 \citep{deepseekr1}, resist many of these heuristic lures,
+producing explicit chain-of-thought (CoT) traces that superficially resemble
+deliberative processing.  A growing body of work has documented these behavioral
+parallels across models and task families \citep{xie2025cogsci, rao2024cobbler,
+codaforno2025dual, ziabari2025reasoning}.
+
+Yet behavior alone cannot distinguish genuine processing-mode differences from
+surface mimicry.  A model that memorizes the correct answer to the bat-and-ball
+problem produces the same output as one that ``reasons through'' it, but via
+radically different internal computation.  Moreover, chain-of-thought traces are
+often unfaithful to the underlying computation: recent work shows that the
+majority of reasoning steps in CoT---including apparent self-correction
+markers---do not causally influence the final answer
+\citep{lanham2023measuring, jiang2025aha}.  The critical open question is
+therefore not whether LLMs \emph{behave} as if they have fast and slow
+processing modes, but whether such modes have \emph{mechanistic correlates} in
+the model's internal representations.
+
+Two recent lines of work begin to address this gap.  On the mechanistic side,
+probing studies have shown that LLM hidden states encode self-verification
+signals before the model generates its answer \citep{zhang2025probing}, that
+attention heads specialize for recall versus reasoning
+\citep{fartale2025recall}, and that sparse autoencoder (SAE) features can
+identify and steer reasoning-related computations
+\citep{fang2026sae, yang2026step, goodfire2025r1}.  On the cognitive science
+side, CogBias \citep{huang2026cogbias} recently combined linear probes with
+activation steering to detect and mitigate cognitive biases in LLM internal
+representations.  However, no prior work has attempted a \emph{unified}
+mechanistic characterization of dual-process-like computation, combining
+multiple complementary interpretability methods on a benchmark explicitly
+designed to elicit and control for the distinction.
+
+This paper presents the first such characterization.  We make four
+contributions:
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{A contrastive cognitive bias benchmark} of 284 items (142
+  conflict/no-conflict matched pairs) across 7 task categories, with novel
+  structural isomorphs designed to resist memorization-based shortcuts
+  (Section~\ref{sec:benchmark}).
+
+  \item \textbf{A multi-method mechanistic analysis} combining five
+  complementary workstreams---linear probes, SAE feature analysis, attention
+  entropy, representational geometry, and causal interventions---applied to four
+  models spanning standard and reasoning-trained architectures
+  (Section~\ref{sec:methods}).
+
+  \item \textbf{A controlled architecture comparison} between
+  Llama-3.1-8B-Instruct and DeepSeek-R1-Distill-Llama-8B, which share
+  identical architectures (32 layers, 32 attention heads, 4096 hidden
+  dimensions) but differ in training.  Any internal differences are attributable
+  to reasoning distillation, not architectural confounds.
+
+  \item \textbf{Built-in falsification} at every stage: Hewitt--Liang control
+  tasks for probes \citep{hewitt2019control}, the Ma et al. framework for SAE
+  feature validation \citep{ma2026falsification}, random-projection baselines
+  for geometry, and random-direction controls for causal interventions.
+\end{enumerate}
+
+Critically, we frame our investigation not as testing for a binary System~1
+versus System~2 dichotomy, but as measuring the \textbf{deliberation-intensity
+gradient}: the degree to which models exhibit mechanistically distinct internal
+signatures when processing tasks that differentially recruit heuristic versus
+deliberative computation.  This graded framing is both more scientifically
+defensible and more informative---it asks not ``does a model have System~2?''
+but ``how, where, and when does deliberation intensity vary across the network's
+representations?''

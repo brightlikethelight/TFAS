@@ -1,0 +1,143 @@
+% ==============================================================================
+% The Deliberation Gradient: Mechanistic Signatures of Dual-Process Cognition
+% in Large Language Models
+%
+% ICML 2027 submission
+% ==============================================================================
+
+\documentclass[accepted]{article}
+
+% ---------- Packages ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{natbib}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+
+% NOTE: Replace \documentclass and geometry with icml2027.sty when available.
+% For now we use a standard article class with comparable formatting.
+% To switch: \documentclass{icml2027} and remove the geometry package.
+
+% ---------- Custom commands ----------
+\newcommand{\sone}{S1-like}
+\newcommand{\stwo}{S2-like}
+\newcommand{\pzero}{\texttt{P0}}
+\newcommand{\ptwo}{\texttt{P2}}
+\newcommand{\tend}{\texttt{Tend}}
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+% ---------- Title ----------
+\title{The Deliberation Gradient: Mechanistic Signatures of\\
+  Dual-Process Cognition in Large Language Models}
+
+\author{%
+  \textbf{Bright Liu}\textsuperscript{1}\thanks{Equal contribution.} \quad
+  \textbf{[Author 2]}\textsuperscript{1}$^*$ \quad
+  \textbf{[Author 3]}\textsuperscript{1} \quad
+  \textbf{[Author 4]}\textsuperscript{1} \\[2pt]
+  \textbf{[Author 5]}\textsuperscript{1} \quad
+  \textbf{[Author 6]}\textsuperscript{1} \quad
+  \textbf{[Author 7]}\textsuperscript{1} \quad
+  \textbf{[Advisor]}\textsuperscript{1,2} \\[6pt]
+  \textsuperscript{1}Harvard Undergraduate AI Safety (HUSAI) \quad
+  \textsuperscript{2}[Department] \\[2pt]
+  \texttt{brightliu@college.harvard.edu}
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% ============================================================
+% Abstract
+% ============================================================
+
+\begin{abstract}
+Large language models exhibit both heuristic and deliberative processing
+patterns on cognitive bias tasks: they fall for intuitive lures on conflict
+problems while succeeding on structurally matched controls.  But do these
+behavioral patterns reflect genuinely distinct internal computations, or
+merely surface-level mimicry?  We present the first unified mechanistic
+characterization of dual-process-like cognition in LLMs, combining five
+complementary methods---linear probes, sparse autoencoder (SAE) feature
+analysis with built-in falsification, attention entropy profiling,
+representational geometry, and causal interventions---on a contrastive
+cognitive bias benchmark of 284 items across 7 task categories.  Our
+headline comparison exploits a natural experiment: Llama-3.1-8B-Instruct
+and DeepSeek-R1-Distill-Llama-8B share identical architectures but differ
+in reasoning distillation training, isolating the effect of training on
+internal representations.  Rather than testing for a binary System~1 versus
+System~2 dichotomy, we measure a graded \emph{deliberation-intensity
+gradient} across model layers and positions.  [We find that \ldots.
+Placeholder for headline results: layer-wise probe accuracy, number of
+genuine SAE deliberation features post-falsification, causal steering
+effect sizes, and cross-model convergence patterns.]  Our results
+[support/complicate/refute] the hypothesis that dual-process-like
+computation has identifiable mechanistic substrates in LLMs, with
+implications for understanding when models reason versus pattern-match.
+\end{abstract}
+
+% ============================================================
+% Main text
+% ============================================================
+
+% --- Figure 1: Benchmark schematic ---
+\begin{figure*}[t]
+\centering
+% \includegraphics[width=\textwidth]{figures/fig1_benchmark_schematic.pdf}
+\fbox{\parbox{0.95\textwidth}{\centering\vspace{3cm}
+  \textbf{Figure 1: Benchmark and experimental overview}\\[4pt]
+  \small Left: the 7 task categories with example conflict/no-conflict pairs.\\
+  Center: activation extraction at key token positions (P0, P2, T0--Tend).\\
+  Right: five analysis workstreams applied to the shared activation cache.
+\vspace{3cm}}}
+\caption{Overview of the experimental framework.  (a)~The contrastive
+  benchmark presents matched conflict/no-conflict problem pairs across 7
+  cognitive bias categories.  (b)~Residual stream activations are extracted
+  at semantically meaningful token positions for all four models.
+  (c)~Five complementary mechanistic methods probe the deliberation-intensity
+  gradient from different angles.}
+\label{fig:overview}
+\end{figure*}
+
+\input{sections/introduction}
+\input{sections/related_work}
+\input{sections/benchmark}
+\input{sections/methods}
+\input{sections/results}
+\input{sections/discussion}
+
+% ============================================================
+% Acknowledgments
+% ============================================================
+
+\section*{Acknowledgments}
+
+We thank the Harvard Undergraduate AI Safety (HUSAI) group for supporting
+this project.  [Additional acknowledgments: compute sponsors, advisors,
+feedback from \ldots.]  Compute was provided by [FASRC / RunPod / \ldots].
+
+% ============================================================
+% References
+% ============================================================
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+% ============================================================
+% Appendix
+% ============================================================
+
+\newpage
+\input{sections/appendix}
+
+\end{document}

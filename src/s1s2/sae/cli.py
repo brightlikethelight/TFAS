@@ -17,6 +17,7 @@ Hydra-agnostic and unit-testable without spinning up Hydra.
 
 from __future__ import annotations
 
+from pathlib import Path
 from typing import Any
 
 import hydra
@@ -31,6 +32,13 @@ from s1s2.sae.core import (
 )
 from s1s2.utils.logging import get_logger
 from s1s2.utils.seed import set_global_seed
+from s1s2.utils.wandb_utils import (
+    finish as wandb_finish,
+    init_run as wandb_init,
+    log_artifact as wandb_log_artifact,
+    log_metrics as wandb_log_metrics,
+    log_summary as wandb_log_summary,
+)
 
 logger = get_logger(__name__)
 
@@ -155,8 +163,64 @@ def run_sae_from_hydra(cfg: DictConfig) -> dict[tuple[str, int], dict[str, Any]]
     # does not support ``typing.Literal`` annotations. A plain dict dump
     # is equally informative and has no such type constraint.
     logger.info("SAE runner config:\n%s", OmegaConf.to_yaml(asdict(runner_cfg)))
+
+    # --- Optional W&B setup -------------------------------------------------
+    wandb_cfg = cfg.get("wandb", {}) if isinstance(cfg, DictConfig) else {}
+    wandb_enabled = bool(_cfg_get(cfg, "wandb.enabled", False))
+    wandb_mode = str(_cfg_get(cfg, "wandb.mode", "disabled")) if wandb_enabled else "disabled"
+    cfg_dict = OmegaConf.to_container(cfg, resolve=True, throw_on_missing=False)
+    wandb_run = wandb_init(
+        project=str(_cfg_get(cfg, "wandb.project", "s1s2")),
+        group="sae",
+        name=f"sae_{'-'.join(runner_cfg.models)}",
+        config=cfg_dict,
+        tags=runner_cfg.models + list(_cfg_get(cfg, "wandb.tags", [])),
+        mode=wandb_mode,
+    )
+
     runner = SAEAnalysisRunner(runner_cfg)
-    return runner.run()
+    results = runner.run()
+
+    # --- W&B: per-cell metrics + summary ------------------------------------
+    step = 0
+    total_sig = 0
+    total_after_fals = 0
+    for (model_key, layer), cell in results.items():
+        n_sig = cell.get("n_features_significant", 0)
+        n_after = cell.get("n_features_after_falsification", 0)
+        total_sig += n_sig
+        total_after_fals += n_after
+        wandb_log_metrics(
+            {
+                "n_features_significant": n_sig,
+                "n_features_after_falsification": n_after,
+                "reconstruction_ev": cell.get("reconstruction_explained_variance", 0.0),
+                "layer": layer,
+                "model": model_key,
+                "status": 1 if cell.get("status") == "ok" else 0,
+            },
+            step=step,
+        )
+        step += 1
+
+    wandb_log_summary(
+        {
+            "n_cells": len(results),
+            "total_significant": total_sig,
+            "total_after_falsification": total_after_fals,
+        }
+    )
+
+    # Upload result directory as artifact.
+    output_dir = runner_cfg.output_dir
+    wandb_log_artifact(
+        name=f"sae_results_{Path(output_dir).name}",
+        path=output_dir,
+        artifact_type="sae_results",
+    )
+    wandb_finish()
+
+    return results
 
 
 # ---------------------------------------------------------------------------

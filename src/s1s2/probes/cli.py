@@ -33,6 +33,13 @@ from s1s2.probes.targets import build_target
 from s1s2.utils import io as ioh
 from s1s2.utils.logging import get_logger
 from s1s2.utils.seed import set_global_seed
+from s1s2.utils.wandb_utils import (
+    finish as wandb_finish,
+    init_run as wandb_init,
+    log_artifact as wandb_log_artifact,
+    log_metrics as wandb_log_metrics,
+    log_summary as wandb_log_summary,
+)
 
 logger = get_logger(__name__)
 
@@ -107,10 +114,25 @@ def run_probes(cfg: DictConfig) -> list[Path]:
     results_dir = Path(cfg.results_dir)
     results_dir.mkdir(parents=True, exist_ok=True)
 
+    # --- Optional W&B setup -------------------------------------------------
+    wandb_cfg = cfg.get("wandb", {})
+    wandb_enabled = bool(wandb_cfg.get("enabled", False))
+    wandb_mode = str(wandb_cfg.get("mode", "disabled")) if wandb_enabled else "disabled"
+    cfg_dict = OmegaConf.to_container(cfg, resolve=True, throw_on_missing=False)
+    wandb_run = wandb_init(
+        project=str(wandb_cfg.get("project", "s1s2")),
+        group="probes",
+        name=f"probes_{'-'.join(str(m) for m in cfg.models_to_probe)}",
+        config=cfg_dict,
+        tags=[str(m) for m in cfg.models_to_probe] + list(wandb_cfg.get("tags", [])),
+        mode=wandb_mode,
+    )
+
     # We'll collect results per (model, target, position) so BH-FDR can be
     # applied across layers at the end.
     grouped: dict[tuple[str, str, str], list] = {}
     written: list[Path] = []
+    step_counter = 0
 
     with ioh.open_activations(act_path) as f:
         for model_key in cfg.models_to_probe:
@@ -161,6 +183,24 @@ def run_probes(cfg: DictConfig) -> list[Path]:
                         key = (model_key, target, position)
                         grouped.setdefault(key, []).append(res)
 
+                        # --- W&B: per-layer metrics -------------------------
+                        primary = res.probes.get("logistic") or next(
+                            iter(res.probes.values()), None
+                        )
+                        if primary is not None:
+                            wandb_log_metrics(
+                                {
+                                    "roc_auc": primary.summary.get("roc_auc", 0.0),
+                                    "selectivity": primary.summary.get("selectivity", 0.0),
+                                    "layer": layer,
+                                    "model": model_key,
+                                    "target": target,
+                                    "position": position,
+                                },
+                                step=step_counter,
+                            )
+                        step_counter += 1
+
     # BH-FDR across layers per (model, target, position).
     for (model_key, target, position), res_list in grouped.items():
         res_list = apply_bh_across_layers(res_list, probe_name="logistic")
@@ -168,6 +208,16 @@ def run_probes(cfg: DictConfig) -> list[Path]:
             path = save_layer_result(r, results_dir)
             written.append(path)
             logger.info(f"wrote {path}")
+
+    # --- W&B: summary + artifact upload -------------------------------------
+    if written:
+        wandb_log_summary({"n_result_files": len(written)})
+        wandb_log_artifact(
+            name=f"probes_results_{results_dir.name}",
+            path=str(results_dir),
+            artifact_type="probes_results",
+        )
+    wandb_finish()
 
     return written
 
