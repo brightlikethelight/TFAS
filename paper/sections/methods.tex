@@ -94,10 +94,30 @@ testing on the held-out category to assess whether probes learn a
 domain-general S1/S2 signal rather than category-specific features.
 
 We report ROC-AUC as the primary metric with bootstrap 95\% confidence
-intervals (1000 resamples).  We additionally train 2-layer MLP probes
-(hidden dimension 256, ReLU activation) as a nonlinearity check and apply
-Contrast-Consistent Search \citep[CCS;][]{burns2022discovering} as an
-unsupervised corroboration for the correctness target.
+intervals (1000 resamples).  We additionally train two alternative probe
+architectures as robustness checks:
+
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item \textbf{MLP probe}: a 2-layer feedforward network with hidden
+  dimension 256, ReLU activations, and dropout $p = 0.1$.  Trained with
+  Adam (learning rate $10^{-3}$, weight decay $10^{-4}$) for a maximum of
+  200 epochs with early stopping (patience 15) on validation loss.  If the
+  MLP achieves substantially higher AUC than the logistic probe, nonlinear
+  representational structure is present.
+  \item \textbf{CCS} \citep{burns2022discovering}: an unsupervised probe
+  that finds a direction in activation space along which the contrast
+  between paired conflict/no-conflict activations is maximized.  We use 10
+  random restarts and select the direction minimizing the CCS loss
+  $\mathcal{L}_{\text{CCS}} = \mathbb{E}[\min(p, 1 - p)]^2 +
+  \mathbb{E}[(p_{\text{conflict}} + p_{\text{no-conflict}} - 1)^2]$.
+  CCS serves as unsupervised corroboration for the correctness target.
+\end{itemize}
+
+\noindent
+The mass-mean baseline computes
+$\bar{\mathbf{x}}_c = \frac{1}{|C|}\sum_{i \in C} \mathbf{x}_i$ for each
+class $c \in \{\text{conflict}, \text{no-conflict}\}$ and classifies each
+test item by nearest centroid in cosine distance.
 
 \subsection{Workstream 2: SAE Feature Analysis}
 \label{sec:sae}
@@ -109,6 +129,17 @@ SAE feature, we compute the mean activation on conflict versus no-conflict
 items and test for differential activation via Mann--Whitney~$U$ tests,
 corrected for multiple comparisons using the Benjamini--Hochberg procedure
 at $q = 0.05$ \citep{benjamini1995controlling}.
+
+\paragraph{Reconstruction fidelity check.}
+Because the Llama Scope SAEs were trained on Llama-3.1-8B-\emph{Base} (not
+Instruct), and because we additionally apply them to R1-Distill-Llama-8B,
+we verify reconstruction fidelity before trusting downstream analyses.
+For a random sample of 500 activations per layer, we compute the
+explained variance $R^2 = 1 - \|\mathbf{x} - \hat{\mathbf{x}}\|^2 /
+\|\mathbf{x} - \bar{\mathbf{x}}\|^2$ and the normalized mean squared
+error.  We require $R^2 \geq 0.50$ at every layer used for feature
+analysis; layers falling below this threshold are excluded from
+SAE-based claims and reported as such.
 
 \paragraph{Visualization.}  We construct volcano plots (log fold-change vs.\
 $-\log_{10} p$) to identify features with both large effect sizes and
@@ -136,10 +167,22 @@ for the mechanical effect of longer sequences on entropy.
 
 For each head, we test whether the attention metric distribution differs
 between conflict and no-conflict items using Mann--Whitney~$U$ tests,
-correcting across all heads $\times$ metrics via BH-FDR.  We classify heads
-as \emph{S2-specialized} if they show significantly higher entropy on conflict
-items in $\geq 3$ of 5 metrics with effect size $|r_{\text{rb}}| \geq 0.3$,
-and \emph{S1-specialized} for the opposite pattern.
+correcting across all heads $\times$ metrics via BH-FDR.  We compute five
+metrics per head: (i)~Shannon entropy $H$, (ii)~normalized entropy
+$H / \log_2 t$, (iii)~Gini coefficient, (iv)~maximum attention weight
+$\max_i a_i$, and (v)~cumulative top-5 attention weight
+$\sum_{i=1}^{5} a_{(i)}$ where $a_{(i)}$ denotes the $i$-th largest
+weight.  We define a multi-metric consensus score for each head $h$:
+\begin{equation}
+  \text{consensus}(h) = \frac{1}{5}\sum_{m=1}^{5}
+    \mathbb{1}\!\left[\,p_m^{\text{BH}} < 0.05 \;\wedge\;
+    |r_{\text{rb},m}| \geq 0.3\,\right],
+  \label{eq:consensus}
+\end{equation}
+where $p_m^{\text{BH}}$ is the BH-corrected $p$-value for metric $m$.
+We classify heads as \emph{S2-specialized} if $\text{consensus}(h) \geq
+3/5$ and the direction indicates higher entropy / lower concentration on
+conflict items, and \emph{S1-specialized} for the opposite pattern.
 
 \paragraph{GQA handling.}  Because Llama uses grouped-query attention (32
 query heads sharing 8 KV heads in groups of~4), heads within the same KV
@@ -203,7 +246,134 @@ specific; and (ii)~ablating the candidate features (setting their
 activation to zero), which should shift behavior in the opposite direction
 from amplification.
 
+\paragraph{Dose-response model.}  The coefficient sweep
+$\alpha \in \{0.5, 1.0, 2.0, 3.0, 5.0\}$ yields a dose-response curve.
+We fit a linear regression of $P(\text{correct})$ on $\alpha$:
+\begin{equation}
+  P(\text{correct} \mid \alpha) = \beta_0 + \beta_1 \alpha + \varepsilon,
+  \label{eq:dose}
+\end{equation}
+and report the slope $\beta_1$ with its 95\% confidence interval.  A
+positive, significant $\beta_1$ for S2-feature steering (but not for
+random-direction steering) is evidence that the identified features
+causally modulate deliberation in a graded manner.  When the
+dose-response curve is clearly non-linear (e.g., saturating at high
+$\alpha$), we additionally fit a log-linear model
+$P(\text{correct}) = \beta_0 + \beta_1 \log(\alpha)$.
+
 \paragraph{Metrics.}  We measure the change in (i)~probability of the
 correct answer, (ii)~probability of the S1-lure answer, and (iii)~general
 capability on a held-out set of non-bias tasks (to check for side effects).
 All experiments use 3 random seeds.
+
+\subsection{Statistical Methodology}
+\label{sec:stats}
+
+We employ a two-level correction strategy for multiple comparisons,
+following our pre-registration.
+
+\paragraph{Family-wise correction across hypotheses.}
+We test six primary hypotheses (H1--H6).  To control the family-wise error
+rate we apply Bonferroni correction, yielding a per-hypothesis significance
+level of $\alpha = 0.05/6 = 0.00833$.
+
+\paragraph{Within-hypothesis false discovery rate.}
+Within each hypothesis, tests are conducted across many layers, heads, or
+features.  We control the false discovery rate at $q = 0.05$ using the
+Benjamini--Hochberg (BH) procedure \citep{benjamini1995controlling}.
+BH-FDR is appropriate here because within-hypothesis tests are correlated
+(adjacent layers share representational structure) and we accept a
+controlled proportion of false discoveries rather than the extreme
+conservatism of Bonferroni across hundreds of tests.
+
+\paragraph{Permutation tests.}
+Statistical significance for probe accuracy and geometric separability is
+established via permutation tests with 1{,}000--10{,}000 label shuffles.
+$p$-values are computed with the \citet{north2002note} $+1$ correction:
+\begin{equation}
+  p = \frac{n_{\text{extreme}} + 1}{n_{\text{perms}} + 1},
+  \label{eq:north}
+\end{equation}
+where $n_{\text{extreme}}$ is the number of permuted statistics $\geq$ the
+observed statistic.  This correction ensures that $p$-values are never
+exactly zero and are valid for subsequent BH-FDR correction.
+
+\paragraph{Bootstrap confidence intervals.}
+95\% confidence intervals on ROC-AUC and other performance metrics are
+computed via 1{,}000 bootstrap resamples using the percentile method.  When
+comparing two models on the same items (e.g., H2), we use a \emph{paired}
+bootstrap: on each resample the same item indices are drawn for both models,
+preserving item-level correlation.
+
+\paragraph{Effect sizes.}
+We report effect sizes alongside every $p$-value:
+(i)~Cohen's $d$ for parametric paired comparisons (e.g., $\Delta$AUC
+between models);
+(ii)~rank-biserial correlation $r_{\text{rb}}$ for Mann--Whitney $U$ tests,
+computed as $r_{\text{rb}} = 1 - 2U/(n_1 n_2)$;
+(iii)~ROC-AUC itself as a non-parametric effect size for probe
+classification.
+Following \citet{cohen1988statistical}, we interpret $|d| \geq 0.2$ as
+small, $\geq 0.5$ as medium, and $\geq 0.8$ as large; for
+$r_{\text{rb}}$, we use $|r_{\text{rb}}| \geq 0.3$ as the minimum
+threshold for a practically meaningful effect.
+
+\paragraph{Control tasks.}
+Following \citet{hewitt2019control}, we train each probe architecture on
+\emph{randomly permuted labels} to establish a floor for probe
+expressiveness.  The meaningful quantity is \emph{selectivity}---the
+difference between real-label accuracy and control-label accuracy.
+Selectivity below 5 percentage points indicates that the decoded signal
+reflects the probe's capacity to memorize random structure in the
+activations, rather than genuine representational content.
+
+\subsection{Confound Controls}
+\label{sec:confounds}
+
+\paragraph{Difficulty confound.}
+Each conflict item is paired with a no-conflict control matched on surface
+structure, correct answer, and approximate difficulty
+(Section~\ref{sec:benchmark}).  For confirmatory analyses, we additionally
+restrict to a \emph{difficulty-matched subset}: item pairs where the
+model's baseline accuracy difference between conditions is less than 10
+percentage points.  Results on the full set and the matched subset are
+always reported side-by-side; discrepancies are interpreted as difficulty
+confounds rather than processing mode effects.
+
+\paragraph{Memorization.}
+All primary benchmark items are novel structural isomorphs---none appear in
+known training sets.  Classic problems (e.g., the original bat-and-ball CRT
+item) are included as contamination baselines only and are excluded from all
+confirmatory analyses (Section~\ref{sec:benchmark}).
+
+\paragraph{Prompt sensitivity.}
+Each conflict item includes 2--5 paraphrases that vary surface wording while
+preserving the conflict structure.  We report behavioral and probing results
+averaged across paraphrases; we additionally verify that the variance across
+paraphrases is small relative to the variance across items (intra-class
+correlation $\geq 0.7$).
+
+\paragraph{$d \gg N$ pitfall.}
+With hidden dimensionality $d = 4096$ and sample size $N \approx 284$, any
+two random classes are linearly separable by Cover's function-counting
+theorem \citep{cover1965geometrical}.  For all representational geometry
+analyses, we PCA-reduce activations to 50 principal components before
+computing silhouette scores or training linear classifiers.  The number of
+retained components is chosen such that $N / d_{\text{reduced}} \geq 5$.
+
+\paragraph{GQA non-independence.}
+Llama-3.1 and R1-Distill-Llama use grouped-query attention with 32 query
+heads sharing 8 KV heads in groups of~4.  Heads within the same KV group
+share key and value projections and are therefore not statistically
+independent.  We report attention results at both the individual query-head
+and the KV-group granularity; the latter is the conservative
+(confirmatory) analysis.
+
+\paragraph{SAE feature spuriousness.}
+Following \citet{ma2026falsification}, who demonstrated that 45--90\% of
+previously claimed SAE reasoning features are token-level artifacts, we
+apply their token-injection falsification protocol to every candidate
+feature (Section~\ref{sec:sae}).  Features that activate at $\geq 50$\%
+of their benchmark-level activation when their top-3 trigger tokens are
+injected into 100 random non-cognitive-bias texts are classified as
+falsified.  We report the falsification rate for full transparency.

@@ -218,10 +218,7 @@ def metrics_at_positions(
         if not position_valid[pos_idx]:
             continue
         abs_tok = int(position_token_indices[pos_idx])
-        if abs_tok < prompt_len:
-            step_idx = 0
-        else:
-            step_idx = 1 + (abs_tok - prompt_len)
+        step_idx = 0 if abs_tok < prompt_len else 1 + (abs_tok - prompt_len)
         if step_idx < 0 or step_idx >= n_steps:
             # Out of range (e.g. Tend beyond generation length): leave zeros and
             # let downstream filter via /position_index/valid.

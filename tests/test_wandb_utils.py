@@ -12,9 +12,6 @@ import sys
 import types
 from unittest import mock
 
-import pytest
-
-
 # ---------------------------------------------------------------------------
 # Helpers to simulate "wandb not installed" vs "wandb installed"
 # ---------------------------------------------------------------------------

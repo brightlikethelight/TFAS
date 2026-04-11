@@ -54,15 +54,12 @@ __all__ = [
     "ProbeRunner",
     "RunnerConfig",
     "apply_bh_across_layers",
-    "config_hash",
-    "filter_valid_samples",
     "git_sha",
     "layer_result_to_dict",
     "load_layer_activations",
     "loco_split_iter",
     "make_stratify_key",
     "primary_probe_name",
-    "run_all",
     "save_layer_result",
 ]
 
@@ -309,14 +306,14 @@ class ProbeRunner:
         key = make_stratify_key(y, stratify_key)
         # Some strata may have <n_folds members — sklearn will error in that
         # case. Merge rare strata into a single "other" bucket.
-        counts = {v: c for v, c in zip(*np.unique(key, return_counts=True), strict=True)}
+        counts = dict(zip(*np.unique(key, return_counts=True), strict=True))
         min_per_fold = self.config.n_folds
         rare = {v for v, c in counts.items() if c < min_per_fold}
         if rare:
             key = np.where(np.isin(key, list(rare)), -1, key)
         # If even after merging we don't have enough samples per stratum, fall
         # back to just y.
-        counts = {v: c for v, c in zip(*np.unique(key, return_counts=True), strict=True)}
+        counts = dict(zip(*np.unique(key, return_counts=True), strict=True))
         if any(c < min_per_fold for c in counts.values()):
             key = y
         skf = StratifiedKFold(
@@ -616,17 +613,17 @@ class ProbeRunner:
 
 def _as_py(obj: Any) -> Any:
     """Recursively coerce numpy scalars / arrays into JSON-native types."""
-    if isinstance(obj, (np.floating,)):
+    if isinstance(obj, np.floating):
         return float(obj)
-    if isinstance(obj, (np.integer,)):
+    if isinstance(obj, np.integer):
         return int(obj)
-    if isinstance(obj, (np.bool_,)):
+    if isinstance(obj, np.bool_):
         return bool(obj)
     if isinstance(obj, np.ndarray):
         return [_as_py(x) for x in obj.tolist()]
     if isinstance(obj, dict):
         return {str(k): _as_py(v) for k, v in obj.items()}
-    if isinstance(obj, (list, tuple)):
+    if isinstance(obj, list | tuple):
         return [_as_py(x) for x in obj]
     if isinstance(obj, Path):
         return str(obj)

@@ -105,7 +105,7 @@ def _as_py(obj: Any) -> Any:
 
 @beartype
 def aggregate_p_correct(
-    correct: Float[np.ndarray, "n"] | np.ndarray,  # noqa: F821, UP037
+    correct: Float[np.ndarray, "n"] | np.ndarray,
     *,
     n_bootstrap: int = 1000,
     seed: int = 0,

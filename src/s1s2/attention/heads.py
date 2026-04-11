@@ -403,7 +403,6 @@ def classify_heads(
         per_metric: dict[str, dict[str, float]] = {}
         entropy_effect = 0.0
         entropy_p = 1.0
-        entropy_q = 1.0
         for _, row in sub_at_pos.iterrows():
             m = str(row["metric"])
             per_metric[m] = {
@@ -417,7 +416,6 @@ def classify_heads(
             if m == "entropy":
                 entropy_effect = float(row["effect_size_rb"])
                 entropy_p = float(row["p_value"])
-                entropy_q = float(row["q_value"])
 
         # Count significant metrics at this position
         sig_metrics = [m for m, mr in per_metric.items() if mr["significant"]]

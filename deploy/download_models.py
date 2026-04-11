@@ -57,7 +57,7 @@ def download_model(hf_id: str, cache_dir: str) -> float:
 
     # Tokenizer first (small, fast)
     AutoTokenizer.from_pretrained(hf_id, cache_dir=cache_dir)
-    print(f"  tokenizer cached.")
+    print("  tokenizer cached.")
 
     # Model weights — download only, don't load into RAM
     AutoModelForCausalLM.from_pretrained(
@@ -93,7 +93,7 @@ def download_sae_repo(name: str, repo_id: str, cache_dir: str) -> float:
     except Exception as e:
         elapsed = time.time() - t0
         print(f"  SAE download failed ({elapsed:.0f}s): {e}")
-        print(f"  (Non-fatal — SAEs are optional for initial extraction.)")
+        print("  (Non-fatal — SAEs are optional for initial extraction.)")
         return elapsed
 
 

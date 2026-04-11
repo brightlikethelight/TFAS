@@ -471,7 +471,7 @@ def _model_forward_residual_for_texts(
             else:
                 ok = False
                 break
-        if ok and isinstance(root, (list, _torch.nn.ModuleList)):
+        if ok and isinstance(root, list | _torch.nn.ModuleList):
             block = root[layer]
             break
     if block is None:
@@ -694,7 +694,7 @@ def falsify_candidates(
     )
 
     results: list[FalsificationResult] = []
-    for i, fid in enumerate(list(candidate_feature_ids)[:n]):
+    for _i, fid in enumerate(list(candidate_feature_ids)[:n]):
         try:
             r = ma_et_al_falsification(
                 feature_id=int(fid),

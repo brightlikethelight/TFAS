@@ -305,7 +305,7 @@ _CRT_EXPGROWTH_SPECS: list[dict[str, Any]] = [
 # --------------------------------------------------------------------- #
 
 
-# 20 pairs.
+# 25 pairs.
 _BASE_RATE_SPECS: list[dict[str, Any]] = [
     {
         "pair_id": "br_brewer_developer",
@@ -560,6 +560,79 @@ _BASE_RATE_SPECS: list[dict[str, Any]] = [
         "rare_group": "professional lapidary",
         "common_group": "factory worker",
         "rare_rate": 0.001,
+        "common_rate": 0.55,
+        "difficulty": 3,
+    },
+    # ---- 5 new pairs to bring base_rate to 25 ----
+    {
+        "pair_id": "br_bonsai_receptionist",
+        "description": (
+            "He rises before dawn to mist his miniature trees, owns "
+            "over forty specialized pruning tools, and has spent two "
+            "decades cultivating a single juniper in a shallow ceramic "
+            "pot."
+        ),
+        "rare_group": "professional bonsai artist",
+        "common_group": "receptionist",
+        "rare_rate": 0.0005,
+        "common_rate": 0.50,
+        # P(rare|description) via Bayes: prior ratio = 0.0005/0.50 =
+        # 0.001. Even with a generous likelihood ratio of 100 for the
+        # description, posterior ratio = 0.1, so common group still
+        # dominates.
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "br_puppeteer_clerk",
+        "description": (
+            "She builds intricate hand puppets from papier-mache, "
+            "performs twice a week at a small theatre, and her "
+            "apartment is filled with costumes and marionettes she "
+            "has sewn herself."
+        ),
+        "rare_group": "professional puppeteer",
+        "common_group": "bank teller",
+        "rare_rate": 0.0003,
+        "common_rate": 0.45,
+        "difficulty": 4,
+    },
+    {
+        "pair_id": "br_mycologist_driver",
+        "description": (
+            "He carries a hand lens everywhere, spends weekends "
+            "crawling through damp forests collecting specimens, and "
+            "his fridge contains petri dishes with mycelium cultures "
+            "he is nurturing."
+        ),
+        "rare_group": "field mycologist",
+        "common_group": "truck driver",
+        "rare_rate": 0.001,
+        "common_rate": 0.50,
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "br_sailmaker_office",
+        "description": (
+            "Her hands are covered in needle pricks, she owns an "
+            "industrial sewing machine adapted for heavy canvas, and "
+            "her workshop smells of resin and salt."
+        ),
+        "rare_group": "professional sailmaker",
+        "common_group": "office administrator",
+        "rare_rate": 0.0002,
+        "common_rate": 0.55,
+        "difficulty": 4,
+    },
+    {
+        "pair_id": "br_falconry_cashier",
+        "description": (
+            "She wears a heavy leather gauntlet even on warm days, "
+            "has a permit to keep raptors, and her car boot contains "
+            "a telemetry receiver and a bag of day-old chicks."
+        ),
+        "rare_group": "licensed falconry practitioner",
+        "common_group": "grocery store cashier",
+        "rare_rate": 0.0002,
         "common_rate": 0.55,
         "difficulty": 3,
     },
@@ -907,7 +980,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
 # --------------------------------------------------------------------- #
 
 
-# 15 pairs. Pick fact-based questions where the true value is well-
+# 20 pairs. Pick fact-based questions where the true value is well-
 # established and the high anchor is clearly above it.
 _ANCHORING_SPECS: list[dict[str, Any]] = [
     {
@@ -1085,6 +1158,66 @@ _ANCHORING_SPECS: list[dict[str, Any]] = [
         "units": "metres",
         "difficulty": 2,
     },
+    # ---- 5 new pairs to bring anchoring to 20 ----
+    {
+        "pair_id": "anchor_elizabeth_tower",
+        "question": (
+            "Approximately how tall is the Elizabeth Tower (Big Ben's "
+            "clock tower) in London, in metres?"
+        ),
+        "true_value": 96,
+        "high_anchor": 330,
+        "low_anchor": 25,
+        "units": "metres",
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "anchor_bones_human",
+        "question": (
+            "How many bones are in the adult human body?"
+        ),
+        "true_value": 206,
+        "high_anchor": 600,
+        "low_anchor": 40,
+        "units": "bones",
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "anchor_sahara_area",
+        "question": (
+            "Approximately how large is the Sahara Desert, in "
+            "millions of square kilometres?"
+        ),
+        "true_value": 9,
+        "high_anchor": 30,
+        "low_anchor": 1,
+        "units": "million km²",
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "anchor_moon_distance",
+        "question": (
+            "Approximately how far is the Moon from Earth on average, "
+            "in thousands of kilometres?"
+        ),
+        "true_value": 384,
+        "high_anchor": 1200,
+        "low_anchor": 50,
+        "units": "thousand kilometres",
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "anchor_amazon_basin",
+        "question": (
+            "Approximately how large is the Amazon rainforest, in "
+            "millions of square kilometres?"
+        ),
+        "true_value": 5,
+        "high_anchor": 18,
+        "low_anchor": 1,
+        "units": "million km²",
+        "difficulty": 3,
+    },
 ]
 
 
@@ -1093,7 +1226,7 @@ _ANCHORING_SPECS: list[dict[str, Any]] = [
 # --------------------------------------------------------------------- #
 
 
-# 15 pairs. We avoid 'Asian disease' surface form: use distinct
+# 20 pairs. We avoid 'Asian disease' surface form: use distinct
 # scenarios. Numbers are picked so EVs match exactly.
 def _frame(
     pair_id: str,
@@ -1293,6 +1426,67 @@ _FRAMING_SPECS: list[dict[str, Any]] = [
         prefer_sure=False,
         difficulty=3,
     ),
+    # ---- 5 new pairs to bring framing to 20 ----
+    _frame(
+        "frame_cyber_servers",
+        (
+            "A ransomware attack is encrypting servers across a "
+            "hospital network."
+        ),
+        n_total=800,
+        n_certain_save=200,
+        prob_save_all=0.25,
+        prefer_sure=True,
+        difficulty=2,
+    ),
+    _frame(
+        "frame_species_climate",
+        (
+            "A habitat corridor is collapsing and threatening endemic "
+            "species in a tropical forest."
+        ),
+        n_total=1000,
+        n_certain_save=500,
+        prob_save_all=0.5,
+        prefer_sure=False,
+        difficulty=3,
+    ),
+    _frame(
+        "frame_dropout_school",
+        (
+            "A district's schools are losing students to chronic "
+            "truancy during an economic downturn."
+        ),
+        n_total=600,
+        n_certain_save=150,
+        prob_save_all=0.25,
+        prefer_sure=True,
+        difficulty=2,
+    ),
+    _frame(
+        "frame_tsunami_coast",
+        (
+            "A tsunami warning has been issued for a densely populated "
+            "stretch of coastline."
+        ),
+        n_total=2000,
+        n_certain_save=500,
+        prob_save_all=0.25,
+        prefer_sure=False,
+        difficulty=3,
+    ),
+    _frame(
+        "frame_pipeline_leak",
+        (
+            "A gas pipeline rupture is threatening homes in a rural "
+            "farming district."
+        ),
+        n_total=400,
+        n_certain_save=200,
+        prob_save_all=0.5,
+        prefer_sure=True,
+        difficulty=2,
+    ),
 ]
 
 
@@ -1301,7 +1495,7 @@ _FRAMING_SPECS: list[dict[str, Any]] = [
 # --------------------------------------------------------------------- #
 
 
-# 12 pairs.
+# 20 pairs.
 _CONJUNCTION_SPECS: list[dict[str, Any]] = [
     {
         "pair_id": "conj_marcus_climber",
@@ -1456,6 +1650,107 @@ _CONJUNCTION_SPECS: list[dict[str, Any]] = [
         ),
         "feature_a": "white-collar worker",
         "feature_b": "competitive amateur road cyclist",
+        "difficulty": 3,
+    },
+    # ---- 8 new pairs to bring conjunction to 20 ----
+    {
+        "pair_id": "conj_rafael_analyst",
+        "person_name": "Rafael",
+        "person_description": (
+            "Rafael, age 31, keeps a home recording studio in his "
+            "spare room, plays three instruments, and spends most "
+            "evenings improvising over backing tracks he built himself."
+        ),
+        "feature_a": "data analyst",
+        "feature_b": "jazz musician who performs at local clubs",
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "conj_ingrid_soldier",
+        "person_name": "Ingrid",
+        "person_description": (
+            "Ingrid, age 44, wakes at 0430 every morning for a "
+            "ten-kilometre run, follows a strict meal-prep schedule, "
+            "and has completed six ultra-marathons in the past three "
+            "years."
+        ),
+        "feature_a": "retired military officer",
+        "feature_b": "competitive endurance athlete who trains daily",
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "conj_tomoko_woodworker",
+        "person_name": "Tomoko",
+        "person_description": (
+            "Tomoko, age 50, has sawdust in every pocket, her garage "
+            "houses a lathe and a bandsaw, and she spends weekends "
+            "hand-planing boards for furniture she designs herself."
+        ),
+        "feature_a": "retired teacher",
+        "feature_b": "skilled furniture maker who sells at craft fairs",
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "conj_adama_pilot",
+        "person_name": "Adama",
+        "person_description": (
+            "Adama, age 38, owns a set of aviation headsets, has "
+            "logged over two thousand flight hours, and his apartment "
+            "walls are covered with framed aeronautical charts."
+        ),
+        "feature_a": "government employee",
+        "feature_b": "licensed commercial airline pilot",
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "conj_clara_beekeeper",
+        "person_name": "Clara",
+        "person_description": (
+            "Clara, age 47, owns twelve hives in her back garden, "
+            "harvests her own honey every autumn, and gives talks at "
+            "local schools about pollinator conservation."
+        ),
+        "feature_a": "homeowner",
+        "feature_b": "dedicated amateur beekeeper who mentors beginners",
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "conj_nikolai_diver",
+        "person_name": "Nikolai",
+        "person_description": (
+            "Nikolai, age 35, keeps a drysuit hanging in his hallway, "
+            "owns two sets of underwater photography equipment, and "
+            "plans every holiday around dive sites with high "
+            "visibility."
+        ),
+        "feature_a": "software engineer",
+        "feature_b": "certified technical scuba diver",
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "conj_fatima_herbalist",
+        "person_name": "Fatima",
+        "person_description": (
+            "Fatima, age 55, grows over sixty medicinal plant species "
+            "in her garden, dries herbs in racks across her kitchen "
+            "ceiling, and keeps meticulous notes on traditional "
+            "remedies passed down in her family."
+        ),
+        "feature_a": "retired professional",
+        "feature_b": "practicing herbalist who treats clients",
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "conj_victor_astronomer",
+        "person_name": "Victor",
+        "person_description": (
+            "Victor, age 42, owns a 14-inch reflector telescope, "
+            "drives to dark-sky sites every clear night, and has "
+            "discovered two comets that now bear provisional "
+            "designations."
+        ),
+        "feature_a": "high-school teacher",
+        "feature_b": "published amateur astronomer",
         "difficulty": 3,
     },
 ]

@@ -332,7 +332,6 @@ def evaluate_gates(
         gate_3_causal(results, cfg),
     ]
 
-    overall = [g.decision for g in gate_results]
     logger.info(
         "[%s/L%02d] gate decisions: %s",
         results.model_key or "model",

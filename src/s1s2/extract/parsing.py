@@ -96,13 +96,9 @@ def split_thinking_answer(generation: str) -> tuple[str, str, ThinkingSpan]:
     if not span.present:
         return "", generation, span
     thinking = generation[span.start_char : span.end_char]
-    if span.truncated:
-        # No closing tag: there is no real "answer" segment, but we still store
-        # the full generation as the answer candidate for scoring so that a
-        # half-emitted answer inside the thinking block isn't lost.
-        answer = generation
-    else:
-        answer = generation[span.end_char + len(THINK_CLOSE) :]
+    # No closing tag: store full generation as answer candidate so a
+    # half-emitted answer inside the thinking block isn't lost.
+    answer = generation if span.truncated else generation[span.end_char + len(THINK_CLOSE) :]
     return thinking, answer, span
 
 

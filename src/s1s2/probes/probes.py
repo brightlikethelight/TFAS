@@ -107,10 +107,7 @@ class Probe(ABC):
         hard = (proba >= 0.5).astype(np.int8)
         # ROC-AUC is undefined if y is single-class. Return 0.5 (chance) in that
         # edge case so downstream plotting doesn't break.
-        if len(np.unique(y)) < 2:
-            auc = 0.5
-        else:
-            auc = float(roc_auc_score(y, proba))
+        auc = 0.5 if len(np.unique(y)) < 2 else float(roc_auc_score(y, proba))
         return {
             "roc_auc": auc,
             "balanced_accuracy": float(balanced_accuracy_score(y, hard)),
@@ -350,8 +347,8 @@ class MLPProbe(Probe):
         idx_neg = np.where(y == 0)[0]
         rng.shuffle(idx_pos)
         rng.shuffle(idx_neg)
-        n_val_pos = max(1, int(round(0.1 * len(idx_pos))))
-        n_val_neg = max(1, int(round(0.1 * len(idx_neg))))
+        n_val_pos = max(1, round(0.1 * len(idx_pos)))
+        n_val_neg = max(1, round(0.1 * len(idx_neg)))
         val_idx = np.concatenate([idx_pos[:n_val_pos], idx_neg[:n_val_neg]])
         train_idx = np.concatenate([idx_pos[n_val_pos:], idx_neg[n_val_neg:]])
         if train_idx.size == 0 or val_idx.size == 0:
@@ -393,10 +390,7 @@ class MLPProbe(Probe):
             with torch.no_grad():
                 val_logits = model(X_va).detach().cpu().numpy()
             val_proba = 1.0 / (1.0 + np.exp(-val_logits))
-            if len(np.unique(y_va)) < 2:
-                val_auc = 0.5
-            else:
-                val_auc = float(roc_auc_score(y_va, val_proba))
+            val_auc = 0.5 if len(np.unique(y_va)) < 2 else float(roc_auc_score(y_va, val_proba))
             if val_auc > best_auc + 1e-6:
                 best_auc = val_auc
                 best_state = {k: v.detach().clone() for k, v in model.state_dict().items()}

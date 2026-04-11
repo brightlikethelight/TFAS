@@ -111,7 +111,7 @@ class TestBenchmarkItemSerialization:
     def test_frozen_dataclass(self):
         """BenchmarkItem is frozen — direct mutation must fail."""
         item = _coerce_item(_make_dict(), line_number=1)
-        with pytest.raises(Exception):
+        with pytest.raises(Exception):  # noqa: B017 — frozen dataclass raises FrozenInstanceError (an Exception subclass)
             item.id = "new_id"  # type: ignore[misc]
 
 
@@ -348,14 +348,6 @@ class TestValidateBenchmark:
         report = validate_benchmark(path)
         # Per-item structural checks should pass; count targets won't, but
         # the function still runs and returns a report.
-        per_item_errors = [
-            e
-            for e in report.errors
-            if ("matched_pair_id" not in e
-            and "category" not in e)
-            or "primary present" in e
-            or False
-        ]
         # The minimal benchmark above has *only* one pair so the count
         # target check fires; ensure no per-item integrity errors fire.
         assert all("crt_0" not in e for e in report.errors), report.errors

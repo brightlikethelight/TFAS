@@ -14,62 +14,287 @@ cognitive bias being tested, the conflict/no-conflict manipulation, the
 expected S1-lure answer, and a worked example.
 
 \paragraph{CRT variants.}
-A ball and a bat cost \$1.10 together.  The bat costs \$1.00 more than the
-ball.  How much does the ball cost?  \textbf{S1-lure}: \$0.10.
-\textbf{S2-correct}: \$0.05.  Our novel variants replace the surface features
-(e.g., ``A notebook and a pen cost \$2.20\ldots'') while preserving the
-mathematical structure.
+\emph{Conflict}: ``A notebook and a pen cost \$2.20 together.  The notebook
+costs \$2.00 more than the pen.  How much does the pen cost?''
+\textbf{S1-lure}: \$0.20.  \textbf{S2-correct}: \$0.10.
+\emph{No-conflict control}: ``A notebook and a pen cost \$2.10 together.
+The notebook costs \$2.00.  How much does the pen cost?''
+\textbf{Answer}: \$0.10.
 
-\textbf{[Full examples for all 7 categories to be included here.]}
+\paragraph{Base rate neglect.}
+\emph{Conflict}: ``In a study of 1000 people, 5 are engineers and 995 are
+lawyers.  Tom enjoys math puzzles and building circuits.  What is the
+probability that Tom is an engineer?''
+\textbf{S1-lure}: high ($>$50\%).  \textbf{S2-correct}: $\approx$0.5\%
+(base rate dominates).
+\emph{No-conflict control}: ``In a study of 1000 people, 500 are engineers
+and 500 are lawyers.  Tom enjoys math puzzles and building circuits.  What
+is the probability that Tom is an engineer?''
+\textbf{Answer}: depends on diagnosticity, but base rate and description
+are congruent.
+
+\paragraph{Belief-bias syllogisms.}
+\emph{Conflict (valid--unbelievable)}: ``All flowers need water.  Roses need
+water.  Therefore, roses are flowers.''  The conclusion is believable but
+the syllogism is \emph{invalid} (affirming the consequent).
+\textbf{S1-lure}: valid.  \textbf{S2-correct}: invalid.
+\emph{No-conflict (valid--believable)}: ``All mammals are warm-blooded.  All
+dogs are mammals.  Therefore, all dogs are warm-blooded.''
+\textbf{Answer}: valid.
+
+Table~\ref{tab:category_detail} summarizes the full category distribution
+with difficulty breakdowns.
+
+\begin{table}[h]
+\centering
+\caption{Benchmark category distribution.  Difficulty is rated on a 1--5
+  scale; the table shows the number of items at each difficulty level within
+  each category.}
+\label{tab:category_detail}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccccccc}
+\toprule
+\textbf{Category} & \textbf{Conflict} & \textbf{Control} & \textbf{Total}
+  & \textbf{D1} & \textbf{D2} & \textbf{D3} & \textbf{D4} & \textbf{D5} \\
+\midrule
+CRT variants       & 30 & 30 & 60  &  8 & 12 & 16 & 14 & 10 \\
+Arithmetic          & 25 & 25 & 50  & 10 & 10 & 10 & 10 & 10 \\
+Syllogisms          & 25 & 25 & 50  & 10 & 10 & 15 & 10 &  5 \\
+Base rate neglect   & 20 & 20 & 40  &  6 &  8 & 12 &  8 &  6 \\
+Anchoring           & 15 & 15 & 30  &  6 &  6 &  8 &  6 &  4 \\
+Framing effects     & 15 & 15 & 30  &  6 &  6 &  8 &  6 &  4 \\
+Conjunction fallacy & 12 & 12 & 24  &  4 &  6 &  6 &  4 &  4 \\
+\midrule
+\textbf{Total}      & \textbf{142} & \textbf{142} & \textbf{284}
+  & 50 & 58 & 75 & 58 & 43 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \subsection{Benchmark Construction Details}
 
-\textbf{[Details on the template generation process, Bayesian verification of
-base rate items, human validation on Prolific, inter-annotator agreement
-statistics.]}
+Items were generated via a controlled template perturbation process:
+(i)~identify the abstract mathematical or logical structure of each
+classic problem (e.g., ``$X + Y = T$; $X - Y = D$'');
+(ii)~instantiate with novel surface features (objects, names, domains)
+drawn from a curated list of 200 nouns and 50 proper names to avoid
+thematic overlap;
+(iii)~for base rate neglect items, verify all posterior probabilities
+analytically using Bayes' theorem with the specified priors and
+likelihoods;
+(iv)~generate the matched no-conflict control by removing or neutralizing
+the heuristic lure (e.g., aligning the base rate with the description, or
+presenting a straightforward arithmetic version).
+
+\paragraph{Scoring rubric.}
+We use a three-tier scoring system:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item \textbf{Binary}: correct (1) or incorrect (0), assessed via
+  regex matching against the \texttt{correct\_answer} field.
+  \item \textbf{Categorical}: correct / S1-lure / other-wrong / refusal.
+  The S1-lure label is assigned when the model's response matches the
+  pre-specified \texttt{lure\_answer} regex.  Refusals are detected via
+  a keyword list (``I cannot,'' ``I'm not sure,'' etc.).
+  \item \textbf{Continuous}: $|r - c| / |l - c|$ where $r$ is the model's
+  numerical response, $c$ is the correct answer, and $l$ is the lure
+  answer.  Values $> 1$ indicate the response is farther from correct than
+  the lure; values near $0$ indicate correctness.  Applicable to numerical
+  categories only (CRT, arithmetic, base rate).
+\end{itemize}
 
 \subsection{Paraphrase Generation}
 
-\textbf{[Protocol for generating 2--5 paraphrases per item, and analysis
-showing robustness of behavioral results across paraphrases.]}
+Each item has 2--5 paraphrases (mean 3.9 per item, 558 total prompts).
+Paraphrases were generated by: (i)~synonym substitution for non-critical
+nouns and verbs; (ii)~reordering of premise clauses where logically
+equivalent; (iii)~varying the question format (``How much\ldots'' vs.\
+``What is the cost of\ldots'').  Critically, paraphrases preserve the
+\emph{conflict structure}---the same heuristic lure is present in all
+paraphrases of a conflict item.
+
+We verify prompt robustness by computing the intra-class correlation (ICC)
+of model responses across paraphrases of the same item.  An ICC $\geq 0.7$
+indicates that inter-item variance dominates over inter-paraphrase variance,
+confirming that our results are not driven by surface phrasing.
 
 % -------------------------------------------------------------------
-\section{Per-Layer Probe Accuracy}
+\section{Probe Architecture Details}
 \label{app:probes}
 
-\textbf{[Full tables: ROC-AUC at every layer $\times$ position $\times$ model
-$\times$ target combination.  Selectivity values.  Leave-one-category-out
-results for all held-out categories.]}
+\subsection{Logistic Regression Probe}
+
+We use \texttt{sklearn.linear\_model.LogisticRegressionCV} with the
+following configuration:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item \textbf{Penalty}: $\ell_2$ regularization.
+  \item \textbf{C range}: 10 values log-spaced from $10^{-4}$ to $10^{4}$,
+  selected via nested 5-fold CV (inner loop).
+  \item \textbf{Solver}: \texttt{lbfgs} (supports $\ell_2$, efficient for
+  $d = 50$ after PCA or $d = 4096$ raw).
+  \item \textbf{Max iterations}: 5{,}000.
+  \item \textbf{Class weights}: \texttt{balanced} (inversely proportional
+  to class frequency; our design is balanced, so this is a no-op for the
+  primary task-type target but important for correctness and
+  bias-susceptibility targets where classes may be imbalanced).
+  \item \textbf{Stratification}: 5-fold, stratified by the Cantor pairing
+  of (target label, task category) to ensure each fold has proportional
+  representation of all category $\times$ label combinations.
+\end{itemize}
+
+\subsection{Mass-Mean Baseline}
+
+The mass-mean probe computes class centroids:
+\begin{equation}
+  \bar{\mathbf{x}}_c = \frac{1}{|S_c|} \sum_{i \in S_c} \mathbf{x}_i,
+  \quad c \in \{\text{conflict}, \text{no-conflict}\},
+\end{equation}
+and assigns each test activation to the class of the nearest centroid in
+cosine distance.  This is a non-parametric baseline that requires no
+training and has no hyperparameters.
+
+\subsection{MLP Probe}
+
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item \textbf{Architecture}: Input $\to$ Linear(256) $\to$ ReLU $\to$
+  Dropout(0.1) $\to$ Linear(1) $\to$ Sigmoid.
+  \item \textbf{Optimizer}: Adam, learning rate $10^{-3}$, weight decay
+  $10^{-4}$.
+  \item \textbf{Training}: 200 epochs maximum, batch size 64, early
+  stopping with patience 15 on validation loss (using the same CV folds
+  as the logistic probe).
+  \item \textbf{Loss}: binary cross-entropy with class-balanced weights.
+\end{itemize}
+
+\subsection{Contrast-Consistent Search (CCS)}
+
+CCS \citep{burns2022discovering} finds a linear direction in activation
+space that maximizes contrast consistency between paired items.  For each
+matched pair $(i, i')$ with activations $(\mathbf{x}_i, \mathbf{x}_{i'})$,
+CCS projects onto a direction $\mathbf{w}$ and applies a sigmoid
+$p_i = \sigma(\mathbf{w}^\top \mathbf{x}_i + b)$.  The CCS loss is:
+\begin{equation}
+  \mathcal{L}_{\text{CCS}} = \mathbb{E}\!\left[\min(p_i, 1 - p_i)^2\right]
+  + \mathbb{E}\!\left[(p_i + p_{i'} - 1)^2\right].
+\end{equation}
+The first term encourages confident predictions; the second enforces that
+paired items receive complementary probabilities.  We optimize with 10
+random restarts (different $\mathbf{w}$ initializations) and select the
+direction achieving the lowest loss.
+
+\subsection{Per-Layer Probe Accuracy}
+
+Full tables of ROC-AUC at every layer $\times$ position $\times$ model
+$\times$ target combination, including selectivity values and
+leave-one-category-out results, are provided in the supplementary data
+release.
 
 % -------------------------------------------------------------------
 \section{SAE Feature Details}
 \label{app:sae}
 
-\subsection{Top-$K$ Feature Lists}
+\subsection{Pre-Trained SAE Sources}
 
-\textbf{[For each model and layer: the top 20 differentially activated
-features, their activation statistics, top-activating tokens, and
-falsification test results.]}
+\begin{table}[h]
+\centering
+\caption{Pre-trained sparse autoencoders used in this study.}
+\label{tab:sae_sources}
+\vspace{4pt}
+\small
+\begin{tabular}{llll}
+\toprule
+\textbf{SAE} & \textbf{HuggingFace ID} & \textbf{Target model} & \textbf{Width} \\
+\midrule
+Llama Scope & \texttt{fnlp/Llama-3\_1-8B-Base-LXR-32x} & Llama-3.1-8B-Base & 32$\times$ ($\sim$131K) \\
+Gemma Scope & \texttt{google/gemma-scope-9b-it-res} & Gemma-2-9B-IT & 16K--1M \\
+\bottomrule
+\end{tabular}
+\vspace{2pt}
+\raggedright
+\footnotesize{Llama Scope was trained on the base model, not Instruct.
+We apply it to both Llama-3.1-8B-Instruct and R1-Distill-Llama-8B after
+verifying reconstruction fidelity (Section~\ref{sec:sae}).  For
+R1-Distill-Qwen-7B, no suitable pre-trained SAE exists; this model is
+analyzed via probes and attention only.}
+\end{table}
+
+\subsection{Reconstruction Fidelity Check}
+
+For each SAE--model pair, we verify reconstruction quality on a random
+sample of 500 activations per layer.  Two criteria must be met:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item \textbf{Explained variance}: $R^2 = 1 - \|\mathbf{x} -
+  \hat{\mathbf{x}}\|^2 / \|\mathbf{x} - \bar{\mathbf{x}}\|^2 \geq 0.50$.
+  \item \textbf{Normalized MSE}: $\text{NMSE} = \|\mathbf{x} -
+  \hat{\mathbf{x}}\|^2 / \|\mathbf{x}\|^2 \leq 2\times$ the NMSE
+  reported in the original SAE publication on in-distribution data.
+\end{itemize}
+Layers failing either criterion are excluded from SAE-based claims and
+flagged in the results tables.
 
 \subsection{Falsification Protocol Details}
 
-\textbf{[Full description of the Ma et al.\ falsification implementation:
-injection procedure, random text corpus, activation threshold, and
-per-feature pass/fail results.]}
+Following \citet{ma2026falsification}, we apply a token-injection
+falsification test to every SAE feature that survives differential
+activation testing (BH-FDR $q < 0.05$, $|r_{\text{rb}}| \geq 0.3$):
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+  \item Identify the top-3 activating tokens for the candidate feature
+  across all benchmark items.
+  \item Construct 100 random non-cognitive-bias texts (drawn from
+  OpenWebText) of length 128--512 tokens.
+  \item Inject each of the top-3 tokens at 5 random positions within each
+  text (total: $3 \times 100 \times 5 = 1{,}500$ injections per feature).
+  \item Measure the feature's activation at each injection site.
+  \item If the feature activates at $\geq 50$\% of its mean activation on
+  benchmark items in $\geq 50$\% of injections, classify it as
+  \emph{falsified} (token-level artifact).
+\end{enumerate}
+
+\noindent
+The feature survival pipeline is:
+\begin{center}
+\small
+All features $\xrightarrow{\text{Mann--Whitney } U}$ significant (BH-FDR)
+$\xrightarrow{|r_{\text{rb}}| \geq 0.3}$ large effect
+$\xrightarrow{\text{falsification}}$ genuine processing-mode features.
+\end{center}
+
+\subsection{Top-$K$ Feature Lists}
+
+For each model and layer: the top 20 differentially activated features,
+their activation statistics, top-activating tokens, and falsification test
+results are provided in the supplementary data release.
 
 \subsection{Cross-Model Feature Matching}
 
-\textbf{[Cosine similarity of decoder vectors and activation correlation
-for matched features across Llama and Gemma SAEs.]}
+For features that survive falsification in both a Llama Scope and Gemma
+Scope model, we compute (i)~the cosine similarity of decoder vectors
+(after projecting to a shared space via CCA) and (ii)~the Pearson
+correlation of per-item activation patterns on the shared 284-item
+benchmark.  Feature pairs with cosine similarity $> 0.5$ \emph{and}
+activation correlation $> 0.5$ are classified as matched cross-model
+features.
 
 % -------------------------------------------------------------------
 \section{Attention Head Classification}
 \label{app:attention}
 
-\textbf{[Full tables: per-head Mann--Whitney $U$ statistics, $p$-values
-(BH-FDR corrected), rank-biserial correlations, and classification
-(S2-specialized / S1-specialized / unspecialized) for all models.
-Results at both query-head and KV-group granularity.]}
+For each model, we provide full tables of per-head Mann--Whitney $U$
+statistics, BH-FDR-corrected $p$-values, rank-biserial correlations across
+all 5 metrics, and the resulting classification (S2-specialized /
+S1-specialized / unspecialized).  Results are reported at both query-head
+and KV-group granularity.
+
+For GQA models (Llama-3.1 and R1-Distill-Llama, with 32 query heads and 8
+KV groups), KV-group-level statistics are computed by averaging attention
+weights across the 4 query heads within each group before computing entropy
+and Gini metrics.  This is the conservative granularity used for
+confirmatory analysis (H5).
+
+Full per-head classification tables are provided in the supplementary data
+release, organized as: model $\times$ layer $\times$ head $\times$
+\{metric, $U$-statistic, $p_{\text{raw}}$, $p_{\text{BH}}$,
+$r_{\text{rb}}$, classification\}.
 
 % -------------------------------------------------------------------
 \section{Representational Geometry Supplement}
@@ -77,25 +302,69 @@ Results at both query-head and KV-group granularity.]}
 
 \subsection{PCA and UMAP Visualizations}
 
-\textbf{[Full PCA/UMAP plots at every 4th layer for all models.  Random
-projection baselines shown alongside.]}
+We provide 2D PCA and UMAP projections of residual stream activations at
+every 4th layer (layers 0, 4, 8, \ldots) for all four models.  Items are
+colored by condition (conflict vs.\ no-conflict).  Each PCA/UMAP panel is
+accompanied by a random projection baseline: the same data projected to 2D
+via a random Gaussian matrix, repeated 100 times.  We display the median
+random projection alongside the PCA/UMAP to calibrate visual cluster
+expectations.
+
+UMAP hyperparameters: $n_{\text{neighbors}} = 15$, $\text{min\_dist} =
+0.1$, metric = cosine.
 
 \subsection{CKA Matrices}
 
-\textbf{[Full layer $\times$ layer CKA heatmaps between Llama-3.1-8B-Instruct
-and R1-Distill-Llama-8B, separately for conflict and no-conflict items.]}
+We compute linear CKA \citep{kornblith2019similarity} between
+Llama-3.1-8B-Instruct and R1-Distill-Llama-8B on a per-layer basis.
+Because both models have 32 layers, this yields a $32 \times 32$ CKA
+matrix.  We compute separate matrices for conflict items ($N = 142$) and
+no-conflict items ($N = 142$).  The prediction (Section~\ref{sec:geometry})
+is that CKA values are lower (more divergent representations) for conflict
+items in mid-to-late layers, reflecting reasoning-distillation-specific
+changes.
 
 \subsection{Intrinsic Dimensionality}
 
-\textbf{[Two-NN estimates at every layer for S1-like vs.\ S2-like activation
-clouds, with bootstrap confidence intervals.]}
+We estimate the intrinsic dimensionality (ID) of conflict and no-conflict
+activation point clouds at each layer using the Two-NN estimator
+\citep{facco2017estimating}.  Two-NN estimates ID from the ratio of
+distances to the first and second nearest neighbors, requiring no
+hyperparameters.  We report point estimates with bootstrap 95\% CIs (1{,}000
+resamples).  Lower ID for one condition would indicate more stereotyped
+(lower-dimensional) processing; higher ID would suggest diverse processing
+strategies.
 
 % -------------------------------------------------------------------
 \section{Causal Intervention Details}
 \label{app:causal}
 
-\textbf{[Full dose-response curves for all candidate features.  Side-effect
-analysis on held-out tasks.  Per-category breakdown of steering effects.]}
+\subsection{Dose-Response Curves}
+
+For each non-falsified S2-associated feature, we provide the full
+dose-response curve: $P(\text{correct})$ on the 142 conflict items at
+each steering coefficient $\alpha \in \{0, 0.5, 1.0, 2.0, 3.0, 5.0\}$.
+The random-direction control (mean over 10 random unit vectors) is plotted
+alongside.  Error bars denote $\pm 1$ standard deviation across 3 seeds.
+
+\subsection{Side-Effect Analysis}
+
+To check whether S2-feature steering degrades general capabilities, we
+evaluate steered models on two held-out benchmarks:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item \textbf{MMLU} (5-shot): accuracy on a 500-item subsample spanning
+  all 57 categories.
+  \item \textbf{HellaSwag} (10-shot): accuracy on a 200-item subsample.
+\end{itemize}
+A degradation of $>$5 percentage points on either benchmark at the best
+steering coefficient is flagged as a meaningful side effect.
+
+\subsection{Per-Category Steering Breakdown}
+
+We report $\Delta P(\text{correct})$ under the best steering coefficient
+broken down by all 7 benchmark categories.  This reveals whether causal
+effects are category-general (supporting a domain-general S2 mechanism) or
+concentrated in specific categories (suggesting category-specific shortcuts).
 
 % -------------------------------------------------------------------
 \section{Reproducibility}
@@ -105,28 +374,61 @@ analysis on held-out tasks.  Per-category breakdown of steering effects.]}
 
 \begin{table}[h]
 \centering
-\caption{Compute budget for the full experimental pipeline.}
+\caption{Compute budget for the full experimental pipeline (4 models,
+  284 items, 3 seeds where applicable).}
+\label{tab:compute}
 \small
-\begin{tabular}{lccr}
+\begin{tabular}{llcr}
 \toprule
-\textbf{Component} & \textbf{Hardware} & \textbf{Time (h)} & \textbf{Cost (\$)} \\
+\textbf{Stage} & \textbf{Hardware} & \textbf{Time (h)} & \textbf{Cost (\$)} \\
 \midrule
-Activation caching & 1$\times$ A100-80GB & 15--30 & 25--50 \\
-Attention extraction & 1$\times$ H100 & $\sim$4 & $\sim$10 \\
-Probe training & CPU & $\sim$2 & 0 \\
-SAE feature analysis & 1$\times$ A100-80GB & $\sim$2 & $\sim$3 \\
-Causal interventions & 1$\times$ A100-80GB & 10--20 & 15--30 \\
-Geometry analysis & CPU & $\sim$4 & 0 \\
+Activation caching (4 models) & 1$\times$ A100-80GB & 15--30 & 25--50 \\
+Attention extraction (4 models) & 1$\times$ H100-80GB & $\sim$4 & $\sim$10 \\
+Probe training (4 models $\times$ 4 targets $\times$ 3 seeds) & CPU (64-core) & $\sim$2 & 0 \\
+SAE feature analysis (2 models with SAEs) & 1$\times$ A100-80GB & $\sim$2 & $\sim$3 \\
+SAE falsification (top-K features) & 1$\times$ A100-80GB & $\sim$3 & $\sim$5 \\
+Causal interventions (5 coefficients $\times$ 3 seeds) & 1$\times$ A100-80GB & 10--20 & 15--30 \\
+Geometry analysis (PCA, CKA, Two-NN) & CPU (64-core) & $\sim$4 & 0 \\
 \midrule
 \textbf{Total} & & $\sim$\textbf{60} & \textbf{80--120} \\
 \bottomrule
 \end{tabular}
+\vspace{2pt}
+\raggedright
+\footnotesize{GPU costs assume RunPod on-demand pricing (\$1.64/h for
+A100-80GB, \$2.49/h for H100-80GB).  CPU stages run on a local workstation
+at no incremental cost.}
 \end{table}
+
+\paragraph{Storage estimates.}
+Residual stream activations for all 4 models at all layers and token
+positions occupy approximately 4\,GB in BFloat16 HDF5 format.  Per-head
+attention entropy metrics add $\sim$200\,MB.  SAE feature activations
+(sparse) add $\sim$500\,MB.  Total storage for the complete experimental
+pipeline is $\sim$5\,GB.
 
 \subsection{Hydra Configurations}
 
-\textbf{[List all Hydra config files and their key parameters.  Configs are
-included in the supplementary code release.]}
+All experiments are configured via Hydra YAML files.  The key configuration
+groups are:
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item \texttt{config/model/}: per-model configs specifying HuggingFace
+  ID, number of layers, head counts, hidden dimension, and SAE source.
+  \item \texttt{config/extract/}: activation extraction settings (token
+  positions, BFloat16 precision, HDF5 schema version).
+  \item \texttt{config/probe/}: probe hyperparameters (C range, MLP
+  architecture, CCS restarts, CV folds, seeds).
+  \item \texttt{config/sae/}: SAE analysis settings (reconstruction
+  fidelity thresholds, falsification parameters, FDR level).
+  \item \texttt{config/attention/}: entropy metrics, GQA handling,
+  sliding-window layer separation.
+  \item \texttt{config/geometry/}: PCA components, UMAP parameters,
+  CKA settings, permutation count.
+  \item \texttt{config/causal/}: steering coefficients, random direction
+  count, side-effect benchmarks.
+\end{itemize}
+Full configs are serialized alongside every result file and are included
+in the supplementary code release.
 
 \subsection{Random Seeds}
 
@@ -136,5 +438,17 @@ globally via \texttt{s1s2.utils.seed.set\_global\_seed()} which seeds
 
 \subsection{Software Versions}
 
-\textbf{[Pin exact versions of PyTorch, Transformers, SAELens, scikit-learn,
-and other key dependencies.  Provided via \texttt{environment.yml}.]}
+Key dependencies (pinned in \texttt{environment.yml}):
+\begin{itemize}[leftmargin=*,itemsep=1pt]
+  \item Python 3.11
+  \item PyTorch $\geq$ 2.3.0 (CUDA 12.1)
+  \item Transformers $\geq$ 4.44.0
+  \item SAELens $\geq$ 0.4.0
+  \item scikit-learn $\geq$ 1.5.0
+  \item NumPy $\geq$ 1.26.0
+  \item h5py $\geq$ 3.11.0
+  \item Weights \& Biases $\geq$ 0.17.0
+  \item Hydra-core $\geq$ 1.3.2
+\end{itemize}
+The exact \texttt{environment.yml} is included in the code release and can
+reproduce the full conda environment.

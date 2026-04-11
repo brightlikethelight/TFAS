@@ -216,7 +216,6 @@ def _plot_example_pairs(ax, pairs: list[tuple[dict[str, Any], dict[str, Any]]]) 
     slice_h = 1.0 / n_pairs
     for i, (conflict, control) in enumerate(pairs):
         y_top = 1.0 - i * slice_h
-        y_mid = y_top - 0.5 * slice_h
 
         cat = str(conflict.get("category", "?")).replace("_", " ")
         cpt = str(conflict.get("prompt", ""))

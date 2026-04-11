@@ -8,7 +8,6 @@ transformers import. Prints a summary table and exits 0 on success,
 from __future__ import annotations
 
 import os
-import sys
 
 # Prevent OpenMP double-init crash on macOS (torch + numpy fight over libomp).
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")

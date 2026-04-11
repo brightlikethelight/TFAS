@@ -40,7 +40,7 @@ _SRC = _REPO / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from s1s2.metacog import (
+from s1s2.metacog import (  # noqa: E402 — sys.path must be patched first
     DifficultyDetectorAnalysis,
     DifficultyDetectorResults,
     GateConfig,
@@ -56,9 +56,9 @@ from s1s2.metacog import (
     s1s2_specificity_test,
     surprise_feature_correlation,
 )
-from s1s2.metacog.surprise import merge_correlation_results
-from s1s2.sae.loaders import MockSAE
-from s1s2.utils import io as ioh
+from s1s2.metacog.surprise import merge_correlation_results  # noqa: E402
+from s1s2.sae.loaders import MockSAE  # noqa: E402
+from s1s2.utils import io as ioh  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Synthetic data builders
@@ -217,7 +217,7 @@ class TestSurpriseFeatureCorrelation:
         # Exactly the planted feature should land
         assert n_diff >= 1
         # And the planted feature index 0 must be among the survivors.
-        diff_ids = set(int(x) for x in result.difficulty_sensitive_ids)
+        diff_ids = {int(x) for x in result.difficulty_sensitive_ids}
         assert 0 in diff_ids
 
     def test_constant_surprise_returns_no_signal(self) -> None:

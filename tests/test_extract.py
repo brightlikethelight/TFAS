@@ -31,7 +31,7 @@ _SRC = _REPO / "src"
 if str(_SRC) not in sys.path:
     sys.path.insert(0, str(_SRC))
 
-from s1s2.extract import (
+from s1s2.extract import (  # noqa: E402 — sys.path must be patched first
     ActivationWriter,
     AttentionMetricsCollector,
     ExtractionConfig,
@@ -47,9 +47,14 @@ from s1s2.extract import (
     split_thinking_answer,
     validate_file,
 )
-from s1s2.extract.hooks import _row_metrics, metrics_at_positions
-from s1s2.utils.io import get_attention_metric, get_residual, open_activations, position_labels
-from s1s2.utils.types import ALL_POSITIONS
+from s1s2.extract.hooks import _row_metrics, metrics_at_positions  # noqa: E402
+from s1s2.utils.io import (  # noqa: E402
+    get_attention_metric,
+    get_residual,
+    open_activations,
+    position_labels,
+)
+from s1s2.utils.types import ALL_POSITIONS  # noqa: E402
 
 # --------------------------------------------------------------------------- #
 # test_thinking_trace_parsing                                                  #
@@ -557,7 +562,10 @@ class TestRoundTripTinyModel:
     def test_full_pipeline(self, tmp_path: Path):
         try:
             import torch
-            from transformers import AutoModelForCausalLM, AutoTokenizer
+            from transformers import (  # noqa: F401 — availability check
+                AutoModelForCausalLM,
+                AutoTokenizer,
+            )
         except ImportError:
             pytest.skip("transformers/torch not available")
 

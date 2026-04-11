@@ -23,7 +23,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import signal
 import subprocess
 import sys
@@ -118,7 +117,7 @@ def run_extraction_for_model(
 
     Returns True if extraction succeeded, False otherwise.
     """
-    output_path = output_dir / f"{run_name}.h5"
+    _output_path = output_dir / f"{run_name}.h5"
     cmd = [
         sys.executable,
         str(_REPO / "scripts" / "extract_all.py"),
@@ -237,18 +236,18 @@ def main() -> int:
 
     # Summary
     print(f"\n{'='*60}")
-    print(f"Checkpoint extraction summary:")
+    print("Checkpoint extraction summary:")
     print(f"  Total models:    {n_total}")
     print(f"  Skipped (done):  {n_skipped}")
     print(f"  Completed now:   {n_done}")
     print(f"  Failed:          {n_failed}")
     print(f"  Remaining:       {n_total - n_skipped - n_done - n_failed}")
     if _preempted:
-        print(f"  Status: PREEMPTED — resubmit job to continue.")
+        print("  Status: PREEMPTED — resubmit job to continue.")
     elif n_failed > 0:
-        print(f"  Status: PARTIAL FAILURE")
+        print("  Status: PARTIAL FAILURE")
     elif n_skipped + n_done == n_total:
-        print(f"  Status: ALL COMPLETE")
+        print("  Status: ALL COMPLETE")
     print(f"{'='*60}")
 
     if n_failed > 0:

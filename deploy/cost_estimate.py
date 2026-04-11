@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import argparse
 
-
 # ---- Cost model -------------------------------------------------------------
 
 # RunPod hourly rates (USD) — ranges as of 2026-Q1
@@ -146,20 +145,20 @@ def print_estimate(
         print()
         print(f"  Recommendation: Use a single A100-80GB pod. At ~{wall_hours:.0f}h wall time,")
         print(f"  total cost is ${cost_lo:.0f}—${cost_hi:.0f}. An H100 is faster but")
-        print(f"  the workload is memory-bound, so the speedup is marginal.")
+        print("  the workload is memory-bound, so the speedup is marginal.")
     elif platform == "fasrc":
         sus = total_gpu_hours * FASRC_GPU_SU_RATE
         print(f"  FASRC GPU SU rate: ~{FASRC_GPU_SU_RATE:.0f} SUs per GPU-hour")
         print(f"  Estimated SU cost: ~{sus:.0f} SUs")
-        print(f"  (Covered by PI allocation — no dollar cost.)")
+        print("  (Covered by PI allocation — no dollar cost.)")
         print()
-        print(f"  Note: Kempner gpu_requeue has 7hr max wall time.")
+        print("  Note: Kempner gpu_requeue has 7hr max wall time.")
         if total_wall_min > 7 * 60:
             n_jobs = int(total_wall_min / (7 * 60)) + 1
             print(f"  Pipeline exceeds 7hr — will need ~{n_jobs} preemptible job submissions.")
-            print(f"  Use deploy/checkpoint_extract.py for automatic resume.")
+            print("  Use deploy/checkpoint_extract.py for automatic resume.")
         else:
-            print(f"  Pipeline fits within a single 7hr job.")
+            print("  Pipeline fits within a single 7hr job.")
 
     print()
     print("=" * 80)

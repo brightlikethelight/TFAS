@@ -130,7 +130,7 @@ def s1s2_specificity_test(
         if matched_pair_id.dtype == object:
             ids = np.asarray(
                 [
-                    s.decode("utf-8") if isinstance(s, (bytes, bytearray)) else str(s)
+                    s.decode("utf-8") if isinstance(s, bytes | bytearray) else str(s)
                     for s in matched_pair_id
                 ]
             )
@@ -146,7 +146,7 @@ def s1s2_specificity_test(
 
         kept: list[int] = []
         kept_conf: list[bool] = []
-        for pid, members in by_pair.items():
+        for _pid, members in by_pair.items():
             if "S1" in members and "S2" in members:
                 kept.extend([members["S1"], members["S2"]])
                 kept_conf.extend([True, False])

@@ -35,9 +35,17 @@ from s1s2.utils.logging import get_logger
 from s1s2.utils.seed import set_global_seed
 from s1s2.utils.wandb_utils import (
     finish as wandb_finish,
+)
+from s1s2.utils.wandb_utils import (
     init_run as wandb_init,
+)
+from s1s2.utils.wandb_utils import (
     log_artifact as wandb_log_artifact,
+)
+from s1s2.utils.wandb_utils import (
     log_metrics as wandb_log_metrics,
+)
+from s1s2.utils.wandb_utils import (
     log_summary as wandb_log_summary,
 )
 
@@ -88,7 +96,7 @@ def iter_layers_for_model(cfg: DictConfig, model_key: str) -> Iterable[int]:
     if layers_cfg == "all" or layers_cfg is None:
         n_layers = int(cfg.models[model_key].n_layers)
         return range(n_layers)
-    if isinstance(layers_cfg, (list, tuple)):
+    if isinstance(layers_cfg, list | tuple):
         return [int(x) for x in layers_cfg]
     if isinstance(layers_cfg, dict) or hasattr(layers_cfg, "start"):
         start = int(layers_cfg.get("start", 0))
@@ -119,7 +127,7 @@ def run_probes(cfg: DictConfig) -> list[Path]:
     wandb_enabled = bool(wandb_cfg.get("enabled", False))
     wandb_mode = str(wandb_cfg.get("mode", "disabled")) if wandb_enabled else "disabled"
     cfg_dict = OmegaConf.to_container(cfg, resolve=True, throw_on_missing=False)
-    wandb_run = wandb_init(
+    wandb_init(
         project=str(wandb_cfg.get("project", "s1s2")),
         group="probes",
         name=f"probes_{'-'.join(str(m) for m in cfg.models_to_probe)}",
@@ -202,7 +210,7 @@ def run_probes(cfg: DictConfig) -> list[Path]:
                         step_counter += 1
 
     # BH-FDR across layers per (model, target, position).
-    for (model_key, target, position), res_list in grouped.items():
+    for (_model_key, _target, _position), res_list in grouped.items():
         res_list = apply_bh_across_layers(res_list, probe_name="logistic")
         for r in res_list:
             path = save_layer_result(r, results_dir)

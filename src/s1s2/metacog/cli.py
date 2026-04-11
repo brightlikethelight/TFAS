@@ -54,7 +54,7 @@ def metacog_config_from_hydra(cfg: DictConfig) -> MetacogConfig:
     layers_cfg = cfg.get("layers", None)
     if layers_cfg in (None, "all", "auto"):
         layers_t = None
-    elif isinstance(layers_cfg, (list, tuple, ListConfig)):
+    elif isinstance(layers_cfg, list | tuple | ListConfig):
         layers_t = tuple(int(x) for x in layers_cfg)
     else:
         layers_t = (int(layers_cfg),)
@@ -101,7 +101,7 @@ def iter_layers_for_model(cfg: DictConfig, model_key: str, n_layers: int) -> lis
         return [n_layers // 2]
     if layers_cfg == "all":
         return list(range(n_layers))
-    if isinstance(layers_cfg, (list, tuple, ListConfig)):
+    if isinstance(layers_cfg, list | tuple | ListConfig):
         return [int(x) for x in layers_cfg]
     return [int(layers_cfg)]
 

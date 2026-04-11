@@ -153,11 +153,11 @@ def layer_matched_cka(
         )
     fn = linear_cka_fast if use_fast else linear_cka
     out = np.empty(len(acts_a), dtype=np.float64)
-    for l, (A, B) in enumerate(zip(acts_a, acts_b, strict=True)):
+    for layer_idx, (A, B) in enumerate(zip(acts_a, acts_b, strict=True)):
         if mask is not None:
             A = A[mask]
             B = B[mask]
-        out[l] = fn(A, B)
+        out[layer_idx] = fn(A, B)
     return out
 
 
@@ -179,7 +179,7 @@ def within_model_cka(
     """
     fn = linear_cka_fast if use_fast else linear_cka
     out = np.empty(len(acts), dtype=np.float64)
-    for l, arr in enumerate(acts):
+    for layer_idx, arr in enumerate(acts):
         A = arr[mask_a]
         B = arr[mask_b]
         if A.shape[0] != B.shape[0]:
@@ -190,5 +190,5 @@ def within_model_cka(
             m = min(A.shape[0], B.shape[0])
             A = A[:m]
             B = B[:m]
-        out[l] = fn(A, B)
+        out[layer_idx] = fn(A, B)
     return out

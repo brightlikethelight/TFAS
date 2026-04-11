@@ -49,8 +49,8 @@ logger = get_logger("s1s2.causal")
 
 @beartype
 def normalize_direction(
-    direction: Float[Tensor, "hidden"] | np.ndarray,  # noqa: F821, UP037
-) -> Float[Tensor, "hidden"]:  # noqa: F821, UP037
+    direction: Float[Tensor, "hidden"] | np.ndarray,
+) -> Float[Tensor, "hidden"]:
     """Return a unit-norm torch tensor copy of ``direction``.
 
     Accepts numpy arrays or torch tensors. The output is always ``float32``
@@ -70,7 +70,7 @@ def normalize_direction(
 @beartype
 def random_unit_direction(
     hidden_dim: int, seed: int
-) -> Float[Tensor, "hidden"]:  # noqa: F821, UP037
+) -> Float[Tensor, "hidden"]:
     """Sample a random unit direction for the random-control baseline.
 
     Uses a dedicated torch :class:`torch.Generator` so the random state
@@ -106,7 +106,7 @@ class SteeringHook:
         self,
         model: torch.nn.Module,
         layer: int,
-        direction: Float[Tensor, "hidden"] | np.ndarray,  # noqa: F821, UP037
+        direction: Float[Tensor, "hidden"] | np.ndarray,
         alpha: float,
         *,
         position_filter: Callable[[Tensor], Tensor] | None = None,
@@ -218,7 +218,7 @@ class StackedSteeringHook:
         self,
         model: torch.nn.Module,
         layers: list[int],
-        directions: list[Float[Tensor, "hidden"] | np.ndarray],  # noqa: F821, UP037
+        directions: list[Float[Tensor, "hidden"] | np.ndarray],
         alpha: float,
     ) -> None:
         if len(layers) != len(directions):

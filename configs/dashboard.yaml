@@ -1,0 +1,17 @@
+# Dashboard configuration
+# Usage: python scripts/run_dashboard.py --config configs/dashboard.yaml
+
+# Path to the results/ directory containing workstream outputs.
+# Relative paths are resolved from the repo root.
+results_dir: results
+
+# Path to the HDF5 activation cache. Reserved for future direct-from-HDF5
+# tabs (e.g., raw activation explorer). Not required for the current tabs.
+activations_path: null
+
+# If true, generate synthetic data for all tabs (demo mode).
+# Override with --synthetic flag.
+synthetic: false
+
+# Port to serve the dashboard on.
+port: 7860

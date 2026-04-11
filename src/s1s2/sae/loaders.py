@@ -241,7 +241,7 @@ class MockSAE:
     ) -> Float[Tensor, "batch n_features"]:
         z = x.float() @ self.W_enc + self.b_enc
         if self.sparsity < 1.0:
-            k = max(1, int(round(self.sparsity * self.n_features)))
+            k = max(1, round(self.sparsity * self.n_features))
             # Keep top-k absolute magnitudes, zero the rest.
             topk = torch.topk(z.abs(), k=k, dim=-1).indices
             mask = torch.zeros_like(z)

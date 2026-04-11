@@ -140,11 +140,11 @@ class PerFeatureResults:
         for rec in records:
             clean_rec = {}
             for k, v in rec.items():
-                if isinstance(v, (np.integer,)):
+                if isinstance(v, np.integer):
                     clean_rec[k] = int(v)
-                elif isinstance(v, (np.floating,)):
+                elif isinstance(v, np.floating):
                     clean_rec[k] = float(v)
-                elif isinstance(v, (np.bool_,)):
+                elif isinstance(v, np.bool_):
                     clean_rec[k] = bool(v)
                 else:
                     clean_rec[k] = v
@@ -382,7 +382,7 @@ class DifficultyDetectorAnalysis:
         thinking_texts = list(generations.get("thinking_text", []))
         # decode bytes to str if needed
         thinking_texts = [
-            t.decode("utf-8") if isinstance(t, (bytes, bytearray)) else str(t)
+            t.decode("utf-8") if isinstance(t, bytes | bytearray) else str(t)
             for t in thinking_texts
         ]
         any_thinking = any(len(t) > 0 for t in thinking_texts)
@@ -447,10 +447,7 @@ class DifficultyDetectorAnalysis:
         the global max, etc. This implements the "best layer wins" rule
         which matches the project's pre-registered analysis plan.
         """
-        if isinstance(per_layer, PerFeatureResults):
-            layers = [per_layer]
-        else:
-            layers = list(per_layer)
+        layers = [per_layer] if isinstance(per_layer, PerFeatureResults) else list(per_layer)
 
         if not layers:
             return (

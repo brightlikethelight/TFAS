@@ -29,11 +29,11 @@ from s1s2.utils.types import ALL_CATEGORIES, TaskCategory
 # towards these targets). These numbers come from the project brief.
 TARGET_COUNTS: dict[TaskCategory, dict[str, int]] = {
     "crt": {"conflict": 30, "control": 30},
-    "base_rate": {"conflict": 20, "control": 20},
+    "base_rate": {"conflict": 25, "control": 25},
     "syllogism": {"conflict": 25, "control": 25},
-    "anchoring": {"conflict": 15, "control": 15},
-    "framing": {"conflict": 15, "control": 15},
-    "conjunction": {"conflict": 12, "control": 12},
+    "anchoring": {"conflict": 20, "control": 20},
+    "framing": {"conflict": 20, "control": 20},
+    "conjunction": {"conflict": 20, "control": 20},
     "arithmetic": {"conflict": 25, "control": 25},
 }
 

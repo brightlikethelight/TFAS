@@ -106,7 +106,7 @@ def check_schema(items: list[dict[str, Any]]) -> list[Issue]:
                                 f"Invalid difficulty: {it.get('difficulty')}"))
         if not isinstance(it.get("paraphrases"), list):
             issues.append(Issue(iid, "invalid_paraphrases", "MEDIUM",
-                                f"paraphrases is not a list"))
+                                "paraphrases is not a list"))
         if not isinstance(it.get("conflict"), bool):
             issues.append(Issue(iid, "invalid_conflict", "CRITICAL",
                                 f"conflict is not bool: {it.get('conflict')}"))
@@ -617,7 +617,7 @@ def check_syllogism_structure(items: list[dict[str, Any]]) -> list[Issue]:
             # CRITICAL: conclusion identical to a premise means the
             # argument is trivially valid regardless of form.
             # If marked "invalid" this is a wrong answer.
-            if conc == p2 or conc == p1:
+            if conc in (p2, p1):
                 which_prem = "P2" if conc == p2 else "P1"
                 if correct == "invalid":
                     issues.append(Issue(
@@ -950,7 +950,7 @@ def main() -> None:
         print(f"    {c}: {n}")
     print(f"  Conflict items: {sum(1 for it in items if it['conflict'])}")
     print(f"  Control items: {sum(1 for it in items if not it['conflict'])}")
-    print(f"  Matched pairs: {len(set(it['matched_pair_id'] for it in items))}")
+    print(f"  Matched pairs: {len({it['matched_pair_id'] for it in items})}")
 
     # Exit code
     n_critical = by_severity.get("CRITICAL", 0)

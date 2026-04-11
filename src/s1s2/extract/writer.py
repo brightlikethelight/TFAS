@@ -513,10 +513,7 @@ def validate_file(path: str | Path) -> list[str]:
             for name in required:
                 if name not in f["/problems"]:
                     errors.append(f"/problems missing dataset {name}")
-            if "id" in f["/problems"]:
-                n_problems = f["/problems/id"].shape[0]
-            else:
-                n_problems = None
+            n_problems = f["/problems/id"].shape[0] if "id" in f["/problems"] else None
         # /models/<key>/
         if "/models" not in f:
             errors.append("missing /models group")

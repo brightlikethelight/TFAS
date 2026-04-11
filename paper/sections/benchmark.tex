@@ -73,6 +73,67 @@ original bat-and-ball) as contamination baselines only---they are excluded from
 all primary analyses.  We test memorization by prompting models to complete the
 original CRT verbatim and comparing performance on classic versus novel variants.
 
+\subsection{Example Items}
+
+Table~\ref{tab:examples} illustrates the conflict/no-conflict matched-pair
+structure for three representative categories.
+
+\begin{table}[t]
+\centering
+\caption{Example conflict/no-conflict item pairs from three benchmark
+  categories.  Each pair shares the same correct answer; they differ only in
+  whether a heuristic lure is present.}
+\label{tab:examples}
+\vspace{4pt}
+\small
+\begin{tabular}{p{1.2cm}p{3.0cm}p{3.0cm}cc}
+\toprule
+\textbf{Category} & \textbf{Conflict item} & \textbf{No-conflict control}
+  & \textbf{Lure} & \textbf{Correct} \\
+\midrule
+CRT &
+  A notebook and a pen cost \$2.20 together.  The notebook costs \$2.00
+  more than the pen.  How much does the pen cost? &
+  A notebook and a pen cost \$2.10 together.  The notebook costs \$2.00.
+  How much does the pen cost? &
+  \$0.20 & \$0.10 \\[6pt]
+Base rate &
+  In a group of 1000 people, 5 are engineers and 995 are lawyers.  Tom
+  likes puzzles and circuits.  Is Tom more likely an engineer or a
+  lawyer? &
+  In a group of 1000 people, 500 are engineers and 500 are lawyers.  Tom
+  likes puzzles and circuits.  Is Tom more likely an engineer or a
+  lawyer? &
+  Engineer & Lawyer \\[6pt]
+Syllogism &
+  All flowers need water.  Roses need water.  Therefore roses are
+  flowers.  Is this valid? &
+  All mammals are warm-blooded.  Dogs are mammals.  Therefore dogs are
+  warm-blooded.  Is this valid? &
+  Valid & Invalid \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Scoring Detail}
+
+We employ three scoring tiers, applied automatically via regex patterns
+stored alongside each benchmark item:
+\begin{enumerate}[leftmargin=*,itemsep=1pt]
+  \item \textbf{Binary}: 1 if the model's response matches the
+  \texttt{correct\_answer} regex, 0 otherwise.
+  \item \textbf{Categorical}: one of \{correct, S1-lure, other-wrong,
+  refusal\}.  The S1-lure label is assigned when the response matches the
+  \texttt{lure\_answer} regex (conflict items only).  Refusals are detected
+  via keyword matching.  This four-way classification is the primary probing
+  target.
+  \item \textbf{Continuous} (numerical categories only):
+  $|r - c| / |l - c|$, where $r$ is the extracted numerical response, $c$
+  is the correct answer, and $l$ is the lure answer.  Values near 0
+  indicate correctness; values near 1 indicate the lure response; values
+  $> 1$ indicate errors worse than the lure.
+\end{enumerate}
+
 \subsection{Behavioral Validation}
 
 \textbf{[Placeholder: behavioral results on all four models.]}  We report the

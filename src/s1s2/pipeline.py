@@ -13,7 +13,7 @@ import subprocess
 import sys
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -237,7 +237,7 @@ def write_checkpoint(
     ckpt = Checkpoint(
         stage=stage,
         status=status,
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=datetime.now(UTC).isoformat(),
         duration_seconds=round(duration, 2),
         outputs=outputs,
         config_hash=config_hash,
@@ -431,7 +431,7 @@ class Pipeline:
 
     def _expected_outputs(self, stage: str) -> list[str]:
         """List of expected output paths for a stage (for the checkpoint)."""
-        if stage == "validate":
+        if stage == "validate":  # noqa: SIM116 — dict lookup can't express the else-default cleanly
             return ["data/benchmark/benchmark.jsonl"]
         elif stage == "extract":
             return [self.config.activations_path]

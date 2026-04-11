@@ -62,42 +62,37 @@ from s1s2.metacog.trajectory import (
 )
 
 __all__ = [
-    # Orchestrator
+    "DEFAULT_MARKERS",
     "DifficultyDetectorAnalysis",
-    "MetacogConfig",
-    "PerFeatureResults",
-    # Surprise correlation
-    "SurpriseAggregation",
-    "SurpriseCorrelationResult",
-    "aggregate_surprise",
-    "merge_correlation_results",
-    "surprise_feature_correlation",
-    # Difficulty / specificity / metacog
-    "SpecificityResult",
-    "auc_from_mannwhitney",
-    "s1s2_specificity_test",
-    "s1s2_specificity_batch",
-    "confidently_wrong_test",
-    "confidently_wrong_batch",
-    "difficulty_sensitive_features",
-    # Gates
     "DifficultyDetectorResults",
     "GateConfig",
     "GateDecision",
     "GateResult",
+    "MetacogConfig",
+    "PerFeatureResults",
+    "SelfCorrectionEvent",
+    "SpecificityResult",
+    "SurpriseAggregation",
+    "SurpriseCorrelationResult",
+    "TraceParseResult",
+    "aggregate_surprise",
+    "auc_from_mannwhitney",
+    "confidently_wrong_batch",
+    "confidently_wrong_test",
+    "difficulty_sensitive_features",
+    "difficulty_trajectory_means",
     "evaluate_gates",
     "gate_0_infrastructure",
     "gate_1_signal_existence",
     "gate_2_specificity",
     "gate_3_causal",
     "gates_to_dict",
-    # Trajectory
-    "DEFAULT_MARKERS",
-    "SelfCorrectionEvent",
-    "TraceParseResult",
+    "merge_correlation_results",
     "parse_self_correction",
     "parse_trace_corpus",
-    "difficulty_trajectory_means",
+    "s1s2_specificity_batch",
+    "s1s2_specificity_test",
+    "surprise_feature_correlation",
 ]
 
 

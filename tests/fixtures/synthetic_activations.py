@@ -169,11 +169,11 @@ def build_synthetic_hdf5(
     )
     matches_lure = conflict & ~correct
     predicted_answer = [
-        "A" if c else ("B" if l else "C") for c, l in zip(correct, matches_lure, strict=False)
+        "A" if c else ("B" if ml else "C") for c, ml in zip(correct, matches_lure, strict=False)
     ]
     response_category = [
-        "correct" if c else ("lure" if l else "other_wrong")
-        for c, l in zip(correct, matches_lure, strict=False)
+        "correct" if c else ("lure" if ml else "other_wrong")
+        for c, ml in zip(correct, matches_lure, strict=False)
     ]
 
     # ---- token surprises (cheap synthetic) -------------------------------

@@ -47,6 +47,9 @@ sae = [
     "transformer-lens>=2.5",
     "nnsight>=0.3",
 ]
+dashboard = [
+    "gradio>=4.0",
+]
 dev = [
     "pytest>=8.3",
     "pytest-cov>=5.0",
@@ -86,6 +89,7 @@ ignore = [
     "E501",  # line too long (handled by black)
     "B008",  # do not perform function calls in argument defaults (Hydra)
     "F821",  # jaxtyping shape strings (e.g. Float[ndarray, "n d"]) look like undefined names to ruff
+    "F722",  # jaxtyping multi-dim shape strings (e.g. Float[ndarray, "n d"]) trigger forward-annotation-syntax-error
     "UP037", # ruff UP037 strips quotes from jaxtyping annotations, breaking beartype at runtime
 ]
 

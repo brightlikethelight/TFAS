@@ -51,9 +51,9 @@ logger = get_logger("s1s2.causal")
 
 @beartype
 def ablate_direction(
-    hidden: Float[Tensor, "... hidden"],  # noqa: F722
-    direction: Float[Tensor, "hidden"],  # noqa: F821, UP037
-) -> Float[Tensor, "... hidden"]:  # noqa: F722
+    hidden: Float[Tensor, "... hidden"],
+    direction: Float[Tensor, "hidden"],
+) -> Float[Tensor, "... hidden"]:
     """Project ``direction`` out of ``hidden``.
 
     Works on any tensor whose last dim is the residual-stream hidden
@@ -93,7 +93,7 @@ class AblationHook:
         self,
         model: torch.nn.Module,
         layer: int,
-        direction: Float[Tensor, "hidden"] | np.ndarray,  # noqa: F821, UP037
+        direction: Float[Tensor, "hidden"] | np.ndarray,
     ) -> None:
         self.model = model
         self.layer = int(layer)

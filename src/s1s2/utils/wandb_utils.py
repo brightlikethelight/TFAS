@@ -11,14 +11,13 @@ The import-time guard uses a module-level ``_wandb`` reference so the
 
 from __future__ import annotations
 
+import contextlib
 from pathlib import Path
 from typing import Any
 
 _wandb: Any = None
-try:
+with contextlib.suppress(ImportError):
     import wandb as _wandb
-except ImportError:
-    pass
 
 
 def is_available() -> bool:

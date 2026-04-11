@@ -20,7 +20,6 @@ from s1s2.pipeline import (
     write_checkpoint,
 )
 
-
 # ── Fixtures ────────────────────────────────────────────────────────────────
 
 

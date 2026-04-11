@@ -1,16 +1,14 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-11
-**Active focus**: Code complete (318 tests green). Building phase-2 infrastructure: GPU deployment, paper, notebooks, W&B, pre-registration. **Waiting on FASRC access (Kempner deadline Apr 14).**
+**Last updated**: 2026-04-11 (session 3)
+**Active focus**: Phase 3 — hardening, E2E validation, dashboard, benchmark expansion, onboarding. **Waiting on FASRC access (Kempner deadline Apr 14 — 3 days).**
 
 ## TL;DR
 
-- 104 Python files, ~33K lines, **318/318 unit tests passing**, smoke test green (3s)
-- Git initialized: commit `954e2d0`
-- Benchmark: 284 items, 142 matched conflict/control pairs, 558 paraphrases, 7 categories
-- All 5 analysis workstreams + metacog + benchmark + causal complete with tests
-- Phase 2 in progress: GPU deploy scripts, paper (LaTeX), notebooks, W&B, pre-registration, HUSAI presentation
-- Next bottleneck: FASRC access (Kempner deadline 2026-04-14)
+- **365/365 tests passing**, smoke green, 4 git commits on main (clean)
+- Benchmark: 284 items, 142 pairs, 11 CRITICAL syllogism bugs FIXED in commit `2b412d6`
+- Phase 2 complete: deploy/, paper/, notebooks/, W&B, orchestrator, pre-reg, presentation
+- Phase 3 in progress: E2E pipeline test with real tiny model, lint sweep, benchmark expansion (→330 items), results aggregator, dashboard, onboarding guide, paper expansion
 
 ## What's done
 

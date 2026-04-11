@@ -289,7 +289,7 @@ def matched_pair_subset(
     # Normalize IDs to hashable byte-strings / Python strings.
     if matched_pair_id.dtype == object:
         ids = np.asarray(
-            [s.decode("utf-8") if isinstance(s, (bytes, bytearray)) else str(s)
+            [s.decode("utf-8") if isinstance(s, bytes | bytearray) else str(s)
              for s in matched_pair_id]
         )
     else:
@@ -305,7 +305,7 @@ def matched_pair_subset(
 
     keep_rows: list[int] = []
     keep_is_conflict: list[bool] = []
-    for pid, members in by_pair.items():
+    for _pid, members in by_pair.items():
         if "S1" not in members or "S2" not in members:
             continue
         s1_row = members["S1"]

@@ -375,8 +375,6 @@ class SingleModelExtractor:
         model = self.model
         n_layers = _infer_n_layers(model) or self.spec.n_layers
         hidden_dim = getattr(model.config, "hidden_size", self.spec.hidden_dim)
-        n_positions = len(ALL_POSITIONS)
-
         # ----- Build prompt -----
         prompt_text = getattr(item, "prompt", None) or getattr(item, "prompt_text", "")
         system_prompt = getattr(item, "system_prompt", None)
@@ -406,7 +404,6 @@ class SingleModelExtractor:
 
         # full sequence length (prompt + generated)
         full_seq = gen_out.sequences[0]   # (full_len,)
-        full_len = int(full_seq.shape[0])
         gen_token_ids = full_seq[prompt_len:].tolist()
         n_gen = len(gen_token_ids)
 
@@ -554,7 +551,7 @@ def _eos_id(tokenizer, model) -> int:
     eos = getattr(tokenizer, "eos_token_id", None)
     if eos is None:
         eos = getattr(model.config, "eos_token_id", None)
-    if isinstance(eos, (list, tuple)):
+    if isinstance(eos, list | tuple):
         return int(eos[0]) if eos else -1
     return int(eos) if eos is not None else -1
 

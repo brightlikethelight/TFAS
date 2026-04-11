@@ -49,35 +49,29 @@ from s1s2.probes.probes import (
 from s1s2.probes.targets import ALL_TARGETS, TargetData, build_target
 
 __all__ = [
-    # Runner / config
-    "ProbeRunner",
-    "RunnerConfig",
-    "LayerResult",
-    "ProbeResult",
+    "ALL_TARGETS",
+    "CCSProbe",
     "FoldResult",
-    # Probes
-    "Probe",
-    "MassMeanProbe",
+    "LayerResult",
     "LogisticRegressionProbe",
     "MLPProbe",
-    "CCSProbe",
-    "get_probe_class",
-    # Targets
+    "MassMeanProbe",
+    "Probe",
+    "ProbeResult",
+    "ProbeRunner",
+    "RunnerConfig",
     "TargetData",
-    "ALL_TARGETS",
-    "build_target",
-    # Controls
-    "run_control_task",
-    "shuffled_labels",
-    # Utilities
-    "make_stratify_key",
-    "loco_split_iter",
     "apply_bh_across_layers",
-    "load_layer_activations",
-    "save_layer_result",
-    "layer_result_to_dict",
+    "build_target",
+    "get_probe_class",
     "git_sha",
-    # High-level driver
+    "layer_result_to_dict",
+    "load_layer_activations",
+    "loco_split_iter",
+    "make_stratify_key",
+    "run_control_task",
     "run_probes",
     "runner_config_from_hydra",
+    "save_layer_result",
+    "shuffled_labels",
 ]

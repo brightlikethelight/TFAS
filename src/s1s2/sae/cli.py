@@ -34,9 +34,17 @@ from s1s2.utils.logging import get_logger
 from s1s2.utils.seed import set_global_seed
 from s1s2.utils.wandb_utils import (
     finish as wandb_finish,
+)
+from s1s2.utils.wandb_utils import (
     init_run as wandb_init,
+)
+from s1s2.utils.wandb_utils import (
     log_artifact as wandb_log_artifact,
+)
+from s1s2.utils.wandb_utils import (
     log_metrics as wandb_log_metrics,
+)
+from s1s2.utils.wandb_utils import (
     log_summary as wandb_log_summary,
 )
 
@@ -165,11 +173,10 @@ def run_sae_from_hydra(cfg: DictConfig) -> dict[tuple[str, int], dict[str, Any]]
     logger.info("SAE runner config:\n%s", OmegaConf.to_yaml(asdict(runner_cfg)))
 
     # --- Optional W&B setup -------------------------------------------------
-    wandb_cfg = cfg.get("wandb", {}) if isinstance(cfg, DictConfig) else {}
     wandb_enabled = bool(_cfg_get(cfg, "wandb.enabled", False))
     wandb_mode = str(_cfg_get(cfg, "wandb.mode", "disabled")) if wandb_enabled else "disabled"
     cfg_dict = OmegaConf.to_container(cfg, resolve=True, throw_on_missing=False)
-    wandb_run = wandb_init(
+    wandb_init(
         project=str(_cfg_get(cfg, "wandb.project", "s1s2")),
         group="sae",
         name=f"sae_{'-'.join(runner_cfg.models)}",
@@ -182,10 +189,9 @@ def run_sae_from_hydra(cfg: DictConfig) -> dict[tuple[str, int], dict[str, Any]]
     results = runner.run()
 
     # --- W&B: per-cell metrics + summary ------------------------------------
-    step = 0
     total_sig = 0
     total_after_fals = 0
-    for (model_key, layer), cell in results.items():
+    for step, ((model_key, layer), cell) in enumerate(results.items()):
         n_sig = cell.get("n_features_significant", 0)
         n_after = cell.get("n_features_after_falsification", 0)
         total_sig += n_sig
@@ -201,7 +207,6 @@ def run_sae_from_hydra(cfg: DictConfig) -> dict[tuple[str, int], dict[str, Any]]
             },
             step=step,
         )
-        step += 1
 
     wandb_log_summary(
         {

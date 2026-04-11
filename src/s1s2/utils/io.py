@@ -10,6 +10,7 @@ The :mod:`s1s2.extract` module owns writing. Other workstreams read only.
 
 from __future__ import annotations
 
+import contextlib
 import json
 from collections.abc import Iterator
 from contextlib import contextmanager
@@ -181,10 +182,8 @@ def run_metadata(f: h5py.File) -> dict[str, object]:
             v = v.decode("utf-8")
         out[k] = v
     if "config" in out and isinstance(out["config"], str):
-        try:
+        with contextlib.suppress(json.JSONDecodeError):
             out["config"] = json.loads(out["config"])
-        except json.JSONDecodeError:
-            pass
     return out
 
 
@@ -204,10 +203,7 @@ def _as_fixed_bytes(strings: list[str] | np.ndarray, max_len: int) -> np.ndarray
     """
     out = np.empty(len(strings), dtype=f"S{max_len}")
     for i, s in enumerate(strings):
-        if isinstance(s, bytes):
-            b = s
-        else:
-            b = s.encode("utf-8", errors="replace")
+        b = s if isinstance(s, bytes) else s.encode("utf-8", errors="replace")
         if len(b) > max_len:
             # Trim back to the nearest UTF-8 boundary
             b = b[:max_len]

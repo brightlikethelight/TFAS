@@ -491,12 +491,10 @@ class TestIORoundTrip:
 
     def test_invalid_position_raises(self, tmp_path: Path):
         path = self._build(tmp_path)
-        with ioh.open_activations(path) as f:
-            with pytest.raises(KeyError):
-                ioh.get_residual(f, "rt_model", layer=0, position="Tswitch")
+        with ioh.open_activations(path) as f, pytest.raises(KeyError):
+            ioh.get_residual(f, "rt_model", layer=0, position="Tswitch")
 
     def test_invalid_metric_raises(self, tmp_path: Path):
         path = self._build(tmp_path)
-        with ioh.open_activations(path) as f:
-            with pytest.raises(ValueError):
-                ioh.get_attention_metric(f, "rt_model", "bogus")
+        with ioh.open_activations(path) as f, pytest.raises(ValueError):
+            ioh.get_attention_metric(f, "rt_model", "bogus")
