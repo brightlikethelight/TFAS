@@ -625,6 +625,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All animals that can hold their breath underwater for at least one hour are mammals.",
         "control_minor": "All hippos can hold their breath underwater for at least one hour.",
+        "control_conclusion": "All mammals are hippos.",
         "difficulty": 3,
     },
     {
@@ -636,6 +637,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All things that rust away to nothing within a single year are gold objects.",
         "control_minor": "All wedding rings in the museum vault rust away to nothing within a single year.",
+        "control_conclusion": "All gold objects are wedding rings in the museum vault.",
         "difficulty": 4,
     },
     {
@@ -647,6 +649,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All trees that shed every needle each winter are conifers.",
         "control_minor": "All Scots pines shed every needle each winter.",
+        "control_conclusion": "All conifers are Scots pines.",
         "difficulty": 2,
     },
     {
@@ -658,6 +661,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All strict vegetarians who never eat meat are eagles.",
         "control_minor": "All bald eagles are strict vegetarians who never eat meat.",
+        "control_conclusion": "All eagles are bald eagles.",
         "difficulty": 2,
     },
     {
@@ -669,6 +673,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All locations that remain below freezing year-round are deserts.",
         "control_minor": "All locations in the central Sahara remain below freezing year-round.",
+        "control_conclusion": "All deserts are locations in the central Sahara.",
         "difficulty": 3,
     },
     {
@@ -680,6 +685,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All aquatic animals that live their entire lives underwater are housecats.",
         "control_minor": "All Siamese cats are aquatic animals that live their entire lives underwater.",
+        "control_conclusion": "All housecats are Siamese cats.",
         "difficulty": 2,
     },
     {
@@ -691,6 +697,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All objects denser than lead are glass spheres.",
         "control_minor": "All marbles in the toy shop are denser than lead.",
+        "control_conclusion": "All glass spheres are marbles in the toy shop.",
         "difficulty": 2,
     },
     {
@@ -702,6 +709,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All birds that hunt only during full daylight are owls.",
         "control_minor": "All barn owls hunt only during full daylight.",
+        "control_conclusion": "All owls are barn owls.",
         "difficulty": 2,
     },
     {
@@ -713,6 +721,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All things highly explosive when ignited are foods that contain water.",
         "control_minor": "All cucumbers are highly explosive when ignited.",
+        "control_conclusion": "All foods that contain water are cucumbers.",
         "difficulty": 3,
     },
     {
@@ -724,6 +733,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All perfect cubes with sharp corners are planets.",
         "control_minor": "All inner-system planets are perfect cubes with sharp corners.",
+        "control_conclusion": "All planets are inner-system planets.",
         "difficulty": 2,
     },
     {
@@ -735,6 +745,7 @@ _SYLLOGISM_SPECS: list[dict[str, Any]] = [
         "is_believable": False,
         "control_major": "All immortal beings who have lived for thousands of years are philosophers.",
         "control_minor": "All ancient Greek philosophers are immortal beings who have lived for thousands of years.",
+        "control_conclusion": "All philosophers are ancient Greek philosophers.",
         "difficulty": 3,
     },
     # ---- (invalid, believable) conflict cells: AAA-2 (undistributed
