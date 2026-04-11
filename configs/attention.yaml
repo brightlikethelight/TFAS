@@ -1,0 +1,36 @@
+# Attention entropy workstream config.
+# Run: python scripts/run_attention.py [overrides]
+defaults:
+  - _self_
+
+activations_path: data/activations/main.h5
+output_dir: results/attention
+seed: 0
+
+# null = all models in the cache
+models: null
+
+# Token positions to analyse (must exist in /position_index/labels)
+positions:
+  - P0
+  - P2
+  - T50
+  - Tend
+
+# All five Fartale-style metrics. The multi-metric consensus head classifier
+# requires significance in >= multi_metric_consensus of these.
+metrics:
+  - entropy
+  - entropy_normalized
+  - gini
+  - max_attn
+  - focus_5
+
+# Statistical
+fdr_q: 0.05
+effect_size_threshold: 0.3   # |rank-biserial| floor for "specialized" head
+multi_metric_consensus: 3
+
+# Architectural caveats
+report_kv_group_aggregate: true     # Llama / Qwen GQA non-independence
+gemma_separate_window_layers: true  # Gemma-2 alternating sliding/global

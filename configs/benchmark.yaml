@@ -1,0 +1,35 @@
+# Hydra config for the cognitive-bias benchmark workstream.
+#
+# Usage:
+#   python scripts/generate_benchmark.py                  # build benchmark.jsonl
+#   python -m s1s2.benchmark.cli validate                 # validate on disk
+#   python -m s1s2.benchmark.cli stats                    # print per-category stats
+#
+# The benchmark file is the foundation of every downstream workstream, so
+# this config lives at the repo root (not under configs/workstreams/...) so
+# it is discoverable by automation.
+
+defaults:
+  - _self_
+
+path: data/benchmark/benchmark.jsonl
+output_dir: data/benchmark
+
+generate:
+  seed: 0
+  n_crt_pairs: 30
+  n_base_rate_pairs: 20
+  n_syllogism_pairs: 25
+  n_anchoring_pairs: 15
+  n_framing_pairs: 15
+  n_conjunction_pairs: 12
+  n_arithmetic_pairs: 25
+  expand_paraphrases: false    # when true, write paraphrase siblings as
+                               # separate JSONL records (one per paraphrase).
+                               # For the on-disk benchmark we keep paraphrases
+                               # nested in the primary record.
+
+validate:
+  strict: true
+  # When strict=true, CLI `validate` exits non-zero on any error (default).
+  # When strict=false, it prints the report but always exits zero.

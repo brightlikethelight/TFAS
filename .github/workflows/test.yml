@@ -1,0 +1,59 @@
+# GitHub Actions: lint + fast test suite for the s1s2 project.
+#
+# We deliberately keep CI minimal:
+#   - lint  : `make lint` (ruff)
+#   - test  : `make test-fast` (skip @pytest.mark.slow, no GPU, no internet)
+#
+# Heavy or GPU-bound tests run elsewhere (RunPod / FASRC). The CI gate is
+# meant to catch import errors, type breakages, and unit-test regressions
+# in <5 minutes.
+
+name: tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch: {}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint-and-test:
+    name: lint + test (Python ${{ matrix.python-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Upgrade pip
+        run: |
+          python -m pip install --upgrade pip setuptools wheel
+
+      - name: Install package + dev extras
+        run: |
+          pip install -e ".[dev]"
+
+      - name: Lint (ruff)
+        run: |
+          make lint
+
+      - name: Test (fast)
+        env:
+          KMP_DUPLICATE_LIB_OK: "TRUE"
+        run: |
+          make test-fast

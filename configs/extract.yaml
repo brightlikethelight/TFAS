@@ -1,0 +1,67 @@
+# Hydra config for the extraction workstream.
+#
+# Usage:
+#   python scripts/extract_all.py run_name=smoke models_to_extract=[llama-3.1-8b-instruct]
+#
+# The extraction CLI reads `models.yaml` as a default to resolve model_key -> hf_id.
+
+defaults:
+  - models
+  - _self_
+
+run_name: main
+benchmark_path: data/benchmark/benchmark.jsonl
+output_dir: data/activations
+output_path: ${output_dir}/${run_name}.h5
+
+# Restrict which models to run this extraction pass on. Must be keys in models.yaml.
+models_to_extract:
+  - llama-3.1-8b-instruct
+  - r1-distill-llama-8b
+
+# Generation hyperparameters. Reasoning models override a subset.
+generation:
+  max_new_tokens_standard: 512
+  max_new_tokens_reasoning: 4096
+  temperature_standard: 0.0        # greedy
+  temperature_reasoning: 0.6       # DeepSeek R1 official recommendation
+  top_p_reasoning: 0.95
+  do_sample_reasoning: true
+  seed: 0
+
+extraction:
+  # Which layers to extract residual stream activations at. "all" dumps every block.
+  layers: all
+  # Which canonical positions to record. Do not reorder -- downstream code assumes the
+  # on-disk order equals this list. T-positions are ignored for non-reasoning models
+  # (row written is zeroed and marked valid=False).
+  positions: [P0, P2, T0, T25, T50, T75, Tend, Tswitch]
+  # On-disk storage dtype. h5py does NOT support bfloat16 natively, so float16 is the
+  # default. Downstream code reads the dtype from /models/<key>/metadata/dtype.
+  dtype: float16
+  # Max characters stored in the full_text field (HDF5 fixed-length string). If a
+  # generation exceeds this it is truncated on write but warning-logged.
+  max_full_text_chars: 8192
+  max_thinking_text_chars: 8192
+  max_answer_text_chars: 512
+  max_prompt_text_chars: 2048
+
+# Per-problem batching is fine: reasoning traces are variable length, and batch=1
+# avoids padding-induced garbage activations at the padded positions.
+batch_size: 1
+device: cuda               # "cuda" | "cpu" | "mps". CLI auto-falls-back to cpu if no cuda.
+torch_dtype: bfloat16      # compute dtype for the forward pass. bf16 on GPU, f32 on cpu.
+
+# Subset the benchmark for smoke tests. null = use the full benchmark.
+limit_problems: null
+
+logging:
+  use_wandb: false
+  wandb_project: s1s2
+  wandb_group: extraction
+  log_every: 10
+
+# Attention implementation. Must be "eager" to get attention weights for hook-based
+# entropy/gini computation. "sdpa" / "flash_attention_2" are faster but do not expose
+# attention weights through the HF API.
+attn_implementation: eager

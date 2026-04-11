@@ -1,0 +1,36 @@
+# Representational geometry workstream config.
+# Run: python scripts/run_geometry.py [overrides]
+defaults:
+  - _self_
+
+activations_path: data/activations/main.h5
+output_dir: results/geometry
+seed: 0
+
+# null = all
+models: null
+layers: null
+position: P0      # primary position for geometry analysis
+
+# Silhouette + permutation
+n_bootstrap: 1000
+n_permutations: 10000
+fdr_q: 0.05
+
+# Linear separability (PCA pre-reduction is the d>>N fix — see CLAUDE.md)
+pca_dim: 50
+n_separability_shuffles: 100
+
+# CKA: list of [model_a, model_b] pairs to compare layer-by-layer.
+# The matched-architecture pair is the headline analysis.
+cka_pairs:
+  - [llama-3.1-8b-instruct, r1-distill-llama-8b]
+
+# Intrinsic dimensionality
+intrinsic_dim_method: two_nn
+intrinsic_dim_fraction: 0.9
+
+# Projections
+umap_n_neighbors: 30
+umap_min_dist: 0.1
+random_proj_n_seeds: 100

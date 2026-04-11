@@ -1,0 +1,61 @@
+# Model registry — referenced by all workstreams.
+# Hydra: configs/models.yaml
+#
+# Usage:
+#   python scripts/run_probes.py model=llama-3.1-8b-instruct
+
+defaults:
+  - _self_
+
+models:
+  llama-3.1-8b-instruct:
+    hf_id: meta-llama/Llama-3.1-8B-Instruct
+    hdf5_key: meta-llama_Llama-3.1-8B-Instruct
+    family: llama
+    n_layers: 32
+    n_heads: 32
+    n_kv_heads: 8
+    hidden_dim: 4096
+    head_dim: 128
+    is_reasoning: false
+    sae_release: fnlp/Llama-3_1-8B-Base-LXR-32x
+    sae_caveat: "SAE trained on Base, not Instruct — verify reconstruction loss"
+
+  gemma-2-9b-it:
+    hf_id: google/gemma-2-9b-it
+    hdf5_key: google_gemma-2-9b-it
+    family: gemma
+    n_layers: 42
+    n_heads: 16
+    n_kv_heads: 8
+    hidden_dim: 3584
+    head_dim: 256
+    is_reasoning: false
+    sae_release: google/gemma-scope-9b-it-res
+    sliding_window: 4096   # Odd layers use sliding window — analyze separately
+    has_alternating_attention: true
+
+  r1-distill-llama-8b:
+    hf_id: deepseek-ai/DeepSeek-R1-Distill-Llama-8B
+    hdf5_key: deepseek-ai_DeepSeek-R1-Distill-Llama-8B
+    family: llama
+    n_layers: 32
+    n_heads: 32
+    n_kv_heads: 8
+    hidden_dim: 4096
+    head_dim: 128
+    is_reasoning: true
+    sae_release: null   # Try Llama Scope first; train custom if reconstruction fails
+    matched_pair_with: llama-3.1-8b-instruct   # The headline comparison
+
+  r1-distill-qwen-7b:
+    hf_id: deepseek-ai/DeepSeek-R1-Distill-Qwen-7B
+    hdf5_key: deepseek-ai_DeepSeek-R1-Distill-Qwen-7B
+    family: qwen2
+    n_layers: 28
+    n_heads: 28
+    n_kv_heads: 4
+    hidden_dim: 3584
+    head_dim: 128
+    is_reasoning: true
+    sae_release: null

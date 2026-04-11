@@ -1,0 +1,94 @@
+# Hydra config for the probing workstream.
+#
+# Usage:
+#   python scripts/run_probes.py
+#   python scripts/run_probes.py models_to_probe=[llama-3.1-8b-instruct] targets=[task_type]
+#   python scripts/run_probes.py layers=[0,8,16,24,31]
+#
+# The ``models`` block is pulled in from ``configs/models.yaml`` via the defaults
+# list. Do NOT duplicate model metadata here.
+
+defaults:
+  - models
+  - _self_
+
+# ---- I/O -----------------------------------------------------------------
+
+activations_path: data/activations/main.h5
+results_dir: results/probes
+figures_dir: figures
+
+# ---- Grid ----------------------------------------------------------------
+
+# Keep ordering consistent: all four models, then targets, then positions.
+models_to_probe:
+  - llama-3.1-8b-instruct
+  - r1-distill-llama-8b
+  - gemma-2-9b-it
+  - r1-distill-qwen-7b
+
+targets:
+  - task_type
+  - correctness
+  - bias_susceptible
+
+positions:
+  - P0
+  - P2
+
+# Either "all" or an explicit list of layer indices.
+layers: all
+
+# ---- Probes --------------------------------------------------------------
+
+probes:
+  - mass_mean
+  - logistic
+  - mlp
+
+# Optional: override per-probe constructor kwargs.
+probe_kwargs:
+  logistic: {}
+  mlp:
+    hidden: 256
+    dropout: 0.2
+    lr: 0.001
+    weight_decay: 0.0001
+    batch_size: 32
+    max_epochs: 100
+    patience: 10
+  ccs:
+    n_restarts: 10
+    max_epochs: 1000
+    lr: 0.01
+
+# ---- Cross-validation ----------------------------------------------------
+
+cv:
+  n_folds: 5
+  n_seeds: 3
+
+control_task:
+  enabled: true
+  n_shuffles: 5
+
+permutation:
+  n_permutations: 1000
+
+bootstrap:
+  n_resamples: 1000
+
+# ---- LOCO (leave-one-category-out) --------------------------------------
+
+loco:
+  enabled: false
+  targets:
+    - task_type
+
+# ---- Reproducibility / logging -------------------------------------------
+
+seed: 0
+
+logging:
+  use_wandb: false
+  level: INFO

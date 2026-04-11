@@ -1,0 +1,46 @@
+# Hydra config for the unified figure generator.
+#
+# Usage:
+#   python scripts/generate_figures.py
+#   python scripts/generate_figures.py figure_format=png
+#   python scripts/generate_figures.py 'include=[figure_2_probe_layer_curves,figure_6_geometry_silhouette]'
+#
+# This config is intentionally small — the heavy lifting lives in
+# ``src/s1s2/viz/figures.py``. Each figure name in ``include`` maps to
+# a renderer registered in that module's ``_FIGURE_REGISTRY``.
+
+defaults:
+  - _self_
+
+# ---- I/O -----------------------------------------------------------------
+
+results_dir: results
+output_dir: figures
+
+# Primary output format. The primary path is returned from the renderer.
+figure_format: pdf   # pdf or png
+
+# Additional formats to save alongside (e.g. always keep a PNG for slides
+# even when the canonical format is PDF). Empty list = primary only.
+extra_formats:
+  - png
+
+# ---- Theme ---------------------------------------------------------------
+
+# Currently only "paper" is supported. The theme rcParams live in
+# ``s1s2.viz.theme.set_paper_theme``. Keep this here so we can add
+# "poster" / "slides" variants later without a config migration.
+theme: paper
+
+# ---- Figures to render ---------------------------------------------------
+#
+# Ordering is preserved. Any figure name not listed is skipped. Any name
+# NOT in the registry is logged as a warning but does not crash the run.
+
+include:
+  - figure_1_benchmark_overview
+  - figure_2_probe_layer_curves
+  - figure_3_sae_volcano
+  - figure_4_causal_intervention
+  - figure_5_attention_entropy
+  - figure_6_geometry_silhouette

@@ -1,0 +1,82 @@
+# Hydra config for the SAE feature-analysis workstream.
+#
+# Usage:
+#   python scripts/run_sae.py
+#   python scripts/run_sae.py models=[llama-3.1-8b-instruct] layers=[16]
+#   python scripts/run_sae.py falsification.mode=model_forward
+#   python scripts/run_sae.py differential.fdr_q=0.01
+#
+# The ``models`` block below is the *whitelist* of model keys to run the SAE
+# analysis on — it is NOT the full model registry. The registry lives in
+# ``configs/models.yaml`` and is pulled in via the defaults list so HDF5 keys
+# and SAE release strings can be resolved by the CLI without hardcoding.
+
+defaults:
+  - models
+  - _self_
+
+# ---- I/O -----------------------------------------------------------------
+
+activations_path: data/activations/main.h5
+output_dir: results/sae
+
+# ---- Grid ----------------------------------------------------------------
+
+# List of model keys (as defined in configs/models.yaml) to run. Omit R1
+# distill qwen by default because there is no pre-trained SAE for it — its
+# entry is kept in the model registry only for the probe / geometry
+# workstreams.
+models_to_run:
+  - llama-3.1-8b-instruct
+  - gemma-2-9b-it
+  - r1-distill-llama-8b
+
+# ``layers`` is either a concrete list or ``null`` to use per-model defaults
+# (early / mid / late). Keep it small for smoke tests.
+layers: [8, 16, 24]
+
+# Residual-stream position to analyse. The HDF5 schema stores a small set of
+# labeled slices per problem (see docs/data_contract.md); P0 is the last
+# prompt token and is the default SAE evaluation slice across the literature.
+position: P0
+
+# ---- Reconstruction fidelity gate ----------------------------------------
+
+reconstruction:
+  n_samples: 256
+  min_explained_variance: 0.5
+
+# ---- Differential analysis -----------------------------------------------
+
+differential:
+  fdr_q: 0.05
+  # If true, compute a secondary differential on the matched-pair subset so
+  # the difficulty confound is controlled. Off by default because the primary
+  # contract downstream workstreams expect is the full-sample result.
+  matched_difficulty_only: false
+
+# ---- Ma et al. (2026) falsification --------------------------------------
+
+falsification:
+  enabled: true
+  n_random_texts: 100
+  n_top_tokens: 5
+  threshold: 0.5
+  # ``cheap`` skips the model forward pass and is what we run in CI and smoke
+  # tests. ``model_forward`` is the real Ma et al. protocol and must be used
+  # for any headline claim.
+  mode: cheap
+  top_k_features: 50
+
+# ---- Plotting ------------------------------------------------------------
+
+volcano:
+  top_k: 10
+
+# ---- Reproducibility / device --------------------------------------------
+
+seed: 0
+sae_device: cpu
+
+logging:
+  level: INFO

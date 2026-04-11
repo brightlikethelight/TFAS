@@ -1,0 +1,46 @@
+# Pre-commit hooks for the s1s2 codebase.
+#
+# Run on every staged commit to keep formatting / lint / hygiene consistent.
+# Install with `pre-commit install` (or `make install`).
+#
+# Skip a hook for one commit with `SKIP=ruff git commit ...`. Avoid bypassing
+# hooks entirely (`--no-verify`) — fix the underlying issue instead.
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-yaml
+        args: ["--unsafe"]  # Hydra configs use !!python tags
+      - id: check-toml
+      - id: check-added-large-files
+        args: ["--maxkb=1024"]
+      - id: check-merge-conflict
+      - id: detect-private-key
+      - id: mixed-line-ending
+        args: ["--fix=lf"]
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.6.9
+    hooks:
+      - id: ruff
+        args: ["--fix", "--exit-non-zero-on-fix"]
+        files: ^(src|tests|scripts)/
+
+  - repo: https://github.com/psf/black
+    rev: 24.8.0
+    hooks:
+      - id: black
+        language_version: python3.11
+        args: ["--line-length=100"]
+        files: ^(src|tests|scripts)/
+
+  - repo: local
+    hooks:
+      - id: forbid-secrets
+        name: forbid committing .env / secret files
+        entry: '\.env$|credentials\.json$|\.key$|secrets\.ya?ml$'
+        language: pygrep
+        types: [text]

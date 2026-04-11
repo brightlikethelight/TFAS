@@ -1,0 +1,98 @@
+# Hydra config for the metacognitive monitoring workstream.
+#
+# Usage:
+#   python scripts/run_metacog.py
+#   python scripts/run_metacog.py models=[r1-distill-llama-8b] layers=[20]
+#   python scripts/run_metacog.py activations_path=data/activations/smoke.h5 sae.use_mock=true
+#
+# The metacog workstream tests whether LLMs have an internal "difficulty
+# detector" — a direction or SAE feature whose activation tracks token
+# surprise (S1 failing) and predicts S2-like processing.
+
+defaults:
+  - _self_
+
+# ---- I/O -----------------------------------------------------------------
+
+activations_path: data/activations/main.h5
+sae_results_dir: results/sae
+output_dir: results/metacog
+seed: 0
+
+# ---- Models / layers -----------------------------------------------------
+
+models:
+  - r1-distill-llama-8b
+  - r1-distill-qwen-7b
+  - llama-3.1-8b-instruct  # baseline comparison
+
+# Either "auto" (single mid-stream layer per model), "all", or an
+# explicit list of layer indices. Default = a single layer to keep
+# the smoke pipeline fast.
+layers: auto
+
+# ---- SAE ----------------------------------------------------------------
+
+sae:
+  use_mock: false  # set true for tests / synthetic data
+  min_explained_variance: 0.5
+
+sae_min_explained_variance: 0.5
+
+# ---- Surprise aggregation ------------------------------------------------
+
+# How to reduce per-token surprise to one scalar per problem.
+# Valid: mean_full, max_full, top_decile_full, mean_answer, by_position:<label>
+surprise_aggregation: mean_full
+
+# ---- Statistical thresholds ----------------------------------------------
+
+fdr_q: 0.05
+
+# ---- Pre-registered gates ------------------------------------------------
+# These commit us to thresholds BEFORE looking at the data. Do NOT edit
+# them after running the analysis without explicitly recording the change
+# in the run JSON's `notes` field. The publication-grade rule is "what
+# would falsify the hypothesis must be set in advance."
+
+gates:
+  gate_1:
+    min_features_with_rho_gt: 20
+    rho_threshold: 0.3
+  gate_2:
+    min_specificity_auc: 0.65
+    difficulty_matched_only: true
+  gate_3:
+    # Causal workstream runs separately and back-fills the result.
+    min_delta_p_correct: 0.15
+
+# ---- Confidently-wrong test ---------------------------------------------
+
+# A feature is "metacognitive" if it activates more strongly on
+# confidently-wrong cases than on confidently-correct cases. We define
+# "confident" as the answer log-probability exceeding this threshold.
+# (Operationalized as -surprise on the answer span; metacog cares only
+# about the sign of the difference, so any monotone proxy works.)
+confidently_wrong:
+  threshold_confidence: -0.5
+
+# ---- Self-correction trajectory analysis -------------------------------
+
+self_correction_markers:
+  - "wait"
+  - "actually"
+  - "let me reconsider"
+  - "but"
+  - "on second thought"
+  - "hold on"
+  - "hmm"
+  - "no, "
+  - "scratch that"
+  - "let me try again"
+self_correction_min_post_chars: 30
+
+# ---- Reproducibility / logging -------------------------------------------
+
+logging:
+  use_wandb: false
+  level: INFO
