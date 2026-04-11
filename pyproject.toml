@@ -85,6 +85,8 @@ select = [
 ignore = [
     "E501",  # line too long (handled by black)
     "B008",  # do not perform function calls in argument defaults (Hydra)
+    "F821",  # jaxtyping shape strings (e.g. Float[ndarray, "n d"]) look like undefined names to ruff
+    "UP037", # ruff UP037 strips quotes from jaxtyping annotations, breaking beartype at runtime
 ]
 
 [tool.black]

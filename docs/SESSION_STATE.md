@@ -1,16 +1,16 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-09 (late session)
-**Active focus**: Full code stack complete. 292/292 unit tests pass. Smoke test green. **Ready to acquire FASRC access and start real model extraction.**
+**Last updated**: 2026-04-11
+**Active focus**: Code complete (318 tests green). Building phase-2 infrastructure: GPU deployment, paper, notebooks, W&B, pre-registration. **Waiting on FASRC access (Kempner deadline Apr 14).**
 
 ## TL;DR
 
-- 101 Python files, ~32K lines of code, 292 unit tests passing
-- Benchmark: 284 items, 142 matched conflict/control pairs, 558 paraphrases, 7 categories — validation passes
-- All five analysis workstreams (probes, SAE, attention, geometry, causal) complete with tests
-- Metacognitive monitoring stretch workstream complete
-- Smoke test runs all workstreams on synthetic data in ~3 seconds, all pass
-- Next bottleneck: faculty sponsor + GPU access
+- 104 Python files, ~33K lines, **318/318 unit tests passing**, smoke test green (3s)
+- Git initialized: commit `954e2d0`
+- Benchmark: 284 items, 142 matched conflict/control pairs, 558 paraphrases, 7 categories
+- All 5 analysis workstreams + metacog + benchmark + causal complete with tests
+- Phase 2 in progress: GPU deploy scripts, paper (LaTeX), notebooks, W&B, pre-registration, HUSAI presentation
+- Next bottleneck: FASRC access (Kempner deadline 2026-04-14)
 
 ## What's done
 
@@ -95,76 +95,43 @@
 - Real activation extraction on the 4 models (requires GPU).
 - SAE reconstruction fidelity verification on real Instruct activations.
 - Behavioral validation of the benchmark against real models (Week 2 gate).
-- FASRC access (waiting on faculty sponsor).
+- FASRC access (waiting on faculty sponsor — Kempner deadline 2026-04-14).
 - W&B integration verified end-to-end with a real run.
 
-## Modified files (this session)
+## Session 2 (2026-04-11): Git + Phase 2 infrastructure
 
-All files in `s1s2/` — initial scaffold + 5 workstreams + metacog + causal +
-docs. The most recently created files (build infra session) are:
-
-- `Makefile`
-- `.pre-commit-config.yaml`
-- `.github/workflows/test.yml`
-- `tests/__init__.py`
-- `tests/conftest.py`
-- `scripts/smoke_test.py`
-- `docs/architecture.md`
-- `docs/SESSION_STATE.md` (this file)
-- `docs/LESSONS_LEARNED_COMPACT.md`
-- `docs/CONTRIBUTING.md`
-- `LICENSE`
-- `CHANGELOG.md`
+- ✅ **Git init**: initial commit `954e2d0` with 134 files, 35,688 lines
+- ✅ **Ruff config fix**: added `F821` and `UP037` ignores to prevent
+  jaxtyping annotation stripping
+- ✅ **SESSION_STATE updated** to reflect actual state (318 tests, not 292)
+- 🔄 **In-flight agents** (8 parallel): GPU deployment scripts, paper skeleton
+  (LaTeX), analysis notebooks, W&B integration, experiment orchestrator,
+  benchmark quality audit, pre-registration document, HUSAI presentation
 
 ## Active blockers
 
-- Need a faculty sponsor for FASRC access (Kempner Accelerator Award deadline
-  **2026-04-14**).
+- **FASRC faculty sponsor** — Kempner Accelerator Award deadline is
+  **2026-04-14** (3 days). Top priority for the faculty advisor.
 - Need to verify Llama Scope SAE reconstruction fidelity on Instruct
-  activations (loaders already wire the check; need real activations).
-- Need final benchmark JSONL — templates exist, need to run the generator and
-  do the manual cleanup pass.
+  activations (loaders wire the check; need real activations).
 
 ## Test commands
 
 ```bash
 make install   # pip install -e ".[dev]" + pre-commit hooks
 make lint      # ruff check
-make format    # ruff format + black
 make test      # pytest tests/
-make smoke     # scripts/smoke_test.py — runs all workstreams on synthetic data
-```
-
-A successful smoke run looks like:
-
-```
-[PASS] probes (...)
-[PASS] sae (...)
-[PASS] attention (...)
-[PASS] geometry (...)
-
-=== Smoke Test Summary ===
-  elapsed: ~12s
-
-  probes      PASS
-  sae         PASS
-  attention   PASS
-  geometry    PASS
-
-All workstreams PASSED.
+make smoke     # all 4 workstreams on synthetic data (~3s)
 ```
 
 ## Next steps
 
-1. `make install && make test && make smoke` — verify scaffold is healthy.
-2. Generate benchmark JSONL: `python -m s1s2.benchmark.cli generate`.
-3. Get FASRC access (or use RunPod B200 in the meantime).
-4. Run extraction on `llama-3.1-8b-instruct` as the first real model
-   (Week 3 gate).
-5. Run the probes pipeline on real activations (Week 5 gate).
-6. Add `core.py` + `cli.py` for the SAE workstream so it has a real driver.
-7. Add unit tests for sae / attention / geometry / causal / metacog
-   (mirroring `tests/test_probes.py`).
+1. **Get FASRC access** — the only blocker before real experiments start
+2. Run `python scripts/run_pipeline.py` on a GPU pod (RunPod or FASRC)
+3. First model: `llama-3.1-8b-instruct` — behavioral validation (Week 2 gate)
+4. Probes pipeline on real activations (Week 5 go/no-go gate)
+5. Present at HUSAI meeting using `docs/presentation/husai_pitch.md`
+6. Submit pre-registration to OSF
 
 ## Key W&B / artifact pointers
 
