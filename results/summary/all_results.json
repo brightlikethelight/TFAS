@@ -1,0 +1,174 @@
+{
+  "metadata": {
+    "generated_at": "2026-04-12T15:28:31.221986+00:00",
+    "results_dir": "/Users/brightliu/School_Work/TFAS/s1s2/results",
+    "script": "scripts/aggregate_results.py",
+    "n_json_files_found": 3,
+    "extra_json_files": [
+      "summary/all_results.json"
+    ]
+  },
+  "behavioral": {
+    "Llama-3.1-8B-Instruct": {
+      "overall_lure_pct": 27.3,
+      "base_rate": 84.0,
+      "conjunction": 55.0,
+      "syllogism": 52.0,
+      "CRT": 0.0,
+      "arithmetic": 0.0,
+      "framing": 0.0,
+      "anchoring": 0.0
+    },
+    "R1-Distill-Llama-8B": {
+      "overall_lure_pct": 2.4,
+      "base_rate": 4.0,
+      "conjunction": 0.0,
+      "syllogism": 0.0,
+      "CRT": null,
+      "arithmetic": null,
+      "framing": null,
+      "anchoring": null
+    },
+    "Qwen-3-8B-NO_THINK": {
+      "overall_lure_pct": 21.0,
+      "base_rate": 56.0,
+      "conjunction": 95.0,
+      "syllogism": 0.0,
+      "CRT": null,
+      "arithmetic": null,
+      "framing": null,
+      "anchoring": null
+    },
+    "Qwen-3-8B-THINK": {
+      "overall_lure_pct": 7.0,
+      "base_rate": 4.0,
+      "conjunction": 55.0,
+      "syllogism": null,
+      "CRT": null,
+      "arithmetic": null,
+      "framing": null,
+      "anchoring": null
+    }
+  },
+  "probes": {
+    "Llama-3.1-8B-Instruct": {
+      "peak_layer": 14,
+      "peak_auc": 0.999,
+      "mean_auc": 0.962,
+      "n_layers": 32,
+      "control_auc": null,
+      "selectivity": null,
+      "bootstrap_ci": {
+        "mean": 0.9618,
+        "ci_lower": 0.9503,
+        "ci_upper": 0.972
+      }
+    },
+    "R1-Distill-Llama-8B": {
+      "peak_layer": 14,
+      "peak_auc": 0.929,
+      "mean_auc": 0.912,
+      "n_layers": 32,
+      "control_auc": null,
+      "selectivity": null,
+      "bootstrap_ci": {
+        "mean": 0.9122,
+        "ci_lower": 0.9005,
+        "ci_upper": 0.9211
+      }
+    },
+    "Qwen-3-8B-NO_THINK": {
+      "peak_layer": 34,
+      "peak_auc": 0.971,
+      "mean_auc": null,
+      "n_layers": 36,
+      "control_auc": null,
+      "selectivity": null
+    },
+    "Qwen-3-8B-THINK": {
+      "peak_layer": 34,
+      "peak_auc": 0.971,
+      "mean_auc": null,
+      "n_layers": 36,
+      "control_auc": null,
+      "selectivity": null
+    }
+  },
+  "cross_prediction": {
+    "Llama-3.1-8B-Instruct": {
+      "l14_transfer_auc": 0.378,
+      "mean_transfer_auc": 0.444,
+      "interpretation": "SPECIFIC",
+      "layer_aucs": {
+        "0": 0.702,
+        "4": 0.439,
+        "8": 0.384,
+        "12": 0.449,
+        "14": 0.378,
+        "16": 0.569,
+        "20": 0.386,
+        "24": 0.326,
+        "28": 0.365,
+        "31": 0.438
+      }
+    },
+    "R1-Distill-Llama-8B": {
+      "l14_transfer_auc": 0.685,
+      "mean_transfer_auc": 0.654,
+      "interpretation": "MIXED",
+      "layer_aucs": {
+        "0": 0.734,
+        "4": 0.878,
+        "8": 0.878,
+        "12": 0.728,
+        "14": 0.685,
+        "16": 0.696,
+        "20": 0.615,
+        "24": 0.524,
+        "28": 0.415,
+        "31": 0.385
+      }
+    }
+  },
+  "transfer_matrix": {
+    "base_rate": {
+      "base_rate": 1.0,
+      "conjunction": 0.993,
+      "syllogism": null
+    },
+    "conjunction": {
+      "base_rate": 0.993,
+      "conjunction": 1.0,
+      "syllogism": null
+    },
+    "syllogism": {
+      "base_rate": null,
+      "conjunction": null,
+      "syllogism": 1.0
+    }
+  },
+  "lure_susceptibility": {
+    "Llama-3.1-8B-Instruct": {
+      "mean": 0.422,
+      "std": 2.986,
+      "min": null,
+      "max": null
+    },
+    "R1-Distill-Llama-8B": {
+      "mean": -0.326,
+      "std": 2.056,
+      "min": null,
+      "max": null
+    }
+  },
+  "geometry": {
+    "silhouette": {
+      "Llama-3.1-8B-Instruct": 0.079,
+      "R1-Distill-Llama-8B": 0.059
+    },
+    "cka": {
+      "min": 0.379,
+      "max": 0.985
+    }
+  }
+}

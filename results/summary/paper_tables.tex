@@ -1,0 +1,90 @@
+% ============================================================
+% Auto-generated LaTeX tables for the s1s2 workshop paper
+% Generated: 2026-04-12T15:28:31.221986+00:00
+% Script: scripts/aggregate_results.py
+% ============================================================
+
+% Table 1: Behavioral Lure Rates
+\begin{table}[t]
+\centering
+\caption{Lure rates (\%) by model and cognitive bias category. Categories above the line are \emph{vulnerable} (lure rate $>$ 0\% in at least one model); below are \emph{immune}.}
+\label{tab:behavioral}
+\small
+\begin{tabular}{l c  c c c c c c c}
+\toprule
+Model & Overall & base\_rate & conjunction & syllogism & CRT & arithmetic & framing & anchoring \\
+\midrule
+Llama-3.1-8B & 27.3\% & 84.0\% & 55.0\% & 52.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% \\
+R1-Distill-8B & 2.4\% & 4.0\% & 0.0\% & 0.0\% & -- & -- & -- & -- \\
+Qwen-3-8B (no think) & 21.0\% & 56.0\% & 95.0\% & 0.0\% & -- & -- & -- & -- \\
+Qwen-3-8B (think) & 7.0\% & 4.0\% & 55.0\% & -- & -- & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 2: Linear Probe Summary
+\begin{table}[t]
+\centering
+\caption{Linear probe performance on vulnerable categories (conflict vs.\ control). AUC from 5-fold stratified CV on last-prompt-token residual stream activations.}
+\label{tab:probes}
+\small
+\begin{tabular}{l c c c c c}
+\toprule
+Model & Layers & Peak Layer & Peak AUC & Mean AUC & Control AUC \\
+\midrule
+Llama-3.1-8B & 32 & L14 & \textbf{0.999} & 0.962 & -- \\
+R1-Distill-8B & 32 & L14 & 0.929 & 0.912 & -- \\
+Qwen-3-8B (no think) & 36 & L34 & 0.971 & -- & -- \\
+Qwen-3-8B (think) & 36 & L34 & 0.971 & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 3: Cross-Prediction (Vulnerable -> Immune)
+\begin{table}[t]
+\centering
+\caption{Cross-prediction AUC: probes trained on vulnerable categories, tested on immune categories. Values near 0.5 indicate specificity (probe does not generalize).}
+\label{tab:cross-prediction}
+\small
+\begin{tabular}{l c c c c c c c c c c c}
+\toprule
+Model & L0 & L4 & L8 & L12 & L14 & L16 & L20 & L24 & L28 & L31 & Mean \\
+\midrule
+Llama-3.1-8B & 0.702 & 0.439 & 0.384 & 0.449 & 0.378 & 0.569 & 0.386 & 0.326 & 0.365 & 0.438 & 0.444 \\
+R1-Distill-8B & 0.734 & 0.878 & 0.878 & 0.728 & 0.685 & 0.696 & 0.615 & 0.524 & 0.415 & 0.385 & 0.654 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 4: Category Transfer Matrix (Llama L14)
+\begin{table}[t]
+\centering
+\caption{Category-to-category transfer AUC (Llama-3.1-8B, Layer 14). Train probe on row category, test on column category. High off-diagonal values indicate shared representations.}
+\label{tab:transfer-matrix}
+\small
+\begin{tabular}{l  c c c}
+\toprule
+Train $\backslash$ Test & base\_rate & conjunction & syllogism \\
+\midrule
+base\_rate & -- & 0.993 & -- \\
+conjunction & 0.993 & -- & -- \\
+syllogism & -- & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% Table 5: Lure Susceptibility (Continuous Score)
+\begin{table}[t]
+\centering
+\caption{Lure susceptibility scores at the last prompt token (P0). Positive values indicate the model's residual stream favors the lure answer; negative values indicate it favors the correct answer.}
+\label{tab:lure-susceptibility}
+\small
+\begin{tabular}{l c c c c}
+\toprule
+Model & Mean & Std & Min & Max \\
+\midrule
+Llama-3.1-8B & +0.422 & 2.986 & -- & -- \\
+R1-Distill-8B & -0.326 & 2.056 & -- & -- \\
+\bottomrule
+\end{tabular}
+\end{table}
