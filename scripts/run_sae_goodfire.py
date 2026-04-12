@@ -228,69 +228,89 @@ def load_goodfire_sae():
 
     # Strategy 3: Raw HuggingFace download + manual weight loading
     try:
-        from huggingface_hub import hf_hub_download
-        import safetensors.torch
+        from huggingface_hub import hf_hub_download, list_repo_files
 
         log.info("Attempting raw HuggingFace download of SAE weights...")
-        # Try common weight file names
-        weight_file = None
-        for fname in ("sae_weights.safetensors", "model.safetensors", "sae.safetensors"):
-            try:
-                weight_file = hf_hub_download(repo_id=SAE_RELEASE, filename=fname)
-                break
-            except Exception:
-                continue
 
-        if weight_file is None:
-            # Try .pt files
-            for fname in ("sae_weights.pt", "model.pt", "sae.pt"):
-                try:
-                    weight_file = hf_hub_download(repo_id=SAE_RELEASE, filename=fname)
-                    break
-                except Exception:
-                    continue
+        # List repo files and find the weight file dynamically
+        repo_files = list_repo_files(SAE_RELEASE)
+        weight_candidates = [
+            f for f in repo_files
+            if f.endswith((".pth", ".pt", ".safetensors", ".bin"))
+            and not f.startswith(".")
+        ]
+        log.info("Weight file candidates in repo: %s", weight_candidates)
 
-        if weight_file is None:
+        if not weight_candidates:
             raise FileNotFoundError(
-                f"Could not find SAE weight files in {SAE_RELEASE}. "
-                "Check the HuggingFace repo for the correct filenames."
+                f"No weight files (.pth/.pt/.safetensors/.bin) in {SAE_RELEASE}. "
+                f"Repo contains: {repo_files}"
             )
+
+        weight_file = hf_hub_download(repo_id=SAE_RELEASE, filename=weight_candidates[0])
+        log.info("Downloaded weight file: %s", weight_file)
 
         # Load weights
         if weight_file.endswith(".safetensors"):
+            import safetensors.torch
             state = safetensors.torch.load_file(weight_file, device=DEVICE)
         else:
-            state = torch.load(weight_file, map_location=DEVICE, weights_only=True)
+            state = torch.load(weight_file, map_location=DEVICE, weights_only=False)
 
         log.info("Loaded raw weights, keys: %s", list(state.keys()))
+        for k, v in state.items():
+            if hasattr(v, "shape"):
+                log.info("  %s: shape=%s dtype=%s", k, v.shape, v.dtype)
 
-        # Infer dimensions from weight shapes
+        # Infer dimensions from weight shapes.
+        # Goodfire SAEs use nn.Linear naming: encoder_linear.weight, decoder_linear.weight
+        # nn.Linear stores weight as (out_features, in_features), so:
+        #   encoder_linear.weight: (n_features, hidden_dim)
+        #   decoder_linear.weight: (hidden_dim, n_features)
         W_enc = None
         W_dec = None
         b_enc = None
         b_dec = None
         for k, v in state.items():
             kl = k.lower()
-            if "enc" in kl and "weight" in kl or (kl == "w_enc"):
+            if ("enc" in kl and "weight" in kl) or kl == "w_enc":
                 W_enc = v
-            elif "dec" in kl and "weight" in kl or (kl == "w_dec"):
+            elif ("dec" in kl and "weight" in kl) or kl == "w_dec":
                 W_dec = v
-            elif "enc" in kl and "bias" in kl or (kl == "b_enc"):
+            elif ("enc" in kl and "bias" in kl) or kl == "b_enc":
                 b_enc = v
-            elif "dec" in kl and "bias" in kl or (kl == "b_dec"):
+            elif ("dec" in kl and "bias" in kl) or kl == "b_dec":
                 b_dec = v
 
         if W_enc is None or W_dec is None:
-            # Try to infer from whatever keys are present
             log.warning("Could not identify W_enc/W_dec from keys: %s", list(state.keys()))
             raise KeyError("Cannot identify encoder/decoder weights")
 
+        # Handle nn.Linear convention: weight is (out_features, in_features).
+        # encoder: out=n_features, in=hidden_dim -> shape (n_features, hidden_dim)
+        # We need W_enc as (hidden_dim, n_features) for matmul: x @ W_enc
+        if W_enc.shape[0] > W_enc.shape[1]:
+            # (n_features, hidden_dim) -> transpose to (hidden_dim, n_features)
+            log.info("Transposing encoder weight from nn.Linear convention: %s", W_enc.shape)
+            W_enc = W_enc.T
         hidden_dim = int(W_enc.shape[0])
         n_features = int(W_enc.shape[1])
+
+        # decoder: out=hidden_dim, in=n_features -> shape (hidden_dim, n_features)
+        # We need W_dec as (n_features, hidden_dim) for matmul: z @ W_dec
+        if W_dec.shape[0] < W_dec.shape[1]:
+            # (hidden_dim, n_features) -> transpose to (n_features, hidden_dim)
+            log.info("Transposing decoder weight from nn.Linear convention: %s", W_dec.shape)
+            W_dec = W_dec.T
+
         if b_enc is None:
             b_enc = torch.zeros(n_features, device=DEVICE)
         if b_dec is None:
             b_dec = torch.zeros(hidden_dim, device=DEVICE)
+
+        log.info(
+            "Inferred SAE architecture: hidden_dim=%d, n_features=%d", hidden_dim, n_features
+        )
 
         class _RawHandle:
             def __init__(self):
