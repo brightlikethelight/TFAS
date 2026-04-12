@@ -109,7 +109,9 @@ items---problems where a salient heuristic cue diverges from the correct
 answer---while succeeding on matched controls
 \citep{hagendorff2023human}.  Reasoning-trained models (e.g., those
 distilled from DeepSeek-R1) resist many of these lures
-\citep{deepseekr1}.  A growing literature documents these behavioral
+\citep{deepseekr1}, though recent clinical evaluations suggest the
+protection is bias-specific rather than universal
+\citep{schwartz2025clinical}.  A growing literature documents these behavioral
 parallels \citep{xie2025cogsci, codaforno2025dual, ziabari2025reasoning},
 and \citet{huang2026cogbias} recently demonstrated that linear probes
 can detect and steer cognitive biases via internal representations.
@@ -117,7 +119,8 @@ can detect and steer cognitive biases via internal representations.
 Yet behavior alone cannot distinguish genuine processing-mode differences
 from surface mimicry.  Chain-of-thought traces are often unfaithful to
 underlying computation: only ${\sim}2.3$\% of reasoning steps causally
-influence the final answer \citep{jiang2025aha, lanham2023measuring}.
+influence the final answer \citep{jiang2025aha, lanham2023measuring,
+boppana2026reasoning}.
 The critical open question is not whether LLMs \emph{behave} as if they
 have fast and slow modes, but whether such modes have
 \emph{mechanistic correlates} in internal representations---and how
@@ -376,7 +379,7 @@ activations---extracted at the same \pzero{} position before the
 \texttt{<think>} block begins---reach \emph{identical} peak
 AUC\,=\,0.971 at layer~34.  Despite a 3$\times$ behavioral improvement
 (lure rate $21\% \to 7\%$), the pre-generation representation is
-unchanged.  This is the key dissociation: training (Llama vs.\ R1-Distill)
+unchanged.  The informativeness of the pre-generation position is consistent with \citet{afzal2025knowing}, who showed that probing classifiers can predict chain-of-thought success before the first token is generated.  This is the key dissociation: training (Llama vs.\ R1-Distill)
 changes both encoding and behavior; inference-time thinking (Qwen no-think
 vs.\ think) changes behavior without changing encoding.
 
@@ -492,7 +495,7 @@ suggests that reasoning distillation makes Type~2 processing
 default'' \citep{evans2019reflections, evans2013dual}.  On this view,
 R1-Distill does not override S1 with S2; it has internalized the
 deliberative pathway so thoroughly that it no longer needs a sharp
-conflict signal to route items correctly.  The lure susceptibility scores
+conflict signal to route items correctly.  This interpretation is further supported by evidence that base models already possess reasoning capabilities latently, with post-training primarily teaching \emph{when} to deploy them rather than \emph{how} \citep{venhoff2025base}.  The lure susceptibility scores
 confirm this: Llama's pre-generation representation actively favors the
 lure ($+0.422$), while R1-Distill's favors the correct answer
 ($-0.326$).  Reasoning training doesn't just blur a boundary---it
@@ -557,6 +560,15 @@ training.  Together, these findings suggest a future intervention strategy:
 identify the directions that reasoning training blurs, and steer standard
 models along those directions to approximate the reasoning model's
 robustness without the computational cost of chain-of-thought generation.
+Methodologically, our work extends beyond CogBias in three respects:
+(i)~continuous lure susceptibility scores rather than binary
+classification, (ii)~cross-category transfer analysis revealing shared
+bias representations, and (iii)~a within-model reasoning toggle (Qwen
+think/no-think) providing the cleanest possible natural experiment for
+mechanistic dual-process claims.
+
+\paragraph{Methodological safeguards.}
+Recent work has shown that probing analyses can produce plausible-seeming results even on randomly initialized networks \citep{meloux2025dead}, and SAE features frequently fail falsification tests against random baselines \citep{sanitychecks2026}. We address these concerns in three ways. First, our Hewitt--Liang control probes (Section~\ref{sec:probes}) establish that the signal exceeds probe expressiveness by >40 percentage points. Second, the cross-prediction test (Section~\ref{sec:specificity}) provides a structural falsification: if the probe captured noise rather than processing-mode information, transfer AUC would not systematically drop to 0.378 on immune categories. Third, the inter-model comparison itself is a control: identical prompts produce different probe AUCs (0.999 vs.\ 0.929) only if the models represent the same inputs differently---noise-level features would produce identical performance on identical inputs.
 
 \paragraph{Limitations.}
 (i) Model scale: all models are 8B parameters; the blurring effect may

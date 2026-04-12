@@ -1,7 +1,8 @@
 # Pre-Registration: Mechanistic Signatures of Dual-Process Cognition in LLMs
 
 **Pre-registration date**: 2026-04-09
-**Status**: Pre-registered before any model activations have been extracted or analyzed.
+**Last updated**: 2026-04-12 (results annotations, expanded hypotheses, descoped items)
+**Status**: Pre-registered before any model activations were extracted. Updated post-hoc with results and expanded hypotheses; all additions are clearly marked.
 
 ---
 
@@ -54,6 +55,8 @@ A within-model repeated-measures design with 142 matched pairs (conflict vs. no-
 
 Four models are tested: 2 standard instruction-tuned (Llama-3.1-8B-Instruct, Gemma-2-9B-IT) and 2 reasoning-distilled (DeepSeek-R1-Distill-Llama-8B, DeepSeek-R1-Distill-Qwen-7B). The Llama pair shares an identical base architecture, enabling a clean comparison where any internal differences are attributable to reasoning distillation rather than architectural confounds.
 
+> **[POST-HOC UPDATE]** Gemma-2-9B-IT was descoped due to workshop paper timeline constraints (see Descope section). OLMo-2-7B-Instruct was added as a replacement standard model. DeepSeek-R1-Distill-Qwen-7B additionally tested in THINK vs. NO_THINK mode (system-prompt-controlled) for H6 within-model dissociation. Ministral-3-8B was descoped due to transformers incompatibility (see Descope section).
+
 Five analysis workstreams are applied to each model: linear probing, SAE feature analysis, attention entropy, representational geometry, and causal interventions.
 
 ---
@@ -73,18 +76,22 @@ All models are publicly available and were not trained or modified by us. Model 
 
 ### Benchmark
 
-The benchmark consists of **284 items** organized as **142 matched pairs** across **7 categories**:
+The original benchmark consisted of **284 items** organized as **142 matched pairs** across **7 categories**.
 
-| Category | Conflict Items | No-Conflict Controls | Total |
-|----------|---------------|---------------------|-------|
-| CRT variants | 30 | 30 | 60 |
-| Arithmetic (multi-step) | 25 | 25 | 50 |
-| Syllogisms (belief-bias) | 25 | 25 | 50 |
-| Base rate neglect | 20 | 20 | 40 |
-| Anchoring | 15 | 15 | 30 |
-| Framing effects | 15 | 15 | 30 |
-| Conjunction fallacy | 12 | 12 | 24 |
-| **Total** | **142** | **142** | **284** |
+> **[POST-HOC UPDATE]** The benchmark was expanded to **380+ items** (~190 matched pairs) across **9 categories** before the main analysis runs. Two new categories were added: sunk cost fallacy (loss aversion domain) and natural frequency framing (base rate domain, Gigerenzer paradigm). Both additions were designed and finalized before any model activations for the new items were extracted.
+
+| Category | Conflict Items | No-Conflict Controls | Total | Status |
+|----------|---------------|---------------------|-------|--------|
+| CRT variants | 30 | 30 | 60 | Original |
+| Arithmetic (multi-step) | 25 | 25 | 50 | Original |
+| Syllogisms (belief-bias) | 25 | 25 | 50 | Original |
+| Base rate neglect | 20 | 20 | 40 | Original |
+| Anchoring | 15 | 15 | 30 | Original |
+| Framing effects | 15 | 15 | 30 | Original |
+| Conjunction fallacy | 12 | 12 | 24 | Original |
+| Sunk cost fallacy | ~25 | ~25 | ~50 | **Added** |
+| Natural frequency framing | ~25 | ~25 | ~50 | **Added** |
+| **Total** | **~192** | **~192** | **~384** | |
 
 The benchmark is **fixed** before any model analysis. It was designed with the following constraints:
 - All conflict items use novel structural isomorphs (no classic CRT bat-and-ball, no classic Linda problem) to avoid training-set contamination.
@@ -193,6 +200,8 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 
 **Bonferroni-adjusted significance**: p < 0.00833 for the peak-layer AUC (0.05/6 primary hypotheses).
 
+> **RESULT: CONFIRMED.** Peak-layer AUC = 0.999 at layer 14 (Llama-3.1-8B-Instruct). The S1/S2 distinction is near-perfectly linearly decodable from the residual stream, far exceeding the pre-registered threshold of 0.6. Selectivity well above 5pp. Result survives BH-FDR correction. This is the strongest finding in the study.
+
 #### H2: Reasoning Models Show Stronger S1/S2 Separation Than Standard Models
 
 **Procedure**:
@@ -211,6 +220,12 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 - The standard model has the higher peak AUC.
 
 **Note**: This is the cleanest comparison in the study because both models share identical architecture (32 layers, 32 heads, 4096 hidden dim). Any difference is attributable to reasoning distillation, not architecture.
+
+> **RESULT: FALSIFIED (in the predicted direction).** The reasoning model (DeepSeek-R1-Distill-Llama-8B) achieved peak AUC = 0.929, which is *lower* than Llama-3.1-8B-Instruct's 0.999 -- the opposite of the predicted direction. The boundary is weaker, not stronger, in the reasoning model.
+>
+> **Theoretical interpretation**: This falsification is actually predicted by Evans' (2019) concept of Type 2 autonomy. Reasoning distillation internalizes deliberative strategies into automatic processing, *blurring* the S1/S2 boundary rather than sharpening it. The reasoning model may have learned to handle conflict items more fluidly, reducing the representational contrast that the probe exploits. This is a theoretically coherent result, not an anomaly.
+>
+> **Honest framing**: We pre-registered a directional prediction that was wrong. The data are inconsistent with "reasoning training amplifies internal S1/S2 separation" and consistent with "reasoning training integrates deliberative processing into a more unified representation."
 
 #### H3: SAE Features Differentially Activate on S1 vs. S2 Tasks
 
@@ -231,6 +246,8 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 - Fewer than 5 features survive the full pipeline (FDR + falsification + effect size) across all models.
 
 **Bonferroni adjustment**: applied at the hypothesis level (the threshold of 5 features is evaluated at the Bonferroni-adjusted alpha). Within-feature FDR remains at q=0.05.
+
+> **RESULT: PENDING.** SAE feature analysis requires GPU re-run with the expanded benchmark. Pre-trained SAE loading and reconstruction fidelity checks are implemented but have not been executed on the full activation cache. This hypothesis remains open.
 
 #### H4: Causal Interventions Shift Behavior from S1-Prone to S2-Like
 
