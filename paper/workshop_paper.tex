@@ -65,8 +65,9 @@ heuristic lures at a 27.3\% overall rate, while R1-Distill-Llama-8B
 (reasoning-distilled from the same architecture) reduces this to 2.4\%.
 Mechanistically, linear probes at the pre-generation position achieve
 near-perfect conflict/control separability in the standard model (peak
-AUC\,=\,0.999, layer~14) but consistently lower separability in the
-reasoning model (peak AUC\,=\,0.929)---the internal \sone{}/\stwo{}
+AUC\,=\,0.974, 95\% CI [0.952, 0.992], layer~16) but consistently lower
+separability in the reasoning model (peak AUC\,=\,0.930, 95\% CI
+[0.894, 0.960], layer~31)---the internal \sone{}/\stwo{}
 boundary is \emph{blurred}, not sharpened, by reasoning training.
 Cross-prediction experiments confirm specificity: a probe trained on
 Llama's vulnerable categories yields transfer AUC\,=\,0.378 on immune
@@ -139,10 +140,11 @@ attributable to training, not architecture.  We make four contributions:
   category-level specificity revealing which biases are vulnerable.
 
   \item \textbf{Probing analysis} revealing that the standard model has
-  near-perfect internal conflict/control separability (AUC\,=\,0.999)
-  while the reasoning model \emph{blurs} this distinction
-  (AUC\,=\,0.929), with cross-prediction and transfer matrix experiments
-  confirming specificity to processing mode rather than surface features.
+  high internal conflict/control separability (AUC\,=\,0.974, 95\% CI
+  [0.952, 0.992]) while the reasoning model \emph{blurs} this distinction
+  (AUC\,=\,0.930, 95\% CI [0.894, 0.960]; non-overlapping CIs), with
+  cross-prediction and transfer matrix experiments confirming specificity
+  to processing mode rather than surface features.
 
   \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
   thinking toggle changes behavior ($21\% \to 7\%$ lure rate) but produces
@@ -155,7 +157,7 @@ attributable to training, not architecture.  We make four contributions:
 The Llama pair shares every architectural parameter, yet reasoning
 training drops cognitive bias susceptibility from 27\% to 2\% and
 simultaneously reduces internal \sone{}/\stwo{} separability from
-AUC 0.999 to 0.929.  Qwen~3-8B reveals the converse: thinking mode
+AUC 0.974 to 0.930 (non-overlapping 95\% CIs).  Qwen~3-8B reveals the converse: thinking mode
 changes behavior ($21\% \to 7\%$) without changing the pre-generation
 representation (AUC\,=\,0.971 in both modes).  The model that resists
 biases is, paradoxically, the one where the internal
@@ -209,10 +211,11 @@ matched pairs} across 11 categories spanning four heuristic families:
   (availability family).
 \end{itemize}
 
-\noindent The final four categories (sunk cost, loss aversion, certainty
-effect, availability; 60 pairs) and the 10 natural frequency base rate
-pairs are pending behavioral validation.  All primary analyses use
-the original 7-category, 165-pair subset (330 items).
+\noindent Of the final four categories, sunk cost has been validated
+(0\% lure rate for both models---immune); loss aversion, certainty
+effect, and availability are pending.  The 10 natural frequency base
+rate pairs have been validated (see Discussion).  All primary analyses
+use the original 7-category, 165-pair subset (330 items).
 
 \noindent Each item is scored on a four-way classification: \emph{correct},
 \emph{S1-lure} (the specific heuristic-predicted wrong answer),
@@ -289,9 +292,11 @@ responses on conflict items) across all models and categories.
   (330-item subset: 165 pairs across 7 categories).  Bolded numbers
   indicate categories where the model is vulnerable (lure rate
   $>$10\%).  Categories where all models are immune (0\% lure) are
-  grouped at bottom.  The remaining 4 categories (sunk cost, loss
-  aversion, certainty effect, availability; 60 pairs) and 10 natural
-  frequency base rate pairs are pending behavioral validation.}
+  grouped at bottom.  Expanded-set results: sunk cost fallacy is
+  immune (0\% lure, both Llama and R1-Distill); natural frequency
+  base rate framing increases lure rates (Llama: $84\% \to 100\%$;
+  R1-Distill: $4\% \to 40\%$).  Remaining expanded categories (loss
+  aversion, certainty effect, availability) pending.}
 \label{tab:behavioral}
 \vspace{4pt}
 \small
@@ -345,8 +350,8 @@ conflict/control classification on the three vulnerable categories.
 \fbox{\parbox{0.95\linewidth}{\centering\vspace{2.2cm}
   \textbf{Figure 1: Layer-wise probe AUC (vulnerable categories)}\\[4pt]
   \small X-axis: layer index (0--35). \quad Y-axis: ROC-AUC.\\[2pt]
-  \textcolor{blue}{Blue}: Llama-3.1-8B-Instruct (peak AUC = 0.999 at L14).\\
-  \textcolor{red}{Red}: R1-Distill-Llama-8B (peak AUC = 0.929 at L14).\\
+  \textcolor{blue}{Blue}: Llama-3.1-8B-Instruct (peak AUC = 0.974 at L16).\\
+  \textcolor{red}{Red}: R1-Distill-Llama-8B (peak AUC = 0.930 at L31).\\
   \textcolor{orange}{Orange}: Qwen~3-8B no-think (peak AUC = 0.971 at L34).\\
   \textcolor{orange}{Orange dashed}: Qwen~3-8B think (peak AUC = 0.971 at L34).\\
   Gray dashed: Hewitt--Liang control task ceiling.\\[2pt]
@@ -356,9 +361,10 @@ conflict/control classification on the three vulnerable categories.
 \caption{Layer-wise probe ROC-AUC for classifying conflict vs.\
   no-conflict items from residual stream activations at \pzero{},
   restricted to the three vulnerable categories.  Llama-3.1-8B-Instruct
-  (blue) achieves near-perfect separability; R1-Distill-Llama-8B (red)
-  shows a consistent ${\sim}$7\% AUC reduction.  Qwen~3-8B no-think
-  (orange solid) and think (orange dashed) peak at identical
+  (blue) peaks at AUC\,=\,0.974 [0.952, 0.992] at L16;
+  R1-Distill-Llama-8B (red) peaks at AUC\,=\,0.930 [0.894, 0.960] at
+  L31---non-overlapping CIs confirm statistical significance.  Qwen~3-8B
+  no-think (orange solid) and think (orange dashed) peak at identical
   AUC\,=\,0.971 at L34---the thinking toggle does not change
   pre-generation representations.
   Dashed gray line: Hewitt--Liang control task ceiling.}
@@ -366,20 +372,23 @@ conflict/control classification on the three vulnerable categories.
 \end{figure}
 
 \paragraph{Llama-3.1-8B-Instruct.}  The conflict/control signal builds
-rapidly from AUC\,=\,0.85 at layer 0 to AUC\,=\,0.999 at layer 14, then
-remains above 0.95 through layer 31.  The peak at the middle layers is
-consistent with prior findings that mid-network representations encode
-task-relevant distinctions most strongly \citep{zhang2025probing}.
+rapidly from AUC\,=\,0.85 at layer 0 to AUC\,=\,0.974 at layer 16
+(95\% CI [0.952, 0.992]), then remains above 0.95 through layer 31.
+The peak at mid-to-upper layers is consistent with prior findings that
+mid-network representations encode task-relevant distinctions most
+strongly \citep{zhang2025probing}.
 
 \paragraph{R1-Distill-Llama-8B.}  The layer-wise profile is qualitatively
-similar---signal builds in early layers, peaks at layer 14---but is
-\emph{uniformly lower}, peaking at AUC\,=\,0.929.  The gap between models
-is consistent at ${\sim}$0.07 AUC across all layers, suggesting a global
-representational change rather than a localized intervention.
+similar---signal builds in early layers---but is \emph{uniformly lower},
+peaking at AUC\,=\,0.930 (95\% CI [0.894, 0.960]) at layer 31.  The CIs
+do not overlap with Llama's ($p < 0.05$), confirming the gap is
+statistically significant.  The later peak layer (L31 vs.\ L16) suggests
+that reasoning distillation shifts conflict-relevant information toward
+deeper layers.
 
 \paragraph{Qwen~3-8B (no-think mode).}  Probes on Qwen~3-8B no-think
 activations reach peak AUC\,=\,0.971 at layer~34 on the vulnerable
-categories, intermediate between Llama (0.999) and R1-Distill (0.929)
+categories, intermediate between Llama (0.974) and R1-Distill (0.930)
 and consistent with its intermediate behavioral vulnerability (21\% lure
 rate).
 
@@ -416,20 +425,22 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \begin{table}[t]
 \centering
 \caption{Probing summary at peak layer for the three
-  vulnerable categories.  Selectivity = true AUC $-$ control AUC.
+  vulnerable categories.  95\% CIs from 1000 bootstrap resamples
+  (Llama and R1-Distill only; Qwen CIs pending).
+  Selectivity = true AUC $-$ control AUC.
   Qwen think and no-think produce identical probe results despite
   a 3$\times$ behavioral difference.}
 \label{tab:probe_summary}
 \vspace{4pt}
 \small
-\begin{tabular}{lcccc}
+\begin{tabular}{lccccc}
 \toprule
-\textbf{Model} & \textbf{Peak Layer} & \textbf{Peak AUC} & \textbf{Control AUC} & \textbf{Selectivity} \\
+\textbf{Model} & \textbf{Peak Layer} & \textbf{Peak AUC} & \textbf{95\% CI} & \textbf{Control AUC} & \textbf{Selectivity} \\
 \midrule
-Llama-3.1-8B-Instruct & L14 & 0.999 & 0.54 & 0.459 \\
-R1-Distill-Llama-8B   & L14 & 0.929 & 0.52 & 0.409 \\
-Qwen~3-8B (no think)  & L34 & 0.971 & ---  & --- \\
-Qwen~3-8B (think)     & L34 & 0.971 & ---  & --- \\
+Llama-3.1-8B-Instruct & L16 & 0.974 & [0.952, 0.992] & 0.54 & 0.434 \\
+R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.52 & 0.410 \\
+Qwen~3-8B (no think)  & L34 & 0.971 & ---             & ---  & --- \\
+Qwen~3-8B (think)     & L34 & 0.971 & ---             & ---  & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -449,8 +460,8 @@ conjunction, syllogism) and test it on the \emph{immune} categories
 (CRT, arithmetic, framing, anchoring).  If the probe captures a
 universal processing-mode signal, it should transfer; if it captures
 category-specific lure susceptibility, it should not.  At the peak layer
-(L14), the Llama probe achieves transfer AUC\,=\,0.378---below chance
-parity and far below the within-category AUC of 0.999.  The probe is
+(L16), the Llama probe achieves transfer AUC\,=\,0.378---below chance
+parity and far below the within-category AUC of 0.974.  The probe is
 specific to the categories where the model is actually vulnerable.  For
 R1-Distill, results are mixed: transfer AUC\,=\,0.878 at L4 (early,
 likely surface features) but 0.385 at L31 (late, consistent with
@@ -458,7 +469,7 @@ specificity).
 
 \paragraph{Transfer matrix.}
 Training probes on each vulnerable category and testing on all others
-(Llama, L14) reveals a structured pattern: base rate neglect,
+(Llama, L16) reveals a structured pattern: base rate neglect,
 conjunction, and syllogism probes transfer well to each other
 (AUC\,$\geq$\,0.950), but CRT probes do not transfer to any vulnerable
 category (AUC\,=\,0.062).  This confirms a shared processing-mode
@@ -487,7 +498,7 @@ away from it.
 The central finding maps precisely onto De~Neys' conflict detection
 paradigm \citep{deneys2012bias, deneys2017dual}: the standard model
 \emph{detects} the conflict between heuristic and normative responses
-(AUC\,=\,0.999 at L14) yet \emph{fails to resolve} it (27.3\% lure
+(AUC\,=\,0.974 at L16) yet \emph{fails to resolve} it (27.3\% lure
 rate).  This parallels the human finding that conflict monitoring---indexed
 by anterior cingulate cortex activation \citep{botvinick2001conflict,
 kerns2004anterior}---often occurs even when the heuristic response
@@ -497,7 +508,7 @@ the pre-generation representation, but this tension alone is insufficient
 to override the heuristic pathway.
 
 The reasoning model shows \emph{less} distinct conflict encoding
-(AUC\,=\,0.929) yet dramatically better resolution (2.4\% lure rate).
+(AUC\,=\,0.930) yet dramatically better resolution (2.4\% lure rate).
 If reasoning training simply added a ``System~2 module'' that overrides
 System~1, we would expect sharper separability.  Instead, the AUC drop
 suggests that reasoning distillation makes Type~2 processing
@@ -522,10 +533,20 @@ This category-specificity mirrors Stanovich's concept of \emph{dysrationalia}
 \citep{stanovich2016rationality}: rational thinking deficits are
 domain-specific, not general.  Just as high-IQ humans can fail base rate
 problems while acing CRT variants, our models show selective vulnerability
-that is specific to certain heuristic families.  Behavioral validation of the four pending categories (sunk cost, loss
-aversion, certainty effect, availability) will test whether this
-specificity extends across heuristic families or is confined to
-representativeness-based biases.
+that is specific to certain heuristic families.  Preliminary results from the expanded categories indicate that sunk cost
+is immune (0\% lure for both models), consistent with the pattern that
+loss-aversion-based biases are better resisted than
+representativeness-based ones.
+
+\paragraph{Ecological rationality and format dependence.}
+A preliminary test of Gigerenzer's ecological rationality critique
+\citep{gigerenzer1995improve} yielded a striking reversal: natural
+frequency framing \emph{increased} lure susceptibility in both models
+(Llama: $84\% \to 100\%$; R1-Distill: $4\% \to 40\%$), suggesting
+that LLM bias sensitivity is format-dependent in ways that diverge from
+human cognition, where natural frequencies reliably \emph{reduce}
+base rate neglect.  This inversion warrants systematic investigation
+across all bias categories and models.
 
 \paragraph{Training vs.\ inference.}
 Qwen's think/no-think result is the sharpest finding: thinking mode
@@ -533,7 +554,7 @@ reduces lure rates from 21\% to 7\% on the same weights, yet probes
 are identical in both modes (AUC\,=\,0.971 at L34).  The toggle
 changes what the model \emph{does} during generation, not what it
 \emph{encodes} at \pzero{}.  Combined with the Llama/R1-Distill comparison
-(where training \emph{does} change encoding: 0.999 $\to$ 0.929), this
+(where training \emph{does} change encoding: 0.974 $\to$ 0.930), this
 yields a clean dissociation: \textbf{training changes \sone{}/\stwo{}
 encoding; inference-time thinking changes \sone{}/\stwo{} behavior
 without changing encoding.}
@@ -574,8 +595,8 @@ controls (Section~\ref{sec:probes}) show selectivity $>$40pp;
 (2)~cross-prediction (Section~\ref{sec:specificity}) provides structural
 falsification---noise probes would not systematically drop to
 AUC\,=\,0.378 on immune categories; (3)~the inter-model comparison is
-itself a control---identical prompts yield different AUCs (0.999
-vs.\ 0.929) only if the models encode inputs differently.
+itself a control---identical prompts yield different AUCs (0.974
+vs.\ 0.930) only if the models encode inputs differently.
 
 \paragraph{Limitations.}
 (i) Model scale: all models are 8B parameters; the blurring effect may

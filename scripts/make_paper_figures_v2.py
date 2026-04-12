@@ -6,10 +6,11 @@ Falls back to hardcoded summary statistics when files are missing
 (e.g., running locally without pod data).
 
 Figures:
-    1. Layer-wise Probe AUC curves (4 models, Hewitt-Liang control ceiling)
+    1. Layer-wise Probe AUC curves (4 models, bootstrap CIs, Hewitt-Liang ceiling)
     2. Behavioral heatmap (4 models x 7 categories)
     3. Cross-prediction matrix (within-vulnerable vs transfer-to-immune)
     4. Lure susceptibility distribution (Llama vs R1-Distill histograms)
+    5. Extended behavioral heatmap (+sunk_cost, +natural_frequency)
 
 Usage::
 
@@ -40,6 +41,7 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = PROJECT_ROOT / "results"
 PROBE_DIR = RESULTS_DIR / "probes"
 SUMMARY_DIR = RESULTS_DIR / "summary"
+BOOTSTRAP_DIR = PROJECT_ROOT / "results_pod" / "bootstrap_cis"
 
 # ---------------------------------------------------------------------------
 # Color palette -- colorblind-friendly (IBM Design / Wong 2011)
@@ -59,6 +61,33 @@ def _load_json(path: Path) -> dict[str, Any] | None:
         with open(path) as f:
             return json.load(f)
     return None
+
+
+def load_bootstrap_cis() -> dict[str, list[dict[str, Any]]] | None:
+    """Load per-layer bootstrap CI data for Llama and R1-Distill.
+
+    Returns dict with keys 'llama' and 'r1', each a list of dicts
+    with keys: layer, auc (=auc_mean), ci_lower, ci_upper.
+    Returns None if bootstrap files are not found.
+    """
+    files = {
+        "llama": BOOTSTRAP_DIR / "unsloth_Meta-Llama-3.1-8B-Instruct_bootstrap_cis.json",
+        "r1": BOOTSTRAP_DIR / "deepseek-ai_DeepSeek-R1-Distill-Llama-8B_bootstrap_cis.json",
+    }
+    result: dict[str, list[dict[str, Any]]] = {}
+    for key, path in files.items():
+        data = _load_json(path)
+        if data is None:
+            print(f"  [warn] Bootstrap CI file not found: {path.name}")
+            return None
+        vuln = data["conditions"]["vulnerable"]
+        # Normalize key: bootstrap files use 'auc' not 'auc_mean'
+        for entry in vuln:
+            if "auc_mean" not in entry:
+                entry["auc_mean"] = entry["auc"]
+        result[key] = vuln
+        print(f"  [data] Loaded bootstrap CIs for {key} ({len(vuln)} layers)")
+    return result
 
 
 # ---------------------------------------------------------------------------
@@ -337,31 +366,56 @@ def _save(fig: mpl.figure.Figure, output_dir: Path, name: str) -> Path:
 def make_figure1_probe_curves(output_dir: Path) -> Path:
     """Layer-wise probe ROC-AUC for all 4 model conditions.
 
-    Single panel, x=layer, y=AUC. Llama (blue solid), R1-Distill (red solid),
-    Qwen NO_THINK (orange solid), Qwen THINK (orange dashed).
+    Uses real bootstrap CI data (vulnerable condition) for Llama and
+    R1-Distill when available, with shaded 95% confidence bands.
+    Qwen curves still from fallback/loaded AUCs.
     Hewitt-Liang control ceiling as horizontal dashed gray line.
-    Peak AUC values annotated at peak layers.
+    Peak AUC values annotated with CI ranges.
     """
     aucs = load_probe_layer_aucs()
+    bootstrap = load_bootstrap_cis()
 
     fig, ax = plt.subplots(figsize=(5.5, 3.5))
 
-    # --- Plot each model ---
-    # Llama (32 layers)
-    llama_layers = sorted(aucs["llama"].keys())
-    llama_vals = np.array([aucs["llama"][l] for l in llama_layers])
+    # --- Plot Llama (32 layers) with bootstrap CIs ---
+    if bootstrap is not None:
+        llama_bs = sorted(bootstrap["llama"], key=lambda d: d["layer"])
+        llama_layers = [d["layer"] for d in llama_bs]
+        llama_vals = np.array([d["auc_mean"] for d in llama_bs])
+        llama_ci_lo = np.array([d["ci_lower"] for d in llama_bs])
+        llama_ci_hi = np.array([d["ci_upper"] for d in llama_bs])
+    else:
+        llama_layers = sorted(aucs["llama"].keys())
+        llama_vals = np.array([aucs["llama"][l] for l in llama_layers])
+        llama_ci_lo = llama_ci_hi = None
+
     ax.plot(llama_layers, llama_vals,
             color=C_LLAMA, linestyle="-", linewidth=1.5,
             marker="o", markersize=2.5, markeredgewidth=0,
             label="Llama-3.1-8B", zorder=4)
+    if llama_ci_lo is not None:
+        ax.fill_between(llama_layers, llama_ci_lo, llama_ci_hi,
+                        color=C_LLAMA, alpha=0.2, zorder=2)
 
-    # R1-Distill (32 layers)
-    r1_layers = sorted(aucs["r1"].keys())
-    r1_vals = np.array([aucs["r1"][l] for l in r1_layers])
+    # --- Plot R1-Distill (32 layers) with bootstrap CIs ---
+    if bootstrap is not None:
+        r1_bs = sorted(bootstrap["r1"], key=lambda d: d["layer"])
+        r1_layers = [d["layer"] for d in r1_bs]
+        r1_vals = np.array([d["auc_mean"] for d in r1_bs])
+        r1_ci_lo = np.array([d["ci_lower"] for d in r1_bs])
+        r1_ci_hi = np.array([d["ci_upper"] for d in r1_bs])
+    else:
+        r1_layers = sorted(aucs["r1"].keys())
+        r1_vals = np.array([aucs["r1"][l] for l in r1_layers])
+        r1_ci_lo = r1_ci_hi = None
+
     ax.plot(r1_layers, r1_vals,
             color=C_R1, linestyle="-", linewidth=1.5,
             marker="s", markersize=2.5, markeredgewidth=0,
             label="R1-Distill-Llama-8B", zorder=4)
+    if r1_ci_lo is not None:
+        ax.fill_between(r1_layers, r1_ci_lo, r1_ci_hi,
+                        color=C_R1, alpha=0.2, zorder=2)
 
     # Qwen NO_THINK (36 layers)
     qnt_layers = sorted(aucs["qwen_nothink"].keys())
@@ -386,13 +440,20 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
             "Hewitt-Liang control ceiling",
             fontsize=6, color=C_CONTROL, va="bottom")
 
-    # --- Peak annotations (manually positioned for clarity) ---
+    # --- Peak annotations with CI values ---
     # Llama peak
     llama_pk_idx = int(np.argmax(llama_vals))
     llama_pk_l = llama_layers[llama_pk_idx]
     llama_pk_v = llama_vals[llama_pk_idx]
+    if llama_ci_lo is not None:
+        llama_pk_text = (
+            f"L{llama_pk_l}: {llama_pk_v:.3f}\n"
+            f"[{llama_ci_lo[llama_pk_idx]:.3f}, {llama_ci_hi[llama_pk_idx]:.3f}]"
+        )
+    else:
+        llama_pk_text = f"L{llama_pk_l}: {llama_pk_v:.3f}"
     ax.annotate(
-        f"L{llama_pk_l}: {llama_pk_v:.3f}",
+        llama_pk_text,
         xy=(llama_pk_l, llama_pk_v),
         xytext=(llama_pk_l + 8, 1.01),
         fontsize=6, color=C_LLAMA, fontweight="bold",
@@ -406,10 +467,17 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
     r1_pk_idx = int(np.argmax(r1_vals))
     r1_pk_l = r1_layers[r1_pk_idx]
     r1_pk_v = r1_vals[r1_pk_idx]
+    if r1_ci_lo is not None:
+        r1_pk_text = (
+            f"L{r1_pk_l}: {r1_pk_v:.3f}\n"
+            f"[{r1_ci_lo[r1_pk_idx]:.3f}, {r1_ci_hi[r1_pk_idx]:.3f}]"
+        )
+    else:
+        r1_pk_text = f"L{r1_pk_l}: {r1_pk_v:.3f}"
     ax.annotate(
-        f"L{r1_pk_l}: {r1_pk_v:.3f}",
+        r1_pk_text,
         xy=(r1_pk_l, r1_pk_v),
-        xytext=(r1_pk_l + 6, 0.87),
+        xytext=(r1_pk_l - 14, 0.84),
         fontsize=6, color=C_R1, fontweight="bold",
         arrowprops=dict(arrowstyle="-", color=C_R1, lw=0.6,
                         shrinkA=0, shrinkB=2,
@@ -430,7 +498,7 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
 
     # --- Axes ---
     ax.set_xlim(-0.5, 35.5)
-    ax.set_ylim(0.5, 1.02)
+    ax.set_ylim(0.5, 1.05)
     ax.set_xlabel("Layer index")
     ax.set_ylabel("ROC-AUC")
     ax.xaxis.set_major_locator(ticker.MultipleLocator(4))
@@ -713,6 +781,116 @@ def make_figure4_lure_distribution(output_dir: Path) -> Path:
 
 
 # ---------------------------------------------------------------------------
+# Figure 5: Extended Behavioral Heatmap (with sunk_cost & natural_frequency)
+# ---------------------------------------------------------------------------
+
+_EXT_CAT_ORDER = [
+    "base_rate", "conjunction", "syllogism", "CRT",
+    "arithmetic", "framing", "anchoring",
+    "sunk_cost", "natural_frequency",
+]
+
+_EXT_CAT_DISPLAY = {
+    **_CAT_DISPLAY,
+    "sunk_cost": "Sunk\nCost",
+    "natural_frequency": "Nat.\nFreq.",
+}
+
+
+def make_figure5_behavioral_extended(output_dir: Path) -> Path:
+    """Extended behavioral heatmap including sunk_cost and natural_frequency.
+
+    New category results:
+        sunk_cost:         0% lure rate for both models
+        natural_frequency: 100% Llama, 40% R1-Distill
+    """
+    behavioral = load_behavioral_data()
+
+    # Inject the new categories into the loaded data
+    ext_data: dict[str, dict[str, float | None]] = {}
+    for model in _MODEL_ORDER:
+        ext_data[model] = dict(behavioral.get(model, {}))
+
+    # sunk_cost: 0% for both Llama and R1, None for Qwen (not tested)
+    ext_data.setdefault("Llama-3.1-8B-Instruct", {})["sunk_cost"] = 0.0
+    ext_data.setdefault("R1-Distill-Llama-8B", {})["sunk_cost"] = 0.0
+    ext_data.setdefault("Qwen-3-8B-NO_THINK", {})["sunk_cost"] = None
+    ext_data.setdefault("Qwen-3-8B-THINK", {})["sunk_cost"] = None
+
+    # natural_frequency: 100% Llama, 40% R1, None for Qwen (not tested)
+    ext_data.setdefault("Llama-3.1-8B-Instruct", {})["natural_frequency"] = 100.0
+    ext_data.setdefault("R1-Distill-Llama-8B", {})["natural_frequency"] = 40.0
+    ext_data.setdefault("Qwen-3-8B-NO_THINK", {})["natural_frequency"] = None
+    ext_data.setdefault("Qwen-3-8B-THINK", {})["natural_frequency"] = None
+
+    n_models = len(_MODEL_ORDER)
+    n_cats = len(_EXT_CAT_ORDER)
+    matrix = np.full((n_models, n_cats), np.nan)
+    annotations: list[list[str]] = []
+
+    for i, model in enumerate(_MODEL_ORDER):
+        row_annot: list[str] = []
+        data = ext_data.get(model, {})
+        for j, cat in enumerate(_EXT_CAT_ORDER):
+            val = data.get(cat)
+            if val is not None:
+                matrix[i, j] = val
+                row_annot.append(f"{val:.0f}%")
+            else:
+                row_annot.append("")
+        annotations.append(row_annot)
+
+    annot_array = np.array(annotations)
+
+    fig, ax = plt.subplots(figsize=(5.5, 2.5))
+
+    cmap = sns.color_palette("Reds", as_cmap=True)
+    mask = np.isnan(matrix)
+
+    sns.heatmap(
+        matrix, ax=ax,
+        mask=mask,
+        cmap=cmap,
+        vmin=0, vmax=100,
+        annot=annot_array, fmt="",
+        annot_kws={"fontsize": 7, "fontweight": "bold"},
+        linewidths=0.8, linecolor="white",
+        cbar_kws={"label": "Lure rate (%)", "shrink": 0.8,
+                   "aspect": 15, "pad": 0.02},
+        square=False,
+    )
+
+    # Gray out missing cells
+    for i in range(n_models):
+        for j in range(n_cats):
+            if mask[i, j]:
+                ax.add_patch(mpl.patches.Rectangle(
+                    (j, i), 1, 1, fill=True, facecolor="#f0f0f0",
+                    edgecolor="white", linewidth=0.8))
+                ax.text(j + 0.5, i + 0.5, "n/a",
+                        ha="center", va="center",
+                        fontsize=5.5, color="#aaaaaa", fontstyle="italic")
+
+    # Labels
+    ax.set_xticklabels([_EXT_CAT_DISPLAY[c] for c in _EXT_CAT_ORDER],
+                       rotation=0, ha="center")
+    ax.set_yticklabels([_MODEL_DISPLAY[m] for m in _MODEL_ORDER],
+                       rotation=0, va="center")
+    ax.tick_params(axis="both", which="both", length=0)
+
+    # Separator line between original and new categories
+    ax.axvline(x=7, color="#666666", linewidth=1.2, linestyle="-")
+
+    # Colorbar tick formatting
+    cbar = ax.collections[0].colorbar
+    cbar.ax.tick_params(labelsize=6)
+    cbar.set_label("Lure rate (%)", fontsize=7)
+
+    fig.tight_layout()
+    return _save(fig, output_dir, "fig5_behavioral_extended")
+
+
+# ---------------------------------------------------------------------------
 # CLI entry point
 # ---------------------------------------------------------------------------
 
@@ -721,6 +899,7 @@ FIGURE_MAKERS = {
     2: ("fig2_behavioral_heatmap", make_figure2_behavioral_heatmap),
     3: ("fig3_cross_prediction", make_figure3_cross_prediction),
     4: ("fig4_lure_distribution", make_figure4_lure_distribution),
+    5: ("fig5_behavioral_extended", make_figure5_behavioral_extended),
 }
 
 

@@ -446,7 +446,7 @@ The following hypotheses were added after the benchmark was expanded from 284 to
 
 **Honest commitment**: If natural frequency framing does eliminate vulnerability, we will frame this as support for Gigerenzer's ecological rationality account and revise our interpretation of base rate neglect findings accordingly. We will not bury this result.
 
-**Result**: PENDING (awaiting GPU run on expanded benchmark).
+**RESULT: FALSIFIED (Gigerenzer prediction rejected).** Natural frequency framing INCREASED lure rates: Llama 84% -> 100%, R1-Distill 4% -> 40%. The reverse of Gigerenzer's prediction. LLMs do not benefit from ecological frequency formats. Sunk cost remained 0% for both models, confirming this is specific to base rate items. See `docs/gigerenzer_analysis.md` for full analysis.
 
 #### H9 [POST-HOC]: Conflict Detection via First-Token Probability (De Neys Paradigm)
 
@@ -685,5 +685,5 @@ Note: H2 (reasoning vs. standard comparison) is computed from H1 results and req
 | H6 (Geometric separability) | Pre-registered | **PENDING** | Partially subsumed by H1 |
 | H6b (Within-model dissociation) | Post-hoc | **CONFIRMED** | Qwen THINK/NO_THINK identical AUC 0.971 |
 | H7 (Sunk cost) | Post-hoc | **PENDING** | Awaiting GPU run on expanded benchmark |
-| H8 (Natural frequency) | Post-hoc | **PENDING** | Awaiting GPU run on expanded benchmark |
+| H8 (Natural frequency) | Post-hoc | **FALSIFIED** | Reverse Gigerenzer: frequency framing INCREASES lure rates (Llama 84%->100%, R1 4%->40%) |
 | H9 (De Neys conflict detection) | Post-hoc | **PENDING** | Awaiting GPU run |
