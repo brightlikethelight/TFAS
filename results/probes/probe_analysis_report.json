@@ -1,0 +1,260 @@
+{
+  "metadata": {
+    "description": "Layer-wise probe AUC analysis: Llama-3.1-8B vs R1-Distill-Llama-8B",
+    "source": "results/probes/llama_vs_r1_layer_aucs.json (B200 pod)",
+    "n_layers": 32,
+    "phase_definitions": {
+      "early": [
+        0,
+        7
+      ],
+      "mid": [
+        8,
+        15
+      ],
+      "late": [
+        16,
+        23
+      ],
+      "final": [
+        24,
+        31
+      ]
+    },
+    "note": "Summary statistics only. Full statistical tests require per-fold AUC arrays from the probe runner."
+  },
+  "llama_3_1_8b": {
+    "raw_aucs": {
+      "0": 0.848,
+      "1": 0.899,
+      "2": 0.926,
+      "3": 0.932,
+      "4": 0.927,
+      "5": 0.939,
+      "6": 0.933,
+      "7": 0.96,
+      "8": 0.952,
+      "9": 0.948,
+      "10": 0.971,
+      "11": 0.979,
+      "12": 0.988,
+      "13": 0.993,
+      "14": 0.999,
+      "15": 0.996,
+      "16": 0.995,
+      "17": 0.989,
+      "18": 0.991,
+      "19": 0.987,
+      "20": 0.978,
+      "21": 0.969,
+      "22": 0.968,
+      "23": 0.963,
+      "24": 0.978,
+      "25": 0.964,
+      "26": 0.965,
+      "27": 0.969,
+      "28": 0.981,
+      "29": 0.965,
+      "30": 0.973,
+      "31": 0.954
+    },
+    "basic_stats": {
+      "peak_layer": 14,
+      "peak_auc": 0.999,
+      "mean_auc": 0.96184375,
+      "std_auc": 0.031666721491180605,
+      "min_auc": 0.848,
+      "min_layer": 0
+    },
+    "curve_shape": {
+      "first_exceeds_0.90": 2,
+      "ever_reaches_0.90": true,
+      "n_layers_above_0.90": 30,
+      "first_exceeds_0.95": 7,
+      "ever_reaches_0.95": true,
+      "n_layers_above_0.95": 24,
+      "first_exceeds_0.99": 13,
+      "ever_reaches_0.99": true,
+      "n_layers_above_0.99": 5
+    }
+  },
+  "r1_distill_llama_8b": {
+    "raw_aucs": {
+      "0": 0.782,
+      "1": 0.831,
+      "2": 0.87,
+      "3": 0.901,
+      "4": 0.919,
+      "5": 0.928,
+      "6": 0.926,
+      "7": 0.927,
+      "8": 0.92,
+      "9": 0.928,
+      "10": 0.927,
+      "11": 0.922,
+      "12": 0.927,
+      "13": 0.927,
+      "14": 0.929,
+      "15": 0.919,
+      "16": 0.929,
+      "17": 0.923,
+      "18": 0.927,
+      "19": 0.914,
+      "20": 0.914,
+      "21": 0.923,
+      "22": 0.922,
+      "23": 0.917,
+      "24": 0.924,
+      "25": 0.922,
+      "26": 0.918,
+      "27": 0.906,
+      "28": 0.923,
+      "29": 0.924,
+      "30": 0.918,
+      "31": 0.904
+    },
+    "basic_stats": {
+      "peak_layer": 14,
+      "peak_auc": 0.929,
+      "mean_auc": 0.9122187500000001,
+      "std_auc": 0.03062439926994752,
+      "min_auc": 0.782,
+      "min_layer": 0
+    },
+    "curve_shape": {
+      "first_exceeds_0.90": 3,
+      "ever_reaches_0.90": true,
+      "n_layers_above_0.90": 29,
+      "first_exceeds_0.95": null,
+      "ever_reaches_0.95": false,
+      "n_layers_above_0.95": 0,
+      "first_exceeds_0.99": null,
+      "ever_reaches_0.99": false,
+      "n_layers_above_0.99": 0
+    }
+  },
+  "deliberation_gap": {
+    "per_layer_diff": {
+      "0": 0.066,
+      "1": 0.068,
+      "2": 0.056,
+      "3": 0.031,
+      "4": 0.008,
+      "5": 0.011,
+      "6": 0.007,
+      "7": 0.033,
+      "8": 0.032,
+      "9": 0.02,
+      "10": 0.044,
+      "11": 0.057,
+      "12": 0.061,
+      "13": 0.066,
+      "14": 0.07,
+      "15": 0.077,
+      "16": 0.066,
+      "17": 0.066,
+      "18": 0.064,
+      "19": 0.073,
+      "20": 0.064,
+      "21": 0.046,
+      "22": 0.046,
+      "23": 0.046,
+      "24": 0.054,
+      "25": 0.042,
+      "26": 0.047,
+      "27": 0.063,
+      "28": 0.058,
+      "29": 0.041,
+      "30": 0.055,
+      "31": 0.05
+    },
+    "mean_gap": 0.049625,
+    "std_gap": 0.018939206646190247,
+    "max_gap": 0.077,
+    "max_gap_layer": 15,
+    "min_gap": 0.007,
+    "min_gap_layer": 6,
+    "top5_gap_layers": [
+      [
+        15,
+        0.077
+      ],
+      [
+        19,
+        0.073
+      ],
+      [
+        14,
+        0.07
+      ],
+      [
+        1,
+        0.068
+      ],
+      [
+        0,
+        0.066
+      ]
+    ],
+    "all_positive": true
+  },
+  "phase_analysis": {
+    "early": {
+      "llama_mean_auc": 0.9205,
+      "r1_mean_auc": 0.8855,
+      "gap": 0.035,
+      "llama_std": 0.0338,
+      "r1_std": 0.0541
+    },
+    "mid": {
+      "llama_mean_auc": 0.9782,
+      "r1_mean_auc": 0.9249,
+      "gap": 0.0534,
+      "llama_std": 0.0197,
+      "r1_std": 0.0039
+    },
+    "late": {
+      "llama_mean_auc": 0.98,
+      "r1_mean_auc": 0.9211,
+      "gap": 0.0589,
+      "llama_std": 0.0122,
+      "r1_std": 0.0056
+    },
+    "final": {
+      "llama_mean_auc": 0.9686,
+      "r1_mean_auc": 0.9174,
+      "gap": 0.0513,
+      "llama_std": 0.0086,
+      "r1_std": 0.008
+    },
+    "gap_trajectory": [
+      [
+        "early",
+        0.035
+      ],
+      [
+        "mid",
+        0.0534
+      ],
+      [
+        "late",
+        0.0589
+      ],
+      [
+        "final",
+        0.0513
+      ]
+    ],
+    "gap_trend": "widens from early to final",
+    "peak_gap_phase": "late"
+  },
+  "interpretation": "Linear probes trained on residual stream activations discriminated S1-like from S2-like processing in both models, but with markedly different layer-wise profiles. Llama-3.1-8B achieved a peak AUC of 0.999 at layer 14 (mean across layers: 0.962), exhibiting a steep rise through the early and middle layers followed by a gradual decline in later layers. R1-Distill-Llama-8B peaked at 0.929 (layer 14), with a substantially flatter curve (mean AUC 0.912, SD 0.031 vs. 0.032 for Llama). The deliberation gap (Llama minus R1 AUC) was positive at every layer (mean 0.050, max 0.077 at layer 15), and widens from early to final. Notably, Llama first exceeded 0.95 AUC at layer 7 and 0.99 at layer 13, whereas R1-Distill never crossed the 0.95 threshold at any layer. The mid-layer phase (8--15) showed the largest gap (0.053), suggesting that reasoning distillation most strongly reshapes representations in the intermediate computation layers where Llama's S1/S2 signal peaks. These results are consistent with the hypothesis that reasoning distillation compresses the deliberation-intensity gradient in residual stream geometry, making S1-like and S2-like representations less linearly separable --- particularly in layers 10--15 where the base model shows maximal decodability. Caution is warranted: higher probe AUC in the base model could also reflect greater reliance on shallow heuristic features that probes can exploit, rather than richer processing-mode information per se.",
+  "statistical_tests_todo": {
+    "paired_bootstrap_peak_layer": "Use s1s2.utils.stats.paired_bootstrap_ci_diff on the per-fold AUC arrays at each model's respective peak layer (Llama layer 14, R1 layer 14 or 16). Statistic: lambda x, y: np.mean(x) - np.mean(y). n_resamples=10000. If the 95% CI excludes zero, the gap is significant.",
+    "phase_wise_permutation": "For each phase, pool per-fold AUC values across layers in that phase. Run s1s2.utils.stats.permutation_test_two_sample on the Llama vs R1 pools with n_permutations=10000, alternative='greater'. Apply BH-FDR across the 4 phases (s1s2.utils.stats.bh_fdr).",
+    "effect_size": "Report Cohen's d (s1s2.utils.stats.cohens_d) for the Llama vs R1 AUC difference per phase. Also report rank-biserial correlation (s1s2.utils.stats.rank_biserial) as a nonparametric alternative.",
+    "specificity_control_immune_categories": "Train the same logistic probe on categories expected to show no S1/S2 difference (e.g., factual recall, trivial arithmetic). If probe AUC on immune categories is near 0.5, the S1/S2 signal is not an artifact of general task-difficulty encoding. Report selectivity = real_AUC - control_AUC. Hewitt & Liang (2019) criterion: selectivity < 5pp means signal is probe expressiveness, not representation.",
+    "hewitt_liang_selectivity": "Train probes on shuffled (random) labels using s1s2.probes.controls.run_control_task. Report selectivity (real AUC - random-label AUC) per layer. If selectivity < 0.05, the probe signal at that layer is not meaningful.",
+    "cross_domain_transfer": "Leave-one-category-out evaluation: train on 6 bias categories, test on the 7th. If transfer AUC drops to ~0.5, probe learned category features not processing-mode features. Run for all 7 held-out categories."
+  }
+}
