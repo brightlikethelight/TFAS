@@ -36,6 +36,9 @@ TARGET_COUNTS: dict[TaskCategory, dict[str, int]] = {
     "conjunction": {"conflict": 20, "control": 20},
     "arithmetic": {"conflict": 25, "control": 25},
     "sunk_cost": {"conflict": 15, "control": 15},
+    "loss_aversion": {"conflict": 15, "control": 15},
+    "certainty_effect": {"conflict": 15, "control": 15},
+    "availability": {"conflict": 15, "control": 15},
 }
 
 # Token-count heuristic bounds for the prompt. Benchmark items should be

@@ -43,6 +43,9 @@ TaskCategory = Literal[
     "conjunction",
     "arithmetic",
     "sunk_cost",
+    "loss_aversion",
+    "certainty_effect",
+    "availability",
 ]
 
 ALL_CATEGORIES: Final[tuple[TaskCategory, ...]] = (
@@ -54,6 +57,9 @@ ALL_CATEGORIES: Final[tuple[TaskCategory, ...]] = (
     "conjunction",
     "arithmetic",
     "sunk_cost",
+    "loss_aversion",
+    "certainty_effect",
+    "availability",
 )
 
 # Behavioral response classification

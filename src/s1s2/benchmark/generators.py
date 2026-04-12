@@ -1171,6 +1171,350 @@ def _narrate_step(i: int, op: str, v: int, *, trap_index: int) -> str:
 
 
 # --------------------------------------------------------------------- #
+# loss aversion                                                         #
+# --------------------------------------------------------------------- #
+
+
+@beartype
+def loss_aversion_isomorph(
+    *,
+    pair_id: str,
+    scenario: str,
+    win_prob: float,
+    win_amount: int | float,
+    lose_prob: float,
+    lose_amount: int | float,
+    subcategory: str = "positive_ev_gamble",
+    difficulty: int = 3,
+) -> tuple[BenchmarkItem, BenchmarkItem]:
+    """Loss aversion pair: reject a positive-EV gamble because of loss framing.
+
+    The conflict item presents a gamble with clearly positive expected
+    value (win_prob * win_amount - lose_prob * lose_amount > 0) but
+    frames it with an explicit loss component. The System-1 lure is
+    to Reject the gamble due to loss aversion even though the EV is
+    positive. The correct answer is Accept.
+
+    The control presents the same EV without any loss framing (as a
+    guaranteed expected gain), so both S1 and S2 agree on Accept.
+
+    The EV ratio (EV / lose_amount) must be > 1.2 so the correct
+    answer is unambiguous.
+    """
+    if not (0.0 < win_prob < 1.0 and 0.0 < lose_prob < 1.0):
+        raise ValueError("probabilities must be strictly between 0 and 1")
+    if abs(win_prob + lose_prob - 1.0) > 1e-9:
+        raise ValueError("win_prob + lose_prob must equal 1.0")
+    if win_amount <= 0 or lose_amount <= 0:
+        raise ValueError("amounts must be positive")
+
+    ev = win_prob * win_amount - lose_prob * lose_amount
+    if ev <= 0:
+        raise ValueError(f"EV must be positive, got {ev:.2f}")
+    if ev / lose_amount < 1.2:
+        raise ValueError(
+            f"EV/lose_amount ratio must be > 1.2 for unambiguous answer, "
+            f"got {ev / lose_amount:.2f}"
+        )
+
+    ev_str = f"${ev:,.0f}" if ev >= 1 else f"${ev:.2f}"
+    win_pct = _pct(win_prob)
+    lose_pct = _pct(lose_prob)
+
+    conflict_prompt = (
+        f"{scenario} You are offered the following gamble: "
+        f"{win_pct} chance of winning ${win_amount:,.0f}, "
+        f"{lose_pct} chance of losing ${lose_amount:,.0f}. "
+        f"The expected value is {ev_str}.\n\n"
+        "Should you accept or reject this gamble based on expected "
+        "value alone?\n\n"
+        "Answer with one word: Accept or Reject."
+    )
+    control_prompt = (
+        f"{scenario} You are offered a payment with an expected "
+        f"value of {ev_str}. There is no possibility of loss. "
+        "Should you accept or reject this offer based on expected "
+        "value alone?\n\n"
+        "Answer with one word: Accept or Reject."
+    )
+
+    paraphrases_conflict = [
+        (
+            f"Consider this gamble. {scenario} "
+            f"Win ${win_amount:,.0f} with probability {win_pct}; "
+            f"lose ${lose_amount:,.0f} with probability {lose_pct}. "
+            f"EV = {ev_str}. On expected value grounds, should you "
+            "accept or reject? One word: Accept or Reject."
+        ),
+        (
+            f"{scenario} A gamble offers {win_pct} chance of "
+            f"+${win_amount:,.0f} and {lose_pct} chance of "
+            f"-${lose_amount:,.0f} (EV = {ev_str}). "
+            "Judging purely by expected value, do you Accept or "
+            "Reject? Answer in one word."
+        ),
+    ]
+    paraphrases_control = [
+        (
+            f"{scenario} You can receive an expected payment of "
+            f"{ev_str} with no downside risk. Accept or Reject? "
+            "One word."
+        ),
+    ]
+
+    return _build_pair(
+        pair_id=pair_id,
+        category="loss_aversion",
+        subcategory=subcategory,
+        difficulty=difficulty,
+        conflict_prompt=conflict_prompt,
+        control_prompt=control_prompt,
+        correct_answer="Accept",
+        lure_answer="Reject",
+        source="novel",
+        provenance_note=(
+            "Loss aversion isomorph in the Kahneman-Tversky (1979) "
+            "prospect theory tradition. Conflict presents a positive-EV "
+            f"gamble (EV={ev_str}) with explicit loss framing; "
+            "control removes the loss frame."
+        ),
+        paraphrases_conflict=paraphrases_conflict,
+        paraphrases_control=paraphrases_control,
+    )
+
+
+# --------------------------------------------------------------------- #
+# certainty effect                                                       #
+# --------------------------------------------------------------------- #
+
+
+@beartype
+def certainty_effect_isomorph(
+    *,
+    pair_id: str,
+    scenario: str,
+    certain_amount: int | float,
+    gamble_prob: float,
+    gamble_amount: int | float,
+    control_a_prob: float,
+    control_a_amount: int | float,
+    control_b_prob: float,
+    control_b_amount: int | float,
+    subcategory: str = "allais_isomorph",
+    difficulty: int = 3,
+) -> tuple[BenchmarkItem, BenchmarkItem]:
+    """Certainty effect pair: prefer certain option despite lower EV.
+
+    The conflict item offers A (certain_amount for sure) vs B
+    (gamble_prob chance of gamble_amount). B has higher EV, but the
+    certainty of A acts as a System-1 lure. Correct answer is B.
+
+    The control offers two probabilistic options (no certainty anchor)
+    where B still has higher EV. Both S1 and S2 agree on B.
+
+    Answer format: A or B. Correct is always B.
+    """
+    if not (0.0 < gamble_prob <= 1.0):
+        raise ValueError("gamble_prob must be in (0, 1]")
+    if certain_amount <= 0 or gamble_amount <= 0:
+        raise ValueError("amounts must be positive")
+
+    ev_certain = certain_amount
+    ev_gamble = gamble_prob * gamble_amount
+    if ev_gamble <= ev_certain:
+        raise ValueError(
+            f"gamble EV ({ev_gamble:.0f}) must exceed certain amount "
+            f"({ev_certain:.0f}) for B to be correct"
+        )
+
+    if not (0.0 < control_a_prob <= 1.0 and 0.0 < control_b_prob <= 1.0):
+        raise ValueError("control probabilities must be in (0, 1]")
+    ev_ctrl_a = control_a_prob * control_a_amount
+    ev_ctrl_b = control_b_prob * control_b_amount
+    if ev_ctrl_b <= ev_ctrl_a:
+        raise ValueError(
+            f"control B EV ({ev_ctrl_b:.0f}) must exceed control A EV "
+            f"({ev_ctrl_a:.0f}) for B to be correct"
+        )
+
+    gamble_pct = _pct(gamble_prob)
+    ctrl_a_pct = _pct(control_a_prob)
+    ctrl_b_pct = _pct(control_b_prob)
+
+    conflict_prompt = (
+        f"{scenario}\n\n"
+        f"Option A: ${certain_amount:,.0f} for certain.\n"
+        f"Option B: {gamble_pct} chance of ${gamble_amount:,.0f} "
+        f"(expected value = ${ev_gamble:,.0f}).\n\n"
+        "Which option has higher expected value? Answer A or B."
+    )
+    control_prompt = (
+        f"{scenario}\n\n"
+        f"Option A: {ctrl_a_pct} chance of ${control_a_amount:,.0f} "
+        f"(expected value = ${ev_ctrl_a:,.0f}).\n"
+        f"Option B: {ctrl_b_pct} chance of ${control_b_amount:,.0f} "
+        f"(expected value = ${ev_ctrl_b:,.0f}).\n\n"
+        "Which option has higher expected value? Answer A or B."
+    )
+
+    paraphrases_conflict = [
+        (
+            f"{scenario} Choose between: "
+            f"A) a guaranteed ${certain_amount:,.0f}; "
+            f"B) a {gamble_pct} chance of ${gamble_amount:,.0f} "
+            f"(EV=${ev_gamble:,.0f}). "
+            "Which has higher expected value, A or B? One letter."
+        ),
+        (
+            f"{scenario} "
+            f"A: ${certain_amount:,.0f} certain (EV=${ev_certain:,.0f}). "
+            f"B: {gamble_pct} of ${gamble_amount:,.0f} "
+            f"(EV=${ev_gamble:,.0f}). "
+            "Comparing expected values only, which is better? "
+            "Reply A or B."
+        ),
+    ]
+    paraphrases_control = [
+        (
+            f"{scenario} "
+            f"A: {ctrl_a_pct} of ${control_a_amount:,.0f} "
+            f"(EV=${ev_ctrl_a:,.0f}). "
+            f"B: {ctrl_b_pct} of ${control_b_amount:,.0f} "
+            f"(EV=${ev_ctrl_b:,.0f}). "
+            "Which option has higher expected value? A or B."
+        ),
+    ]
+
+    return _build_pair(
+        pair_id=pair_id,
+        category="certainty_effect",
+        subcategory=subcategory,
+        difficulty=difficulty,
+        conflict_prompt=conflict_prompt,
+        control_prompt=control_prompt,
+        correct_answer="B",
+        lure_answer="A",
+        source="novel",
+        provenance_note=(
+            "Certainty effect isomorph in the Allais (1953) / "
+            "Kahneman-Tversky (1979) tradition. Conflict offers a "
+            f"certain ${certain_amount:,.0f} vs {gamble_pct} of "
+            f"${gamble_amount:,.0f} (EV=${ev_gamble:,.0f}); "
+            "control removes the certainty anchor."
+        ),
+        paraphrases_conflict=paraphrases_conflict,
+        paraphrases_control=paraphrases_control,
+    )
+
+
+# --------------------------------------------------------------------- #
+# availability heuristic                                                 #
+# --------------------------------------------------------------------- #
+
+
+@beartype
+def availability_isomorph(
+    *,
+    pair_id: str,
+    vivid_event: str,
+    mundane_event: str,
+    vivid_deaths: int,
+    mundane_deaths: int,
+    control_event_a: str,
+    control_event_b: str,
+    control_deaths_a: int,
+    control_deaths_b: int,
+    subcategory: str = "frequency_judgment",
+    difficulty: int = 3,
+) -> tuple[BenchmarkItem, BenchmarkItem]:
+    """Availability heuristic pair: vivid/media-salient vs mundane frequency.
+
+    The conflict item asks which of two causes kills more people per
+    year: a vivid, media-prominent but rarer event vs a mundane but
+    more frequent one. The System-1 lure is to name the vivid event
+    (availability bias). The correct answer is the mundane event.
+
+    The control uses two events with similar salience where the more
+    frequent one is also more salient, so S1 and S2 agree.
+
+    The vivid event must be at least 3x rarer than the mundane one.
+    """
+    if vivid_deaths <= 0 or mundane_deaths <= 0:
+        raise ValueError("death counts must be positive")
+    if mundane_deaths < vivid_deaths * 3:
+        raise ValueError(
+            f"mundane_deaths ({mundane_deaths}) must be at least 3x "
+            f"vivid_deaths ({vivid_deaths}) for the lure to exist"
+        )
+    if vivid_event.strip().lower() == mundane_event.strip().lower():
+        raise ValueError("events must be different")
+
+    if control_deaths_a <= 0 or control_deaths_b <= 0:
+        raise ValueError("control death counts must be positive")
+    if control_deaths_b <= control_deaths_a:
+        raise ValueError(
+            "control_deaths_b must exceed control_deaths_a so B is correct"
+        )
+
+    conflict_prompt = (
+        "Which of the following causes more deaths per year in the "
+        "United States?\n\n"
+        f"A) {vivid_event}\n"
+        f"B) {mundane_event}\n\n"
+        "Answer with one letter: A or B."
+    )
+    control_prompt = (
+        "Which of the following causes more deaths per year in the "
+        "United States?\n\n"
+        f"A) {control_event_a}\n"
+        f"B) {control_event_b}\n\n"
+        "Answer with one letter: A or B."
+    )
+
+    paraphrases_conflict = [
+        (
+            f"In the US, which kills more people annually: "
+            f"{vivid_event.lower()} or {mundane_event.lower()}? "
+            "Answer A or B."
+        ),
+        (
+            "Consider two causes of death in the United States. "
+            f"A: {vivid_event}. B: {mundane_event}. "
+            "Which has a higher annual death toll? Reply with one "
+            "letter."
+        ),
+    ]
+    paraphrases_control = [
+        (
+            "In the US, which kills more people annually: "
+            f"A) {control_event_a}, or B) {control_event_b}? "
+            "Answer A or B."
+        ),
+    ]
+
+    return _build_pair(
+        pair_id=pair_id,
+        category="availability",
+        subcategory=subcategory,
+        difficulty=difficulty,
+        conflict_prompt=conflict_prompt,
+        control_prompt=control_prompt,
+        correct_answer="B",
+        lure_answer="A",
+        source="novel",
+        provenance_note=(
+            "Availability heuristic isomorph in the Tversky-Kahneman "
+            "(1973) tradition. Conflict: vivid/media-salient "
+            f"{vivid_event!r} (~{vivid_deaths}/yr) vs mundane "
+            f"{mundane_event!r} (~{mundane_deaths}/yr). "
+            "Control uses events with aligned salience and frequency."
+        ),
+        paraphrases_conflict=paraphrases_conflict,
+        paraphrases_control=paraphrases_control,
+    )
+
+
+# --------------------------------------------------------------------- #
 # bulk helper                                                           #
 # --------------------------------------------------------------------- #
 
