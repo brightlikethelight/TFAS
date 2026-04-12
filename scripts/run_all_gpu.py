@@ -34,7 +34,8 @@ from typing import Any
 # Environment — set before any imports that touch HF/torch
 # ---------------------------------------------------------------------------
 os.environ["HF_HOME"] = "/workspace/hf_cache"
-os.environ["HF_TOKEN"] = "$HF_TOKEN"
+# Set HF_TOKEN via environment variable or .env file — never hardcode
+os.environ.setdefault("HF_TOKEN", os.getenv("HF_TOKEN", ""))
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 
 # ---------------------------------------------------------------------------
