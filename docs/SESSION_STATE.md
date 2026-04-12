@@ -1,7 +1,7 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-13 evening (session 7 — major expansion: benchmark, paper, 7 new scripts)
-**Active focus**: Benchmark expanded to 380+ items (sunk cost + Gigerenzer natural frequency; loss aversion + certainty effect + availability in progress). Paper updated with 11 new citations + Dead Salmons safeguards. 7 new scripts ready for GPU deployment. **Targeting ICML MechInterp Workshop (May 8, ~24 days).**
+**Last updated**: 2026-04-13 evening (session 7 — major expansion complete)
+**Active focus**: Benchmark at 470 items (11 categories, 4 heuristic families). Paper updated with 15 new citations + Dead Salmons safeguards. 7 new deployment scripts ready. **Targeting ICML MechInterp Workshop (May 8, ~24 days). GPU deployment script ready: `scripts/run_all_gpu.py`.**
 
 ---
 
