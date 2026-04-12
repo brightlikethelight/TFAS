@@ -89,3 +89,24 @@ models:
     sae_release: null
     matched_pair_with: ministral-3-8b-instruct
     thinking_format: "<think>...</think>"   # Same convention as R1-Distill
+
+  # --- OLMo-3-7B matched pair (Allen AI) ---
+  # Backup for Ministral-3-8B (which requires Mistral3Config unsupported by
+  # transformers). Same base model, different post-training. Fully open
+  # (data + weights + code), Apache 2.0, standard transformer attention.
+  olmo-3-7b-instruct:
+    hf_id: allenai/OLMo-3-7B-Instruct
+    hdf5_key: allenai_OLMo-3-7B-Instruct
+    family: olmo
+    is_reasoning: false
+    sae_release: null
+    matched_pair_with: olmo-3-7b-think
+
+  olmo-3-7b-think:
+    hf_id: allenai/OLMo-3-7B-Think
+    hdf5_key: allenai_OLMo-3-7B-Think
+    family: olmo
+    is_reasoning: true
+    sae_release: null
+    matched_pair_with: olmo-3-7b-instruct
+    thinking_format: "<|think_start|>...<|think_end|>"
