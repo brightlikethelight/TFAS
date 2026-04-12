@@ -59,3 +59,33 @@ models:
     head_dim: 128
     is_reasoning: true
     sae_release: null
+
+  # --- Ministral-3-8B matched pair (Dec 2025) ---
+  # Cleanest comparison: same base, same tokenizer, cascade distillation
+  # from Mistral AI. Both Apache 2.0. Instruct vs Reasoning only.
+  ministral-3-8b-instruct:
+    hf_id: mistralai/Ministral-3-8B-Instruct-2512
+    hdf5_key: mistralai_Ministral-3-8B-Instruct-2512
+    family: mistral
+    n_layers: 32
+    n_heads: 32
+    n_kv_heads: 8
+    hidden_dim: 4096
+    head_dim: 128
+    is_reasoning: false
+    sae_release: null      # No public SAEs yet — train custom or probe-only
+    matched_pair_with: ministral-3-8b-reasoning
+
+  ministral-3-8b-reasoning:
+    hf_id: mistralai/Ministral-3-8B-Reasoning-2512
+    hdf5_key: mistralai_Ministral-3-8B-Reasoning-2512
+    family: mistral
+    n_layers: 32
+    n_heads: 32
+    n_kv_heads: 8
+    hidden_dim: 4096
+    head_dim: 128
+    is_reasoning: true
+    sae_release: null
+    matched_pair_with: ministral-3-8b-instruct
+    thinking_format: "<think>...</think>"   # Same convention as R1-Distill
