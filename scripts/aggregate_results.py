@@ -24,10 +24,9 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
-
 
 # ---------------------------------------------------------------------------
 # Constants -- expected file locations relative to results_dir
@@ -653,13 +652,13 @@ def generate_table3_cross_prediction(cross_pred: dict[str, Any]) -> str:
     all_layers: set[int] = set()
     for model_data in cross_pred.values():
         aucs = model_data.get("layer_aucs", {})
-        all_layers.update(int(k) for k in aucs.keys())
+        all_layers.update(int(k) for k in aucs)
 
     if not all_layers:
         all_layers = {0, 4, 8, 12, 14, 16, 20, 24, 28, 31}
 
     sorted_layers = sorted(all_layers)
-    layer_cols = " ".join(f"c" for _ in sorted_layers)
+    layer_cols = " ".join("c" for _ in sorted_layers)
 
     lines = [
         "% Table 3: Cross-Prediction (Vulnerable -> Immune)",
@@ -672,7 +671,7 @@ def generate_table3_cross_prediction(cross_pred: dict[str, Any]) -> str:
         "\\small",
         f"\\begin{{tabular}}{{l {layer_cols} c}}",
         "\\toprule",
-        "Model & " + " & ".join(f"L{l}" for l in sorted_layers) + " & Mean \\\\",
+        "Model & " + " & ".join(f"L{layer}" for layer in sorted_layers) + " & Mean \\\\",
         "\\midrule",
     ]
 
@@ -810,7 +809,7 @@ def _print_section(title: str) -> None:
 def print_summary(summary: dict[str, Any]) -> None:
     """Print a human-readable summary to stdout."""
     meta = summary.get("metadata", {})
-    print(f"\ns1s2 Results Summary")
+    print("\ns1s2 Results Summary")
     print(f"Generated: {meta.get('generated_at', 'unknown')}")
     print(f"Source: {meta.get('results_dir', 'unknown')}")
 
@@ -869,7 +868,7 @@ def print_summary(summary: dict[str, Any]) -> None:
     for model, data in lure.items():
         mean = data.get("mean", "?")
         std = data.get("std", "?")
-        sign = "+" if isinstance(mean, (int, float)) and mean > 0 else ""
+        sign = "+" if isinstance(mean, int | float) and mean > 0 else ""
         print(f"  {model}: mean {sign}{mean}, std {std}")
 
     # Geometry
@@ -930,7 +929,7 @@ def aggregate(results_dir: Path) -> dict[str, Any]:
 
     summary: dict[str, Any] = {
         "metadata": {
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "results_dir": str(results_dir),
             "script": "scripts/aggregate_results.py",
             "n_json_files_found": len(all_jsons),

@@ -56,8 +56,9 @@
 Reasoning-trained large language models resist cognitive bias lures that
 trip up their standard counterparts, but does this behavioral shift
 reflect a genuine change in internal computation?  We present a
-contrastive benchmark of 330 items (165 matched conflict/control pairs)
-across 7 cognitive bias categories and apply linear probes to residual
+contrastive benchmark of 470 items (235 matched conflict/control pairs)
+across 11 cognitive bias categories spanning 4 heuristic families, and
+apply linear probes to residual
 stream activations of models that share \emph{identical} architectures
 but differ in training.  Behaviorally, Llama-3.1-8B-Instruct falls for
 heuristic lures at a 27.3\% overall rate, while R1-Distill-Llama-8B
@@ -103,27 +104,21 @@ dissociation between conflict \emph{monitoring} and conflict
 \emph{resolution} with clear neural correlates in the anterior cingulate
 cortex \citep{botvinick2001conflict}.
 
-Large language models exhibit strikingly analogous behavioral patterns.
-Instruction-tuned models reproduce human-like errors on conflict
-items---problems where a salient heuristic cue diverges from the correct
-answer---while succeeding on matched controls
-\citep{hagendorff2023human}.  Reasoning-trained models (e.g., those
-distilled from DeepSeek-R1) resist many of these lures
-\citep{deepseekr1}, though recent clinical evaluations suggest the
-protection is bias-specific rather than universal
-\citep{schwartz2025clinical}.  A growing literature documents these behavioral
-parallels \citep{xie2025cogsci, codaforno2025dual, ziabari2025reasoning},
-and \citet{huang2026cogbias} recently demonstrated that linear probes
-can detect and steer cognitive biases via internal representations.
+LLMs exhibit analogous patterns: instruction-tuned models reproduce
+human-like errors on conflict items while succeeding on matched controls
+\citep{hagendorff2023human}, and reasoning-trained models resist many
+such lures \citep{deepseekr1}, though the protection is bias-specific
+rather than universal \citep{schwartz2025clinical}.  A growing literature
+documents these parallels \citep{xie2025cogsci, codaforno2025dual,
+ziabari2025reasoning}, and \citet{huang2026cogbias} showed that linear
+probes can detect and steer cognitive biases via internal representations.
 
 Yet behavior alone cannot distinguish genuine processing-mode differences
-from surface mimicry.  Chain-of-thought traces are often unfaithful to
-underlying computation: only ${\sim}2.3$\% of reasoning steps causally
-influence the final answer \citep{jiang2025aha, lanham2023measuring,
-boppana2026reasoning}.
-The critical open question is not whether LLMs \emph{behave} as if they
-have fast and slow modes, but whether such modes have
-\emph{mechanistic correlates} in internal representations---and how
+from surface mimicry---chain-of-thought traces are often unfaithful,
+with only ${\sim}2.3$\% of reasoning steps causally influencing the
+final answer \citep{jiang2025aha, lanham2023measuring,
+boppana2026reasoning}.  The critical question is whether fast/slow modes
+have \emph{mechanistic correlates} in internal representations, and how
 those correlates change when a model is trained to reason.
 
 We address this question with a natural experiment: Llama-3.1-8B-Instruct
@@ -133,10 +128,11 @@ reasoning distillation training.  Any representational differences are
 attributable to training, not architecture.  We make four contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
-  \item A \textbf{contrastive cognitive bias benchmark} of 380 items
-  (190 matched conflict/control pairs) across 8 categories spanning two
-  heuristic families (representativeness and loss aversion), with novel
-  isomorphs to resist memorization.
+  \item A \textbf{contrastive cognitive bias benchmark} of 470 items
+  (235 matched conflict/control pairs) across 11 categories spanning
+  four heuristic families (representativeness, loss aversion, certainty
+  weighting, and availability), with novel isomorphs to resist
+  memorization.
 
   \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
   overall lure rate (standard) vs.\ 2.4\% (reasoning), with
@@ -179,8 +175,8 @@ no-conflict control \citep{deneys2012bias}; (2) all items use novel
 surface features to resist memorization; and (3) category diversity
 enables specificity analysis.
 
-The benchmark comprises \textbf{380 items} organized as \textbf{190
-matched pairs} across eight categories spanning two heuristic families:
+The benchmark comprises \textbf{470 items} organized as \textbf{235
+matched pairs} across 11 categories spanning four heuristic families:
 
 \begin{itemize}[leftmargin=*,itemsep=1pt]
   \item \textbf{Base rate neglect} (35 pairs): Bayesian reasoning with
@@ -192,10 +188,6 @@ matched pairs} across eight categories spanning two heuristic families:
   where detailed descriptions make conjunctions seem more likely.
   \item \textbf{Belief-bias syllogisms} (25 pairs): logical validity
   crossed with conclusion believability.
-  \item \textbf{Sunk cost fallacy} (15 pairs): decision scenarios where
-  large prior investment tempts continuation despite negative expected
-  value---a distinct heuristic family (loss aversion; Arkes \& Blumer,
-  1985) from the representativeness items above.
   \item \textbf{CRT variants} (30 pairs): structural isomorphs of
   Cognitive Reflection Test items with novel surface features.
   \item \textbf{Arithmetic} (25 pairs): multi-step computation with
@@ -204,7 +196,23 @@ matched pairs} across eight categories spanning two heuristic families:
   equivalent decisions.
   \item \textbf{Anchoring} (20 pairs): numerical estimation with
   extreme vs.\ neutral anchors.
+  \item \textbf{Sunk cost fallacy} (15 pairs): decision scenarios where
+  large prior investment tempts continuation despite negative expected
+  value (loss aversion family).
+  \item \textbf{Loss aversion} (15 pairs): risky gambles where
+  loss-framed and gain-framed options have identical expected value.
+  \item \textbf{Certainty effect} (15 pairs): preference for certain
+  outcomes over probabilistically equivalent or superior gambles
+  (certainty weighting family; Kahneman \& Tversky, 1979).
+  \item \textbf{Availability heuristic} (15 pairs): frequency and risk
+  judgments where vivid or recent exemplars bias estimation
+  (availability family).
 \end{itemize}
+
+\noindent The final four categories (sunk cost, loss aversion, certainty
+effect, availability; 60 pairs) and the 10 natural frequency base rate
+pairs are pending behavioral validation.  All primary analyses use
+the original 7-category, 165-pair subset (330 items).
 
 \noindent Each item is scored on a four-way classification: \emph{correct},
 \emph{S1-lure} (the specific heuristic-predicted wrong answer),
@@ -233,12 +241,11 @@ and non-thinking (\texttt{/no\_think}) modes, providing a
 
 \subsection{Activation Extraction}
 
-For each model--item pair, we extract residual stream activations (output
-of each transformer block, post-MLP and post-residual connection) at all
-32 layers at position \pzero{}: the last token of the prompt before
-generation begins.  This position captures the model's ``pre-decision''
-representation---the internal state from which the answer is generated.
-Activations are stored in BFloat16 in HDF5.
+For each model--item pair, we extract residual stream activations
+(post-MLP, post-residual) at all 32 layers at position \pzero{}: the
+last prompt token before generation.  This ``pre-decision'' position
+captures the internal state from which the answer is generated.
+Activations are stored in BFloat16 (HDF5).
 
 \subsection{Linear Probes with Hewitt--Liang Controls}
 \label{sec:probes}
@@ -279,10 +286,12 @@ responses on conflict items) across all models and categories.
 \begin{table}[t]
 \centering
 \caption{S1-lure rates (\%) on conflict items by model and category
-  (original 330-item benchmark).  Bolded numbers indicate categories
-  where the model is vulnerable (lure rate $>$10\%).  Categories where
-  all models are immune (0\% lure) are grouped at bottom.  Sunk cost
-  and natural frequency items (50 additional) pending behavioral validation.}
+  (330-item subset: 165 pairs across 7 categories).  Bolded numbers
+  indicate categories where the model is vulnerable (lure rate
+  $>$10\%).  Categories where all models are immune (0\% lure) are
+  grouped at bottom.  The remaining 4 categories (sunk cost, loss
+  aversion, certainty effect, availability; 60 pairs) and 10 natural
+  frequency base rate pairs are pending behavioral validation.}
 \label{tab:behavioral}
 \vspace{4pt}
 \small
@@ -379,7 +388,9 @@ activations---extracted at the same \pzero{} position before the
 \texttt{<think>} block begins---reach \emph{identical} peak
 AUC\,=\,0.971 at layer~34.  Despite a 3$\times$ behavioral improvement
 (lure rate $21\% \to 7\%$), the pre-generation representation is
-unchanged.  The informativeness of the pre-generation position is consistent with \citet{afzal2025knowing}, who showed that probing classifiers can predict chain-of-thought success before the first token is generated.  This is the key dissociation: training (Llama vs.\ R1-Distill)
+unchanged---consistent with \citet{afzal2025knowing}, who showed probes
+can predict chain-of-thought success before the first token is generated.
+This is the key dissociation: training (Llama vs.\ R1-Distill)
 changes both encoding and behavior; inference-time thinking (Qwen no-think
 vs.\ think) changes behavior without changing encoding.
 
@@ -495,7 +506,10 @@ suggests that reasoning distillation makes Type~2 processing
 default'' \citep{evans2019reflections, evans2013dual}.  On this view,
 R1-Distill does not override S1 with S2; it has internalized the
 deliberative pathway so thoroughly that it no longer needs a sharp
-conflict signal to route items correctly.  This interpretation is further supported by evidence that base models already possess reasoning capabilities latently, with post-training primarily teaching \emph{when} to deploy them rather than \emph{how} \citep{venhoff2025base}.  The lure susceptibility scores
+conflict signal to route items correctly---consistent with evidence
+that base models already possess latent reasoning capabilities, with
+post-training teaching \emph{when} to deploy them rather than
+\emph{how} \citep{venhoff2025base}.  The lure susceptibility scores
 confirm this: Llama's pre-generation representation actively favors the
 lure ($+0.422$), while R1-Distill's favors the correct answer
 ($-0.326$).  Reasoning training doesn't just blur a boundary---it
@@ -508,67 +522,60 @@ This category-specificity mirrors Stanovich's concept of \emph{dysrationalia}
 \citep{stanovich2016rationality}: rational thinking deficits are
 domain-specific, not general.  Just as high-IQ humans can fail base rate
 problems while acing CRT variants, our models show selective vulnerability
-that is specific to certain heuristic families.  The addition of sunk cost
-fallacy items (loss aversion family) to our benchmark will test whether
-this specificity extends across heuristic families or is confined to
+that is specific to certain heuristic families.  Behavioral validation of the four pending categories (sunk cost, loss
+aversion, certainty effect, availability) will test whether this
+specificity extends across heuristic families or is confined to
 representativeness-based biases.
 
 \paragraph{Training vs.\ inference.}
-The Qwen think/no-think result is the sharpest finding in this paper.
-Thinking mode reduces the overall lure rate from 21\% to 7\%---a
-genuine behavioral intervention on the same weights.  Yet probes on
-the pre-generation activations are identical in both modes
-(AUC\,=\,0.971 at L34).  The thinking toggle does not change what the
-model \emph{encodes} at \pzero{}; it changes what the model \emph{does}
-during generation.  Combined with the Llama/R1-Distill comparison
+Qwen's think/no-think result is the sharpest finding: thinking mode
+reduces lure rates from 21\% to 7\% on the same weights, yet probes
+are identical in both modes (AUC\,=\,0.971 at L34).  The toggle
+changes what the model \emph{does} during generation, not what it
+\emph{encodes} at \pzero{}.  Combined with the Llama/R1-Distill comparison
 (where training \emph{does} change encoding: 0.999 $\to$ 0.929), this
 yields a clean dissociation: \textbf{training changes \sone{}/\stwo{}
 encoding; inference-time thinking changes \sone{}/\stwo{} behavior
 without changing encoding.}
 
-This dissociation has a neuroscience analogue: the distinction between
-structural and functional plasticity \citep{kolb2013brain}.  Training
-changes the weights (structural plasticity), while inference-time
-thinking changes the activation pattern (functional plasticity).  The
-standard model's P0 representation is, in effect, ``structurally wired''
-to favor the heuristic; the reasoning model's P0 representation is
-structurally rewired to favor the normative answer; and the
-thinking-mode model achieves behavioral improvement through functional
-adaptation on an unchanged structural substrate.
+This parallels the neuroscience distinction between structural and
+functional plasticity \citep{kolb2013brain}: training rewires the weights
+so that P0 favors the normative answer; inference-time thinking adapts
+the activation pattern on an unchanged structural substrate.  This is
+consistent with \citet{ziabari2025reasoning} and
+\citet{codaforno2025dual}'s overlapping subspaces, but adds a new
+dimension: the encoding/behavior dissociation reveals two distinct
+mechanisms for bias resistance, not one.
 
-This is consistent with the ``Reasoning on a
-Spectrum'' finding of \citet{ziabari2025reasoning} and with
-\citet{codaforno2025dual}'s observation of overlapping subspaces, but
-adds a new dimension: the encoding/behavior dissociation suggests these
-are two distinct mechanisms for bias resistance, not one.
-
-\paragraph{Specificity is confirmed.}
-The cross-prediction results (Section~\ref{sec:specificity}) resolve
-the surface-feature confound.  Llama's vulnerable-category probe
-yields transfer AUC\,=\,0.378 on immune categories---effectively random.
-The transfer matrix further shows that vulnerable categories share a
-processing-mode direction (mutual AUC\,$\geq$\,0.950) that does not
-extend to CRT items (transfer AUC\,=\,0.062).  The probe captures
-how the model processes lures, not that lures are present.
+\paragraph{Specificity.}
+Cross-prediction (Section~\ref{sec:specificity}) resolves the
+surface-feature confound: Llama's vulnerable-category probe yields
+transfer AUC\,=\,0.378 on immune categories, and the transfer matrix
+shows vulnerable categories share a processing-mode direction
+(mutual AUC\,$\geq$\,0.950) absent in CRT (AUC\,=\,0.062).  The probe
+captures how the model processes lures, not that lures are present.
 
 \paragraph{Relation to CogBias.}
-\citet{huang2026cogbias} demonstrated practical bias reduction (26--32\%)
-via activation steering on cognitive bias probes.  Our work is
-complementary: they show that bias-related directions are \emph{steerable};
-we show that the same directions are \emph{reorganized} by reasoning
-training.  Together, these findings suggest a future intervention strategy:
-identify the directions that reasoning training blurs, and steer standard
-models along those directions to approximate the reasoning model's
-robustness without the computational cost of chain-of-thought generation.
-Methodologically, our work extends beyond CogBias in three respects:
-(i)~continuous lure susceptibility scores rather than binary
-classification, (ii)~cross-category transfer analysis revealing shared
-bias representations, and (iii)~a within-model reasoning toggle (Qwen
-think/no-think) providing the cleanest possible natural experiment for
-mechanistic dual-process claims.
+\citet{huang2026cogbias} showed that bias-related directions are
+\emph{steerable} (26--32\% bias reduction via activation steering);
+we show the same directions are \emph{reorganized} by reasoning training.
+This suggests a practical strategy: steer standard models along the
+directions that reasoning training blurs, approximating the reasoning
+model's robustness without chain-of-thought cost.  We extend CogBias
+methodologically via (i)~continuous lure susceptibility scores,
+(ii)~cross-category transfer analysis, and (iii)~a within-model
+reasoning toggle (Qwen think/no-think).
 
 \paragraph{Methodological safeguards.}
-Recent work has shown that probing analyses can produce plausible-seeming results even on randomly initialized networks \citep{meloux2025dead}, and SAE features frequently fail falsification tests against random baselines \citep{sanitychecks2026}. We address these concerns in three ways. First, our Hewitt--Liang control probes (Section~\ref{sec:probes}) establish that the signal exceeds probe expressiveness by >40 percentage points. Second, the cross-prediction test (Section~\ref{sec:specificity}) provides a structural falsification: if the probe captured noise rather than processing-mode information, transfer AUC would not systematically drop to 0.378 on immune categories. Third, the inter-model comparison itself is a control: identical prompts produce different probe AUCs (0.999 vs.\ 0.929) only if the models represent the same inputs differently---noise-level features would produce identical performance on identical inputs.
+Probing can produce plausible results even on random networks
+\citep{meloux2025dead}, and SAE features often fail falsification
+\citep{sanitychecks2026}.  We address this three ways: (1)~Hewitt--Liang
+controls (Section~\ref{sec:probes}) show selectivity $>$40pp;
+(2)~cross-prediction (Section~\ref{sec:specificity}) provides structural
+falsification---noise probes would not systematically drop to
+AUC\,=\,0.378 on immune categories; (3)~the inter-model comparison is
+itself a control---identical prompts yield different AUCs (0.999
+vs.\ 0.929) only if the models encode inputs differently.
 
 \paragraph{Limitations.}
 (i) Model scale: all models are 8B parameters; the blurring effect may
@@ -601,6 +608,10 @@ resistance.
 We thank Harvard Undergraduate AI Safety (HUSAI) for supporting this
 project and [advisor name] for guidance.  Compute was provided by
 RunPod.
+
+\paragraph{Code and Data.}
+Code, benchmark, and activation data will be released at [URL upon
+acceptance].
 
 % ============================================================
 % References

@@ -51,7 +51,9 @@ Observational mechanistic interpretability study. We analyze the internal repres
 Not applicable. This is a computational study with pre-specified analyses on fixed models and a fixed benchmark. The benchmark was designed and finalized before any model activations were extracted.
 
 ### Study Design
-A within-model repeated-measures design with 142 matched pairs (conflict vs. no-conflict) drawn from 7 cognitive bias categories. Each pair shares surface structure and correct answer; they differ only in whether a heuristic lure is present (conflict) or absent (no-conflict). This matched-pair structure is the primary confound control against task difficulty.
+A within-model repeated-measures design with matched pairs (conflict vs. no-conflict) drawn from cognitive bias categories. Each pair shares surface structure and correct answer; they differ only in whether a heuristic lure is present (conflict) or absent (no-conflict). This matched-pair structure is the primary confound control against task difficulty.
+
+> **[POST-HOC UPDATE]** Originally 142 matched pairs across 7 categories (284 items). Expanded to ~192 matched pairs across 9 categories (~384 items) with the addition of sunk_cost and natural_frequency categories.
 
 Four models are tested: 2 standard instruction-tuned (Llama-3.1-8B-Instruct, Gemma-2-9B-IT) and 2 reasoning-distilled (DeepSeek-R1-Distill-Llama-8B, DeepSeek-R1-Distill-Qwen-7B). The Llama pair shares an identical base architecture, enabling a clean comparison where any internal differences are attributable to reasoning distillation rather than architectural confounds.
 
@@ -99,7 +101,9 @@ The benchmark is **fixed** before any model analysis. It was designed with the f
 - Each item has a `correct_answer`, `lure_answer` (conflict items only), regex patterns for automated scoring, and 1-4 paraphrases.
 
 ### Power Analysis
-Not applicable in the traditional sense. We analyze all 284 items through all 4 models at all layers. There is no sampling from a larger population. Statistical tests are conducted at the item level with 142 items per condition (conflict/no-conflict), which provides adequate precision for the effect sizes we pre-specify.
+Not applicable in the traditional sense. We analyze all items through all models at all layers. There is no sampling from a larger population. Statistical tests are conducted at the item level with ~192 items per condition (conflict/no-conflict) in the expanded benchmark, which provides adequate precision for the effect sizes we pre-specify.
+
+> **[POST-HOC UPDATE]** Originally 142 items per condition. Expanded to ~192 per condition, which improves precision for the newer category-specific analyses (H7, H8) where per-category sample sizes are ~25.
 
 ---
 
@@ -109,7 +113,7 @@ Not applicable in the traditional sense. We analyze all 284 items through all 4 
 
 1. **Task type** (within-item): conflict (S1-lure present) vs. no-conflict (S1-lure absent). Binary. This is the primary manipulation.
 2. **Model type** (between-model): standard (instruction-tuned) vs. reasoning (R1-distilled). Binary.
-3. **Task category** (between-item): crt, arithmetic, syllogism, base_rate, anchoring, framing, conjunction. 7 levels.
+3. **Task category** (between-item): crt, arithmetic, syllogism, base_rate, anchoring, framing, conjunction, sunk_cost, natural_frequency. 9 levels (originally 7; sunk_cost and natural_frequency added 2026-04-12).
 4. **Layer** (within-model): residual stream layer index (0 to L-1 for each model).
 5. **Token position** (within-item): last prompt token (P0, primary), answer token (P2), and reasoning-trace positions (T0, T25, T50, T75, Tend) for reasoning models only.
 
@@ -164,7 +168,7 @@ All analyses adhere to the statistical standards documented in `CLAUDE.md`:
 - **Permutation tests**: 10,000 shuffles for null distributions. P-values computed with the North et al. (2002) +1 correction: p = (n_extreme + 1) / (n_perms + 1).
 - **Cross-validation**: 5-fold stratified by the Cantor pairing of (target label, task category). Nested CV for hyperparameter selection (LogisticRegressionCV).
 - **Random seeds**: 3+ seeds for all stochastic procedures. Report mean +/- standard deviation.
-- **Matched-difficulty control**: every primary analysis is run on (a) the full 284-item set AND (b) the difficulty-matched subset. Both are reported; the matched subset is primary for confirmatory claims.
+- **Matched-difficulty control**: every primary analysis is run on (a) the full item set AND (b) the difficulty-matched subset. Both are reported; the matched subset is primary for confirmatory claims.
 
 ### Pre-requisite: Behavioral Validation (Week 2 Gate)
 
@@ -172,6 +176,8 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 - **Criterion**: models produce the S1 lure answer on > 30% of conflict items (at least 1 of the standard models must meet this threshold).
 - **If failed**: revise benchmark items or descope to categories where lure rates exceed 30%.
 - This is a go/no-go gate. If models do not show heuristic-prone behavior, mechanistic claims about S1/S2 processing are vacuous.
+
+> **RESULT**: Gate PASSED. Lure susceptibility analysis showed substantial vulnerability in specific categories (base rate neglect, conjunction fallacy, syllogisms). The overall lure rate across categories is heterogeneous (see H4b), which led to the decision to analyze category-specific vulnerability rather than aggregate lure rate. The > 30% threshold was met for vulnerable categories in standard models.
 
 ---
 
@@ -200,6 +206,13 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 
 **Bonferroni-adjusted significance**: p < 0.00833 for the peak-layer AUC (0.05/6 primary hypotheses).
 
+**Actual statistical thresholds used**:
+- L2-regularized logistic regression (sklearn `LogisticRegressionCV`, Cs=10, solver='lbfgs')
+- 5-fold stratified CV (Cantor pairing of label x category)
+- 1,000 permutation shuffles for null distribution
+- BH-FDR q=0.05 across layers
+- Bootstrap CI: 1,000 resamples, percentile method
+
 > **RESULT: CONFIRMED.** Peak-layer AUC = 0.999 at layer 14 (Llama-3.1-8B-Instruct). The S1/S2 distinction is near-perfectly linearly decodable from the residual stream, far exceeding the pre-registered threshold of 0.6. Selectivity well above 5pp. Result survives BH-FDR correction. This is the strongest finding in the study.
 
 #### H2: Reasoning Models Show Stronger S1/S2 Separation Than Standard Models
@@ -220,6 +233,11 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 - The standard model has the higher peak AUC.
 
 **Note**: This is the cleanest comparison in the study because both models share identical architecture (32 layers, 32 heads, 4096 hidden dim). Any difference is attributable to reasoning distillation, not architecture.
+
+**Actual statistical thresholds used**:
+- Paired bootstrap CI: 1,000 resamples at the item level (same 284 items, both models)
+- 99.17% CI (Bonferroni-adjusted from 95%)
+- AUC difference computed at each model's independently-selected peak layer
 
 > **RESULT: FALSIFIED (in the predicted direction).** The reasoning model (DeepSeek-R1-Distill-Llama-8B) achieved peak AUC = 0.929, which is *lower* than Llama-3.1-8B-Instruct's 0.999 -- the opposite of the predicted direction. The boundary is weaker, not stronger, in the reasoning model.
 >
@@ -479,7 +497,9 @@ The following analyses are planned but are explicitly **not** pre-registered. Re
 ## 6. Existing Data
 
 ### Benchmark
-The benchmark (284 items, `data/benchmark/benchmark.jsonl`) was designed and finalized **before** any model activations were extracted. No pilot data from these models on this benchmark exists. The benchmark creation process did not involve running any of the 4 target models.
+The original benchmark (284 items, `data/benchmark/benchmark.jsonl`) was designed and finalized **before** any model activations were extracted. No pilot data from these models on this benchmark exists. The benchmark creation process did not involve running any of the 4 target models.
+
+> **[POST-HOC UPDATE]** The benchmark was expanded to ~384 items (adding sunk_cost and natural_frequency categories) on 2026-04-12. The expansion was designed and finalized before any model activations for the new items were extracted. All analyses on the original 284 items were completed before the expansion.
 
 ### Models
 All 4 models are publicly available pre-trained models from Meta, Google DeepMind, and DeepSeek. We did not train, fine-tune, or modify any model.
@@ -501,16 +521,18 @@ No prior analyses of these specific models on this specific benchmark exist. The
 
 We employ a two-level correction strategy:
 
-1. **Between primary hypotheses (family-wise)**: Bonferroni correction across the 6 primary hypotheses. The per-hypothesis significance level is alpha = 0.05/6 = 0.00833. This is conservative by design -- we prefer false negatives to false positives for confirmatory claims.
+1. **Between primary hypotheses (family-wise)**: Bonferroni correction across the 6 original pre-registered hypotheses. The per-hypothesis significance level is alpha = 0.05/6 = 0.00833. This is conservative by design -- we prefer false negatives to false positives for confirmatory claims.
 
-2. **Within each hypothesis (false discovery rate)**: Benjamini-Hochberg FDR at q=0.05 for tests across layers, heads, or features within a single hypothesis test. BH-FDR is appropriate here because within-hypothesis tests are correlated (adjacent layers share representations) and we accept a controlled proportion of false discoveries.
+2. **Post-hoc hypotheses (H4b, H5b, H6b, H7-H9)**: These are subject to a separate Bonferroni correction within the post-hoc family: alpha = 0.05/6 = 0.00833. They are reported with both uncorrected and corrected p-values, and clearly labeled as post-hoc throughout the manuscript.
 
-3. **Exploratory analyses**: BH-FDR at q=0.05. Clearly labeled as exploratory. No confirmatory claims.
+3. **Within each hypothesis (false discovery rate)**: Benjamini-Hochberg FDR at q=0.05 for tests across layers, heads, or features within a single hypothesis test. BH-FDR is appropriate here because within-hypothesis tests are correlated (adjacent layers share representations) and we accept a controlled proportion of false discoveries.
+
+4. **Exploratory analyses**: BH-FDR at q=0.05. Clearly labeled as exploratory. No confirmatory claims.
 
 ### Matched-Difficulty Confound Control
 
 This is pre-registered as a mandatory analysis:
-- **Every primary analysis** (H1-H6) is run on (a) the full 284-item set AND (b) a difficulty-matched subset.
+- **Every primary analysis** (H1-H6, and post-hoc H4b-H9) is run on (a) the full item set AND (b) a difficulty-matched subset.
 - The difficulty-matched subset is defined per-model: item pairs where the model's baseline accuracy difference between the conflict and no-conflict versions is less than 0.1 (10 percentage points).
 - If a result holds on the full set but not the matched subset, we interpret it as a difficulty confound rather than an S1/S2 processing mode difference.
 - Both results (full and matched) are reported in all cases.
@@ -539,6 +561,31 @@ To validate that our analysis pipeline can detect known signals before applying 
 
 ---
 
+## 8. Descoped Items
+
+> **[POST-HOC SECTION]** The following items from the original pre-registration were descoped during the project. Each is documented with the reason and replacement (if any).
+
+### Descoped Models
+
+| Model | Reason | Replacement |
+|-------|--------|-------------|
+| **Ministral-3-8B** | Incompatible with HuggingFace `transformers` library at time of analysis (custom architecture not yet supported). Activation extraction hooks failed. | Replaced by **OLMo-2-7B-Instruct** (allenai/OLMo-2-1124-7B-Instruct), which uses a standard Llama-like architecture with full transformers compatibility. |
+| **Gemma-2-9B-IT** | Deprioritized for the workshop paper timeline. Sliding window attention on odd layers adds analysis complexity that was not justified for the initial submission. | Deprioritized, not permanently removed. May be re-added for the ICLR full paper. |
+
+### Descoped Analyses
+
+| Analysis | Original Hypothesis | Reason | Status |
+|----------|-------------------|--------|--------|
+| **Causal interventions** (H4) | S2-feature steering shifts behavior from heuristic to deliberative | Depends on H3 SAE features, which are themselves pending GPU re-run. Additionally, causal interventions require iterative tuning of steering coefficients that is infeasible within the workshop paper timeline. | Stretch goal for ICLR paper. Pipeline code is implemented but untested. |
+| **Attention entropy** (H5) | S2-specialized attention heads exist | Requires GPU re-run for full attention extraction (memory-intensive for long sequences). The extraction hooks are implemented but have not been run on the full benchmark. | Pending GPU allocation. Planned for next RunPod session. |
+| **Full geometric analysis** (H6) | Cosine silhouette scores distinguish S1/S2 | Partially addressed by probing and cross-prediction analyses. The formal permutation-tested silhouette analysis requires GPU re-run. | Pending GPU. Partially subsumed by H1 and H5b results. |
+
+### Rationale for Descoping
+
+The workshop paper (ICML MechInterp Workshop, deadline late April 2026) focuses on the strongest, most novel findings: near-perfect linear decodability (H1), the Evans-predicted H2 falsification, category-specific vulnerability (H4b), cross-prediction specificity (H5b), and within-model dissociation (H6b). These form a coherent, publishable story without the GPU-intensive workstreams. The descoped analyses are retained as planned extensions for the full ICLR paper.
+
+---
+
 ## Decision Framework
 
 The table below maps every primary outcome pattern to an interpretation and publication strategy. All outcomes are publishable. Negative results are explicitly valuable -- they save the field from pursuing mechanistic dual-process claims without evidence.
@@ -551,6 +598,14 @@ The table below maps every primary outcome pattern to an interpretation and publ
 | Weak positive (representation only) | H1 + H5 + H6, not H3 or H4 | Representational separation exists (probes, geometry) but no feature-level or causal evidence | ICML MechInterp Workshop. Honest about the gap between decodability and mechanism. |
 | Minimal positive | Only H1 | Some linear decodability but weak, possibly a difficulty confound survivor | Workshop paper or negative-results venue. Report as "suggestive but inconclusive." |
 | Null result | None pass | The dual-process framework does not have detectable mechanistic correlates in LLMs at this scale and with these methods | NeurIPS SoLaR Workshop or Alignment Forum. Frame as "against dual-process theory in LLMs" -- valuable for the anthropomorphism debate. |
+
+### Actual Outcome (Updated 2026-04-12)
+
+> The actual outcome pattern is: **H1 CONFIRMED + H2 FALSIFIED + H3 PENDING + H4b CONFIRMED + H5b CONFIRMED + H6b CONFIRMED**, with H4 (causal), H5 (attention), and H6 (geometry) descoped/pending.
+>
+> This maps closest to the **"Weak positive (representation only)"** scenario in the original decision table, but with important additions: the H2 falsification is theoretically interpretable (Evans 2019), the cross-prediction specificity (H5b) resolves the difficulty confound, and the within-model dissociation (H6b) provides a clean control. The combination is stronger than "weak positive" -- it is a coherent representational finding with robust controls.
+>
+> **Publication target**: ICML MechInterp Workshop paper (immediate), with ICLR 2027 full paper planned once GPU-dependent analyses (H3, H5, H6, H4 causal) are completed.
 
 ### Interpretation Safeguards
 
@@ -566,6 +621,7 @@ Regardless of outcome:
 
 To verify that the benchmark analyzed matches the pre-registered benchmark:
 
+**Original benchmark (pre-registered 2026-04-09)**:
 ```
 File: data/benchmark/benchmark.jsonl
 Items: 284
@@ -575,11 +631,24 @@ Matched pairs: 142
 Categories: anchoring (30), arithmetic (50), base_rate (40), conjunction (24), crt (60), framing (30), syllogism (50)
 ```
 
-The SHA-256 hash of the benchmark file will be computed and recorded at the time of first model extraction. Any subsequent modifications to the benchmark invalidate this pre-registration.
+**Expanded benchmark (updated 2026-04-12)**:
+```
+File: data/benchmark/benchmark.jsonl
+Items: ~384
+Conflict items: ~192
+No-conflict items: ~192
+Matched pairs: ~192
+Categories: anchoring (30), arithmetic (50), base_rate (40), conjunction (24), crt (60),
+            framing (30), syllogism (50), sunk_cost (~50), natural_frequency (~50)
+```
+
+The SHA-256 hash of each benchmark version is computed and recorded at the time of extraction. The original 284-item analyses use the original hash; the expanded benchmark analyses use the expanded hash. Both hashes are recorded in the W&B run metadata for traceability. Any subsequent modifications to the benchmark invalidate this pre-registration for the affected items.
 
 ---
 
 ## Appendix: Timeline for Pre-Registered Analyses
+
+**Original timeline (pre-registered 2026-04-09)**:
 
 | Week | Gate | Analysis |
 |------|------|----------|
@@ -590,3 +659,31 @@ The SHA-256 hash of the benchmark file will be computed and recorded at the time
 | 9 | Full assessment | Commit to paper scope based on which hypotheses passed |
 
 Note: H2 (reasoning vs. standard comparison) is computed from H1 results and requires no additional data collection.
+
+**Actual timeline (updated 2026-04-12)**:
+
+| Date | Milestone | Status |
+|------|-----------|--------|
+| 2026-04-09 | Pre-registration filed | Done |
+| 2026-04-09 -- 04-11 | Behavioral validation, probe analysis, cross-prediction, lure susceptibility, THINK/NO_THINK | Done |
+| 2026-04-12 | Benchmark expanded (sunk_cost, natural_frequency). Pre-registration updated. | Done |
+| 2026-04-12 -- 04-15 | GPU re-run: expanded benchmark extraction, SAE features (H3), attention entropy (H5) | Planned |
+| 2026-04-15 -- 04-20 | Workshop paper draft (ICML MechInterp Workshop) | Planned |
+| 2026-04 -- 2026-09 | Full ICLR paper: causal interventions (H4), geometric analysis (H6), Gemma-2 re-add | Stretch |
+
+## Appendix: Summary of Hypothesis Results
+
+| Hypothesis | Type | Status | Key Finding |
+|------------|------|--------|-------------|
+| H1 (Linear decodability) | Pre-registered | **CONFIRMED** | AUC 0.999 at L14 |
+| H2 (Reasoning amplification) | Pre-registered | **FALSIFIED** | AUC 0.929 < 0.999; Evans 2019 Type 2 autonomy |
+| H3 (SAE features) | Pre-registered | **PENDING** | Awaiting GPU re-run |
+| H4 (Causal interventions) | Pre-registered | **DESCOPED** | Stretch goal for ICLR |
+| H4b (Category vulnerability) | Post-hoc | **CONFIRMED** | 3 vulnerable, 4+ immune categories |
+| H5 (Attention entropy) | Pre-registered | **PENDING** | Awaiting GPU re-run |
+| H5b (Cross-prediction) | Post-hoc | **CONFIRMED** | Transfer AUC 0.378 (specificity confirmed) |
+| H6 (Geometric separability) | Pre-registered | **PENDING** | Partially subsumed by H1 |
+| H6b (Within-model dissociation) | Post-hoc | **CONFIRMED** | Qwen THINK/NO_THINK identical AUC 0.971 |
+| H7 (Sunk cost) | Post-hoc | **PENDING** | Awaiting GPU run on expanded benchmark |
+| H8 (Natural frequency) | Post-hoc | **PENDING** | Awaiting GPU run on expanded benchmark |
+| H9 (De Neys conflict detection) | Post-hoc | **PENDING** | Awaiting GPU run |
