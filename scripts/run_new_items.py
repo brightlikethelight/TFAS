@@ -82,7 +82,8 @@ def run_model(
         if item.get("system_prompt"):
             messages.insert(0, {"role": "system", "content": item["system_prompt"]})
 
-        input_ids = tok.apply_chat_template(messages, return_tensors="pt").to("cuda")
+        enc = tok.apply_chat_template(messages, return_tensors="pt", add_generation_prompt=True)
+        input_ids = (enc.input_ids if hasattr(enc, "input_ids") else enc).to("cuda")
         with torch.no_grad():
             out = model.generate(
                 input_ids,

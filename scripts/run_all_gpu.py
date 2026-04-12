@@ -90,7 +90,7 @@ def check_gpu() -> None:
     n_gpus = torch.cuda.device_count()
     for i in range(n_gpus):
         name = torch.cuda.get_device_name(i)
-        total = torch.cuda.get_device_properties(i).total_mem / 1e9
+        total = torch.cuda.get_device_properties(i).total_memory / 1e9
         log(f"  GPU {i}: {name} — {total:.1f} GB VRAM")
 
     # Quick allocation test

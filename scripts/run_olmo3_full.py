@@ -857,7 +857,7 @@ def main() -> int:
         log("FATAL: CUDA not available")
         return 1
     log(f"CUDA device: {torch.cuda.get_device_name(0)}")
-    log(f"VRAM total: {torch.cuda.get_device_properties(0).total_mem / 1e9:.1f} GB")
+    log(f"VRAM total: {torch.cuda.get_device_properties(0).total_memory / 1e9:.1f} GB")
 
     # Process each model independently so failures are isolated
     all_behavioral: dict[str, list[dict] | None] = {}
