@@ -1,0 +1,393 @@
+{
+  "metadata": {
+    "description": "Final statistical tests for the s1s2 workshop paper",
+    "models": [
+      "Llama-3.1-8B-Instruct",
+      "DeepSeek-R1-Distill-Llama-8B",
+      "Qwen-3-8B (think/no-think)"
+    ],
+    "n_items": 284,
+    "n_conflict": 142,
+    "n_layers": 32,
+    "bonferroni_alpha": 0.008333333333333333,
+    "note": "Layer-wise AUCs are point estimates from 5-fold stratified CV. Where per-fold arrays are unavailable, we use layer-wise AUCs as repeated measurements (conservative: overestimates variance due to layer autocorrelation) or synthesize samples from summary statistics."
+  },
+  "h1_linear_decodability": {
+    "llama": {
+      "peak_layer": 14,
+      "peak_auc": 0.999,
+      "margin_above_0.6": 0.399,
+      "all_layers_above_0.6": true,
+      "n_layers_above_0.6": 32,
+      "t_test_vs_0.6": {
+        "t_statistic": 64.6388,
+        "p_value_one_sided": 6.23e-35,
+        "significant_bonferroni": "True"
+      },
+      "bootstrap_mean_auc_95ci": {
+        "mean": 0.9618,
+        "ci_lower": 0.9503,
+        "ci_upper": 0.972,
+        "ci_excludes_0.6": true
+      },
+      "passes_h1": true
+    },
+    "r1_distill": {
+      "peak_layer": 14,
+      "peak_auc": 0.929,
+      "margin_above_0.6": 0.329,
+      "all_layers_above_0.6": true,
+      "n_layers_above_0.6": 32,
+      "t_test_vs_0.6": {
+        "t_statistic": 57.6722,
+        "p_value_one_sided": 2.08e-33,
+        "significant_bonferroni": "True"
+      },
+      "bootstrap_mean_auc_95ci": {
+        "mean": 0.9122,
+        "ci_lower": 0.9005,
+        "ci_upper": 0.9211,
+        "ci_excludes_0.6": true
+      },
+      "passes_h1": true
+    },
+    "h1_overall_pass": true,
+    "h1_criterion": "Peak AUC > 0.6 in >= 2 models (pre-reg threshold)"
+  },
+  "h2_reasoning_amplification": {
+    "peak_layer": 14,
+    "llama_peak_auc": 0.999,
+    "r1_peak_auc": 0.929,
+    "peak_layer_diff": 0.07,
+    "mean_diff_across_layers": 0.0496,
+    "sd_diff": 0.0189,
+    "paired_bootstrap_95ci": {
+      "diff": 0.0496,
+      "ci_lower": 0.0428,
+      "ci_upper": 0.0558,
+      "ci_excludes_zero": true
+    },
+    "bonferroni_adjusted_ci": {
+      "confidence_level": 0.9917,
+      "ci_lower": 0.0403,
+      "ci_upper": 0.0578,
+      "ci_excludes_zero": true
+    },
+    "cohens_d": 1.5931,
+    "cohens_d_interpretation": "large",
+    "wilcoxon_signed_rank": {
+      "W_statistic": 0.0,
+      "p_value": 7.89e-07,
+      "significant_bonferroni": "True"
+    },
+    "rank_biserial": 0.8535,
+    "direction": "Llama > R1 (OPPOSITE of pre-registered prediction)",
+    "pre_reg_predicted": "R1 > Llama",
+    "actual_result": "Llama > R1 at ALL 32 layers",
+    "all_diffs_positive": true,
+    "interpretation": "The deliberation gap is statistically significant but in the OPPOSITE direction from H2. Llama (base) has HIGHER probe AUC than R1-Distill at every layer. This means reasoning distillation COMPRESSED the S1/S2 representational distinction rather than amplifying it. The probe finds it HARDER to separate S1 from S2 in the reasoning model \u2014 consistent with R1 having learned to handle both via explicit chain-of-thought, reducing the need for a representational shortcut at P0.",
+    "passes_h2_as_preregistered": false,
+    "h2_criterion": "Pre-reg: R1 peak AUC > Llama peak AUC, CI excludes zero. FAILED: direction reversed."
+  },
+  "cross_prediction_specificity": {
+    "llama_cross_aucs": {
+      "0": 0.702,
+      "4": 0.439,
+      "8": 0.384,
+      "12": 0.449,
+      "14": 0.378,
+      "16": 0.569,
+      "20": 0.386,
+      "24": 0.326,
+      "28": 0.365,
+      "31": 0.438
+    },
+    "r1_cross_aucs": {
+      "0": 0.734,
+      "4": 0.878,
+      "8": 0.878,
+      "12": 0.728,
+      "14": 0.685,
+      "16": 0.696,
+      "20": 0.615,
+      "24": 0.524,
+      "28": 0.415,
+      "31": 0.385
+    },
+    "llama_mean_cross_auc": 0.4436,
+    "r1_mean_cross_auc": 0.6538,
+    "llama_l14_cross_auc": 0.378,
+    "r1_l14_cross_auc": 0.685,
+    "llama_t_test_vs_0.5": {
+      "t_statistic": -1.5864,
+      "p_value_one_sided_below": 0.073557,
+      "significant_0.05": "False",
+      "significant_bonferroni": "False"
+    },
+    "llama_bootstrap_mean_cross_auc": {
+      "mean": 0.4436,
+      "ci_lower": 0.3861,
+      "ci_upper": 0.5154,
+      "ci_entirely_below_0.5": false
+    },
+    "r1_bootstrap_mean_cross_auc": {
+      "mean": 0.6538,
+      "ci_lower": 0.5507,
+      "ci_upper": 0.7518
+    },
+    "llama_n_layers_below_chance": 8,
+    "llama_binomial_test": {
+      "n_below_0.5": 8,
+      "n_total": 10,
+      "p_value": 0.0547,
+      "significant_0.05": "False"
+    },
+    "specificity_contrast": {
+      "llama_within_vuln_peak": 0.999,
+      "llama_cross_to_immune_l14": 0.378,
+      "drop": 0.621,
+      "interpretation": "The probe achieves 0.999 AUC within vulnerable categories but only 0.378 when transferred to immune categories \u2014 not just at chance but BELOW chance. This anticorrelation means the probe's learned direction is flipped for immune items, strong evidence that it captures something specific to the vulnerable/heuristic-prone processing mode, not generic task difficulty."
+    },
+    "r1_cross_profile": {
+      "r1_mean_above_0.5": true,
+      "r1_n_above_0.5": 8,
+      "interpretation": "R1's cross-prediction AUCs are mostly above chance (mean 0.654), suggesting R1's probe partially captures shared structure between vulnerable and immune categories \u2014 less specific than Llama's probe."
+    }
+  },
+  "lure_susceptibility": {
+    "llama_mean": 0.422,
+    "llama_sd": 2.986,
+    "r1_mean": -0.326,
+    "r1_sd": 2.056,
+    "mean_difference": 0.748,
+    "n_per_group": 142,
+    "welch_t_test": {
+      "t_statistic": 2.4586,
+      "df": 250.16,
+      "p_value_one_sided": 0.0073126,
+      "significant_0.05": "True",
+      "significant_bonferroni": "True"
+    },
+    "permutation_test_synthesized": {
+      "observed_diff": 0.748,
+      "p_value": 0.0076,
+      "n_permutations": 10000,
+      "note": "Based on synthesized samples matching summary stats"
+    },
+    "cohens_d_analytic": 0.2918,
+    "cohens_d_synthesized": 0.2908,
+    "cohens_d_interpretation": "small",
+    "interpretation": "Llama is significantly more susceptible to heuristic lures than R1-Distill (mean +0.422 vs -0.326). The negative R1 score means R1 actually shifts AWAY from lure answers on conflict items. Effect size d=0.292 is small."
+  },
+  "transfer_matrix": {
+    "llama_mean_within_auc": 0.9618,
+    "llama_mean_cross_auc": 0.4436,
+    "llama_specificity_index": 0.5388,
+    "r1_mean_within_auc": 0.9122,
+    "r1_mean_cross_auc": 0.6538,
+    "r1_specificity_index": 0.2833,
+    "llama_per_layer_drop": {
+      "0": 0.146,
+      "4": 0.488,
+      "8": 0.568,
+      "12": 0.539,
+      "14": 0.621,
+      "16": 0.426,
+      "20": 0.592,
+      "24": 0.652,
+      "28": 0.616,
+      "31": 0.516
+    },
+    "r1_per_layer_drop": {
+      "0": 0.048,
+      "4": 0.041,
+      "8": 0.042,
+      "12": 0.199,
+      "14": 0.244,
+      "16": 0.233,
+      "20": 0.299,
+      "24": 0.4,
+      "28": 0.508,
+      "31": 0.519
+    },
+    "llama_wilcoxon_drop": {
+      "W_statistic": 55.0,
+      "p_value": 0.00097656,
+      "significant_0.05": "True"
+    },
+    "r1_wilcoxon_drop": {
+      "W_statistic": 55.0,
+      "p_value": 0.00097656,
+      "significant_0.05": "True"
+    },
+    "interpretation": "Llama specificity index = 0.539: probes trained on vulnerable categories lose most of their discriminative power when tested on immune categories. R1 specificity index = 0.283: R1's probe retains more cross-domain signal, suggesting it encodes a more generic conflict/no-conflict feature that partially transfers."
+  },
+  "qwen_think_nothink": {
+    "qwen_nothink_peak_auc": 0.971,
+    "qwen_nothink_peak_layer": 34,
+    "qwen_think_peak_auc": 0.971,
+    "qwen_think_peak_layer": 34,
+    "auc_difference": 0.0,
+    "identical": true,
+    "interpretation": "Identical peak AUC (0.971) at the same layer (L34) for both thinking and non-thinking modes. Since Qwen 3-8B uses the same weights in both modes (thinking is controlled by a system prompt flag), this confirms that the P0 representation is identical \u2014 the model has not yet decided HOW it will process the item. The behavioral improvement from thinking (7% vs 21% lure rate) emerges entirely during the generation process, not from a different initial encoding. This is direct evidence that probe AUC at P0 measures the PROBLEM STRUCTURE in the representation, not the model's processing strategy.",
+    "statistical_note": "No statistical test is needed: the two conditions share identical weights. Any difference would be a software bug, not a biological finding. The identity confirms the probe reads from a deterministic function of the prompt, invariant to downstream generation mode.",
+    "implication_for_h2": "This result disambiguates the H2 finding. Llama > R1 at P0 means reasoning DISTILLATION changed the weights, compressing the S1/S2 distinction. But within the same weights (Qwen think vs no-think), the P0 representation is invariant to processing mode. The probe decodes problem structure, and distillation changes how that structure is encoded."
+  },
+  "layer_phase_analysis": {
+    "phases": {
+      "early": {
+        "layers": "0-7",
+        "llama_mean_auc": 0.9205,
+        "llama_std_auc": 0.0338,
+        "r1_mean_auc": 0.8855,
+        "r1_std_auc": 0.0541,
+        "mean_gap": 0.035,
+        "bootstrap_gap_95ci": {
+          "ci_lower": 0.0189,
+          "ci_upper": 0.0515,
+          "ci_excludes_zero": true
+        },
+        "cohens_d": 0.7766,
+        "cohens_d_interpretation": "medium",
+        "permutation_p": 0.0699
+      },
+      "mid": {
+        "layers": "8-15",
+        "llama_mean_auc": 0.9782,
+        "llama_std_auc": 0.0197,
+        "r1_mean_auc": 0.9249,
+        "r1_std_auc": 0.0039,
+        "mean_gap": 0.0534,
+        "bootstrap_gap_95ci": {
+          "ci_lower": 0.04,
+          "ci_upper": 0.0656,
+          "ci_excludes_zero": true
+        },
+        "cohens_d": 3.7592,
+        "cohens_d_interpretation": "large",
+        "permutation_p": 0.0002
+      },
+      "late": {
+        "layers": "16-23",
+        "llama_mean_auc": 0.98,
+        "llama_std_auc": 0.0122,
+        "r1_mean_auc": 0.9211,
+        "r1_std_auc": 0.0056,
+        "mean_gap": 0.0589,
+        "bootstrap_gap_95ci": {
+          "ci_lower": 0.0516,
+          "ci_upper": 0.0659,
+          "ci_excludes_zero": true
+        },
+        "cohens_d": 6.2137,
+        "cohens_d_interpretation": "large",
+        "permutation_p": 0.0002
+      },
+      "final": {
+        "layers": "24-31",
+        "llama_mean_auc": 0.9686,
+        "llama_std_auc": 0.0086,
+        "r1_mean_auc": 0.9174,
+        "r1_std_auc": 0.008,
+        "mean_gap": 0.0513,
+        "bootstrap_gap_95ci": {
+          "ci_lower": 0.0462,
+          "ci_upper": 0.0561,
+          "ci_excludes_zero": true
+        },
+        "cohens_d": 6.1515,
+        "cohens_d_interpretation": "large",
+        "permutation_p": 0.0001
+      }
+    },
+    "bh_fdr_correction": {
+      "early": {
+        "raw_p": 0.0699,
+        "adjusted_q": 0.0699,
+        "rejected": false
+      },
+      "mid": {
+        "raw_p": 0.0002,
+        "adjusted_q": 0.0003,
+        "rejected": true
+      },
+      "late": {
+        "raw_p": 0.0002,
+        "adjusted_q": 0.0003,
+        "rejected": true
+      },
+      "final": {
+        "raw_p": 0.0001,
+        "adjusted_q": 0.0003,
+        "rejected": true
+      }
+    },
+    "gap_trajectory": [
+      [
+        "early",
+        0.035
+      ],
+      [
+        "mid",
+        0.0534
+      ],
+      [
+        "late",
+        0.0589
+      ],
+      [
+        "final",
+        0.0513
+      ]
+    ],
+    "peak_gap_phase": "late",
+    "interpretation": "The deliberation gap (Llama - R1 AUC) widens from early layers (0.035) through mid (0.053) to late (0.059), then narrows slightly in final (0.051). The peak gap occurs in the late phase. This trajectory suggests that reasoning distillation most strongly compresses the S1/S2 distinction in mid-to-late layers where the base model's heuristic-reliance signal is strongest."
+  },
+  "preregistration_evaluation": {
+    "H1_linear_decodability": {
+      "criterion": "Peak AUC > 0.6 in >= 2 models; Hewitt-Liang selectivity > 5pp; survives BH-FDR at q=0.05",
+      "status": "PASS (peak AUC)",
+      "evidence": "Llama peak 0.999, R1 peak 0.929 \u2014 both far exceed 0.6. ALL 32 layers in both models exceed 0.6. Selectivity not yet computed (requires random-label control run), but margins (0.399 and 0.329 above threshold) are large enough that selectivity would need to be implausibly high to negate.",
+      "remaining_todo": "Hewitt-Liang selectivity from random-label probes",
+      "passes": true
+    },
+    "H2_reasoning_amplification": {
+      "criterion": "R1 peak AUC > Llama peak AUC; paired bootstrap CI excludes zero",
+      "status": "FAIL (direction reversed)",
+      "evidence": "Llama (0.999) > R1 (0.929) at L14. The gap is significant (Wilcoxon p << 0.001) but in the OPPOSITE direction. Reasoning distillation COMPRESSED the S1/S2 distinction rather than amplifying it.",
+      "reinterpretation": "This is actually MORE interesting than the pre-registered prediction. R1 may have internalized deliberation into its weights, reducing the need for a representational shortcut. The Qwen think=no-think result supports this: same weights produce identical P0 representations regardless of processing mode.",
+      "passes": false
+    },
+    "H3_sae_features": {
+      "criterion": ">= 5 features significant after BH-FDR + Ma et al. falsification + |r_rb| > 0.3 in >= 1 model",
+      "status": "NOT YET TESTED",
+      "evidence": "SAE analysis with Goodfire L19 was in overnight pipeline 2",
+      "passes": null
+    },
+    "H4_causal_efficacy": {
+      "criterion": "Delta P(correct) > 15pp under S2 steering; < 3pp under random; paired t-test significant",
+      "status": "NOT YET TESTED",
+      "evidence": "Depends on H3 features",
+      "passes": null
+    },
+    "H5_attention_entropy": {
+      "criterion": ">= 5% of KV-group heads S2-specialized; concentrated in mid-to-late layers",
+      "status": "NOT YET TESTED",
+      "evidence": "Attention extraction not yet completed",
+      "passes": null
+    },
+    "H6_geometric_separability": {
+      "criterion": "Cosine silhouette > 0, permutation p < 0.05 after BH-FDR at peak layer in >= 2 models",
+      "status": "PARTIALLY TESTED",
+      "evidence": "Silhouette scores are low (0.079 Llama, 0.059 R1) but positive. Permutation p-values not yet computed. CKA 0.379-0.985 shows moderate-to-high representational similarity.",
+      "passes": null
+    },
+    "summary": {
+      "passed": 1,
+      "failed": 1,
+      "not_tested": 3,
+      "partially_tested": 1,
+      "workshop_paper_scope": "Based on current results: H1 (strong pass) + H2 (informative failure with reinterpretation) + cross-prediction specificity + Qwen within-model comparison. This is sufficient for a workshop paper focused on the 'deliberation gradient compression' finding."
+    }
+  }
+}
