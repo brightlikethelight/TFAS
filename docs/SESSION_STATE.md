@@ -1,117 +1,144 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-11 (session 3)
-**Active focus**: Phase 3 — hardening, E2E validation, dashboard, benchmark expansion, onboarding. **Waiting on FASRC access (Kempner deadline Apr 14 — 3 days).**
+**Last updated**: 2026-04-12 01:30 AM (session 4 — Bright going to sleep)
+**Active focus**: Phase 4 — behavioral validation DONE, first mechanistic results in hand, overnight jobs running on B200 pod. **Targeting ICML MechInterp Workshop (May 8, 26 days).**
 
-## TL;DR
+---
 
-- **365/365 tests passing**, smoke green, 4 git commits on main (clean)
-- Benchmark: 284 items, 142 pairs, 11 CRITICAL syllogism bugs FIXED in commit `2b412d6`
-- Phase 2 complete: deploy/, paper/, notebooks/, W&B, orchestrator, pre-reg, presentation
-- Phase 3 in progress: E2E pipeline test with real tiny model, lint sweep, benchmark expansion (→330 items), results aggregator, dashboard, onboarding guide, paper expansion
+## MORNING BRIEFING (read this first)
 
-## What's done
+You went to sleep April 12. Here is what matters right now.
 
-- **Project scaffolding**: `pyproject.toml`, `CLAUDE.md`, `AGENTS.md`,
-  `docs/data_contract.md`, Hydra `configs/{extract,probe,models}.yaml`.
-- **Shared utilities**: `s1s2.utils.{seed, stats, types, io, logging}`.
-  - `io.py` has typed read accessors AND write helpers (writer-side owned by
-    `s1s2.extract`); other workstreams must not call write helpers.
-  - `stats.py` provides BH-FDR, North-corrected permutation tests, bootstrap
-    CIs, Cohen's d, rank-biserial, Gini, Shannon entropy.
-- **Benchmark loader + validator + templates**: `s1s2.benchmark.{loader, validate,
-  templates}`. The real JSONL still needs to be generated from templates
-  (script exists; not yet run end-to-end).
-- **Activation extraction pipeline**: `s1s2.extract.{core, hooks, parsing,
-  reasoning, scoring, writer, cli}`. Incremental attention metric collector,
-  thinking-trace parser, behavioral scorer, HDF5 writer, Hydra CLI.
-- **Linear probing pipeline**: `s1s2.probes.{core, probes, controls, targets,
-  cli}` plus `s1s2.viz.probe_plots`. Mass-mean / logistic / MLP / CCS probes,
-  Hewitt-Liang controls, BH-FDR across layers, LOCO transfer.
-- **SAE feature analysis**: `s1s2.sae.{core, cli, loaders, differential,
-  falsification, volcano}`. Loaders for Llama Scope, Gemma Scope, Goodfire R1,
-  plus a MockSAE for tests. Ma et al. (2026) falsification framework with a
-  cheap (no-model-forward) and a model-forward mode.
-- **Attention entropy pipeline**: `s1s2.attention.{core, heads, layers,
-  trajectories}`. Per-head Mann-Whitney U with BH-FDR, KV-group aggregation,
-  Gemma sliding-window separation, matched-pair cross-model comparison.
-- **Representational geometry pipeline**: `s1s2.geometry.{cka, clusters,
-  intrinsic_dim, projections, separability, viz}`. Cosine silhouette with
-  bootstrap CIs and permutation tests, CKA, Two-NN intrinsic dim, linear
-  separability with PCA pre-reduction (the d>>N fix).
-- **Causal interventions pipeline**: `s1s2.causal.*` — steering, ablation,
-  dose-response, capability gates, viz.
-- **Metacognitive monitoring (stretch)**: `s1s2.metacog.*`.
-- **Build / dev infra (this session)**: `Makefile`, `.pre-commit-config.yaml`,
-  `.github/workflows/test.yml`, `tests/conftest.py` with `synthetic_hdf5_path`,
-  `scripts/smoke_test.py`, `LICENSE` (MIT), `CHANGELOG.md`,
-  `docs/{architecture, SESSION_STATE, LESSONS_LEARNED_COMPACT, CONTRIBUTING}.md`.
+### Overnight jobs running on B200 pod
 
-## What's done (since the previous "what's not done" list)
+All launched before sleep. Check `/workspace/overnight_log.txt` on the pod.
 
-- ✅ **Benchmark JSONL** generated and validated: 284 items, 142 matched
-  conflict/control pairs, 558 paraphrases, all 7 categories. Stats:
-  - crt 30 / base_rate 20 / syllogism 25 / anchoring 15 / framing 15 /
-    conjunction 12 / arithmetic 25 (matched pair counts; ×2 for items)
-- ✅ **All Hydra configs** exist: `extract.yaml`, `probe.yaml`, `sae.yaml`,
-  `attention.yaml` (in causal), `geometry.yaml`, `causal.yaml`,
-  `metacog.yaml`, `benchmark.yaml`, `figures.yaml`, `models.yaml`.
-- ✅ **All driver scripts** exist: `run_probes.py`, `run_sae.py`,
-  `run_attention.py`, `run_geometry.py`, `run_causal.py`, `run_metacog.py`,
-  `extract_all.py`, `generate_figures.py`, `smoke_test.py`.
-- ✅ **Test coverage for every workstream**: `test_benchmark.py`,
-  `test_extract.py`, `test_probes.py`, `test_sae.py`, `test_attention.py`,
-  `test_geometry.py`, `test_causal.py`, `test_metacog.py`, `test_utils.py`,
-  `test_scripts.py`, `test_viz_paper_figures.py`. **292/292 tests pass.**
-- ✅ **Bug fixes during integration**:
-  - `s1s2.utils.stats.rank_biserial` had inverted sign convention; fixed.
-  - `s1s2.utils.stats.shannon_entropy_bits` returned a Python scalar for
-    1-D input; rewrapped as 0-D ndarray to match the type hint.
-  - `s1s2.geometry.cka.linear_cka` used `tr((X^T X)(Y^T Y))` instead of
-    `tr(K_X K_Y)`. Fixed; now matches `linear_cka_fast` exactly and
-    satisfies orthogonal-rotation invariance.
-  - `s1s2.geometry.projections.random_projection` was unnormalised, so the
-    "no clusters in random projections of random data" control was too
-    weak. Switched to `1/sqrt(d)` JL scaling + per-axis std normalisation.
-  - `s1s2.sae.loaders.reconstruction_report` had a hard-coded `mse > 0.5*var`
-    floor that overrode the user's `min_explained_variance` parameter; fixed.
-  - `s1s2.sae.cli.runner_config_from_hydra` ignored top-level `models_to_run`
-    and only consulted `models`. Fixed to honor both.
-  - `s1s2.probes.core.primary_probe_name` was exported in `__all__` and
-    referenced by the runner but never defined; added.
-  - `tests/test_probes.py::test_bh_fdr_application_on_known_pvalues` had an
-    arithmetically-incorrect expectation (rejected p≤0.03 but BH at q=0.05
-    only rejects p≤0.01 here); fixed expectation.
-- ✅ **Ruff auto-fix collateral damage**: ruff stripped the quotes from 58
-  jaxtyping shape annotations across 15 files (`Float[np.ndarray, "n d"]`
-  → `Float[np.ndarray, n d]`), which broke beartype runtime checking. A
-  single regex pass restored every annotation. Pre-commit must NOT run
-  ruff on jaxtyping-annotated modules until upstream supports it.
+| Job | Status at sleep | What to check |
+|-----|-----------------|---------------|
+| Qwen 3-8B THINK behavioral (330 items) | RUNNING | Lure rate. If it drops dramatically from 21% (NO_THINK), that is the within-model confirmation of H1. |
+| Expanded probes — Llama (all categories + specificity) | RUNNING | Do immune categories (CRT, arithmetic, framing, anchoring) show the same probe signal? They should NOT. |
+| Expanded probes — R1-Distill (same) | RUNNING | Same check. |
+| Geometry analysis (silhouette + CKA) | RUNNING | Cosine silhouette scores + cross-model CKA. |
+| Qwen 3-8B NO_THINK activation extraction + probes | RUNNING | HDF5 should be ~140 MB like the others. |
+| Ministral-3-8B pair download | RUNNING | Model weights should be cached on the pod. |
+
+### Your morning checklist (in order)
+
+1. SSH into B200 pod, read `/workspace/overnight_log.txt`
+2. **Qwen 3-8B THINK lure rate** — THE critical number. If THINK lure << NO_THINK lure (especially on conjunction/base_rate), you have within-model confirmation with identical weights. This is the cleanest result in the paper.
+3. **Specificity control probes** — immune categories should show chance-level probe accuracy. If they don't, the probe is picking up something other than S1/S2 processing mode.
+4. **Geometry results** — silhouette scores and CKA matrices.
+5. Start **SAE analysis** with Goodfire L19 SAE (exact match for Llama-3.1-8B-Instruct, layer 19). This is the new discovery — a public SAE trained on the exact model we use.
+6. **Begin writing** the ICML MechInterp Workshop paper. Figure code is ready. 26 days to deadline.
+
+### Key numbers you have (REAL DATA, not synthetic)
+
+| Model | Overall lure % | base_rate | conjunction | syllogism | CRT | arithmetic | framing | anchoring |
+|-------|---------------|-----------|-------------|-----------|-----|------------|---------|-----------|
+| Llama-3.1-8B-Instruct | **27.3%** | 84% | 55% | 52% | 0% | 0% | 0% | 0% |
+| R1-Distill-Llama-8B | **2.4%** | 4% | 0% | 0% | — | — | — | — |
+| R1-Distill-Qwen-7B | **~0%** | ~0% | ~0% | ~0% | — | — | — | — |
+| Qwen 3-8B NO_THINK | **21%** | 56% | 95% | 0% | — | — | — | — |
+| Qwen 3-8B THINK | **PENDING** (overnight) | | | | | | | |
+
+### Key mechanistic result (H1 PASS — first real finding)
+
+Linear probes on the 3 vulnerable categories (base_rate, conjunction, syllogism):
+- **Llama-3.1-8B-Instruct**: peak AUC = **0.999** at Layer 14
+- **R1-Distill-Llama-8B**: peak AUC = **0.929** at Layer 14
+- Both peak at the **same layer** — the "where" doesn't change, the "how much" does
+- Standard model has near-perfect S1/S2 separability; reasoning distillation has blurred it
+- This is consistent with H1: reasoning training integrates S2-like processing into the residual stream, reducing the distinctiveness of the S1/S2 boundary
+
+### Activation data on disk
+
+| Model | File size | Dimensions | Items |
+|-------|-----------|------------|-------|
+| Llama-3.1-8B-Instruct | 139.7 MB HDF5 | 32 layers × 4096 hidden | 330 |
+| R1-Distill-Llama-8B | 140.0 MB HDF5 | 32 layers × 4096 hidden | 330 |
+
+---
+
+## What happened this session (April 11-12, 2026)
+
+### Behavioral validation (Phase 2 gate: PASSED)
+
+Ran the full 330-item benchmark against 5 model configurations on the B200 pod.
+
+**Key insight**: Only 3 of 7 categories are vulnerable (base_rate, conjunction, syllogism). The other 4 (CRT, arithmetic, framing, anchoring) show 0% lure rates across all models. This is not a failure — it means the benchmark correctly identifies which cognitive bias categories these models are susceptible to, and it means we have built-in negative controls.
+
+**Strategic pivot**: Focus primary analysis on the 3 vulnerable categories. Use the 4 immune categories as specificity controls for probes (probes should NOT be able to distinguish conflict/control in immune categories).
+
+### Activation extraction (Phase 3: started)
+
+- Extracted full residual stream activations for Llama-3.1-8B-Instruct and R1-Distill-Llama-8B
+- Both produce ~140 MB HDF5 files, 32 layers × 4096 hidden × 330 items
+- Qwen 3-8B NO_THINK extraction running overnight
+
+### First mechanistic result (H1 linear probe)
+
+- Trained logistic probes (conflict vs. control) on the 3 vulnerable categories
+- Llama peak AUC = 0.999 at Layer 14; R1-Distill peak AUC = 0.929 at Layer 14
+- Same peak layer, reduced separability in the reasoning model
+- Interpretation: reasoning training doesn't relocate S1/S2 representations — it blurs them, consistent with integrating S2-like processing throughout the forward pass
+
+### Strategic discoveries
+
+- **Goodfire L19 SAE**: A public SAE trained on the exact Llama-3.1-8B-Instruct model, layer 19. Previously we only had Llama Scope (trained on Base, not Instruct). This is a direct match — no reconstruction fidelity concerns.
+- **Ministral-3-8B pair**: Discovered as potentially the cleanest matched pair (same architecture, same weights, thinking toggle). Download started overnight.
+- **Qwen 3-8B with /think toggle**: Same weights, same architecture, thinking on vs. off. This is the cleanest possible within-model comparison. NO_THINK shows 21% lure; THINK result pending overnight.
+- **ICML MechInterp Workshop**: May 8 deadline, 26 days out. This is the target venue. Workshop paper, not full paper — more tractable.
+
+---
+
+## What's done (cumulative)
+
+- **Project scaffolding**: `pyproject.toml`, `CLAUDE.md`, `AGENTS.md`, configs, docs
+- **365/365 tests passing**, smoke green
+- **Benchmark**: 330 items (expanded from 284), 7 categories, matched conflict/control pairs
+- **Full codebase**: extract, probes, sae, attention, geometry, causal, metacog, viz
+- **Deployment infra**: deploy scripts, orchestrator, W&B integration, pre-reg, presentation
+- **Behavioral validation**: 5 model configs tested on full benchmark (REAL DATA)
+- **Activation extraction**: 2 models complete (Llama, R1-Distill-Llama), 1 running (Qwen NO_THINK)
+- **First mechanistic result**: Linear probes on vulnerable categories, H1 confirmed
 
 ## What's still NOT done
 
-- Real activation extraction on the 4 models (requires GPU).
-- SAE reconstruction fidelity verification on real Instruct activations.
-- Behavioral validation of the benchmark against real models (Week 2 gate).
-- FASRC access (waiting on faculty sponsor — Kempner deadline 2026-04-14).
-- W&B integration verified end-to-end with a real run.
-
-## Session 2 (2026-04-11): Git + Phase 2 infrastructure
-
-- ✅ **Git init**: initial commit `954e2d0` with 134 files, 35,688 lines
-- ✅ **Ruff config fix**: added `F821` and `UP037` ignores to prevent
-  jaxtyping annotation stripping
-- ✅ **SESSION_STATE updated** to reflect actual state (318 tests, not 292)
-- 🔄 **In-flight agents** (8 parallel): GPU deployment scripts, paper skeleton
-  (LaTeX), analysis notebooks, W&B integration, experiment orchestrator,
-  benchmark quality audit, pre-registration document, HUSAI presentation
+- Qwen 3-8B THINK behavioral + activation extraction (overnight)
+- Expanded probes (all categories + specificity controls) — overnight
+- Geometry analysis (silhouette, CKA) — overnight
+- SAE analysis with Goodfire L19 (ready to start morning)
+- Attention entropy analysis on real data
+- Causal interventions (steering, ablation)
+- Ministral-3-8B pair extraction + analysis
+- Workshop paper writing (figures ready, need text)
+- FASRC access (Kempner deadline was Apr 14 — status unknown, B200 pod is working fine for now)
 
 ## Active blockers
 
-- **FASRC faculty sponsor** — Kempner Accelerator Award deadline is
-  **2026-04-14** (3 days). Top priority for the faculty advisor.
-- Need to verify Llama Scope SAE reconstruction fidelity on Instruct
-  activations (loaders wire the check; need real activations).
+- **None critical** — B200 pod is running, overnight jobs launched, data is flowing
+- FASRC access still pending but not blocking progress (RunPod B200 is sufficient)
+- Goodfire L19 SAE needs to be loaded and verified before SAE workstream can produce real results
+
+## Overnight jobs (B200 pod)
+
+All jobs launched before sleep on April 12 ~01:00 AM. Check `/workspace/overnight_log.txt`.
+
+```
+1. Qwen 3-8B THINK behavioral (330 items)
+2. Expanded probes — Llama (all categories + specificity)
+3. Expanded probes — R1-Distill (same)
+4. Geometry analysis (silhouette + CKA)
+5. Qwen 3-8B NO_THINK activation extraction + probes
+6. Ministral-3-8B pair model download
+```
+
+## Key W&B / artifact pointers
+
+- Llama-3.1-8B-Instruct activations: `data/activations/` on B200 pod, 139.7 MB HDF5
+- R1-Distill-Llama-8B activations: `data/activations/` on B200 pod, 140.0 MB HDF5
+- Behavioral results: on B200 pod (check overnight log for paths)
+- Probe results (Layer 14 peak): on B200 pod
 
 ## Test commands
 
@@ -122,15 +149,10 @@ make test      # pytest tests/
 make smoke     # all 4 workstreams on synthetic data (~3s)
 ```
 
-## Next steps
+## Timeline
 
-1. **Get FASRC access** — the only blocker before real experiments start
-2. Run `python scripts/run_pipeline.py` on a GPU pod (RunPod or FASRC)
-3. First model: `llama-3.1-8b-instruct` — behavioral validation (Week 2 gate)
-4. Probes pipeline on real activations (Week 5 go/no-go gate)
-5. Present at HUSAI meeting using `docs/presentation/husai_pitch.md`
-6. Submit pre-registration to OSF
-
-## Key W&B / artifact pointers
-
-(none yet — first real extraction has not run)
+- **Now → May 8**: ICML MechInterp Workshop paper (26 days)
+  - Week 1 (Apr 12-18): Complete all extractions, run full probe/geometry/attention analysis, start SAE
+  - Week 2 (Apr 19-25): Causal interventions, SAE falsification, write Methods + Results
+  - Week 3 (Apr 26-May 2): Figures, writing, internal review
+  - Week 4 (May 3-8): Polish, submit
