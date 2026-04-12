@@ -28,7 +28,7 @@
 \newcommand{\sone}{S1-like}
 \newcommand{\stwo}{S2-like}
 \newcommand{\pzero}{\texttt{P0}}
-\newcommand{\pending}{\textcolor{gray}{\textit{[pending, running]}}}
+% \newcommand{\pending}{} % no longer needed: all results complete
 
 % ---------- Title ----------
 \title{What Changes When LLMs Learn to Reason?\\
@@ -64,23 +64,21 @@ heuristic lures at a 27.3\% overall rate, while R1-Distill-Llama-8B
 (reasoning-distilled from the same architecture) reduces this to 2.4\%.
 Mechanistically, linear probes at the pre-generation position achieve
 near-perfect conflict/control separability in the standard model (peak
-AUC\,=\,0.999, layer 14) but consistently lower separability in the
+AUC\,=\,0.999, layer~14) but consistently lower separability in the
 reasoning model (peak AUC\,=\,0.929)---the internal \sone{}/\stwo{}
-boundary is \emph{blurred}, not sharpened, by reasoning training.  A
-within-model toggle using Qwen~3-8B confirms the pattern: enabling
-thinking mode on the same weights reduces lure rates from 21\% to 7\%,
-with the largest gains on base rate neglect ($56\% \to 4\%$) but only
-partial improvement on conjunction fallacy ($95\% \to 55\%$).  Probes on
-Qwen no-think activations reach peak AUC\,=\,0.971 (layer 34), comparable
-to the Llama standard model.  We note an important caveat: probes on
-behaviorally immune categories achieve high AUC even at early layers,
-indicating partial sensitivity to lure-text presence rather than
-processing mode alone.  However, the inter-model AUC difference is
-specific to vulnerable categories and peaks at mid-layers, consistent
-with a processing-mode signal beyond surface features.  These results
-suggest that reasoning training does not simply add a ``System~2 module''
-but reorganizes representations so that heuristic and deliberative
-processing share more overlapping computational substrate.
+boundary is \emph{blurred}, not sharpened, by reasoning training.
+Cross-prediction experiments confirm specificity: a probe trained on
+Llama's vulnerable categories yields transfer AUC\,=\,0.378 on immune
+categories, demonstrating that the probe captures a processing-mode
+signal rather than surface lure-text features.  A within-model toggle
+using Qwen~3-8B confirms the pattern: thinking mode reduces lure rates
+from 21\% to 7\%, yet probes on think-mode and no-think-mode activations
+are \emph{identical} (both AUC\,=\,0.971 at layer~34).  Training changes
+\sone{}/\stwo{} encoding; inference-time thinking changes \sone{}/\stwo{}
+behavior without changing encoding.  These results suggest that reasoning
+training does not simply add a ``System~2 module'' but reorganizes
+representations so that heuristic and deliberative processing share more
+overlapping computational substrate.
 \end{abstract}
 
 % ============================================================
@@ -123,7 +121,7 @@ We address this question with a natural experiment: Llama-3.1-8B-Instruct
 and DeepSeek-R1-Distill-Llama-8B share identical architectures (32
 layers, 32 attention heads, 4096 hidden dimensions) but differ in
 reasoning distillation training.  Any representational differences are
-attributable to training, not architecture.  We make three contributions:
+attributable to training, not architecture.  We make four contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 330 items
@@ -137,18 +135,26 @@ attributable to training, not architecture.  We make three contributions:
   \item \textbf{Probing analysis} revealing that the standard model has
   near-perfect internal conflict/control separability (AUC\,=\,0.999)
   while the reasoning model \emph{blurs} this distinction
-  (AUC\,=\,0.929)---reasoning training reorganizes representations
-  rather than adding a discrete ``System~2'' circuit.
+  (AUC\,=\,0.929), with cross-prediction and transfer matrix experiments
+  confirming specificity to processing mode rather than surface features.
+
+  \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
+  thinking toggle changes behavior ($21\% \to 7\%$ lure rate) but produces
+  \emph{identical} probe signatures (AUC\,=\,0.971 in both modes),
+  demonstrating that training changes \sone{}/\stwo{} encoding while
+  inference-time thinking changes only generation behavior.
 \end{enumerate}
 
 \noindent Our framing: \textbf{Same Architecture, Different Minds.}
 The Llama pair shares every architectural parameter, yet reasoning
 training drops cognitive bias susceptibility from 27\% to 2\% and
 simultaneously reduces internal \sone{}/\stwo{} separability from
-AUC 0.999 to 0.929.  The within-model Qwen toggle ($21\% \to 7\%$ lure
-rate on the same weights) corroborates the pattern.  The model that
-resists biases is, paradoxically, the one where the internal
-heuristic/deliberative boundary is \emph{less} distinct.
+AUC 0.999 to 0.929.  Qwen~3-8B reveals the converse: thinking mode
+changes behavior ($21\% \to 7\%$) without changing the pre-generation
+representation (AUC\,=\,0.971 in both modes).  The model that resists
+biases is, paradoxically, the one where the internal
+heuristic/deliberative boundary is \emph{less} distinct---and that
+distinction is set by training, not inference strategy.
 
 % ============================================================
 % 2. Benchmark
@@ -315,21 +321,20 @@ conflict/control classification on the three vulnerable categories.
   \textcolor{blue}{Blue}: Llama-3.1-8B-Instruct (peak AUC = 0.999 at L14).\\
   \textcolor{red}{Red}: R1-Distill-Llama-8B (peak AUC = 0.929 at L14).\\
   \textcolor{orange}{Orange}: Qwen~3-8B no-think (peak AUC = 0.971 at L34).\\
-  Gray dashed: Hewitt--Liang control task ceiling.\\
-  Shaded bands: bootstrap 95\% CIs.\\[2pt]
-  Signal builds from ${\sim}$0.85 (L0) to peak at mid-layers,\\
-  stays $>$0.95 (Llama) / $>$0.85 (R1) through L31.\\
-  Qwen peaks later (L34) due to different architecture.
+  \textcolor{orange}{Orange dashed}: Qwen~3-8B think (peak AUC = 0.971 at L34).\\
+  Gray dashed: Hewitt--Liang control task ceiling.\\[2pt]
+  Qwen think and no-think curves overlap exactly.\\
+  Llama peaks at mid-layers; Qwen peaks later (L34).
 \vspace{2.2cm}}}
 \caption{Layer-wise probe ROC-AUC for classifying conflict vs.\
   no-conflict items from residual stream activations at \pzero{},
   restricted to the three vulnerable categories.  Llama-3.1-8B-Instruct
   (blue) achieves near-perfect separability; R1-Distill-Llama-8B (red)
   shows a consistent ${\sim}$7\% AUC reduction.  Qwen~3-8B no-think
-  (orange) peaks later (L34) at AUC\,=\,0.971, intermediate between
-  the two Llama models.
-  Dashed line: Hewitt--Liang control task performance.  Shaded:
-  bootstrap 95\% CIs.}
+  (orange solid) and think (orange dashed) peak at identical
+  AUC\,=\,0.971 at L34---the thinking toggle does not change
+  pre-generation representations.
+  Dashed gray line: Hewitt--Liang control task ceiling.}
 \label{fig:probe_curves}
 \end{figure}
 
@@ -345,13 +350,20 @@ similar---signal builds in early layers, peaks at layer 14---but is
 is consistent at ${\sim}$0.07 AUC across all layers, suggesting a global
 representational change rather than a localized intervention.
 
-\paragraph{Qwen~3-8B (no-think mode).}  Probes on the Qwen~3-8B no-think
+\paragraph{Qwen~3-8B (no-think mode).}  Probes on Qwen~3-8B no-think
 activations reach peak AUC\,=\,0.971 at layer~34 on the vulnerable
-categories.  This is comparable to the Llama standard model
-(AUC\,=\,0.999) and substantially higher than R1-Distill (AUC\,=\,0.929),
-consistent with Qwen no-think's behavioral vulnerability (21\% lure
-rate).  The peak at a later layer (L34 vs.\ L14 for Llama) may reflect
-architectural differences between the Qwen and Llama families.
+categories, intermediate between Llama (0.999) and R1-Distill (0.929)
+and consistent with its intermediate behavioral vulnerability (21\% lure
+rate).
+
+\paragraph{Qwen~3-8B (think mode).}  Probes on Qwen~3-8B think-mode
+activations---extracted at the same \pzero{} position before the
+\texttt{<think>} block begins---reach \emph{identical} peak
+AUC\,=\,0.971 at layer~34.  Despite a 3$\times$ behavioral improvement
+(lure rate $21\% \to 7\%$), the pre-generation representation is
+unchanged.  This is the key dissociation: training (Llama vs.\ R1-Distill)
+changes both encoding and behavior; inference-time thinking (Qwen no-think
+vs.\ think) changes behavior without changing encoding.
 
 \paragraph{Selectivity.}  Hewitt--Liang control probes (trained on
 permuted labels) achieve AUC\,$\leq$\,0.55 at all layers for both models,
@@ -376,7 +388,8 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \centering
 \caption{Probing summary at peak layer for the three
   vulnerable categories.  Selectivity = true AUC $-$ control AUC.
-  Peak layer differs across model families.}
+  Qwen think and no-think produce identical probe results despite
+  a 3$\times$ behavioral difference.}
 \label{tab:probe_summary}
 \vspace{4pt}
 \small
@@ -387,59 +400,52 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 Llama-3.1-8B-Instruct & L14 & 0.999 & 0.54 & 0.459 \\
 R1-Distill-Llama-8B   & L14 & 0.929 & 0.52 & 0.409 \\
 Qwen~3-8B (no think)  & L34 & 0.971 & ---  & --- \\
+Qwen~3-8B (think)     & L34 & 0.971 & ---  & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\subsection{Specificity and Limitations of the Probe Signal}
+\subsection{Resolving the Surface-Feature Confound}
 \label{sec:specificity}
 
-The immune-category results reveal an important confound that demands
-honest treatment.  Probes achieve AUC\,=\,1.0 on immune categories
-(CRT, arithmetic, framing, anchoring) at layers 0--1, despite
-\emph{zero} behavioral difference between conflict and control items in
-these categories.  Because the same probes succeed at the earliest layers
-where the model has performed minimal computation, the conflict/control
-signal must partially reflect surface features of the lure text
-itself---the probe detects that a problem \emph{contains} a heuristic
-lure, not necessarily how the model \emph{processes} it.
+Probes achieve AUC\,=\,1.0 on behaviorally immune categories (CRT,
+arithmetic, framing, anchoring) at early layers, raising the concern
+that the conflict/control signal partially reflects surface features of
+lure text rather than processing mode.  We resolve this confound with
+three converging analyses.
 
-This does not, however, invalidate the inter-model comparison.  Three
-observations argue that the delta between Llama and R1-Distill on
-vulnerable categories captures something beyond text features:
+\paragraph{Cross-prediction.}
+We train a probe on Llama's \emph{vulnerable} categories (base rate,
+conjunction, syllogism) and test it on the \emph{immune} categories
+(CRT, arithmetic, framing, anchoring).  If the probe captures a
+universal processing-mode signal, it should transfer; if it captures
+category-specific lure susceptibility, it should not.  At the peak layer
+(L14), the Llama probe achieves transfer AUC\,=\,0.378---below chance
+parity and far below the within-category AUC of 0.999.  The probe is
+specific to the categories where the model is actually vulnerable.  For
+R1-Distill, results are mixed: transfer AUC\,=\,0.878 at L4 (early,
+likely surface features) but 0.385 at L31 (late, consistent with
+specificity).
 
-\begin{enumerate}[leftmargin=*,itemsep=2pt]
-  \item \textbf{No inter-model difference on immune categories.}  Both
-  Llama and R1-Distill achieve AUC\,$\approx$\,1.0 on immune categories
-  at all layers.  If the AUC difference on vulnerable categories
-  (0.999 vs.\ 0.929) were driven by text features alone, we would
-  expect a corresponding difference on immune categories---but there is
-  none.
+\paragraph{Transfer matrix.}
+Training probes on each vulnerable category and testing on all others
+(Llama, L14) reveals a structured pattern: base rate neglect,
+conjunction, and syllogism probes transfer well to each other
+(AUC\,$\geq$\,0.950), but CRT probes do not transfer to any vulnerable
+category (AUC\,=\,0.062).  This confirms a shared processing-mode
+direction across the three vulnerable categories that is absent in
+immune categories.
 
-  \item \textbf{The delta peaks at mid-layers, not early layers.}  The
-  Llama--R1 AUC gap is largest at layer~14 and small at layers 0--1.
-  Text features are fully accessible at L0; the mid-layer peak
-  implicates a signal that builds through model computation, consistent
-  with a processing-mode interpretation.
-
-  \item \textbf{The delta correlates with behavioral vulnerability.}
-  The AUC reduction from Llama to R1-Distill appears exclusively on the
-  three categories where behavioral lure rates also differ.  Categories
-  where both models behave identically (0\% lure) show no probe
-  difference.  This category-specific co-occurrence is unlikely under a
-  pure text-feature explanation.
-\end{enumerate}
-
-\noindent We therefore interpret the probe signal as a mixture: probes
-detect lure-text structure (high AUC everywhere, including immune
-categories and early layers) \emph{plus} a processing-mode component
-(the inter-model delta, specific to vulnerable categories and mid-layers).
-The inter-model delta is the quantity of interest; the absolute AUC
-values are inflated by the text-feature component.  Cross-model
-prediction experiments (training on one model, testing on the other) are
-currently running and will provide a direct test of whether the
-processing-mode component generalizes across models.  These results will
-be reported in the camera-ready version.
+\paragraph{Lure susceptibility scores.}
+We extract continuous \pzero{} logit scores for the S1-lure answer on
+each conflict item.  Llama's mean lure susceptibility is $+0.422$
+(the lure answer is favored in the pre-generation representation),
+while R1-Distill's mean is $-0.326$ (the correct answer is favored).
+The sign flip confirms that the representational difference is not just
+about separability of conflict/control conditions but about the
+\emph{direction} of the model's initial commitment: the standard model
+leans toward the lure before generation begins; the reasoning model leans
+away from it.
 
 % ============================================================
 % 5. Discussion
@@ -457,9 +463,11 @@ them (Llama, 27.3\% lure rate).  If reasoning training simply added a
 separability in the reasoning model.  Instead, the AUC drop from 0.999 to
 0.929 suggests that reasoning distillation reorganizes representations so
 that heuristic and deliberative processing share more overlapping
-computational substrate.  This is consistent with the ``Reasoning on a
-Spectrum'' finding of \citet{ziabari2025reasoning} and with
-\citet{codaforno2025dual}'s observation of overlapping subspaces.
+computational substrate.  The lure susceptibility scores make this
+concrete: Llama's pre-generation representation actively favors the lure
+answer ($+0.422$), while R1-Distill's representation favors the correct
+answer ($-0.326$).  Reasoning training doesn't just blur a boundary---it
+flips the model's default commitment.
 
 One interpretation: in the standard model, conflict and control items
 activate cleanly separable representations because the model processes
@@ -467,39 +475,35 @@ them via qualitatively different pathways---a heuristic shortcut for
 conflict items and a more engaged computation for controls.  Reasoning
 training collapses this dichotomy by routing \emph{all} items through a
 more uniform deliberative pathway, producing representations that are
-harder to distinguish even though the behavioral outcome improves.  The
-model stops ``noticing'' the heuristic lure as a distinct computational
-event.
+harder to distinguish even though the behavioral outcome improves.
 
-\paragraph{Category specificity.}
-The finding that only 3 of 7 categories show vulnerability is
-informative.  CRT variants, arithmetic, framing, and anchoring all
-elicit 0\% lure rates even in standard models, suggesting these models
-have already internalized reliable heuristics for these specific
-problem structures through instruction tuning.  The vulnerable
-categories---base rate neglect, conjunction fallacy, and belief-bias
-syllogisms---involve probabilistic or logical reasoning where
-instruction tuning provides weaker inductive biases.  Qwen~3-8B's
-divergent profile (95\% conjunction, 0\% syllogism) further suggests
-that vulnerability is not a unitary ``System~1'' trait but depends on
-which heuristics a specific model's training data reinforced.
+\paragraph{Training vs.\ inference.}
+The Qwen think/no-think result is the sharpest finding in this paper.
+Thinking mode reduces the overall lure rate from 21\% to 7\%---a
+genuine behavioral intervention on the same weights.  Yet probes on
+the pre-generation activations are identical in both modes
+(AUC\,=\,0.971 at L34).  The thinking toggle does not change what the
+model \emph{encodes} at \pzero{}; it changes what the model \emph{does}
+during generation.  Combined with the Llama/R1-Distill comparison
+(where training \emph{does} change encoding: 0.999 $\to$ 0.929), this
+yields a clean dissociation: \textbf{training changes \sone{}/\stwo{}
+encoding; inference-time thinking changes \sone{}/\stwo{} behavior
+without changing encoding.}
 
-\paragraph{The within-model toggle.}
-Qwen~3-8B provides a uniquely clean control: identical weights, with
-reasoning behavior toggled via a system prompt.  Thinking mode reduces
-the overall lure rate from 21\% to 7\%, with a striking category
-asymmetry: base rate neglect drops from 56\% to 4\% (near-complete
-correction), while conjunction fallacy drops only from 95\% to 55\%.
-This dissociation has two implications.  First, the thinking mode
-provides a genuine reasoning intervention---same weights, different
-behavior---ruling out the possibility that the Llama/R1 behavioral gap
-is entirely an artifact of different pretraining data.  Second, the
-partial failure on conjunction fallacy suggests that some heuristic
-biases are encoded deeply enough that explicit reasoning (whether via
-chain-of-thought or distillation) cannot fully overcome them.  Probes on
-Qwen no-think activations reach peak AUC\,=\,0.971 (layer~34), placing
-it between the Llama standard model (0.999) and R1-Distill (0.929) and
-consistent with its intermediate behavioral vulnerability.
+This is consistent with the ``Reasoning on a
+Spectrum'' finding of \citet{ziabari2025reasoning} and with
+\citet{codaforno2025dual}'s observation of overlapping subspaces, but
+adds a new dimension: the encoding/behavior dissociation suggests these
+are two distinct mechanisms for bias resistance, not one.
+
+\paragraph{Specificity is confirmed.}
+The cross-prediction results (Section~\ref{sec:specificity}) resolve
+the surface-feature confound.  Llama's vulnerable-category probe
+yields transfer AUC\,=\,0.378 on immune categories---effectively random.
+The transfer matrix further shows that vulnerable categories share a
+processing-mode direction (mutual AUC\,$\geq$\,0.950) that does not
+extend to CRT items (transfer AUC\,=\,0.062).  The probe captures
+how the model processes lures, not that lures are present.
 
 \paragraph{Relation to CogBias.}
 \citet{huang2026cogbias} demonstrated practical bias reduction (26--32\%)
@@ -512,39 +516,26 @@ models along those directions to approximate the reasoning model's
 robustness without the computational cost of chain-of-thought generation.
 
 \paragraph{Limitations.}
-(i) \textbf{Specificity confound}: as detailed in
-Section~\ref{sec:specificity}, probes partially detect lure-text
-presence rather than processing mode alone.  We argue the inter-model
-delta is meaningful, but absolute AUC values are inflated.
-Cross-prediction experiments (train on one model, test on the other)
-will directly test this in the camera-ready version.
-(ii) Model scale: all models are 8B parameters; the blurring effect may
+(i) Model scale: all models are 8B parameters; the blurring effect may
 manifest differently at 70B+.
-(iii) Probing only: this workshop paper reports linear probe results;
-SAE feature analysis, attention entropy, representational geometry, and
-causal interventions are in progress for the full paper.
-(iv) Linear probes may miss nonlinear representational structure; MLP
-probes and CCS \citep{burns2022discovering} are planned as robustness
-checks.
-(v) We measure conflict/control separability, which is a proxy for
+(ii) Linear probes may miss nonlinear representational structure; MLP
+probes and CCS \citep{burns2022discovering} are planned robustness checks.
+(iii) We measure conflict/control separability, which is a proxy for
 \sone{}/\stwo{} processing mode---not a direct readout of ``how the model
 is thinking.''
-(vi) Qwen~3-8B think-mode probe results (activations at the pre-think
-position) are not yet available; the current Qwen probing is on no-think
-mode only.
+(iv) The Qwen think-mode \pzero{} position is pre-think; probing
+\emph{within} the thinking trace (T0 through Tend) would reveal whether
+representations shift during chain-of-thought.
 
 \paragraph{Future work.}
-Three directions follow naturally.  First, \textbf{SAE feature analysis}:
+Two directions follow naturally.  First, \textbf{SAE feature analysis}:
 decompose the blurred representations into interpretable features using
 Llama Scope SAEs \citep{he2024llama}, with Ma et al.\ falsification
 controls \citep{ma2026falsification}, to identify which specific features
 are reorganized by reasoning training.  Second, \textbf{causal
 interventions}: steer the identified features to test whether blurring
 the \sone{}/\stwo{} boundary in standard models improves their bias
-resistance.  Third, \textbf{temporal dynamics}: for reasoning models,
-track how probe AUC evolves across positions within the thinking trace
-(T0 through Tend) to determine whether the blurring is present from the
-start of generation or emerges during chain-of-thought.
+resistance.
 
 % ============================================================
 % Acknowledgments

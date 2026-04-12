@@ -38,7 +38,7 @@ if str(_SRC) not in sys.path:
 # ---------------------------------------------------------------------------
 
 H5_PATH = _ROOT / "data" / "activations" / "llama31_8b_instruct.h5"
-MODEL_KEY = "meta-llama_Llama-3.1-8B-Instruct"
+MODEL_KEY: str | None = None  # auto-detected from HDF5 at load time
 LAYER = 19
 SAE_RELEASE = "Goodfire/Llama-3.1-8B-Instruct-SAE-l19"
 SAE_ID = "."  # Goodfire convention for single-SAE repos
@@ -92,6 +92,19 @@ def load_activations() -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]:
         )
 
     with h5py.File(str(H5_PATH), "r") as f:
+        # Auto-detect model key from HDF5 instead of hardcoding
+        global MODEL_KEY
+        available_models = list(f["/models"].keys())
+        if len(available_models) == 0:
+            raise KeyError("No models found in HDF5 /models group")
+        MODEL_KEY = available_models[0]
+        if len(available_models) > 1:
+            log.warning(
+                "Multiple models in HDF5: %s — using first: %s",
+                available_models, MODEL_KEY,
+            )
+        log.info("Auto-detected model key from HDF5: %s", MODEL_KEY)
+
         # Problem metadata
         conflict = f["/problems/conflict"][:].astype(bool)
         categories_raw = f["/problems/category"][:]

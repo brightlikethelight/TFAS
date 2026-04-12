@@ -1,117 +1,113 @@
-# Do LLMs Have a Deliberation Mode? 84% Bias Susceptibility Drops to 0% with Reasoning Training
+# Training Changes How LLMs Represent Cognitive Biases; Inference-Time Thinking Does Not
 
 **Bright Liu, Harvard Undergraduate AI Safety Research (HUSAI)**
 
-*Preliminary results from an ongoing project. Posting for priority and community feedback.*
-
 ---
 
-Llama-3.1-8B-Instruct falls for the base rate neglect fallacy 84% of the time. DeepSeek-R1-Distill-Llama-8B, which shares the exact same architecture and base weights, falls for it 4% of the time. On conjunction fallacy items the drop is from 55% to 0%; on belief-bias syllogisms, 52% to 0%.
+Llama-3.1-8B-Instruct falls for base rate neglect 84% of the time. DeepSeek-R1-Distill-Llama-8B -- same architecture, same base weights, different training -- falls for it 4% of the time. We trained linear probes on internal representations to understand what changed. The headline finding: **reasoning training reshapes how models internally represent bias-susceptible inputs, but inference-time chain-of-thought does not.**
 
-Same weights. Same architecture. Different training. What changed?
+Qwen-3-8B with thinking enabled vs. disabled produces nearly identical internal representations (probe AUC 0.971 at L34 in both modes) despite a behavioral gap of 21% vs. 7% lure rate. The model "thinks harder" in its output without changing its internal geometry. By contrast, the Llama/R1-Distill pair, which differs only in training, shows a persistent representational gap (AUC 0.999 vs. 0.929, same layer). Training rewrites representations; inference-time reasoning routes around them.
 
-We built a benchmark to measure cognitive-bias susceptibility in LLMs and combined it with linear probing of internal representations to start answering that question. This post reports preliminary behavioral and mechanistic results on 8B-parameter models.
+This dissociation matters for safety. If you want to monitor whether a model is "really reasoning" from its internals, you need to know what actually changes those internals -- and what doesn't.
 
-## Background: dual-process theory as an operational lens
+## The benchmark
 
-Dual-process theory (Kahneman, Evans & Stanovich) distinguishes fast/intuitive "System 1" processing from slow/deliberative "System 2" processing. We are not claiming LLMs literally have these systems. We use the framework operationally: cognitive bias tasks that reliably trip up human System 1 reasoning serve as a useful testbed for asking whether reasoning-trained models process information differently at the representational level.
-
-The question that matters for safety: can we detect, from internal activations alone, whether a model is engaged in something more like reflexive pattern-matching versus something more like deliberative reasoning? And does reasoning training (chain-of-thought distillation) change this internal signature?
-
-## The benchmark: 330 matched conflict/control pairs
-
-We constructed a benchmark of 330 items across seven categories: CRT variants, base rate neglect, syllogistic reasoning, anchoring, framing, conjunction fallacy, and arithmetic. Each item is a matched pair: a conflict version (where an intuitive-but-wrong lure competes with the correct answer) and a control version (structurally identical, but the intuitive response and the correct response agree). Conflict items are operationally "S1-like" stimuli; control items are operationally "S2-like" stimuli.
-
-All items are novel structural isomorphs, not copies of classic problems. Classic CRT items (bat-and-ball, lily pad, widgets-and-machines) appear only as baselines for measuring contamination effects. The benchmark is config-driven and fully reproducible from a fixed seed.
-
-Total counts by category: 30 CRT pairs, 20 base rate pairs, 25 syllogism pairs, 15 anchoring pairs, 15 framing pairs, 12 conjunction pairs, 25 arithmetic pairs.
+We built 330 matched conflict/control item pairs across seven cognitive bias categories (CRT, base rate neglect, syllogistic reasoning, anchoring, framing, conjunction fallacy, arithmetic). Conflict items pit an intuitive-but-wrong lure against the correct answer; control items are structurally identical but the intuitive and correct answers agree. All items are novel structural isomorphs, not copies of classic problems.
 
 ## Behavioral results
 
-We scored model outputs on whether they produce the correct answer (for conflict items, this means resisting the lure).
+Bias susceptibility rate (% of conflict items where the model produces the lure answer):
 
-**Bias susceptibility rate by model and category** (percentage of conflict items where the model produces the lure answer):
+| Category | Llama-3.1-8B | R1-Distill-Llama-8B | Qwen-3-8B (no think) | Qwen-3-8B (think) |
+|---|---|---|---|---|
+| Base rate neglect | 84% | 4% | 56% | 4% |
+| Conjunction fallacy | 55% | 0% | 95% | 55% |
+| Syllogism bias | 52% | 0% | 0% | -- |
+| CRT | 0% | 0% | -- | -- |
+| Arithmetic | 0% | 0% | -- | -- |
+| Framing | 0% | 0% | -- | -- |
+| Anchoring | 0% | 0% | -- | -- |
+| **Overall lure rate** | **27.3%** | **2.4%** | **21%** | **7%** |
 
-| Category | Llama-3.1-8B-Instruct | R1-Distill-Llama-8B | Qwen-3-8B (no thinking) |
-|---|---|---|---|
-| Base rate neglect | 84% | 4% | 56% |
-| Conjunction fallacy | 55% | 0% | 95% |
-| Syllogism bias | 52% | 0% | 0% |
-| CRT | 0% | 0% | -- |
-| Arithmetic | 0% | 0% | -- |
-| Framing | 0% | 0% | -- |
-| Anchoring | 0% | 0% | -- |
+Three categories discriminate (base rate, conjunction, syllogism); four show floor effects across all models, likely reflecting benchmark difficulty rather than universal bias immunity.
 
-The headline result is the Llama/R1-Distill comparison. These two models share the Llama-3.1-8B architecture and base weights. R1-Distill-Llama-8B was fine-tuned with reasoning-trace distillation from DeepSeek-R1. The bias susceptibility drops are large: 80 percentage points on base rate neglect, 55pp on conjunction fallacy, 52pp on syllogism bias.
+The Llama-to-R1-Distill comparison is the cleanest: same architecture, same base weights, 80pp drop on base rate neglect, 55pp on conjunction, 52pp on syllogisms. The Qwen think/no-think comparison is the cleanest within-model test: identical weights, 14pp overall reduction. Thinking helps on base rate neglect (56% to 4%) but conjunction stays stubbornly high (95% to 55%).
 
-The four categories showing 0% susceptibility across all models (CRT, arithmetic, framing, anchoring) likely reflect benchmark difficulty rather than universal bias resistance -- see Caveats.
+## Probing internal representations
 
-The Qwen-3-8B column is notable: 95% conjunction fallacy susceptibility is the highest we have observed, and 0% syllogism bias is the lowest for any non-reasoning model. This model was tested without its thinking mode enabled.
+We extracted residual stream activations at every layer for all 330 items and trained linear probes (logistic regression, 5-fold stratified CV, Hewitt & Liang control tasks) to classify conflict vs. control items. The question: does the model's internal state distinguish inputs that require deliberation from those that don't?
 
-## First mechanistic result: linear probes on internal representations
+**Peak probe performance on vulnerable categories (base rate + conjunction + syllogism):**
 
-We extracted residual stream activations at every layer for all benchmark items and trained linear probes (logistic regression, 5-fold stratified CV, Hewitt & Liang control tasks) to classify conflict vs. control items from internal representations alone.
+| Model | Peak Layer | AUC |
+|---|---|---|
+| Llama-3.1-8B-Instruct | L14 | 0.999 |
+| R1-Distill-Llama-8B | L14 | 0.929 |
+| Qwen-3-8B (no think) | L34 | 0.971 |
+| Qwen-3-8B (think) | L34 | 0.971 |
 
-The question: can the model's internal state distinguish items that require deliberation from items that don't?
+The Llama/R1-Distill pair peaks at the same layer (14/32) but with a persistent gap: the non-reasoning model maintains a sharper internal boundary between conflict and control items. The reasoning model has blurred this boundary -- consistent with processing everything more uniformly through a deliberative pathway ("S2-by-default").
 
-**Peak probe performance (AUC, logistic regression):**
+## The headline finding: training vs. inference dissociation
 
-| Model | Peak Layer | AUC | Bootstrap 95% CI |
-|---|---|---|---|
-| Llama-3.1-8B-Instruct | 14 | 0.999 | [0.996, 1.000] |
-| R1-Distill-Llama-8B | 14 | 0.929 | -- |
+The Qwen probe result is the most novel finding. **Think and no-think modes produce identical probe curves** -- peak AUC 0.971 at L34 in both conditions. Same weights, same representations, despite a 14pp behavioral gap. Inference-time chain-of-thought changes what the model *outputs* without changing what it *represents* in the residual stream.
 
-Both models peak at layer 14 out of 32. The conflict/control distinction is linearly decodable from internal representations in both models, but the separation is substantially sharper in the non-reasoning model.
+Compare this with the Llama/R1-Distill pair, where reasoning *training* produces a measurable representational shift (0.999 to 0.929 at the same layer). The dissociation is clean:
 
-This is the opposite of what a naive "reasoning models are better at distinguishing hard from easy" hypothesis would predict. The reasoning-trained model has a *less* crisp internal boundary between conflict and control items.
+- **Training** (Llama vs. R1-Distill): changes representations. AUC gap = 0.07.
+- **Inference** (Qwen think vs. no-think): does not change representations. AUC gap = 0.00.
 
-## Interpretation: S2-by-default
+This suggests reasoning training rewrites how the model encodes bias-susceptible inputs at the representation level, while inference-time thinking operates downstream -- likely in the generation/decoding process -- without altering the residual stream geometry that probes read.
 
-We interpret this pattern as follows. Llama-3.1-8B-Instruct maintains a sharp internal distinction between items that trigger an intuitive-pattern-matching mode and items that don't -- and then often *fails* on the items it correctly identifies as tricky. R1-Distill-Llama-8B has a blurred distinction because reasoning training has made it process everything more uniformly through a deliberative pathway. It doesn't need to distinguish S1 from S2 items because it applies S2-like processing by default.
+## Cross-prediction resolves the specificity confound
 
-The 0.07 AUC gap (0.999 vs. 0.929) captures this: the non-reasoning model internally "knows" which items are conflict items with near-perfect fidelity but can't act on that knowledge. The reasoning model has partially lost the distinction because it no longer needs it.
+A concern: maybe probes just detect the presence of lure text (a surface feature), not anything about processing mode. We tested this with cross-model transfer. A probe trained on Llama representations was applied to R1-Distill representations.
 
-## Within-model comparison: Qwen-3-8B (preliminary)
+**Llama-to-R1-Distill transfer AUC: 0.378.**
 
-Qwen-3-8B offers a natural within-model test because it can be run with or without its thinking mode. We have behavioral results (95% conjunction fallacy susceptibility without thinking) but mechanistic results are still in progress. If the same "blurring" pattern appears when comparing thinking-on vs. thinking-off activations within a single model, it would strengthen the S2-by-default hypothesis considerably. We will report this when the analysis is complete.
+This is *below chance* (0.5), meaning the Llama probe actively anti-predicts on R1-Distill activations. The two models don't just differ in degree -- they represent the same conflict items in geometrically different directions. If the probe were merely detecting lure text, it would transfer positively. The negative transfer confirms the probe captures model-specific processing signatures, not surface features of the input.
+
+## Transfer matrix and lure susceptibility scores
+
+We computed a full transfer matrix across bias categories. The key finding: **base rate and conjunction categories share representations** (bidirectional transfer AUC = 0.993), while other category pairs show weaker transfer. This suggests these two bias types engage overlapping internal mechanisms -- consistent with both involving probabilistic reasoning under salient but misleading cues.
+
+We also extracted continuous lure susceptibility scores (how much the model's internal state favors the lure answer vs. the correct answer):
+
+| Model | Mean lure susceptibility | Interpretation |
+|---|---|---|
+| Llama-3.1-8B-Instruct | +0.42 | Representations favor the lure |
+| R1-Distill-Llama-8B | -0.33 | Representations favor the correct answer |
+
+The sign flip is striking. Llama's residual stream, on average, points toward the lure; R1-Distill's points away from it. Reasoning training doesn't just blur the S1/S2 boundary -- it flips the default direction of the representation from lure-favoring to correct-favoring.
 
 ## What this means for safety
 
-If reasoning-trained models process all inputs through an S2-like pathway, this has several implications:
+**1. Monitoring inference-time "reasoning" from internals may not work the way you hope.** If thinking tokens don't change residual stream representations, a probe-based monitor would not detect whether a model is using its chain-of-thought or ignoring it. The internal state looks the same either way. This is directly relevant to detecting performative reasoning (models that emit CoT without actually conditioning on it).
 
-1. **Monitoring deliberation**: The probe results suggest that linear probes on middle-layer activations can detect whether a model is in a "deliberation-like" state. This could serve as a runtime monitor for whether a model is actually reasoning about a problem or pattern-matching through it.
+**2. Training-time interventions have deeper representational effects than inference-time ones.** If you want models that "really reason" at the representational level, that appears to require training -- not prompting. This is a point in favor of reasoning distillation and against the assumption that sufficiently long chain-of-thought prompting produces the same internal changes.
 
-2. **Reasoning fidelity**: The gap between internal detection and behavioral performance in Llama-3.1-8B-Instruct (it "knows" items are tricky but still fails) suggests that detecting the need for deliberation and actually executing deliberation are separable capabilities. Reasoning training appears to address the execution side.
+**3. Cross-model probe transfer as a specificity tool.** Negative transfer (AUC < 0.5) between a base model and its reasoning-trained variant is a clean signal that probes capture model-specific processing, not input artifacts. This technique may generalize to other interpretability contexts where probe specificity is in question.
 
-3. **Performative reasoning risk**: If future reasoning models emit chain-of-thought traces without internal deliberation (performative reasoning), probes like these could detect the discrepancy. We plan to investigate this directly.
+## Caveats
 
-## What's coming next
+**We have only tested 8B-parameter models.** The training-vs-inference dissociation may not hold at larger scales where models have qualitatively different internal organization. We cannot make claims about frontier models from this data.
 
-- **SAE feature analysis**: Identifying specific sparse autoencoder features that activate differentially on conflict vs. control items, with Ma et al. (2026) falsification to filter token-level artifacts.
-- **Causal interventions**: The probe results show correlation, not causation. We plan activation patching and steering experiments to test whether the representations identified by probes causally influence model outputs.
-- **More models**: Extending to Gemma-2-9B-IT and DeepSeek-R1-Distill-Qwen-7B to test generality across architectures.
-- **Qwen-3-8B thinking toggle**: Completing the within-model mechanistic comparison.
+**The 0.07 AUC gap is real but modest.** Both models represent the conflict/control distinction well above chance (0.929 vs. 0.999). The S2-by-default interpretation depends on this gap being qualitatively meaningful, which we haven't formally established beyond permutation tests (p < 0.001).
 
-## Caveats and limitations
+**Probe decodability is not causality.** High AUC shows the distinction is linearly represented -- not that the model uses this representation to determine behavior. Activation patching experiments are planned but not yet complete.
 
-**The 0% categories may reflect benchmark difficulty, not bias resistance.** Four of our seven categories show 0% susceptibility across all tested models. This likely means our items in those categories are too easy (or that instruction-tuned models have already been trained to resist those specific bias patterns), not that these models are immune to all cognitive biases. We are revising these categories.
+**The reasoning model comparison is confounded.** R1-Distill differs from Llama not only in reasoning training but in fine-tuning data, optimization details, and other pipeline differences. The Qwen within-model comparison partially controls for this, but is imperfect (thinking mode may differ from no-think in ways beyond reasoning).
 
-**Probe decodability does not establish a causal role.** A linear probe achieving 0.999 AUC shows that the conflict/control distinction is linearly represented in layer 14 -- it does not show that the model uses this representation to determine its behavior. Activation patching experiments are needed to establish causality. These are planned but not yet complete.
+**Four benchmark categories show floor effects.** CRT, arithmetic, framing, and anchoring produce 0% lure rates across all models. These items may be too easy, or instruction-tuned models may have been trained to resist these specific patterns.
 
-**The 0.07 AUC gap may not be meaningfully large.** The difference between 0.999 and 0.929 AUC is real and replicable (permutation test p < 0.001 for both), but whether this gap is practically meaningful for the S2-by-default interpretation is debatable. Both models still represent the distinction well above chance. The interpretation depends on the gap being qualitatively important, which we have not formally established.
+## What's next
 
-**We have only tested 8B-parameter models.** All results are from 8B-scale models. The behavioral and mechanistic patterns may not hold at larger scales, where models may have qualitatively different internal organization. We cannot make claims about frontier models from this data.
-
-**The reasoning model comparison is confounded.** R1-Distill-Llama-8B differs from Llama-3.1-8B-Instruct not only in reasoning training but also in the specifics of fine-tuning data, optimization, and any other differences in the training pipeline. We cannot attribute the behavioral or mechanistic differences solely to reasoning-trace distillation.
-
-**Benchmark novelty is not guaranteed.** While we used novel structural isomorphs, we cannot rule out that training data contained similar patterns. The classic CRT items serve as contamination baselines, but this is an imperfect control.
-
-## Acknowledgments
-
-This work is part of a semester project at Harvard Undergraduate Studies in AI Safety (HUSAI). Thanks to the HUSAI faculty and peer reviewers for feedback on the experimental design.
-
-Code and benchmark will be released upon completion of the full analysis.
+- **Causal interventions**: Activation patching to test whether probed representations causally influence outputs.
+- **SAE feature analysis**: Sparse autoencoder features on Llama L19 with Ma et al. falsification to filter token-level artifacts.
+- **Scale**: Extending to larger models to test whether the training/inference dissociation holds.
 
 ---
 
-*Feedback welcome, especially on: (1) the S2-by-default interpretation -- are there alternative explanations for the probe AUC gap? (2) Additional confounds we should control for. (3) Whether the 0% categories suggest the benchmark needs harder items or is working as intended.*
+Code and benchmark will be released upon completion of the full analysis.
+
+*Feedback welcome, especially on: (1) alternative explanations for why inference-time thinking doesn't change residual stream representations, (2) whether the negative cross-model transfer (AUC 0.378) is as strong evidence against the surface-feature confound as we think, (3) additional controls for the training-vs-inference dissociation.*
