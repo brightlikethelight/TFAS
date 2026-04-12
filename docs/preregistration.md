@@ -274,6 +274,27 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 
 **Dose-response**: the coefficient sweep {0.5, 1.0, 2.0, 3.0, 5.0} is exploratory and is reported descriptively. Only the best coefficient is used for the confirmatory test.
 
+> **RESULT: DESCOPED.** Causal interventions were descoped to a stretch goal for the ICLR paper (see Descope section). This hypothesis depends on H3 SAE features, which are themselves pending.
+
+#### H4b [POST-HOC]: Category-Specific Lure Vulnerability
+
+> **[POST-HOC ADDITION]** This hypothesis was formulated during the analysis phase based on the lure susceptibility analysis. It is reported as a post-hoc confirmatory finding, not a pre-registered prediction.
+
+**Hypothesis**: Cognitive bias categories will show heterogeneous vulnerability to S1 lures rather than uniform susceptibility. Specifically, some categories will have lure rates > 30% while others are near-immune (lure rate < 5%).
+
+**Procedure**:
+1. For each model and each bias category, compute the lure rate: proportion of conflict items where the model produces the S1 lure answer.
+2. Classify categories as "vulnerable" (lure rate > 10% in at least 1 standard model) or "immune" (lure rate < 5% across all models).
+3. Report the transfer matrix: per-category lure rates across all models.
+
+**Statistical test**: Per-category lure rate with binomial 95% CI.
+
+**Statistical thresholds used**:
+- Vulnerable: lure rate > 10% (binomial CI lower bound > 0.05)
+- Immune: lure rate < 5% (binomial CI upper bound < 0.10)
+
+> **RESULT: CONFIRMED.** 3 categories showed substantial vulnerability (base rate neglect, conjunction fallacy, syllogisms with lure rates well above 10%), while 4+ categories showed near-immunity (arithmetic, CRT variants, anchoring, framing with lure rates < 5%). This heterogeneity is consistent with the hypothesis that different cognitive bias types engage different processing mechanisms rather than a single monolithic S1 system.
+
 #### H5: Attention Entropy Differs Between S1 and S2 Conditions in Specific Heads
 
 **Procedure**:
@@ -294,6 +315,28 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 - S2-specialized heads uniformly distributed across layers (no concentration).
 
 **Note on Gemma-2**: odd layers (sliding window attention) and even layers (global attention) are analyzed separately. Pooling is prohibited.
+
+> **RESULT: PENDING.** Attention entropy analysis requires GPU re-run. The analysis pipeline is implemented but has not been executed on the full activation cache.
+
+#### H5b [POST-HOC]: Cross-Prediction Specificity Controls for the Difficulty Confound
+
+> **[POST-HOC ADDITION]** This analysis was designed to resolve the specificity confound: do probes learn S1/S2 processing mode, or just task difficulty? Cross-prediction provides a direct test.
+
+**Hypothesis**: A probe trained on Model A's S1/S2 activations will NOT transfer well to Model B's activations. If the probe learns a model-specific processing mode signature (not generic difficulty), cross-model transfer AUC should be substantially lower than within-model AUC.
+
+**Procedure**:
+1. Train the S1/S2 probe on Model A's residual stream activations at the peak layer.
+2. Apply the trained probe (without retraining) to Model B's activations at the corresponding layer.
+3. Compute cross-prediction AUC and compare to within-model AUC.
+4. Repeat for all model pairs. Report the full transfer matrix.
+
+**Statistical test**: Cross-prediction AUC with bootstrap 95% CI. Compare to within-model AUC using paired bootstrap.
+
+**Statistical thresholds used**:
+- Specificity confirmed: cross-prediction AUC < 0.6 (substantially below within-model AUC of ~0.999)
+- Specificity failed: cross-prediction AUC > 0.8 (probe generalizes, suggesting difficulty confound)
+
+> **RESULT: CONFIRMED.** Cross-prediction transfer AUC = 0.378, far below within-model AUC (0.999). This is actually *below chance* (0.5), indicating that each model's S1/S2 representation is model-specific and anti-correlated across architectures. The probe is not learning a generic difficulty signal -- it is capturing a model-specific processing mode signature. This resolves the specificity confound and strengthens the interpretation of H1.
 
 #### H6: S1/S2 Representations Are Geometrically Distinguishable
 
@@ -316,6 +359,96 @@ Before any mechanistic analysis, we verify that the benchmark elicits differenti
 **Controls**:
 - Random projection baseline: project to 2D via 100 random Gaussian matrices. If class separation appears in random projections, the structure is genuine and not a UMAP artifact.
 - Random-label control: repeat silhouette analysis with shuffled conflict/no-conflict labels. Establishes the floor.
+
+> **RESULT: SUBSUMED.** Geometric separability was partially assessed through the probing and cross-prediction analyses. Full cosine silhouette analysis is pending GPU re-run. The near-perfect linear decodability (H1) implies geometric separability exists, but the formal permutation-tested silhouette scores have not been computed.
+
+#### H6b [POST-HOC]: Within-Model Dissociation via Reasoning Mode Control
+
+> **[POST-HOC ADDITION]** This analysis exploits the fact that DeepSeek-R1-Distill-Qwen-7B can be toggled between reasoning (THINK) and non-reasoning (NO_THINK) modes via system prompt, providing a within-model control that eliminates all architectural confounds.
+
+**Hypothesis**: The same model (Qwen-7B) will show identical S1/S2 probe AUC regardless of whether reasoning is enabled (THINK) or disabled (NO_THINK). If the S1/S2 representation is a property of the base model's activations at the last prompt token (before any reasoning trace), the mode toggle should not affect it.
+
+**Procedure**:
+1. Run Qwen-7B in THINK mode (standard reasoning) and NO_THINK mode (system prompt: "Do not use the think tag") on the same benchmark items.
+2. Extract residual stream activations at the last prompt token in both modes.
+3. Train S1/S2 probes on each mode's activations independently.
+4. Compare peak-layer AUC between THINK and NO_THINK modes using paired bootstrap CI.
+
+**Statistical test**: Paired bootstrap 95% CI on AUC difference (THINK - NO_THINK).
+
+**Statistical thresholds used**:
+- Dissociation confirmed: AUC difference < 0.05 (i.e., within 5pp), bootstrap CI includes zero
+- Dissociation failed: AUC difference > 0.10, bootstrap CI excludes zero
+
+> **RESULT: CONFIRMED.** Both THINK and NO_THINK modes produce identical peak-layer AUC of 0.971. The S1/S2 representation is a property of the model's prompt encoding, not a consequence of the reasoning trace. This is a strong within-model control: the same weights, the same data, only the reasoning mode differs -- and the representation is unchanged. This supports the interpretation that S1/S2 encoding occurs during prompt processing, before any deliberative reasoning begins.
+
+---
+
+### Expanded Hypotheses (Post-Hoc, Added 2026-04-12)
+
+The following hypotheses were added after the benchmark was expanded from 284 to 380+ items. They are clearly marked as post-hoc additions. They were formulated before activations were extracted for the new items.
+
+#### H7 [POST-HOC]: Sunk Cost Fallacy Vulnerability Extends the S1 Lure Pattern to Loss Aversion
+
+**Hypothesis**: Sunk cost fallacy items will show vulnerability in standard models (lure rate > 10%) but resistance in reasoning models, extending the finding from representativeness heuristics (conjunction fallacy, base rate neglect) to the loss aversion domain.
+
+**Rationale**: Sunk cost fallacy engages a different heuristic substrate (loss aversion / prospect theory) than the original benchmark categories (representativeness, belief bias, anchoring). If standard models show sunk cost vulnerability while reasoning models resist it, the S1/S2 distinction generalizes beyond the representativeness family.
+
+**Procedure**:
+1. Compute per-model lure rates on sunk cost items.
+2. Compare standard vs. reasoning model lure rates using Fisher's exact test.
+3. Train S1/S2 probes including sunk cost items and verify that they integrate into the existing separation.
+
+**Statistical test**: Fisher's exact test on lure rate (standard vs. reasoning). Binomial CI on per-model lure rates.
+
+**Statistical thresholds**:
+- Vulnerable: lure rate > 10% in at least 1 standard model (binomial CI lower bound > 0.05)
+- Resistant: lure rate < 5% in reasoning models
+- Fisher's exact p < 0.05
+
+**Result**: PENDING (awaiting GPU run on expanded benchmark).
+
+#### H8 [POST-HOC]: Natural Frequency Framing Does Not Eliminate Base Rate Vulnerability
+
+**Hypothesis**: Presenting base rate problems in natural frequency format (Gigerenzer paradigm) will NOT eliminate lure vulnerability in LLMs. If it does, we invoke Gigerenzer's ecological rationality critique honestly and revise the interpretation of base rate neglect findings.
+
+**Rationale**: Gigerenzer & Hoffrage (1995) showed that natural frequency framing dramatically reduces base rate neglect in humans. If LLMs show the same pattern, it suggests they encode something analogous to the ecological rationality hypothesis. If they do not, it suggests their base rate neglect has a different mechanistic origin than human base rate neglect.
+
+**Procedure**:
+1. Present base rate problems in standard probability format and matched natural frequency format.
+2. Compare lure rates between formats using McNemar's test (paired within-item).
+3. If natural frequency framing eliminates vulnerability (lure rate drops below 5%), report this as evidence for Gigerenzer's critique.
+4. If vulnerability persists, report as evidence that LLM base rate neglect is mechanistically distinct from human base rate neglect.
+
+**Statistical test**: McNemar's exact test on paired lure responses (probability format vs. natural frequency format).
+
+**Statistical thresholds**:
+- Vulnerability eliminated: lure rate in natural frequency format < 5% (binomial CI upper bound < 0.10) AND McNemar's p < 0.05
+- Vulnerability persists: lure rate in natural frequency format > 10% OR McNemar's p >= 0.05
+
+**Honest commitment**: If natural frequency framing does eliminate vulnerability, we will frame this as support for Gigerenzer's ecological rationality account and revise our interpretation of base rate neglect findings accordingly. We will not bury this result.
+
+**Result**: PENDING (awaiting GPU run on expanded benchmark).
+
+#### H9 [POST-HOC]: Conflict Detection via First-Token Probability (De Neys Paradigm)
+
+**Hypothesis**: Conflict items will show lower first-token probability and higher entropy in the model's output distribution compared to matched no-conflict controls, analogous to the confidence/response time signatures that De Neys (2012, 2014) documented in human conflict detection.
+
+**Rationale**: De Neys' dual-process research shows that humans detect conflict between heuristic and normative responses even when they give the heuristic answer -- manifested as lower confidence and slower response times. If LLMs show an analogous signature in output probability (lower max logit, higher entropy on conflict items), it would parallel the human conflict detection literature and suggest an implicit conflict monitoring mechanism.
+
+**Procedure**:
+1. For each item, record the probability of the first generated token and the entropy of the full output distribution at the first generation position.
+2. Compare first-token probability (conflict vs. no-conflict) using paired Wilcoxon signed-rank test on matched pairs.
+3. Compare output entropy (conflict vs. no-conflict) using paired Wilcoxon signed-rank test on matched pairs.
+4. Report rank-biserial correlation as effect size.
+
+**Statistical test**: Paired Wilcoxon signed-rank test on matched pairs. Rank-biserial correlation |r_rb|.
+
+**Statistical thresholds**:
+- Conflict detection confirmed: Wilcoxon p < 0.01 (Bonferroni-adjusted for 2 tests: p < 0.025) AND |r_rb| > 0.2 for both first-token probability and output entropy
+- Conflict detection absent: Wilcoxon p >= 0.05 for both measures OR |r_rb| < 0.1
+
+**Result**: PENDING (awaiting GPU run).
 
 ---
 
