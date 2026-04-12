@@ -1,7 +1,7 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-13 afternoon (session 7 — benchmark expanded, paper updated with theoretical grounding)
-**Active focus**: Benchmark expanded to 380 items (sunk cost + Gigerenzer natural frequency). Paper updated with De Neys/Evans/Stanovich/Botvinick theoretical framing. **Targeting ICML MechInterp Workshop (May 8, ~24 days).**
+**Last updated**: 2026-04-13 evening (session 7 — major expansion: benchmark, paper, 7 new scripts)
+**Active focus**: Benchmark expanded to 380+ items (sunk cost + Gigerenzer natural frequency; loss aversion + certainty effect + availability in progress). Paper updated with 11 new citations + Dead Salmons safeguards. 7 new scripts ready for GPU deployment. **Targeting ICML MechInterp Workshop (May 8, ~24 days).**
 
 ---
 
@@ -139,14 +139,23 @@ The narrative now rests on **four converging lines of evidence**:
 3. **Benchmark section**: Updated to 380 items, 8 categories, two heuristic families.
 4. **References**: Added Botvinick 2001, Kerns 2004, De Neys 2017/2023, Evans 2019, Stanovich 2016, Gigerenzer 1995, Kolb 2013.
 
-### Files modified
-- `src/s1s2/utils/types.py` — added "sunk_cost" to TaskCategory
-- `src/s1s2/benchmark/validate.py` — updated target counts
-- `src/s1s2/benchmark/generators.py` — added sunk_cost_isomorph and base_rate_natural_freq_isomorph generators
-- `src/s1s2/benchmark/build.py` — added 15 sunk cost specs + 10 natural frequency specs
-- `data/benchmark/benchmark.jsonl` — rebuilt (380 items)
-- `paper/workshop_paper.tex` — theoretical grounding updates
-- `paper/references.bib` — 9 new entries
+### Files modified (session 7)
+- `src/s1s2/utils/types.py` — added "sunk_cost", "loss_aversion", "certainty_effect", "availability"
+- `src/s1s2/benchmark/validate.py` — updated target counts for all new categories
+- `src/s1s2/benchmark/generators.py` — added sunk_cost, natural_freq, loss_aversion, certainty_effect, availability generators
+- `src/s1s2/benchmark/build.py` — added all new specs
+- `data/benchmark/benchmark.jsonl` — rebuilt (380+ items)
+- `paper/workshop_paper.tex` — 11 new citations, Dead Salmons safeguards paragraph, CogBias differentiation
+- `paper/references.bib` — 15 new entries (De Neys, Evans, Stanovich, Botvinick, Venhoff, Meloux, Afzal, etc.)
+- `docs/preregistration.md` — H4b, H5b added with results; H7-H9 for new categories; descope section
+
+### New scripts added (session 7)
+- `scripts/compute_bootstrap_cis.py` — 1000-resample bootstrap CIs + Hewitt-Liang controls
+- `scripts/confidence_paradigm.py` — De Neys confidence extraction (token probs, entropy, lure/correct gap)
+- `scripts/run_all_gpu.py` — Single-command orchestrator for all 6 pending GPU jobs
+- `scripts/run_new_items.py` — Behavioral validation for sunk cost + natural frequency items
+- `scripts/aggregate_results.py` — Comprehensive results aggregation + LaTeX table generation
+- `scripts/extract_attention.py` — Rewritten with normalized entropy, KV-group analysis, BH-FDR stats
 
 ---
 
