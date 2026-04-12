@@ -1,7 +1,7 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-13 morning (session 6 — all overnight2 results in, post-overnight lure susceptibility done)
-**Active focus**: Phase 4 complete for available GPU work. Paper writing with all non-SAE results in hand. **Targeting ICML MechInterp Workshop (May 8, 24 days).**
+**Last updated**: 2026-04-13 afternoon (session 7 — benchmark expanded, paper updated with theoretical grounding)
+**Active focus**: Benchmark expanded to 380 items (sunk cost + Gigerenzer natural frequency). Paper updated with De Neys/Evans/Stanovich/Botvinick theoretical framing. **Targeting ICML MechInterp Workshop (May 8, ~24 days).**
 
 ---
 
@@ -126,7 +126,31 @@ The narrative now rests on **four converging lines of evidence**:
 
 ---
 
-## What happened this session (April 12 night -> April 13 morning, 2026)
+## What happened session 7 (April 13 afternoon, 2026)
+
+### Benchmark expanded from 330 to 380 items
+1. **Sunk cost fallacy**: 15 new matched pairs (loss aversion heuristic family). Broadens claims from representativeness-only to multiple heuristic families.
+2. **Gigerenzer natural frequency framing**: 10 base rate items reformulated as "X out of N" instead of "X%". Tests robustness to ecological rationality critique.
+3. All 427 tests pass. Benchmark validation clean (no errors).
+
+### Workshop paper updated with theoretical grounding
+1. **Introduction**: Added De Neys conflict detection framework (our P0 probe = "conflict detection without resolution"), Botvinick ACC mapping.
+2. **Discussion**: "Blurring" section reframed as "Conflict detection without resolution" mapping to De Neys. Added Evans' Type 2 autonomy interpretation. Added Stanovich's dysrationalia for domain-specific vulnerability. Added structural/functional plasticity analogy for training vs inference dissociation.
+3. **Benchmark section**: Updated to 380 items, 8 categories, two heuristic families.
+4. **References**: Added Botvinick 2001, Kerns 2004, De Neys 2017/2023, Evans 2019, Stanovich 2016, Gigerenzer 1995, Kolb 2013.
+
+### Files modified
+- `src/s1s2/utils/types.py` — added "sunk_cost" to TaskCategory
+- `src/s1s2/benchmark/validate.py` — updated target counts
+- `src/s1s2/benchmark/generators.py` — added sunk_cost_isomorph and base_rate_natural_freq_isomorph generators
+- `src/s1s2/benchmark/build.py` — added 15 sunk cost specs + 10 natural frequency specs
+- `data/benchmark/benchmark.jsonl` — rebuilt (380 items)
+- `paper/workshop_paper.tex` — theoretical grounding updates
+- `paper/references.bib` — 9 new entries
+
+---
+
+## What happened session 6 (April 12 night -> April 13 morning, 2026)
 
 ### Overnight2 pipeline completed (all 5 jobs)
 
@@ -194,7 +218,7 @@ Ran the full 330-item benchmark against 5 model configurations on the B200 pod.
 
 - **Project scaffolding**: `pyproject.toml`, `CLAUDE.md`, `AGENTS.md`, configs, docs
 - **365/365 tests passing**, smoke green
-- **Benchmark**: 330 items (expanded from 284), 7 categories, matched conflict/control pairs
+- **Benchmark**: 380 items (8 categories, 2 heuristic families), matched conflict/control pairs. Includes sunk cost fallacy (loss aversion) and Gigerenzer natural frequency framing.
 - **Full codebase**: extract, probes, sae, attention, geometry, causal, metacog, viz
 - **Deployment infra**: deploy scripts, orchestrator, W&B integration, pre-reg, presentation
 - **Behavioral validation**: 5 model configs tested on full benchmark (REAL DATA)

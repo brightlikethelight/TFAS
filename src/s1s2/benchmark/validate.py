@@ -29,12 +29,13 @@ from s1s2.utils.types import ALL_CATEGORIES, TaskCategory
 # towards these targets). These numbers come from the project brief.
 TARGET_COUNTS: dict[TaskCategory, dict[str, int]] = {
     "crt": {"conflict": 30, "control": 30},
-    "base_rate": {"conflict": 25, "control": 25},
+    "base_rate": {"conflict": 35, "control": 35},
     "syllogism": {"conflict": 25, "control": 25},
     "anchoring": {"conflict": 20, "control": 20},
     "framing": {"conflict": 20, "control": 20},
     "conjunction": {"conflict": 20, "control": 20},
     "arithmetic": {"conflict": 25, "control": 25},
+    "sunk_cost": {"conflict": 15, "control": 15},
 }
 
 # Token-count heuristic bounds for the prompt. Benchmark items should be

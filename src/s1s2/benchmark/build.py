@@ -40,10 +40,12 @@ from s1s2.benchmark.generators import (
     anchoring_isomorph,
     arithmetic_trap_isomorph,
     base_rate_isomorph,
+    base_rate_natural_freq_isomorph,
     belief_bias_syllogism,
     conjunction_fallacy_isomorph,
     framing_isomorph,
     make_many,
+    sunk_cost_isomorph,
 )
 from s1s2.benchmark.loader import BenchmarkItem
 from s1s2.benchmark.templates import (
@@ -634,6 +636,158 @@ _BASE_RATE_SPECS: list[dict[str, Any]] = [
         "common_group": "grocery store cashier",
         "rare_rate": 0.0002,
         "common_rate": 0.55,
+        "difficulty": 3,
+    },
+]
+
+
+# --------------------------------------------------------------------- #
+# base-rate natural frequency specs (Gigerenzer framing test)           #
+# --------------------------------------------------------------------- #
+
+# 10 pairs. Same stereotyped descriptions as the probability-framed
+# base_rate items, but using "X out of N" natural frequency framing
+# (Gigerenzer, 1995). If models still show base rate neglect here,
+# the vulnerability is robust to Gigerenzer's critique.
+_BASE_RATE_NATFREQ_SPECS: list[dict[str, Any]] = [
+    {
+        "pair_id": "brnf_carpenter_teacher",
+        "description": (
+            "He keeps a tape measure in his pocket, has sawdust on his "
+            "boots, and drives a pickup truck with a toolbox in the bed."
+        ),
+        "rare_group": "professional carpenter",
+        "common_group": "school teacher",
+        "n_total": 1000,
+        "n_rare": 5,
+        "n_common": 450,
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "brnf_brewer_accountant",
+        "description": (
+            "She has a keen sense of smell, reads journals about "
+            "fermentation science, and her garage contains stainless "
+            "steel vessels and bags of malted barley."
+        ),
+        "rare_group": "craft brewer",
+        "common_group": "accountant",
+        "n_total": 1000,
+        "n_rare": 3,
+        "n_common": 400,
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "brnf_beekeeper_programmer",
+        "description": (
+            "He wears a broad hat even indoors, talks enthusiastically "
+            "about colony health, and has jars of golden liquid lined "
+            "up on every windowsill."
+        ),
+        "rare_group": "beekeeper",
+        "common_group": "software programmer",
+        "n_total": 1000,
+        "n_rare": 2,
+        "n_common": 550,
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "brnf_tattooist_nurse",
+        "description": (
+            "She sketches in a black notebook constantly, has an "
+            "autoclave at home, and her arms are covered in intricate "
+            "colored designs she drew herself."
+        ),
+        "rare_group": "tattoo artist",
+        "common_group": "nurse",
+        "n_total": 1000,
+        "n_rare": 4,
+        "n_common": 400,
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "brnf_pilot_salesperson",
+        "description": (
+            "He owns several pairs of aviator sunglasses, keeps a "
+            "logbook in his briefcase, and checks weather radar on "
+            "his phone every morning before leaving the house."
+        ),
+        "rare_group": "commercial pilot",
+        "common_group": "retail salesperson",
+        "n_total": 1000,
+        "n_rare": 3,
+        "n_common": 500,
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "brnf_glassblower_clerk",
+        "description": (
+            "She wears heat-resistant gloves even in cold weather, "
+            "has burn marks on her forearms, and her studio contains "
+            "a furnace that runs at 1100 degrees."
+        ),
+        "rare_group": "glassblower",
+        "common_group": "office clerk",
+        "n_total": 1000,
+        "n_rare": 1,
+        "n_common": 500,
+        "difficulty": 4,
+    },
+    {
+        "pair_id": "brnf_florist_engineer",
+        "description": (
+            "She rises at 4am to visit the wholesale flower market, "
+            "her car always smells of roses and eucalyptus, and her "
+            "fridge is full of wrapped bouquets in various stages of "
+            "arrangement."
+        ),
+        "rare_group": "professional florist",
+        "common_group": "mechanical engineer",
+        "n_total": 1000,
+        "n_rare": 6,
+        "n_common": 350,
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "brnf_farrier_manager",
+        "description": (
+            "He has an anvil in his truck, smells of coal smoke, and "
+            "his hands are thick with calluses from hammering iron "
+            "all day."
+        ),
+        "rare_group": "farrier",
+        "common_group": "office manager",
+        "n_total": 1000,
+        "n_rare": 1,
+        "n_common": 480,
+        "difficulty": 4,
+    },
+    {
+        "pair_id": "brnf_locksmith_analyst",
+        "description": (
+            "He carries a ring of blank keys on his belt, owns a "
+            "van full of specialized picks and tension tools, and "
+            "can open most household locks in under a minute."
+        ),
+        "rare_group": "locksmith",
+        "common_group": "data analyst",
+        "n_total": 1000,
+        "n_rare": 2,
+        "n_common": 420,
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "brnf_falconer_cashier",
+        "description": (
+            "She wears a heavy leather gauntlet even on warm days, "
+            "has a permit to keep raptors, and her car boot contains "
+            "a telemetry receiver and a bag of day-old chicks."
+        ),
+        "rare_group": "licensed falconry practitioner",
+        "common_group": "grocery store cashier",
+        "n_total": 1000,
+        "n_rare": 2,
+        "n_common": 550,
         "difficulty": 3,
     },
 ]
@@ -1833,6 +1987,358 @@ _ARITHMETIC_SPECS: list[dict[str, Any]] = [
 
 
 # --------------------------------------------------------------------- #
+# sunk cost fallacy specs                                               #
+# --------------------------------------------------------------------- #
+
+
+# 15 pairs. Each tests whether the model falls for "we've already invested
+# X, so we should continue" when the rational future-looking answer is to
+# switch. Distinct heuristic family (loss aversion) from base_rate,
+# conjunction, and syllogism (all representativeness/belief bias).
+_SUNK_COST_SPECS: list[dict[str, Any]] = [
+    {
+        "pair_id": "sc_software_rewrite",
+        "scenario": "A mid-size company has been building a custom ERP system.",
+        "investment_description": (
+            "The in-house team has spent two years writing the software "
+            "from scratch, hiring three additional engineers along the way."
+        ),
+        "amount_spent": "$1.2 million",
+        "negative_signal": (
+            "an independent audit finds the architecture is fundamentally "
+            "flawed: it cannot scale past 50 concurrent users, and fixing "
+            "it would require rewriting 80% of the codebase at an "
+            "estimated additional cost of $900,000."
+        ),
+        "alternative": (
+            "a well-tested commercial ERP solution is available for "
+            "$200,000 in licensing and $100,000 in migration costs, "
+            "with proven scalability to 10,000 users."
+        ),
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "sc_film_production",
+        "scenario": "A film studio is producing an animated feature.",
+        "investment_description": (
+            "The production has completed storyboarding, voice "
+            "recording, and 40% of the animation."
+        ),
+        "amount_spent": "$18 million",
+        "negative_signal": (
+            "test audiences rate the film 2.1 out of 10, the lowest "
+            "score in the studio's history. Marketing analysis projects "
+            "a box-office return of at most $5 million even with an "
+            "additional $12 million in completion and promotion costs."
+        ),
+        "alternative": (
+            "the studio can redeploy its animators to a different "
+            "project with strong test-audience reception that needs "
+            "only $8 million more to complete and is projected to "
+            "earn $40 million."
+        ),
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "sc_mine_copper",
+        "scenario": "A mining company opened a copper mine in a remote region.",
+        "investment_description": (
+            "The company built access roads, a processing plant, and "
+            "worker housing over three years."
+        ),
+        "amount_spent": "$50 million",
+        "negative_signal": (
+            "geological surveys now reveal that the remaining copper "
+            "reserves are 90% smaller than originally estimated. "
+            "Continued extraction would cost $30 million more but "
+            "yield only $8 million in copper at current prices."
+        ),
+        "alternative": (
+            "the company can sell the processing equipment for "
+            "$6 million and redirect the $30 million operating "
+            "budget to a newly discovered lithium deposit with "
+            "projected returns of $70 million."
+        ),
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "sc_restaurant_renovation",
+        "scenario": "An entrepreneur is renovating a building into a restaurant.",
+        "investment_description": (
+            "Demolition, plumbing, and electrical work are complete, "
+            "and the kitchen equipment has been installed."
+        ),
+        "amount_spent": "$350,000",
+        "negative_signal": (
+            "the city has just approved a highway bypass that will "
+            "divert 85% of through-traffic away from the block. A "
+            "commissioned traffic study projects that the restaurant "
+            "would lose $60,000 per year even under optimistic scenarios."
+        ),
+        "alternative": (
+            "a buyer has offered $280,000 for the partially renovated "
+            "building, and the entrepreneur can use the proceeds to "
+            "open in a high-traffic location where projected annual "
+            "profit is $90,000."
+        ),
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "sc_phd_program",
+        "scenario": "A doctoral student is four years into a six-year PhD program.",
+        "investment_description": (
+            "She has completed coursework, passed qualifying exams, and "
+            "spent two years collecting field data in tropical forests."
+        ),
+        "amount_spent": "four years of full-time effort and $60,000 in personal savings",
+        "negative_signal": (
+            "her primary dataset has been invalidated by a newly "
+            "published paper showing the measurement technique she "
+            "used produces systematic errors. Her advisor estimates "
+            "she would need three more years to recollect valid data."
+        ),
+        "alternative": (
+            "a biotech company has offered her a senior research "
+            "position starting immediately, with a salary matching "
+            "post-PhD rates and research problems aligned with her "
+            "interests."
+        ),
+        "difficulty": 4,
+    },
+    {
+        "pair_id": "sc_concert_tickets",
+        "scenario": "You bought non-refundable tickets to an outdoor concert.",
+        "investment_description": (
+            "The tickets were purchased months ago as a birthday gift "
+            "for a friend."
+        ),
+        "amount_spent": "$300",
+        "negative_signal": (
+            "on the day of the concert, a severe ice storm is "
+            "forecast with dangerous driving conditions. Two other "
+            "concert-goers were hospitalized in accidents driving to "
+            "the same venue last year in similar weather."
+        ),
+        "alternative": (
+            "you can stay home, watch the same artist's live-streamed "
+            "show for free, and celebrate with a home-cooked dinner — "
+            "an option your friend says she would actually prefer."
+        ),
+        "difficulty": 1,
+    },
+    {
+        "pair_id": "sc_startup_pivot",
+        "scenario": "A tech startup has been developing a social-media analytics platform.",
+        "investment_description": (
+            "The founding team has built a working prototype, acquired "
+            "200 beta users, and pitched to twelve venture capital firms."
+        ),
+        "amount_spent": "$400,000 in seed funding and 18 months of founder time",
+        "negative_signal": (
+            "all twelve VCs declined to invest, citing that three "
+            "well-funded competitors launched identical products in "
+            "the past quarter. Beta-user retention is 4%, far below "
+            "the 30% threshold needed for growth."
+        ),
+        "alternative": (
+            "during beta testing, several enterprise customers asked "
+            "for a different product — a compliance-monitoring tool — "
+            "that the team's technology could power with three months "
+            "of development. Two customers have offered signed letters "
+            "of intent totalling $250,000 in annual contracts."
+        ),
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "sc_bridge_construction",
+        "scenario": "A county is building a pedestrian bridge over a river.",
+        "investment_description": (
+            "Foundation pilings have been driven and one abutment is "
+            "complete."
+        ),
+        "amount_spent": "$2.3 million",
+        "negative_signal": (
+            "a new geological survey reveals an unstable clay layer "
+            "beneath the riverbed. Engineers estimate that reinforcing "
+            "the foundations would cost an additional $4.5 million, "
+            "bringing the total to $8.8 million — triple the original "
+            "budget — while a structural failure risk of 12% remains."
+        ),
+        "alternative": (
+            "a ferry service can be established for $600,000 in total "
+            "setup costs, serving the same population with comparable "
+            "convenience and no structural risk."
+        ),
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "sc_drug_trial",
+        "scenario": "A pharmaceutical company is running a Phase III clinical trial.",
+        "investment_description": (
+            "The drug has passed Phase I and Phase II, and 60% of "
+            "Phase III patients have been enrolled."
+        ),
+        "amount_spent": "$80 million",
+        "negative_signal": (
+            "an interim analysis shows the drug performs no better "
+            "than placebo on the primary endpoint (p = 0.89) and "
+            "causes liver toxicity in 8% of patients. The independent "
+            "data safety monitoring board has recommended halting."
+        ),
+        "alternative": (
+            "the company has a different compound in Phase I that "
+            "targets the same condition via a novel mechanism, with "
+            "promising early signals and an estimated $40 million to "
+            "reach Phase III."
+        ),
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "sc_military_jet",
+        "scenario": "A defence ministry is developing a next-generation fighter jet.",
+        "investment_description": (
+            "The programme has completed design, built two prototypes, "
+            "and conducted initial flight tests."
+        ),
+        "amount_spent": "$6 billion over eight years",
+        "negative_signal": (
+            "flight tests reveal the airframe cannot achieve the "
+            "required radar cross-section without a full fuselage "
+            "redesign. The redesign would add $4 billion and five "
+            "years, and the resulting aircraft would still lag behind "
+            "an allied nation's existing model on three of five key "
+            "performance metrics."
+        ),
+        "alternative": (
+            "the allied nation has offered to sell its proven model "
+            "at $120 million per unit (total fleet cost $3.6 billion), "
+            "with full technology transfer and a four-year delivery "
+            "schedule."
+        ),
+        "difficulty": 4,
+    },
+    {
+        "pair_id": "sc_organic_farm",
+        "scenario": "A farmer converted half her land to organic blueberry cultivation.",
+        "investment_description": (
+            "She spent three years preparing the soil, planted 8,000 "
+            "bushes, and installed drip irrigation."
+        ),
+        "amount_spent": "$180,000",
+        "negative_signal": (
+            "after the first harvest, yields are 70% below projections "
+            "due to a soil pH problem that cannot be corrected without "
+            "replacing the top 18 inches of soil across the entire "
+            "plot — an additional $150,000. Even then, the county "
+            "agricultural agent gives only a 40% chance of viable "
+            "yields within five years."
+        ),
+        "alternative": (
+            "the same land could be converted to solar-panel leasing "
+            "at zero upfront cost (the solar company installs the "
+            "panels), providing $25,000 per year in guaranteed lease "
+            "income for 20 years."
+        ),
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "sc_language_learning",
+        "scenario": "You have been studying Mandarin Chinese for three years.",
+        "investment_description": (
+            "You have completed six semesters of classes, hired a "
+            "private tutor for weekly sessions, and spent a summer "
+            "in Beijing."
+        ),
+        "amount_spent": "$15,000 in tuition and travel",
+        "negative_signal": (
+            "your employer has just reassigned you from the Shanghai "
+            "office to the Sao Paulo office permanently. Your new role "
+            "requires Portuguese, not Mandarin, and there are no "
+            "foreseeable Mandarin-requiring positions."
+        ),
+        "alternative": (
+            "an intensive Portuguese programme starts next month, and "
+            "colleagues who completed it reached professional fluency "
+            "in nine months — well within your transfer timeline."
+        ),
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "sc_book_manuscript",
+        "scenario": "An author has been writing a historical novel for two years.",
+        "investment_description": (
+            "She has completed 70,000 words, conducted extensive "
+            "archival research, and visited three countries for "
+            "on-location detail."
+        ),
+        "amount_spent": "$25,000 in research travel and two years of writing time",
+        "negative_signal": (
+            "her agent reports that two major publishers have released "
+            "novels with nearly identical premises in the past month, "
+            "and a third is scheduled for autumn. Editors say the "
+            "market is now saturated and estimate her book's advance "
+            "would be at most $5,000 — below the cost of finishing it."
+        ),
+        "alternative": (
+            "a publisher has approached her with a contract for a "
+            "different book — a biography she is uniquely qualified "
+            "to write — offering a $40,000 advance and a 12-month "
+            "deadline."
+        ),
+        "difficulty": 3,
+    },
+    {
+        "pair_id": "sc_warehouse_lease",
+        "scenario": "A small business signed a 5-year warehouse lease.",
+        "investment_description": (
+            "The business invested in custom shelving, a loading dock "
+            "modification, and climate-control upgrades specific to "
+            "this building."
+        ),
+        "amount_spent": "$90,000 in non-recoverable fit-out costs",
+        "negative_signal": (
+            "after one year, a new distribution hub opened next door, "
+            "causing constant truck congestion that delays shipments "
+            "by 2-3 hours daily. The business is losing $4,000 per "
+            "month in late-delivery penalties, and the landlord refuses "
+            "to release the lease."
+        ),
+        "alternative": (
+            "another warehouse three miles away is available at the "
+            "same rent, with no congestion issues. The early-termination "
+            "penalty on the current lease is $20,000, and re-fitting "
+            "the new warehouse would cost $30,000 — after which the "
+            "$4,000/month loss would stop entirely."
+        ),
+        "difficulty": 2,
+    },
+    {
+        "pair_id": "sc_wedding_venue",
+        "scenario": "A couple booked a destination wedding venue.",
+        "investment_description": (
+            "They have paid the non-refundable venue deposit, bought "
+            "plane tickets for themselves and close family, and ordered "
+            "custom decorations for the specific space."
+        ),
+        "amount_spent": "$12,000 in non-refundable deposits and purchases",
+        "negative_signal": (
+            "the venue has just informed them that a major construction "
+            "project next door will produce jackhammer noise throughout "
+            "their wedding day, and the only available alternative date "
+            "is during the rainy season with a 90% chance of storms."
+        ),
+        "alternative": (
+            "a local venue with excellent reviews has an opening on "
+            "their original date, at $8,000 total (all-inclusive), "
+            "which family members say they would prefer because it "
+            "eliminates everyone's travel costs."
+        ),
+        "difficulty": 2,
+    },
+]
+
+
+# --------------------------------------------------------------------- #
 # orchestration                                                         #
 # --------------------------------------------------------------------- #
 
@@ -1856,11 +2362,13 @@ def build_full_benchmark(seed: int = 0) -> list[BenchmarkItem]:
 
     # ---- non-CRT
     items.extend(make_many(base_rate_isomorph, _BASE_RATE_SPECS))
+    items.extend(make_many(base_rate_natural_freq_isomorph, _BASE_RATE_NATFREQ_SPECS))
     items.extend(make_many(belief_bias_syllogism, _SYLLOGISM_SPECS))
     items.extend(make_many(anchoring_isomorph, _ANCHORING_SPECS))
     items.extend(make_many(framing_isomorph, _FRAMING_SPECS))
     items.extend(make_many(conjunction_fallacy_isomorph, _CONJUNCTION_SPECS))
     items.extend(make_many(arithmetic_trap_isomorph, _ARITHMETIC_SPECS))
+    items.extend(make_many(sunk_cost_isomorph, _SUNK_COST_SPECS))
 
     _assert_invariants(items)
     return items

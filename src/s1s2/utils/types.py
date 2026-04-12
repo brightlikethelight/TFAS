@@ -42,6 +42,7 @@ TaskCategory = Literal[
     "framing",
     "conjunction",
     "arithmetic",
+    "sunk_cost",
 ]
 
 ALL_CATEGORIES: Final[tuple[TaskCategory, ...]] = (
@@ -52,6 +53,7 @@ ALL_CATEGORIES: Final[tuple[TaskCategory, ...]] = (
     "framing",
     "conjunction",
     "arithmetic",
+    "sunk_cost",
 )
 
 # Behavioral response classification

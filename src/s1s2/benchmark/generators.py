@@ -769,6 +769,219 @@ def conjunction_fallacy_isomorph(
 
 
 # --------------------------------------------------------------------- #
+# base-rate neglect — natural frequency framing (Gigerenzer)            #
+# --------------------------------------------------------------------- #
+
+
+@beartype
+def base_rate_natural_freq_isomorph(
+    *,
+    pair_id: str,
+    description: str,
+    rare_group: str,
+    common_group: str,
+    n_total: int,
+    n_rare: int,
+    n_common: int,
+    subcategory: str = "natural_frequency",
+    difficulty: int = 3,
+) -> tuple[BenchmarkItem, BenchmarkItem]:
+    """Base-rate pair using natural frequency format (Gigerenzer, 1995).
+
+    Gigerenzer argues that base rate neglect is an artefact of
+    probability framing and largely disappears when the same information
+    is presented as natural frequencies ("10 out of 1000" instead of
+    "1%"). If the model still falls for the lure under natural frequency
+    framing, the vulnerability is robust to Gigerenzer's critique.
+
+    Same logic as :func:`base_rate_isomorph` but the prompt says
+    "Out of N people, X are rare_group and Y are common_group"
+    instead of "X% are rare_group."
+    """
+    if n_rare >= n_common:
+        raise ValueError("n_rare must be less than n_common")
+    if n_rare + n_common > n_total:
+        raise ValueError("n_rare + n_common cannot exceed n_total")
+    if n_common < n_rare * 3:
+        raise ValueError("n_common must dominate n_rare (>=3x)")
+
+    conflict_prompt = (
+        f"Imagine a room of {n_total} people. Of these {n_total} "
+        f"people, {n_common} are {common_group}s and {n_rare} are "
+        f"{rare_group}s. One person is drawn at random and described "
+        f"as follows: {description} "
+        f"Out of the {n_total} people in the room, is this person "
+        f"more likely to be one of the {n_common} {common_group}s "
+        f"or one of the {n_rare} {rare_group}s? "
+        f"Answer with the single word {common_group!s} or "
+        f"{rare_group!s}."
+    )
+    control_prompt = (
+        f"Imagine a room of {n_total} people. Of these {n_total} "
+        f"people, {n_common} are {common_group}s and {n_rare} are "
+        f"{rare_group}s. One person is drawn at random with no "
+        f"further information. Out of the {n_total} people, is this "
+        f"person more likely to be one of the {n_common} "
+        f"{common_group}s or one of the {n_rare} {rare_group}s? "
+        f"Answer with the single word {common_group!s} or "
+        f"{rare_group!s}."
+    )
+
+    paraphrases_conflict = [
+        (
+            f"There are {n_total} people. {n_common} of them are "
+            f"{common_group}s. {n_rare} of them are {rare_group}s. "
+            f"One person has this profile: {description} "
+            f"Which group does this person more likely belong to — "
+            f"the {n_common} {common_group}s or the {n_rare} "
+            f"{rare_group}s? One word."
+        ),
+        (
+            f"In a group of {n_total}, there are {n_common} "
+            f"{common_group}s and {n_rare} {rare_group}s. A randomly "
+            f"selected individual is described: {description} "
+            f"Is this individual more likely a {common_group} or a "
+            f"{rare_group}? Respond with one word."
+        ),
+    ]
+    paraphrases_control = [
+        (
+            f"In a group of {n_total}, there are {n_common} "
+            f"{common_group}s and {n_rare} {rare_group}s. One "
+            f"person is selected at random with no description. "
+            f"More likely a {common_group} or {rare_group}? One word."
+        ),
+    ]
+
+    return _build_pair(
+        pair_id=pair_id,
+        category="base_rate",
+        subcategory=subcategory,
+        difficulty=difficulty,
+        conflict_prompt=conflict_prompt,
+        control_prompt=control_prompt,
+        correct_answer=common_group,
+        lure_answer=rare_group,
+        source="novel",
+        provenance_note=(
+            "Base-rate neglect isomorph in Gigerenzer's (1995) natural "
+            f"frequency format. n_total={n_total}, n_rare={n_rare}, "
+            f"n_common={n_common}. Tests whether vulnerability is "
+            "robust to framing format."
+        ),
+        paraphrases_conflict=paraphrases_conflict,
+        paraphrases_control=paraphrases_control,
+    )
+
+
+# --------------------------------------------------------------------- #
+# sunk cost fallacy                                                     #
+# --------------------------------------------------------------------- #
+
+
+@beartype
+def sunk_cost_isomorph(
+    *,
+    pair_id: str,
+    scenario: str,
+    investment_description: str,
+    amount_spent: str,
+    negative_signal: str,
+    alternative: str,
+    subcategory: str = "loss_aversion",
+    difficulty: int = 3,
+) -> tuple[BenchmarkItem, BenchmarkItem]:
+    """Sunk cost fallacy pair in the loss-aversion heuristic family.
+
+    The conflict item describes a project where substantial resources
+    have been invested, but new information makes it clear the rational
+    choice is to stop and switch to an alternative. The System-1 lure
+    is to continue because of the sunk investment ("we've already put
+    so much in..."). The normatively correct answer is to stop/switch
+    because sunk costs are irrelevant to future-looking decisions.
+
+    The control poses a structurally identical scenario but with a
+    POSITIVE signal: the investment IS on track and continuing is
+    genuinely rational, so both S1 and S2 agree on "continue."
+
+    This category tests a DIFFERENT heuristic family (loss aversion)
+    than base_rate/conjunction/syllogism (representativeness), which
+    broadens the domain-specificity claim.
+    """
+    if not scenario.strip() or not investment_description.strip():
+        raise ValueError("scenario and investment_description must be non-empty")
+    if not negative_signal.strip() or not alternative.strip():
+        raise ValueError("negative_signal and alternative must be non-empty")
+
+    conflict_prompt = (
+        f"{scenario} {investment_description} So far, {amount_spent} has "
+        f"been spent on this project. However, {negative_signal} "
+        f"Meanwhile, {alternative}\n\n"
+        "Based purely on expected future outcomes (ignoring what has "
+        "already been spent), should you continue the current project "
+        "or switch to the alternative?\n\n"
+        "Answer with one word: Continue or Switch."
+    )
+    control_prompt = (
+        f"{scenario} {investment_description} So far, {amount_spent} has "
+        "been spent on this project. Recent evaluations confirm the "
+        "project is on track, with projected returns exceeding remaining "
+        "costs by a wide margin. No better alternative is currently "
+        "available.\n\n"
+        "Based purely on expected future outcomes (ignoring what has "
+        "already been spent), should you continue the current project "
+        "or abandon it?\n\n"
+        "Answer with one word: Continue or Abandon."
+    )
+
+    paraphrases_conflict = [
+        (
+            f"Consider this scenario. {scenario} {investment_description} "
+            f"Already spent: {amount_spent}. New information: "
+            f"{negative_signal} An alternative exists: {alternative} "
+            "Ignoring sunk costs entirely, which option has higher "
+            "expected value going forward: continuing or switching? "
+            "One word: Continue or Switch."
+        ),
+        (
+            f"{scenario} {investment_description} Investment to date: "
+            f"{amount_spent}. {negative_signal} {alternative} "
+            "A rational decision-maker who ignores past expenditures "
+            "would choose to: Continue or Switch? Answer in one word."
+        ),
+    ]
+    paraphrases_control = [
+        (
+            f"{scenario} {investment_description} Investment to date: "
+            f"{amount_spent}. The project is proceeding well with "
+            "strong projected returns. No superior alternative exists. "
+            "Should you continue or abandon? One word."
+        ),
+    ]
+
+    return _build_pair(
+        pair_id=pair_id,
+        category="sunk_cost",
+        subcategory=subcategory,
+        difficulty=difficulty,
+        conflict_prompt=conflict_prompt,
+        control_prompt=control_prompt,
+        correct_answer="Switch",
+        lure_answer="Continue",
+        source="novel",
+        provenance_note=(
+            "Sunk cost fallacy isomorph in the loss-aversion "
+            "tradition (Arkes & Blumer, 1985; Thaler, 1980). "
+            f"amount_spent={amount_spent!r}. Conflict item has a "
+            "negative signal making continuation irrational; "
+            "control item has the project on track."
+        ),
+        paraphrases_conflict=paraphrases_conflict,
+        paraphrases_control=paraphrases_control,
+    )
+
+
+# --------------------------------------------------------------------- #
 # arithmetic trap                                                       #
 # --------------------------------------------------------------------- #
 

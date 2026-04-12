@@ -91,11 +91,17 @@ overlapping computational substrate.
 Kahneman's dual-process framework distinguishes fast, heuristic
 processing (``System~1'') from slow, deliberative processing
 (``System~2'') \citep{kahneman2011thinking}.  While the binary framing
-is an acknowledged oversimplification---what matters is a
+is an acknowledged oversimplification---modern accounts treat this as a
 \emph{continuum} of processing intensity \citep{melnikoff2018mythical,
-evans2013dual}---the core observation that cognitive systems flexibly
-allocate effort, with measurable consequences for bias susceptibility,
-remains robust \citep{deneys2012bias}.
+evans2013dual, deneys2023advancing}---the core observation that
+cognitive systems flexibly allocate effort, with measurable consequences
+for bias susceptibility, remains robust.  Crucially, De~Neys' conflict
+detection paradigm \citep{deneys2012bias, deneys2017dual} demonstrates
+that humans often \emph{detect} conflicts between heuristic and
+normative responses even when they fail to override the heuristic---a
+dissociation between conflict \emph{monitoring} and conflict
+\emph{resolution} with clear neural correlates in the anterior cingulate
+cortex \citep{botvinick2001conflict}.
 
 Large language models exhibit strikingly analogous behavioral patterns.
 Instruction-tuned models reproduce human-like errors on conflict
@@ -124,8 +130,9 @@ reasoning distillation training.  Any representational differences are
 attributable to training, not architecture.  We make four contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
-  \item A \textbf{contrastive cognitive bias benchmark} of 330 items
-  (165 matched conflict/control pairs) across 7 categories, with novel
+  \item A \textbf{contrastive cognitive bias benchmark} of 380 items
+  (190 matched conflict/control pairs) across 8 categories spanning two
+  heuristic families (representativeness and loss aversion), with novel
   isomorphs to resist memorization.
 
   \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
@@ -169,23 +176,30 @@ no-conflict control \citep{deneys2012bias}; (2) all items use novel
 surface features to resist memorization; and (3) category diversity
 enables specificity analysis.
 
-The benchmark comprises \textbf{330 items} organized as \textbf{165
-matched pairs} across seven categories:
+The benchmark comprises \textbf{380 items} organized as \textbf{190
+matched pairs} across eight categories spanning two heuristic families:
 
 \begin{itemize}[leftmargin=*,itemsep=1pt]
-  \item \textbf{Base rate neglect} (22 pairs): Bayesian reasoning with
-  diagnostic descriptions pitted against base rates.
-  \item \textbf{Conjunction fallacy} (12 pairs): probability judgments
+  \item \textbf{Base rate neglect} (35 pairs): Bayesian reasoning with
+  diagnostic descriptions pitted against base rates.  Includes 10 pairs
+  in Gigerenzer's natural frequency format (``10 out of 1000'' instead
+  of ``1\%'') to test robustness to the ecological rationality critique
+  \citep{gigerenzer1995improve}.
+  \item \textbf{Conjunction fallacy} (20 pairs): probability judgments
   where detailed descriptions make conjunctions seem more likely.
-  \item \textbf{Belief-bias syllogisms} (20 pairs): logical validity
+  \item \textbf{Belief-bias syllogisms} (25 pairs): logical validity
   crossed with conclusion believability.
-  \item \textbf{CRT variants} (48 pairs): structural isomorphs of
+  \item \textbf{Sunk cost fallacy} (15 pairs): decision scenarios where
+  large prior investment tempts continuation despite negative expected
+  value---a distinct heuristic family (loss aversion; Arkes \& Blumer,
+  1985) from the representativeness items above.
+  \item \textbf{CRT variants} (30 pairs): structural isomorphs of
   Cognitive Reflection Test items with novel surface features.
-  \item \textbf{Arithmetic} (12 pairs): multi-step computation with
+  \item \textbf{Arithmetic} (25 pairs): multi-step computation with
   and without carrying traps.
-  \item \textbf{Framing effects} (14 pairs): gain/loss-framed logically
+  \item \textbf{Framing effects} (20 pairs): gain/loss-framed logically
   equivalent decisions.
-  \item \textbf{Anchoring} (14 pairs): numerical estimation with
+  \item \textbf{Anchoring} (20 pairs): numerical estimation with
   extreme vs.\ neutral anchors.
 \end{itemize}
 
@@ -262,9 +276,10 @@ responses on conflict items) across all models and categories.
 \begin{table}[t]
 \centering
 \caption{S1-lure rates (\%) on conflict items by model and category
-  (330 items, 165 matched pairs).  Bolded numbers indicate categories
+  (original 330-item benchmark).  Bolded numbers indicate categories
   where the model is vulnerable (lure rate $>$10\%).  Categories where
-  all models are immune (0\% lure) are grouped at bottom.}
+  all models are immune (0\% lure) are grouped at bottom.  Sunk cost
+  and natural frequency items (50 additional) pending behavioral validation.}
 \label{tab:behavioral}
 \vspace{4pt}
 \small
@@ -454,28 +469,46 @@ away from it.
 \section{Discussion}
 \label{sec:discussion}
 
-\paragraph{Blurring, not sharpening.}
-The central finding is counterintuitive: the model that \emph{resists}
-cognitive biases (R1-Distill, 2.4\% lure rate) has a \emph{less} distinct
-internal \sone{}/\stwo{} boundary than the model that \emph{succumbs} to
-them (Llama, 27.3\% lure rate).  If reasoning training simply added a
-``System~2 module'' that overrides System~1, we would expect sharper
-separability in the reasoning model.  Instead, the AUC drop from 0.999 to
-0.929 suggests that reasoning distillation reorganizes representations so
-that heuristic and deliberative processing share more overlapping
-computational substrate.  The lure susceptibility scores make this
-concrete: Llama's pre-generation representation actively favors the lure
-answer ($+0.422$), while R1-Distill's representation favors the correct
-answer ($-0.326$).  Reasoning training doesn't just blur a boundary---it
+\paragraph{Conflict detection without resolution.}
+The central finding maps precisely onto De~Neys' conflict detection
+paradigm \citep{deneys2012bias, deneys2017dual}: the standard model
+\emph{detects} the conflict between heuristic and normative responses
+(AUC\,=\,0.999 at L14) yet \emph{fails to resolve} it (27.3\% lure
+rate).  This parallels the human finding that conflict monitoring---indexed
+by anterior cingulate cortex activation \citep{botvinick2001conflict,
+kerns2004anterior}---often occurs even when the heuristic response
+prevails.  Our \pzero{} probe functions analogously to an ACC conflict
+signal: it registers the presence of a heuristic--normative tension in
+the pre-generation representation, but this tension alone is insufficient
+to override the heuristic pathway.
+
+The reasoning model shows \emph{less} distinct conflict encoding
+(AUC\,=\,0.929) yet dramatically better resolution (2.4\% lure rate).
+If reasoning training simply added a ``System~2 module'' that overrides
+System~1, we would expect sharper separability.  Instead, the AUC drop
+suggests that reasoning distillation makes Type~2 processing
+\emph{autonomous}---a phenomenon Evans explicitly predicts:
+``Type~2 processes, practiced over time, can become automatic and
+default'' \citep{evans2019reflections, evans2013dual}.  On this view,
+R1-Distill does not override S1 with S2; it has internalized the
+deliberative pathway so thoroughly that it no longer needs a sharp
+conflict signal to route items correctly.  The lure susceptibility scores
+confirm this: Llama's pre-generation representation actively favors the
+lure ($+0.422$), while R1-Distill's favors the correct answer
+($-0.326$).  Reasoning training doesn't just blur a boundary---it
 flips the model's default commitment.
 
-One interpretation: in the standard model, conflict and control items
-activate cleanly separable representations because the model processes
-them via qualitatively different pathways---a heuristic shortcut for
-conflict items and a more engaged computation for controls.  Reasoning
-training collapses this dichotomy by routing \emph{all} items through a
-more uniform deliberative pathway, producing representations that are
-harder to distinguish even though the behavioral outcome improves.
+\paragraph{Domain-specific vulnerability.}
+Three categories are vulnerable (base rate neglect, conjunction fallacy,
+syllogisms) while four are immune (CRT, arithmetic, framing, anchoring).
+This category-specificity mirrors Stanovich's concept of \emph{dysrationalia}
+\citep{stanovich2016rationality}: rational thinking deficits are
+domain-specific, not general.  Just as high-IQ humans can fail base rate
+problems while acing CRT variants, our models show selective vulnerability
+that is specific to certain heuristic families.  The addition of sunk cost
+fallacy items (loss aversion family) to our benchmark will test whether
+this specificity extends across heuristic families or is confined to
+representativeness-based biases.
 
 \paragraph{Training vs.\ inference.}
 The Qwen think/no-think result is the sharpest finding in this paper.
@@ -489,6 +522,16 @@ during generation.  Combined with the Llama/R1-Distill comparison
 yields a clean dissociation: \textbf{training changes \sone{}/\stwo{}
 encoding; inference-time thinking changes \sone{}/\stwo{} behavior
 without changing encoding.}
+
+This dissociation has a neuroscience analogue: the distinction between
+structural and functional plasticity \citep{kolb2013brain}.  Training
+changes the weights (structural plasticity), while inference-time
+thinking changes the activation pattern (functional plasticity).  The
+standard model's P0 representation is, in effect, ``structurally wired''
+to favor the heuristic; the reasoning model's P0 representation is
+structurally rewired to favor the normative answer; and the
+thinking-mode model achieves behavioral improvement through functional
+adaptation on an unchanged structural substrate.
 
 This is consistent with the ``Reasoning on a
 Spectrum'' finding of \citet{ziabari2025reasoning} and with
