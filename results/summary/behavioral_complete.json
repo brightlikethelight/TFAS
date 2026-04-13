@@ -1,0 +1,587 @@
+{
+  "generated": "2026-04-13T01:22:58.365909+00:00",
+  "script": "scripts/make_behavioral_table.py",
+  "categories_original": [
+    "crt",
+    "base_rate",
+    "conjunction",
+    "syllogism",
+    "arithmetic",
+    "framing",
+    "anchoring"
+  ],
+  "categories_new": [
+    "sunk_cost",
+    "availability",
+    "certainty_effect",
+    "loss_aversion"
+  ],
+  "models": {
+    "llama": {
+      "display_name": "Llama-3.1-8B",
+      "overall": {
+        "n_conflict": 190,
+        "n_lure": 55,
+        "lure_rate": 0.2895,
+        "ci_95": [
+          0.2297,
+          0.3576
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1135
+          ]
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_lure": 31,
+          "lure_rate": 0.8857,
+          "ci_95": [
+            0.7405,
+            0.9546
+          ]
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 11,
+          "lure_rate": 0.55,
+          "ci_95": [
+            0.3421,
+            0.7418
+          ]
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 13,
+          "lure_rate": 0.52,
+          "ci_95": [
+            0.335,
+            0.6997
+          ]
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ]
+        },
+        "availability": null,
+        "certainty_effect": null,
+        "loss_aversion": null
+      }
+    },
+    "r1_distill": {
+      "display_name": "R1-Distill-8B",
+      "overall": {
+        "n_conflict": 190,
+        "n_lure": 8,
+        "lure_rate": 0.0421,
+        "ci_95": [
+          0.0215,
+          0.0809
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 1,
+          "lure_rate": 0.0333,
+          "ci_95": [
+            0.0059,
+            0.1667
+          ]
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_lure": 5,
+          "lure_rate": 0.1429,
+          "ci_95": [
+            0.0626,
+            0.2938
+          ]
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 2,
+          "lure_rate": 0.1,
+          "ci_95": [
+            0.0279,
+            0.301
+          ]
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ]
+        },
+        "availability": null,
+        "certainty_effect": null,
+        "loss_aversion": null
+      }
+    },
+    "qwen_nothink": {
+      "display_name": "Qwen3-8B (no think)",
+      "overall": {
+        "n_conflict": 165,
+        "n_lure": 35,
+        "lure_rate": 0.2121,
+        "ci_95": [
+          0.1567,
+          0.2807
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1135
+          ]
+        },
+        "base_rate": {
+          "n_conflict": 25,
+          "n_lure": 14,
+          "lure_rate": 0.56,
+          "ci_95": [
+            0.3707,
+            0.7333
+          ]
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 19,
+          "lure_rate": 0.95,
+          "ci_95": [
+            0.7639,
+            0.9911
+          ]
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 2,
+          "lure_rate": 0.1,
+          "ci_95": [
+            0.0279,
+            0.301
+          ]
+        },
+        "sunk_cost": null,
+        "availability": null,
+        "certainty_effect": null,
+        "loss_aversion": null
+      }
+    },
+    "qwen_think": {
+      "display_name": "Qwen3-8B (think)",
+      "overall": {
+        "n_conflict": 165,
+        "n_lure": 12,
+        "lure_rate": 0.0727,
+        "ci_95": [
+          0.0421,
+          0.1228
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1135
+          ]
+        },
+        "base_rate": {
+          "n_conflict": 25,
+          "n_lure": 1,
+          "lure_rate": 0.04,
+          "ci_95": [
+            0.0071,
+            0.1954
+          ]
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 11,
+          "lure_rate": 0.55,
+          "ci_95": [
+            0.3421,
+            0.7418
+          ]
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "sunk_cost": null,
+        "availability": null,
+        "certainty_effect": null,
+        "loss_aversion": null
+      }
+    },
+    "olmo_instruct": {
+      "display_name": "OLMo-3-7B-Instruct",
+      "overall": {
+        "n_conflict": 235,
+        "n_lure": 35,
+        "lure_rate": 0.1489,
+        "ci_95": [
+          0.1091,
+          0.2001
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 1,
+          "lure_rate": 0.0333,
+          "ci_95": [
+            0.0059,
+            0.1667
+          ]
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_lure": 16,
+          "lure_rate": 0.4571,
+          "ci_95": [
+            0.3047,
+            0.6181
+          ]
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 10,
+          "lure_rate": 0.5,
+          "ci_95": [
+            0.2993,
+            0.7007
+          ]
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 1,
+          "lure_rate": 0.05,
+          "ci_95": [
+            0.0089,
+            0.2361
+          ]
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ]
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_lure": 2,
+          "lure_rate": 0.1333,
+          "ci_95": [
+            0.0374,
+            0.3788
+          ]
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ]
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_lure": 5,
+          "lure_rate": 0.3333,
+          "ci_95": [
+            0.1518,
+            0.5829
+          ]
+        }
+      }
+    },
+    "olmo_think": {
+      "display_name": "OLMo-3-7B-Think",
+      "overall": {
+        "n_conflict": 235,
+        "n_lure": 2,
+        "lure_rate": 0.0085,
+        "ci_95": [
+          0.0023,
+          0.0305
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 1,
+          "lure_rate": 0.0333,
+          "ci_95": [
+            0.0059,
+            0.1667
+          ]
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.0989
+          ]
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 1,
+          "lure_rate": 0.04,
+          "ci_95": [
+            0.0071,
+            0.1954
+          ]
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ]
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ]
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ]
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ]
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ]
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ]
+        }
+      }
+    }
+  }
+}

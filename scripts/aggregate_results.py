@@ -180,6 +180,12 @@ HARDCODED_PROBES: dict[str, dict[str, Any]] = {
         "n_layers": 36,
         "mean_auc": None,
     },
+    "OLMo-3-7B-Instruct": {
+        "peak_auc": 0.998,
+        "peak_layer": 21,
+        "n_layers": 32,
+        "mean_auc": 0.972,
+    },
 }
 
 HARDCODED_CROSS_PREDICTION: dict[str, dict[str, Any]] = {
@@ -295,6 +301,31 @@ def _parse_behavioral(
         # Handle both file format (nested) and hardcoded (flat)
         if "overall_lure_pct" in raw:
             parsed[model] = raw
+        elif "results" in raw and isinstance(raw["results"], list):
+            # Raw item-level format (e.g., OLMo behavioral files)
+            # Compute lure rates from individual trial verdicts
+            from collections import Counter
+            cat_total: Counter[str] = Counter()
+            cat_lured: Counter[str] = Counter()
+            for item in raw["results"]:
+                if item.get("conflict"):
+                    cat_key = item["category"].lower()
+                    cat_total[cat_key] += 1
+                    if item.get("verdict") == "lured":
+                        cat_lured[cat_key] += 1
+            total_conflict = sum(cat_total.values())
+            total_lured = sum(cat_lured.values())
+            entry: dict[str, Any] = {
+                "overall_lure_pct": round(total_lured / total_conflict * 100, 1)
+                if total_conflict > 0 else 0.0,
+            }
+            for cat in CATEGORIES:
+                cat_key = cat.lower()
+                if cat_total[cat_key] > 0:
+                    entry[cat] = round(cat_lured[cat_key] / cat_total[cat_key] * 100, 1)
+                else:
+                    entry[cat] = None
+            parsed[model] = entry
         elif "overall" in raw:
             # File format: {overall: {lure_rate: ...}, categories: {...}}
             parsed[model] = {
@@ -335,6 +366,28 @@ def _parse_probes(
                 "n_layers": raw.get("n_layers"),
                 "control_auc": raw.get("control_auc"),
                 "selectivity": raw.get("selectivity"),
+            }
+        elif "layers" in raw and isinstance(raw["layers"], dict):
+            # OLMo-style probe format: {layers: {L00_P0: {auc_mean, ...}, ...}}
+            p0_aucs: list[tuple[int, float]] = []
+            for key, layer_data in raw["layers"].items():
+                if key.endswith("_P0"):
+                    layer_idx = layer_data.get("layer", int(key.split("_")[0][1:]))
+                    auc = layer_data.get("auc_mean")
+                    if auc is not None:
+                        p0_aucs.append((layer_idx, auc))
+            if p0_aucs:
+                peak_layer, peak_auc = max(p0_aucs, key=lambda x: x[1])
+                mean_auc = round(sum(a for _, a in p0_aucs) / len(p0_aucs), 4)
+            else:
+                peak_layer, peak_auc, mean_auc = None, None, None
+            parsed[model] = {
+                "peak_layer": peak_layer,
+                "peak_auc": round(peak_auc, 4) if peak_auc is not None else None,
+                "mean_auc": mean_auc,
+                "n_layers": raw.get("n_layers", len(p0_aucs)),
+                "control_auc": None,
+                "selectivity": None,
             }
         elif "basic_stats" in raw:
             bs = raw["basic_stats"]
@@ -585,12 +638,16 @@ def generate_table1_behavioral(behavioral: dict[str, Any]) -> str:
         "R1-Distill-Llama-8B",
         "Qwen-3-8B-NO_THINK",
         "Qwen-3-8B-THINK",
+        "OLMo-3-7B-Instruct",
+        "OLMo-3-7B-Think",
     ]
     display_names = {
         "Llama-3.1-8B-Instruct": "Llama-3.1-8B",
         "R1-Distill-Llama-8B": "R1-Distill-8B",
         "Qwen-3-8B-NO_THINK": "Qwen-3-8B (no think)",
         "Qwen-3-8B-THINK": "Qwen-3-8B (think)",
+        "OLMo-3-7B-Instruct": "OLMo-3-7B",
+        "OLMo-3-7B-Think": "OLMo-3-7B (think)",
     }
 
     for model in models:

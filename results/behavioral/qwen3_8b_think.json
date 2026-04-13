@@ -1,0 +1,2647 @@
+{
+  "model": "Qwen/Qwen3-8B",
+  "mode": "THINK",
+  "enable_thinking": true,
+  "results": [
+    {
+      "id": "crt_ratio_coffee_pastry_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1306,
+      "thinking_len": 2973
+    },
+    {
+      "id": "crt_ratio_coffee_pastry_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1644,
+      "thinking_len": 4782
+    },
+    {
+      "id": "crt_ratio_brush_paint_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_ratio_brush_paint_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1621,
+      "thinking_len": 4717
+    },
+    {
+      "id": "crt_ratio_helmet_lock_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 5170
+    },
+    {
+      "id": "crt_ratio_helmet_lock_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1335,
+      "thinking_len": 3379
+    },
+    {
+      "id": "crt_ratio_kettle_strainer_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_ratio_kettle_strainer_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1257,
+      "thinking_len": 3210
+    },
+    {
+      "id": "crt_ratio_compass_map_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1999,
+      "thinking_len": 4852
+    },
+    {
+      "id": "crt_ratio_compass_map_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1644,
+      "thinking_len": 4228
+    },
+    {
+      "id": "crt_ratio_pillow_case_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1881,
+      "thinking_len": 4093
+    },
+    {
+      "id": "crt_ratio_pillow_case_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1372,
+      "thinking_len": 3479
+    },
+    {
+      "id": "crt_ratio_torch_battery_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2038,
+      "thinking_len": 4730
+    },
+    {
+      "id": "crt_ratio_torch_battery_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1646,
+      "thinking_len": 4294
+    },
+    {
+      "id": "crt_ratio_clay_glaze_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1602,
+      "thinking_len": 3506
+    },
+    {
+      "id": "crt_ratio_clay_glaze_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1351,
+      "thinking_len": 3314
+    },
+    {
+      "id": "crt_ratio_ledger_pen_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 5149
+    },
+    {
+      "id": "crt_ratio_ledger_pen_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 5146
+    },
+    {
+      "id": "crt_ratio_kite_string_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1584,
+      "thinking_len": 3605
+    },
+    {
+      "id": "crt_ratio_kite_string_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1910,
+      "thinking_len": 4727
+    },
+    {
+      "id": "crt_workrate_press_tile_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_press_tile_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1249,
+      "thinking_len": 3560
+    },
+    {
+      "id": "crt_workrate_loom_scarf_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_loom_scarf_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_oven_loaf_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_oven_loaf_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1728,
+      "thinking_len": 5194
+    },
+    {
+      "id": "crt_workrate_kiln_brick_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_kiln_brick_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_lathe_spindle_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_lathe_spindle_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1616,
+      "thinking_len": 4802
+    },
+    {
+      "id": "crt_workrate_printer_label_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 7119
+    },
+    {
+      "id": "crt_workrate_printer_label_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 6685
+    },
+    {
+      "id": "crt_workrate_baler_bale_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 6635
+    },
+    {
+      "id": "crt_workrate_baler_bale_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 6976
+    },
+    {
+      "id": "crt_workrate_punch_button_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_punch_button_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_filler_jar_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 7040
+    },
+    {
+      "id": "crt_workrate_filler_jar_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1514,
+      "thinking_len": 4298
+    },
+    {
+      "id": "crt_workrate_packer_box_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_workrate_packer_box_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1916,
+      "thinking_len": 5738
+    },
+    {
+      "id": "crt_exp_moss_courtyard_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 6370
+    },
+    {
+      "id": "crt_exp_moss_courtyard_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_lichen_boulder_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2027,
+      "thinking_len": 6084
+    },
+    {
+      "id": "crt_exp_lichen_boulder_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_algae_tank_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 5879
+    },
+    {
+      "id": "crt_exp_algae_tank_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_bacteria_dish_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 6704
+    },
+    {
+      "id": "crt_exp_bacteria_dish_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_ivy_wall_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 4973
+    },
+    {
+      "id": "crt_exp_ivy_wall_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_mussels_pier_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 5935
+    },
+    {
+      "id": "crt_exp_mussels_pier_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_mold_loaf_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_mold_loaf_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_termites_log_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_termites_log_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_kelp_pen_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_kelp_pen_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "crt_exp_phytoplankton_pond_conflict",
+      "category": "crt",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 5431
+    },
+    {
+      "id": "crt_exp_phytoplankton_pond_control",
+      "category": "crt",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "br_brewer_developer_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "br_brewer_developer_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 759,
+      "thinking_len": 2413
+    },
+    {
+      "id": "br_falconer_accountant_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 444,
+      "thinking_len": 1958
+    },
+    {
+      "id": "br_falconer_accountant_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 896,
+      "thinking_len": 2673
+    },
+    {
+      "id": "br_glassblower_nurse_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 1311,
+      "thinking_len": 5035
+    },
+    {
+      "id": "br_glassblower_nurse_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1265,
+      "thinking_len": 4230
+    },
+    {
+      "id": "br_arctic_geologist_teacher_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 718,
+      "thinking_len": 3127
+    },
+    {
+      "id": "br_arctic_geologist_teacher_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1149,
+      "thinking_len": 3479
+    },
+    {
+      "id": "br_calligrapher_clerk_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 676,
+      "thinking_len": 2803
+    },
+    {
+      "id": "br_calligrapher_clerk_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 978,
+      "thinking_len": 2714
+    },
+    {
+      "id": "br_taxidermist_warehouse_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 958,
+      "thinking_len": 4068
+    },
+    {
+      "id": "br_taxidermist_warehouse_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 465,
+      "thinking_len": 1890
+    },
+    {
+      "id": "br_violinmaker_driver_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1031,
+      "thinking_len": 4447
+    },
+    {
+      "id": "br_violinmaker_driver_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 945,
+      "thinking_len": 2854
+    },
+    {
+      "id": "br_perfumer_salesclerk_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1254,
+      "thinking_len": 5272
+    },
+    {
+      "id": "br_perfumer_salesclerk_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1344,
+      "thinking_len": 4422
+    },
+    {
+      "id": "br_arborist_admin_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 808,
+      "thinking_len": 3559
+    },
+    {
+      "id": "br_arborist_admin_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 911,
+      "thinking_len": 4081
+    },
+    {
+      "id": "br_bookbinder_cashier_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 697,
+      "thinking_len": 2980
+    },
+    {
+      "id": "br_bookbinder_cashier_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1258,
+      "thinking_len": 4108
+    },
+    {
+      "id": "br_volcanologist_engineer_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 675,
+      "thinking_len": 2987
+    },
+    {
+      "id": "br_volcanologist_engineer_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 992,
+      "thinking_len": 3197
+    },
+    {
+      "id": "br_dressage_clerk_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 574,
+      "thinking_len": 2469
+    },
+    {
+      "id": "br_dressage_clerk_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1151,
+      "thinking_len": 3420
+    },
+    {
+      "id": "br_acrobat_logistics_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 689,
+      "thinking_len": 2952
+    },
+    {
+      "id": "br_acrobat_logistics_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 950,
+      "thinking_len": 2965
+    },
+    {
+      "id": "br_blacksmith_office_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 794,
+      "thinking_len": 3471
+    },
+    {
+      "id": "br_blacksmith_office_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 802,
+      "thinking_len": 2350
+    },
+    {
+      "id": "br_archeologist_clerk_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 839,
+      "thinking_len": 3455
+    },
+    {
+      "id": "br_archeologist_clerk_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 892,
+      "thinking_len": 2697
+    },
+    {
+      "id": "br_marine_biologist_secretary_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1066,
+      "thinking_len": 4690
+    },
+    {
+      "id": "br_marine_biologist_secretary_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 805,
+      "thinking_len": 2353
+    },
+    {
+      "id": "br_smokejumper_admin_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1023,
+      "thinking_len": 4410
+    },
+    {
+      "id": "br_smokejumper_admin_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 768,
+      "thinking_len": 3259
+    },
+    {
+      "id": "br_horologist_cashier_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1057,
+      "thinking_len": 4620
+    },
+    {
+      "id": "br_horologist_cashier_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 760,
+      "thinking_len": 2018
+    },
+    {
+      "id": "br_mahout_clerk_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 684,
+      "thinking_len": 2936
+    },
+    {
+      "id": "br_mahout_clerk_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1618,
+      "thinking_len": 5649
+    },
+    {
+      "id": "br_lapidary_factory_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "br_lapidary_factory_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1001,
+      "thinking_len": 3040
+    },
+    {
+      "id": "br_bonsai_receptionist_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 920,
+      "thinking_len": 4093
+    },
+    {
+      "id": "br_bonsai_receptionist_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 963,
+      "thinking_len": 2796
+    },
+    {
+      "id": "br_puppeteer_clerk_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1036,
+      "thinking_len": 4581
+    },
+    {
+      "id": "br_puppeteer_clerk_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 919,
+      "thinking_len": 2634
+    },
+    {
+      "id": "br_mycologist_driver_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 655,
+      "thinking_len": 2727
+    },
+    {
+      "id": "br_mycologist_driver_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 582,
+      "thinking_len": 2409
+    },
+    {
+      "id": "br_sailmaker_office_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 694,
+      "thinking_len": 3188
+    },
+    {
+      "id": "br_sailmaker_office_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 951,
+      "thinking_len": 2762
+    },
+    {
+      "id": "br_falconry_cashier_conflict",
+      "category": "base_rate",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1005,
+      "thinking_len": 4274
+    },
+    {
+      "id": "br_falconry_cashier_control",
+      "category": "base_rate",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1261,
+      "thinking_len": 3934
+    },
+    {
+      "id": "syll_swimmers_landlocked_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 840,
+      "thinking_len": 3049
+    },
+    {
+      "id": "syll_swimmers_landlocked_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1004,
+      "thinking_len": 3619
+    },
+    {
+      "id": "syll_mammal_breath_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 650,
+      "thinking_len": 2337
+    },
+    {
+      "id": "syll_mammal_breath_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1045,
+      "thinking_len": 3573
+    },
+    {
+      "id": "syll_metal_corrodes_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 561,
+      "thinking_len": 1756
+    },
+    {
+      "id": "syll_metal_corrodes_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 981,
+      "thinking_len": 3551
+    },
+    {
+      "id": "syll_evergreen_lose_leaves_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 513,
+      "thinking_len": 1709
+    },
+    {
+      "id": "syll_evergreen_lose_leaves_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1089,
+      "thinking_len": 3752
+    },
+    {
+      "id": "syll_predator_vegetarian_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 749,
+      "thinking_len": 2462
+    },
+    {
+      "id": "syll_predator_vegetarian_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1111,
+      "thinking_len": 3601
+    },
+    {
+      "id": "syll_deserts_cold_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 597,
+      "thinking_len": 2137
+    },
+    {
+      "id": "syll_deserts_cold_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 784,
+      "thinking_len": 2523
+    },
+    {
+      "id": "syll_cats_aquatic_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 673,
+      "thinking_len": 2298
+    },
+    {
+      "id": "syll_cats_aquatic_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1465,
+      "thinking_len": 5406
+    },
+    {
+      "id": "syll_glass_dense_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 773,
+      "thinking_len": 2648
+    },
+    {
+      "id": "syll_glass_dense_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 964,
+      "thinking_len": 3482
+    },
+    {
+      "id": "syll_owl_diurnal_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 543,
+      "thinking_len": 1647
+    },
+    {
+      "id": "syll_owl_diurnal_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1084,
+      "thinking_len": 3544
+    },
+    {
+      "id": "syll_water_combustible_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1241,
+      "thinking_len": 4600
+    },
+    {
+      "id": "syll_water_combustible_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1149,
+      "thinking_len": 4225
+    },
+    {
+      "id": "syll_planets_cubes_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 817,
+      "thinking_len": 3023
+    },
+    {
+      "id": "syll_planets_cubes_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1256,
+      "thinking_len": 4613
+    },
+    {
+      "id": "syll_philosophers_immortal_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 813,
+      "thinking_len": 3065
+    },
+    {
+      "id": "syll_philosophers_immortal_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 875,
+      "thinking_len": 3110
+    },
+    {
+      "id": "syll_dogs_pets_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1002,
+      "thinking_len": 3399
+    },
+    {
+      "id": "syll_dogs_pets_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 830,
+      "thinking_len": 2662
+    },
+    {
+      "id": "syll_doctors_educated_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1021,
+      "thinking_len": 3773
+    },
+    {
+      "id": "syll_doctors_educated_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1200,
+      "thinking_len": 4337
+    },
+    {
+      "id": "syll_apples_grow_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1541,
+      "thinking_len": 5481
+    },
+    {
+      "id": "syll_apples_grow_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1565,
+      "thinking_len": 5756
+    },
+    {
+      "id": "syll_athletes_fit_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1139,
+      "thinking_len": 4560
+    },
+    {
+      "id": "syll_athletes_fit_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 794,
+      "thinking_len": 2654
+    },
+    {
+      "id": "syll_metals_conduct_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1155,
+      "thinking_len": 4626
+    },
+    {
+      "id": "syll_metals_conduct_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 866,
+      "thinking_len": 3139
+    },
+    {
+      "id": "syll_cars_wheels_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1251,
+      "thinking_len": 4596
+    },
+    {
+      "id": "syll_cars_wheels_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 650,
+      "thinking_len": 2183
+    },
+    {
+      "id": "syll_birds_fly_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1384,
+      "thinking_len": 4873
+    },
+    {
+      "id": "syll_birds_fly_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 921,
+      "thinking_len": 2894
+    },
+    {
+      "id": "syll_fish_swim_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1449,
+      "thinking_len": 5245
+    },
+    {
+      "id": "syll_fish_swim_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1093,
+      "thinking_len": 3278
+    },
+    {
+      "id": "syll_tools_metal_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1016,
+      "thinking_len": 3701
+    },
+    {
+      "id": "syll_tools_metal_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 750,
+      "thinking_len": 2529
+    },
+    {
+      "id": "syll_books_paper_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1161,
+      "thinking_len": 4256
+    },
+    {
+      "id": "syll_books_paper_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1049,
+      "thinking_len": 3807
+    },
+    {
+      "id": "syll_buildings_stand_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 863,
+      "thinking_len": 2633
+    },
+    {
+      "id": "syll_buildings_stand_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1405,
+      "thinking_len": 5065
+    },
+    {
+      "id": "syll_chairs_legs_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1139,
+      "thinking_len": 4103
+    },
+    {
+      "id": "syll_chairs_legs_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 451,
+      "thinking_len": 1658
+    },
+    {
+      "id": "syll_houses_doors_conflict",
+      "category": "syllogism",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 837,
+      "thinking_len": 3079
+    },
+    {
+      "id": "syll_houses_doors_control",
+      "category": "syllogism",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 652,
+      "thinking_len": 2335
+    },
+    {
+      "id": "anchor_un_members_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1045,
+      "thinking_len": 3854
+    },
+    {
+      "id": "anchor_un_members_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 354,
+      "thinking_len": 1317
+    },
+    {
+      "id": "anchor_periodic_elements_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 731,
+      "thinking_len": 2601
+    },
+    {
+      "id": "anchor_periodic_elements_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "anchor_country_capital_year_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 734,
+      "thinking_len": 2826
+    },
+    {
+      "id": "anchor_country_capital_year_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 709,
+      "thinking_len": 2768
+    },
+    {
+      "id": "anchor_amazon_river_length_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 1219,
+      "thinking_len": 4458
+    },
+    {
+      "id": "anchor_amazon_river_length_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1142,
+      "thinking_len": 4443
+    },
+    {
+      "id": "anchor_human_chromosomes_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 322,
+      "thinking_len": 1125
+    },
+    {
+      "id": "anchor_human_chromosomes_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 384,
+      "thinking_len": 1556
+    },
+    {
+      "id": "anchor_sun_radius_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "anchor_sun_radius_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "anchor_hist_olympics_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 263,
+      "thinking_len": 910
+    },
+    {
+      "id": "anchor_hist_olympics_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 230,
+      "thinking_len": 807
+    },
+    {
+      "id": "anchor_keys_piano_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 568,
+      "thinking_len": 1971
+    },
+    {
+      "id": "anchor_keys_piano_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 371,
+      "thinking_len": 1382
+    },
+    {
+      "id": "anchor_great_wall_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1370,
+      "thinking_len": 5107
+    },
+    {
+      "id": "anchor_great_wall_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1135,
+      "thinking_len": 4720
+    },
+    {
+      "id": "anchor_marathon_distance_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 574,
+      "thinking_len": 1896
+    },
+    {
+      "id": "anchor_marathon_distance_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 527,
+      "thinking_len": 1894
+    },
+    {
+      "id": "anchor_mount_fuji_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 654,
+      "thinking_len": 2398
+    },
+    {
+      "id": "anchor_mount_fuji_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 537,
+      "thinking_len": 2083
+    },
+    {
+      "id": "anchor_dna_pairs_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 951,
+      "thinking_len": 3319
+    },
+    {
+      "id": "anchor_dna_pairs_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "other",
+      "n_tokens": 1104,
+      "thinking_len": 4238
+    },
+    {
+      "id": "anchor_us_states_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 307,
+      "thinking_len": 1142
+    },
+    {
+      "id": "anchor_us_states_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 275,
+      "thinking_len": 985
+    },
+    {
+      "id": "anchor_speed_light_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 679,
+      "thinking_len": 2110
+    },
+    {
+      "id": "anchor_speed_light_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 981,
+      "thinking_len": 3038
+    },
+    {
+      "id": "anchor_everest_meters_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 1209,
+      "thinking_len": 3615
+    },
+    {
+      "id": "anchor_everest_meters_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "other",
+      "n_tokens": 1383,
+      "thinking_len": 4962
+    },
+    {
+      "id": "anchor_elizabeth_tower_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 1553,
+      "thinking_len": 6135
+    },
+    {
+      "id": "anchor_elizabeth_tower_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 837,
+      "thinking_len": 3183
+    },
+    {
+      "id": "anchor_bones_human_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 315,
+      "thinking_len": 1159
+    },
+    {
+      "id": "anchor_bones_human_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "anchor_sahara_area_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 709,
+      "thinking_len": 3028
+    },
+    {
+      "id": "anchor_sahara_area_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1116,
+      "thinking_len": 4639
+    },
+    {
+      "id": "anchor_moon_distance_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 447,
+      "thinking_len": 1434
+    },
+    {
+      "id": "anchor_moon_distance_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1925,
+      "thinking_len": 5804
+    },
+    {
+      "id": "anchor_amazon_basin_conflict",
+      "category": "anchoring",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1107,
+      "thinking_len": 4681
+    },
+    {
+      "id": "anchor_amazon_basin_control",
+      "category": "anchoring",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 804,
+      "thinking_len": 3270
+    },
+    {
+      "id": "frame_flood_village_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1701,
+      "thinking_len": 4571
+    },
+    {
+      "id": "frame_flood_village_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1263,
+      "thinking_len": 3203
+    },
+    {
+      "id": "frame_wildfire_canyon_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1464,
+      "thinking_len": 4200
+    },
+    {
+      "id": "frame_wildfire_canyon_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1261,
+      "thinking_len": 3221
+    },
+    {
+      "id": "frame_avalanche_resort_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_avalanche_resort_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1565,
+      "thinking_len": 4595
+    },
+    {
+      "id": "frame_chemical_spill_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_chemical_spill_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 980,
+      "thinking_len": 2668
+    },
+    {
+      "id": "frame_dam_failing_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_dam_failing_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1585,
+      "thinking_len": 4521
+    },
+    {
+      "id": "frame_ferry_capsize_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_ferry_capsize_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1064,
+      "thinking_len": 2739
+    },
+    {
+      "id": "frame_storm_islanders_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_storm_islanders_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1033,
+      "thinking_len": 2618
+    },
+    {
+      "id": "frame_landmine_field_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_landmine_field_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1409,
+      "thinking_len": 4072
+    },
+    {
+      "id": "frame_blizzard_pass_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1392,
+      "thinking_len": 3834
+    },
+    {
+      "id": "frame_blizzard_pass_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 6119
+    },
+    {
+      "id": "frame_carbon_monoxide_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1678,
+      "thinking_len": 4708
+    },
+    {
+      "id": "frame_carbon_monoxide_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1374,
+      "thinking_len": 3414
+    },
+    {
+      "id": "frame_volcano_evacuation_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_volcano_evacuation_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1010,
+      "thinking_len": 2477
+    },
+    {
+      "id": "frame_collapse_mine_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_collapse_mine_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1169,
+      "thinking_len": 3280
+    },
+    {
+      "id": "frame_marathon_heatstroke_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1133,
+      "thinking_len": 3040
+    },
+    {
+      "id": "frame_marathon_heatstroke_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1880,
+      "thinking_len": 4839
+    },
+    {
+      "id": "frame_outbreak_camp_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_outbreak_camp_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1629,
+      "thinking_len": 4862
+    },
+    {
+      "id": "frame_plane_crash_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_plane_crash_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1363,
+      "thinking_len": 3822
+    },
+    {
+      "id": "frame_cyber_servers_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_cyber_servers_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1609,
+      "thinking_len": 4447
+    },
+    {
+      "id": "frame_species_climate_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_species_climate_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1627,
+      "thinking_len": 5075
+    },
+    {
+      "id": "frame_dropout_school_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_dropout_school_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 6426
+    },
+    {
+      "id": "frame_tsunami_coast_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_tsunami_coast_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 988,
+      "thinking_len": 2477
+    },
+    {
+      "id": "frame_pipeline_leak_conflict",
+      "category": "framing",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "frame_pipeline_leak_control",
+      "category": "framing",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 955,
+      "thinking_len": 2455
+    },
+    {
+      "id": "conj_marcus_climber_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 1151,
+      "thinking_len": 5510
+    },
+    {
+      "id": "conj_marcus_climber_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1273,
+      "thinking_len": 4411
+    },
+    {
+      "id": "conj_priya_violinist_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1042,
+      "thinking_len": 4380
+    },
+    {
+      "id": "conj_priya_violinist_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 860,
+      "thinking_len": 2557
+    },
+    {
+      "id": "conj_elena_pacifist_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 841,
+      "thinking_len": 4194
+    },
+    {
+      "id": "conj_elena_pacifist_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1137,
+      "thinking_len": 4564
+    },
+    {
+      "id": "conj_omar_chef_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 693,
+      "thinking_len": 3157
+    },
+    {
+      "id": "conj_omar_chef_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 742,
+      "thinking_len": 2329
+    },
+    {
+      "id": "conj_sarah_anthropologist_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 872,
+      "thinking_len": 4231
+    },
+    {
+      "id": "conj_sarah_anthropologist_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 976,
+      "thinking_len": 3006
+    },
+    {
+      "id": "conj_diego_marathoner_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1759,
+      "thinking_len": 7596
+    },
+    {
+      "id": "conj_diego_marathoner_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 785,
+      "thinking_len": 2506
+    },
+    {
+      "id": "conj_maya_painter_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 755,
+      "thinking_len": 3066
+    },
+    {
+      "id": "conj_maya_painter_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1168,
+      "thinking_len": 3614
+    },
+    {
+      "id": "conj_yusuf_chess_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1654,
+      "thinking_len": 6073
+    },
+    {
+      "id": "conj_yusuf_chess_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1218,
+      "thinking_len": 4045
+    },
+    {
+      "id": "conj_lena_biologist_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "conj_lena_biologist_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1080,
+      "thinking_len": 3788
+    },
+    {
+      "id": "conj_thomas_potter_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 549,
+      "thinking_len": 2473
+    },
+    {
+      "id": "conj_thomas_potter_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1113,
+      "thinking_len": 3441
+    },
+    {
+      "id": "conj_anna_birdwatcher_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "conj_anna_birdwatcher_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1159,
+      "thinking_len": 3271
+    },
+    {
+      "id": "conj_kenji_cyclist_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 883,
+      "thinking_len": 4091
+    },
+    {
+      "id": "conj_kenji_cyclist_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1566,
+      "thinking_len": 5570
+    },
+    {
+      "id": "conj_rafael_analyst_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 695,
+      "thinking_len": 3119
+    },
+    {
+      "id": "conj_rafael_analyst_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 965,
+      "thinking_len": 3014
+    },
+    {
+      "id": "conj_ingrid_soldier_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "conj_ingrid_soldier_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1112,
+      "thinking_len": 3543
+    },
+    {
+      "id": "conj_tomoko_woodworker_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1407,
+      "thinking_len": 5620
+    },
+    {
+      "id": "conj_tomoko_woodworker_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 860,
+      "thinking_len": 2384
+    },
+    {
+      "id": "conj_adama_pilot_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 748,
+      "thinking_len": 3452
+    },
+    {
+      "id": "conj_adama_pilot_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1515,
+      "thinking_len": 5598
+    },
+    {
+      "id": "conj_clara_beekeeper_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 696,
+      "thinking_len": 3146
+    },
+    {
+      "id": "conj_clara_beekeeper_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1560,
+      "thinking_len": 5738
+    },
+    {
+      "id": "conj_nikolai_diver_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 849,
+      "thinking_len": 3968
+    },
+    {
+      "id": "conj_nikolai_diver_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1433,
+      "thinking_len": 4311
+    },
+    {
+      "id": "conj_fatima_herbalist_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "lure",
+      "n_tokens": 870,
+      "thinking_len": 4304
+    },
+    {
+      "id": "conj_fatima_herbalist_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1158,
+      "thinking_len": 3884
+    },
+    {
+      "id": "conj_victor_astronomer_conflict",
+      "category": "conjunction",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "conj_victor_astronomer_control",
+      "category": "conjunction",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1266,
+      "thinking_len": 4224
+    },
+    {
+      "id": "ar_box_apples_1_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_apples_1_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 683,
+      "thinking_len": 1411
+    },
+    {
+      "id": "ar_box_oranges_2_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1829,
+      "thinking_len": 5104
+    },
+    {
+      "id": "ar_box_oranges_2_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1885,
+      "thinking_len": 5180
+    },
+    {
+      "id": "ar_box_screws_3_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_screws_3_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1440,
+      "thinking_len": 3457
+    },
+    {
+      "id": "ar_box_books_4_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1796,
+      "thinking_len": 5399
+    },
+    {
+      "id": "ar_box_books_4_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 684,
+      "thinking_len": 1424
+    },
+    {
+      "id": "ar_box_jars_5_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_jars_5_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 767,
+      "thinking_len": 1690
+    },
+    {
+      "id": "ar_box_crayons_6_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1228,
+      "thinking_len": 3616
+    },
+    {
+      "id": "ar_box_crayons_6_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1142,
+      "thinking_len": 2910
+    },
+    {
+      "id": "ar_box_markers_7_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_markers_7_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 603,
+      "thinking_len": 1135
+    },
+    {
+      "id": "ar_box_files_8_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_files_8_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 862,
+      "thinking_len": 1847
+    },
+    {
+      "id": "ar_box_tools_9_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1405,
+      "thinking_len": 3750
+    },
+    {
+      "id": "ar_box_tools_9_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 961,
+      "thinking_len": 2322
+    },
+    {
+      "id": "ar_box_buttons_10_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1707,
+      "thinking_len": 4477
+    },
+    {
+      "id": "ar_box_buttons_10_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 845,
+      "thinking_len": 1903
+    },
+    {
+      "id": "ar_box_pencils_11_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_pencils_11_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1152,
+      "thinking_len": 2613
+    },
+    {
+      "id": "ar_box_corks_12_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_corks_12_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 880,
+      "thinking_len": 1786
+    },
+    {
+      "id": "ar_box_chips_13_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 783,
+      "thinking_len": 1660
+    },
+    {
+      "id": "ar_box_chips_13_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 914,
+      "thinking_len": 1997
+    },
+    {
+      "id": "ar_box_dice_14_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_dice_14_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 738,
+      "thinking_len": 1520
+    },
+    {
+      "id": "ar_box_ribbons_15_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_ribbons_15_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 918,
+      "thinking_len": 1954
+    },
+    {
+      "id": "ar_box_eggs_16_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1279,
+      "thinking_len": 3214
+    },
+    {
+      "id": "ar_box_eggs_16_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1320,
+      "thinking_len": 3718
+    },
+    {
+      "id": "ar_box_seeds_17_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 6639
+    },
+    {
+      "id": "ar_box_seeds_17_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 665,
+      "thinking_len": 1311
+    },
+    {
+      "id": "ar_box_tags_18_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_tags_18_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 696,
+      "thinking_len": 1418
+    },
+    {
+      "id": "ar_box_keys_19_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1264,
+      "thinking_len": 3323
+    },
+    {
+      "id": "ar_box_keys_19_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1196,
+      "thinking_len": 2927
+    },
+    {
+      "id": "ar_box_marbles_20_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "other",
+      "n_tokens": 2048,
+      "thinking_len": 6737
+    },
+    {
+      "id": "ar_box_marbles_20_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 834,
+      "thinking_len": 2038
+    },
+    {
+      "id": "ar_box_petals_21_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 2048,
+      "thinking_len": 0
+    },
+    {
+      "id": "ar_box_petals_21_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 944,
+      "thinking_len": 2363
+    },
+    {
+      "id": "ar_box_strings_22_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1605,
+      "thinking_len": 4710
+    },
+    {
+      "id": "ar_box_strings_22_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 716,
+      "thinking_len": 1515
+    },
+    {
+      "id": "ar_box_tickets_23_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1795,
+      "thinking_len": 4920
+    },
+    {
+      "id": "ar_box_tickets_23_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 697,
+      "thinking_len": 1483
+    },
+    {
+      "id": "ar_box_clips_24_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1735,
+      "thinking_len": 5120
+    },
+    {
+      "id": "ar_box_clips_24_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 678,
+      "thinking_len": 1408
+    },
+    {
+      "id": "ar_box_charges_25_conflict",
+      "category": "arithmetic",
+      "conflict": true,
+      "verdict": "correct",
+      "n_tokens": 1828,
+      "thinking_len": 5480
+    },
+    {
+      "id": "ar_box_charges_25_control",
+      "category": "arithmetic",
+      "conflict": false,
+      "verdict": "correct",
+      "n_tokens": 1462,
+      "thinking_len": 3539
+    }
+  ]
+}

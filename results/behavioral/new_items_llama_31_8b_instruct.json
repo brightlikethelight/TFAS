@@ -1,0 +1,506 @@
+{
+  "model": "Llama-3.1-8B-Instruct",
+  "model_id": "unsloth/Meta-Llama-3.1-8B-Instruct",
+  "results": [
+    {
+      "id": "sc_software_rewrite_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_software_rewrite_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_film_production_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_film_production_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_mine_copper_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_mine_copper_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_restaurant_renovation_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_restaurant_renovation_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_phd_program_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch. \n\nThe doctoral student has already spent four years and $60,000 on the project, but the primary dataset has been invalidated. Given the need for three more years to recollect valid data, the expected time and cost to complete the project would be significantly higher. \n\nIn contrast, the biotech company offers a senior research position with a salary matching post-PhD rates, which would provide financial stability and a clear path forward. The research problems aligned with her interests ",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_phd_program_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_concert_tickets_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_concert_tickets_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_startup_pivot_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_startup_pivot_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_bridge_construction_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_bridge_construction_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_drug_trial_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_drug_trial_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_military_jet_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_military_jet_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_organic_farm_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_organic_farm_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_language_learning_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_language_learning_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_book_manuscript_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_book_manuscript_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_warehouse_lease_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_warehouse_lease_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_wedding_venue_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "Switch.",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_wedding_venue_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "Continue.",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_carpenter_teacher_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "professional carpenter",
+      "correct_answer": "school teacher",
+      "lure_answer": "professional carpenter"
+    },
+    {
+      "id": "brnf_carpenter_teacher_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "school teacher",
+      "correct_answer": "school teacher",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_brewer_accountant_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "craft brewer",
+      "correct_answer": "accountant",
+      "lure_answer": "craft brewer"
+    },
+    {
+      "id": "brnf_brewer_accountant_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "accountant",
+      "correct_answer": "accountant",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_beekeeper_programmer_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "beekeeper",
+      "correct_answer": "software programmer",
+      "lure_answer": "beekeeper"
+    },
+    {
+      "id": "brnf_beekeeper_programmer_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "software programmer",
+      "correct_answer": "software programmer",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_tattooist_nurse_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "tattoo artist",
+      "correct_answer": "nurse",
+      "lure_answer": "tattoo artist"
+    },
+    {
+      "id": "brnf_tattooist_nurse_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "nurse",
+      "correct_answer": "nurse",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_pilot_salesperson_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "commercial pilot",
+      "correct_answer": "retail salesperson",
+      "lure_answer": "commercial pilot"
+    },
+    {
+      "id": "brnf_pilot_salesperson_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "retail salesperson",
+      "correct_answer": "retail salesperson",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_glassblower_clerk_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "glassblower",
+      "correct_answer": "office clerk",
+      "lure_answer": "glassblower"
+    },
+    {
+      "id": "brnf_glassblower_clerk_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "office clerk",
+      "correct_answer": "office clerk",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_florist_engineer_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "professional florist",
+      "correct_answer": "mechanical engineer",
+      "lure_answer": "professional florist"
+    },
+    {
+      "id": "brnf_florist_engineer_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "mechanical engineer",
+      "correct_answer": "mechanical engineer",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_farrier_manager_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "farrier",
+      "correct_answer": "office manager",
+      "lure_answer": "farrier"
+    },
+    {
+      "id": "brnf_farrier_manager_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "office manager",
+      "correct_answer": "office manager",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_locksmith_analyst_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "locksmith",
+      "correct_answer": "data analyst",
+      "lure_answer": "locksmith"
+    },
+    {
+      "id": "brnf_locksmith_analyst_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "data analyst",
+      "correct_answer": "data analyst",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_falconer_cashier_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "licensed falconry practitioner",
+      "correct_answer": "grocery store cashier",
+      "lure_answer": "licensed falconry practitioner"
+    },
+    {
+      "id": "brnf_falconer_cashier_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "grocery store cashier",
+      "correct_answer": "grocery store cashier",
+      "lure_answer": ""
+    }
+  ]
+}

@@ -1,0 +1,225 @@
+{
+  "model": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+  "results": [
+    {
+      "id": "crt_ratio_coffee_pastry_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "30",
+      "lure_answer": "60",
+      "verdict": "correct",
+      "n_tokens": 861,
+      "thinking_len": 0,
+      "elapsed_s": 16.4
+    },
+    {
+      "id": "crt_ratio_coffee_pastry_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "30",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 316,
+      "thinking_len": 0,
+      "elapsed_s": 5.7
+    },
+    {
+      "id": "crt_ratio_brush_paint_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "60",
+      "lure_answer": "120",
+      "verdict": "correct",
+      "n_tokens": 551,
+      "thinking_len": 0,
+      "elapsed_s": 6.2
+    },
+    {
+      "id": "crt_ratio_brush_paint_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "60",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 286,
+      "thinking_len": 0,
+      "elapsed_s": 3.2
+    },
+    {
+      "id": "crt_ratio_helmet_lock_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "150",
+      "lure_answer": "300",
+      "verdict": "correct",
+      "n_tokens": 503,
+      "thinking_len": 0,
+      "elapsed_s": 5.7
+    },
+    {
+      "id": "crt_ratio_helmet_lock_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "150",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 337,
+      "thinking_len": 0,
+      "elapsed_s": 3.8
+    },
+    {
+      "id": "crt_ratio_kettle_strainer_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "105",
+      "lure_answer": "210",
+      "verdict": "other",
+      "n_tokens": 409,
+      "thinking_len": 0,
+      "elapsed_s": 4.6
+    },
+    {
+      "id": "crt_ratio_kettle_strainer_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "105",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 283,
+      "thinking_len": 0,
+      "elapsed_s": 3.2
+    },
+    {
+      "id": "crt_ratio_compass_map_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "110",
+      "lure_answer": "220",
+      "verdict": "correct",
+      "n_tokens": 510,
+      "thinking_len": 0,
+      "elapsed_s": 5.8
+    },
+    {
+      "id": "crt_ratio_compass_map_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "110",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 351,
+      "thinking_len": 0,
+      "elapsed_s": 4.0
+    },
+    {
+      "id": "crt_ratio_pillow_case_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "170",
+      "lure_answer": "340",
+      "verdict": "other",
+      "n_tokens": 470,
+      "thinking_len": 0,
+      "elapsed_s": 5.3
+    },
+    {
+      "id": "crt_ratio_pillow_case_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "170",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 278,
+      "thinking_len": 0,
+      "elapsed_s": 3.2
+    },
+    {
+      "id": "crt_ratio_torch_battery_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "90",
+      "lure_answer": "180",
+      "verdict": "lure",
+      "n_tokens": 336,
+      "thinking_len": 0,
+      "elapsed_s": 3.8
+    },
+    {
+      "id": "crt_ratio_torch_battery_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "90",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 289,
+      "thinking_len": 0,
+      "elapsed_s": 3.3
+    },
+    {
+      "id": "crt_ratio_clay_glaze_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "80",
+      "lure_answer": "160",
+      "verdict": "correct",
+      "n_tokens": 557,
+      "thinking_len": 0,
+      "elapsed_s": 6.3
+    },
+    {
+      "id": "crt_ratio_clay_glaze_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "80",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 334,
+      "thinking_len": 0,
+      "elapsed_s": 3.8
+    },
+    {
+      "id": "crt_ratio_ledger_pen_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "165",
+      "lure_answer": "330",
+      "verdict": "correct",
+      "n_tokens": 559,
+      "thinking_len": 0,
+      "elapsed_s": 6.3
+    },
+    {
+      "id": "crt_ratio_ledger_pen_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "165",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 335,
+      "thinking_len": 0,
+      "elapsed_s": 3.8
+    },
+    {
+      "id": "crt_ratio_kite_string_conflict",
+      "category": "crt",
+      "conflict": true,
+      "correct_answer": "75",
+      "lure_answer": "150",
+      "verdict": "correct",
+      "n_tokens": 539,
+      "thinking_len": 0,
+      "elapsed_s": 6.1
+    },
+    {
+      "id": "crt_ratio_kite_string_control",
+      "category": "crt",
+      "conflict": false,
+      "correct_answer": "75",
+      "lure_answer": "",
+      "verdict": "correct",
+      "n_tokens": 337,
+      "thinking_len": 0,
+      "elapsed_s": 3.8
+    }
+  ]
+}

@@ -1,0 +1,55 @@
+% ======================================================================
+% Comprehensive behavioral results tables for s1s2 paper
+% Generated: 2026-04-13T01:22:58.365807+00:00
+% Script: scripts/make_behavioral_table.py
+% ======================================================================
+
+% ---- COMPACT TABLE (main paper) ----
+
+% Compact behavioral results table — main paper
+% Generated: 2026-04-13T01:22:58.365673+00:00
+% Script: scripts/make_behavioral_table.py
+\begin{table}[t]
+\centering
+\caption{Lure rates (\%) on conflict items across six models and seven cognitive-bias categories. \textbf{Bold} indicates lure rate $>$ 10\%.}
+\label{tab:behavioral}
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{l c c c c c c c c}
+\toprule
+Model & Overall & CRT & Base Rate & Conjunction & Syllogism & Arithmetic & Framing & Anchoring \\
+\midrule
+Llama-3.1-8B & \textbf{31.4\%} & 0.0\% & \textbf{88.6\%} & \textbf{55.0\%} & \textbf{52.0\%} & 0.0\% & 0.0\% & 0.0\% \\
+R1-Distill-8B & 4.6\% & 3.3\% & \textbf{14.3\%} & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 10.0\% \\
+Qwen3-8B {\small(no think)} & \textbf{21.2\%} & 0.0\% & \textbf{56.0\%} & \textbf{95.0\%} & 0.0\% & 0.0\% & 0.0\% & 10.0\% \\
+Qwen3-8B {\small(think)} & 7.3\% & 0.0\% & 4.0\% & \textbf{55.0\%} & 0.0\% & 0.0\% & 0.0\% & 0.0\% \\
+OLMo-3-7B-Instruct & \textbf{16.0\%} & 3.3\% & \textbf{45.7\%} & \textbf{50.0\%} & 0.0\% & 0.0\% & 0.0\% & 5.0\% \\
+OLMo-3-7B-Think & 1.1\% & 3.3\% & 0.0\% & 0.0\% & 4.0\% & 0.0\% & 0.0\% & 0.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ---- FULL TABLE (supplementary) ----
+
+% Full behavioral results table — all models × all categories
+% Generated: 2026-04-13T01:22:58.365374+00:00
+% Script: scripts/make_behavioral_table.py
+\begin{table*}[t]
+\centering
+\caption{Lure rates (\%) on conflict items by model and cognitive-bias category, with Wilson 95\% CIs. \textbf{Bold} indicates lure rate $>$ 10\%. ``---'' indicates the category was not evaluated for that model.}
+\label{tab:behavioral-full}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{l c c c c c c c c c c c c}
+\toprule
+Model & Overall & CRT & Base Rate & Conjunction & Syllogism & Arithmetic & Framing & Anchoring & Sunk Cost & Availability & Certainty Eff. & Loss Aversion \\
+\midrule
+Llama-3.1-8B & \textbf{28.9\%\,{\tiny [23,36]}} & 0.0\%\,{\tiny [0,11]} & \textbf{88.6\%\,{\tiny [74,95]}} & \textbf{55.0\%\,{\tiny [34,74]}} & \textbf{52.0\%\,{\tiny [33,70]}} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,16]} & 0.0\%\,{\tiny [0,16]} & 0.0\%\,{\tiny [0,20]} & --- & --- & --- \\
+R1-Distill-8B & 4.2\%\,{\tiny [2,8]} & 3.3\%\,{\tiny [1,17]} & \textbf{14.3\%\,{\tiny [6,29]}} & 0.0\%\,{\tiny [0,16]} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,16]} & 10.0\%\,{\tiny [3,30]} & 0.0\%\,{\tiny [0,20]} & --- & --- & --- \\
+Qwen3-8B {\small(no think)} & \textbf{21.2\%\,{\tiny [16,28]}} & 0.0\%\,{\tiny [0,11]} & \textbf{56.0\%\,{\tiny [37,73]}} & \textbf{95.0\%\,{\tiny [76,99]}} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,16]} & 10.0\%\,{\tiny [3,30]} & --- & --- & --- & --- \\
+Qwen3-8B {\small(think)} & 7.3\%\,{\tiny [4,12]} & 0.0\%\,{\tiny [0,11]} & 4.0\%\,{\tiny [1,20]} & \textbf{55.0\%\,{\tiny [34,74]}} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,16]} & 0.0\%\,{\tiny [0,16]} & --- & --- & --- & --- \\
+OLMo-3-7B-Instruct & \textbf{14.9\%\,{\tiny [11,20]}} & 3.3\%\,{\tiny [1,17]} & \textbf{45.7\%\,{\tiny [30,62]}} & \textbf{50.0\%\,{\tiny [30,70]}} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,16]} & 5.0\%\,{\tiny [1,24]} & 0.0\%\,{\tiny [0,20]} & \textbf{13.3\%\,{\tiny [4,38]}} & 0.0\%\,{\tiny [0,20]} & \textbf{33.3\%\,{\tiny [15,58]}} \\
+OLMo-3-7B-Think & 0.9\%\,{\tiny [0,3]} & 3.3\%\,{\tiny [1,17]} & 0.0\%\,{\tiny [0,10]} & 0.0\%\,{\tiny [0,16]} & 4.0\%\,{\tiny [1,20]} & 0.0\%\,{\tiny [0,13]} & 0.0\%\,{\tiny [0,16]} & 0.0\%\,{\tiny [0,16]} & 0.0\%\,{\tiny [0,20]} & 0.0\%\,{\tiny [0,20]} & 0.0\%\,{\tiny [0,20]} & 0.0\%\,{\tiny [0,20]} \\
+\bottomrule
+\end{tabular}
+\end{table*}

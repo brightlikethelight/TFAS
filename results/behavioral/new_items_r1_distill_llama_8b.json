@@ -1,0 +1,506 @@
+{
+  "model": "R1-Distill-Llama-8B",
+  "model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+  "results": [
+    {
+      "id": "sc_software_rewrite_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120this\u0120company\u0120should\u0120continue\u0120their\u0120current\u0120ERP\u0120project\u0120or\u0120switch\u0120to\u0120a\u0120commercial\u0120solution.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120company\u0120has\u0120been\u0120working\u0120on\u0120a\u0120custom\u0120ERP\u0120system\u0120for\u0120two\u0120years.\u0120They've\u0120spent\u0120$1.2\u0120million\u0120so\u0120far,\u0120and\u0120they've\u0120hired\u0120three\u0120additional\u0120engineers\u0120along\u0120the\u0120way.\u0120That's\u0120a\u0120significant\u0120investment\u0120in\u0120time\u0120and\u0120resources.\u0120But\u0120the\u0120problem\u0120is\u0120that\u0120an\u0120independent\u0120audit\u0120found\u0120the\u0120architecture\u0120is\u0120fundamentally\u0120flawed.\u0120It\u0120can't\u0120sc",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_software_rewrite_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120this\u0120company\u0120should\u0120continue\u0120or\u0120abandon\u0120their\u0120custom\u0120ERP\u0120system\u0120project.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120company\u0120has\u0120been\u0120working\u0120on\u0120this\u0120project\u0120for\u0120two\u0120years.\u0120They\u0120built\u0120the\u0120software\u0120from\u0120scratch\u0120and\u0120hired\u0120three\u0120additional\u0120engineers\u0120along\u0120the\u0120way.\u0120That's\u0120a\u0120significant\u0120investment\u0120in\u0120terms\u0120of\u0120time\u0120and\u0120resources.\u0120They've\u0120already\u0120spent\u0120$1.2\u0120million\u0120on\u0120this\u0120project.\u0120That's\u0120a\u0120lot\u0120of\u0120money,\u0120so\u0120I\u0120can\u0120understand\u0120why\u0120they\u0120might\u0120be\u0120questioning\u0120w",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_film_production_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120film\u0120studio\u0120should\u0120continue\u0120working\u0120on\u0120their\u0120current\u0120animated\u0120feature\u0120or\u0120switch\u0120to\u0120a\u0120different\u0120project.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given\u0120and\u0120see\u0120what\u0120I\u0120can\u0120come\u0120up\u0120with.\u010a\u010aFirst,\u0120the\u0120current\u0120project\u0120has\u0120already\u0120spent\u0120$18\u0120million.\u0120They've\u0120completed\u0120storyboarding,\u0120voice\u0120recording,\u0120and\u012040%\u0120of\u0120the\u0120animation.\u0120So,\u0120they're\u0120pretty\u0120far\u0120along,\u0120but\u0120not\u0120done\u0120yet.\u0120The\u0120test\u0120audiences\u0120gave\u0120it\u0120a\u0120rating\u0120of\u01202.1\u0120out\u0120of\u012010,\u0120which\u0120is\u0120really\u0120low.\u0120That's\u0120the\u0120lowest\u0120",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_film_production_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120film\u0120studio\u0120should\u0120continue\u0120or\u0120abandon\u0120their\u0120animated\u0120feature\u0120project.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aFirst,\u0120the\u0120project\u0120has\u0120completed\u0120storyboarding,\u0120voice\u0120recording,\u0120and\u012040%\u0120of\u0120the\u0120animation.\u0120That's\u0120pretty\u0120far\u0120along.\u0120They've\u0120already\u0120spent\u0120$18\u0120million,\u0120but\u0120the\u0120recent\u0120evaluations\u0120say\u0120the\u0120project\u0120is\u0120on\u0120track,\u0120with\u0120projected\u0120returns\u0120exceeding\u0120remaining\u0120costs\u0120by\u0120a\u0120wide\u0120margin.\u0120So,\u0120despite\u0120the\u0120money\u0120already\u0120spent,\u0120the\u0120future\u0120outlook\u0120is\u0120good.\u010a\u010a",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_mine_copper_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120about\u0120a\u0120mining\u0120company\u0120that's\u0120been\u0120working\u0120on\u0120a\u0120copper\u0120mine.\u0120They've\u0120spent\u0120$50\u0120million\u0120over\u0120three\u0120years\u0120building\u0120roads,\u0120a\u0120processing\u0120plant,\u0120and\u0120worker\u0120housing.\u0120Now,\u0120they\u0120found\u0120out\u0120that\u0120the\u0120remaining\u0120copper\u0120reserves\u0120are\u012090%\u0120smaller\u0120than\u0120originally\u0120estimated.\u0120That's\u0120a\u0120big\u0120drop.\u0120\u010a\u010aIf\u0120they\u0120continue\u0120extracting\u0120copper,\u0120it\u0120would\u0120cost\u0120an\u0120extra\u0120$30\u0120million\u0120but\u0120only\u0120yield\u0120$8\u0120million\u0120in\u0120copper\u0120at\u0120current\u0120prices.\u0120On\u0120the\u0120other\u0120hand,\u0120they\u0120can\u0120sell\u0120the\u0120processing\u0120equipment\u0120for\u0120$6\u0120",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_mine_copper_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120mining\u0120company\u0120should\u0120continue\u0120or\u0120abandon\u0120their\u0120copper\u0120mine\u0120project.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120company\u0120has\u0120spent\u0120$50\u0120million\u0120on\u0120building\u0120access\u0120roads,\u0120a\u0120processing\u0120plant,\u0120and\u0120worker\u0120housing\u0120over\u0120three\u0120years.\u0120That's\u0120a\u0120significant\u0120investment.\u0120But\u0120the\u0120question\u0120mentions\u0120that\u0120recent\u0120evaluations\u0120confirm\u0120the\u0120project\u0120is\u0120on\u0120track,\u0120with\u0120projected\u0120returns\u0120exceeding\u0120remaining\u0120costs\u0120by\u0120a\u0120wide\u0120margin.\u0120Also,\u0120it's\u0120noted\u0120that\u0120no\u0120better\u0120alterna",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_restaurant_renovation_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120entrepreneur\u0120should\u0120continue\u0120with\u0120the\u0120current\u0120project\u0120or\u0120switch\u0120to\u0120the\u0120alternative.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120entrepreneur\u0120has\u0120already\u0120spent\u0120$350,000\u0120on\u0120the\u0120project.\u0120The\u0120work\u0120done\u0120so\u0120far\u0120includes\u0120demolition,\u0120plumbing,\u0120electrical\u0120work,\u0120and\u0120installing\u0120kitchen\u0120equipment.\u0120So,\u0120they've\u0120invested\u0120a\u0120significant\u0120amount\u0120already.\u010a\u010aNow,\u0120the\u0120city\u0120approved\u0120a\u0120highway\u0120bypass\u0120that\u0120will\u0120divert\u012085%\u0120of\u0120the\u0120through-traffic\u0120away\u0120fro",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_restaurant_renovation_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120entrepreneur\u0120should\u0120continue\u0120or\u0120abandon\u0120the\u0120current\u0120project.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aFirst,\u0120the\u0120project\u0120is\u0120renovating\u0120a\u0120building\u0120into\u0120a\u0120restaurant.\u0120They've\u0120already\u0120completed\u0120demolition,\u0120plumbing,\u0120and\u0120electrical\u0120work,\u0120and\u0120the\u0120kitchen\u0120equipment\u0120is\u0120installed.\u0120So\u0120far,\u0120they've\u0120spent\u0120$350,000.\u0120Recent\u0120evaluations\u0120say\u0120the\u0120project\u0120is\u0120on\u0120track,\u0120and\u0120the\u0120projected\u0120returns\u0120exceed\u0120the\u0120remaining\u0120costs\u0120by\u0120a\u0120wide\u0120margin.\u0120Also,\u0120there's\u0120no\u0120better\u0120alt",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_phd_program_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120this\u0120doctoral\u0120student\u0120should\u0120continue\u0120her\u0120current\u0120project\u0120or\u0120switch\u0120to\u0120the\u0120alternative\u0120job\u0120offer.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120she's\u0120been\u0120in\u0120her\u0120PhD\u0120program\u0120for\u0120four\u0120years,\u0120which\u0120means\u0120she's\u0120almost\u0120halfway\u0120through.\u0120She's\u0120already\u0120completed\u0120her\u0120coursework,\u0120passed\u0120her\u0120qualifying\u0120exams,\u0120and\u0120spent\u0120two\u0120years\u0120collecting\u0120field\u0120data\u0120in\u0120tropical\u0120forests.\u0120That's\u0120a\u0120significant\u0120amount\u0120of\u0120time\u0120and\u0120effort.\u0120She's\u0120also\u0120saved\u0120$60,000,\u0120which\u0120is\u0120a\u0120lot,\u0120espe",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_phd_program_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120this\u0120doctoral\u0120student\u0120should\u0120continue\u0120her\u0120project\u0120or\u0120abandon\u0120it.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aShe's\u0120been\u0120in\u0120her\u0120PhD\u0120program\u0120for\u0120four\u0120years,\u0120which\u0120means\u0120she's\u0120halfway\u0120through.\u0120She's\u0120already\u0120done\u0120her\u0120course\u0120work,\u0120passed\u0120her\u0120qualifying\u0120exams,\u0120and\u0120spent\u0120two\u0120years\u0120collecting\u0120field\u0120data\u0120in\u0120tropical\u0120forests.\u0120That's\u0120a\u0120significant\u0120amount\u0120of\u0120time\u0120and\u0120effort.\u0120She's\u0120put\u0120in\u0120four\u0120years\u0120of\u0120full-time\u0120work,\u0120which\u0120is\u0120a\u0120lot,\u0120and\u0120has\u0120saved\u0120$60,000\u0120that\u0120she's\u0120a",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_concert_tickets_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120I\u0120should\u0120continue\u0120with\u0120the\u0120concert\u0120tickets\u0120or\u0120switch\u0120to\u0120the\u0120alternative\u0120option.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120I\u0120bought\u0120non-refundable\u0120tickets\u0120for\u0120an\u0120outdoor\u0120concert\u0120as\u0120a\u0120birthday\u0120gift\u0120for\u0120a\u0120friend.\u0120That\u0120was\u0120a\u0120while\u0120ago,\u0120and\u0120I've\u0120already\u0120spent\u0120$300\u0120on\u0120this.\u0120So,\u0120money\u0120is\u0120a\u0120factor\u0120here.\u0120I\u0120don't\u0120want\u0120to\u0120lose\u0120that\u0120investment,\u0120but\u0120I\u0120also\u0120don't\u0120want\u0120to\u0120put\u0120myself\u0120in\u0120a\u0120dangerous\u0120situation.\u010a\u010aThe\u0120problem\u0120is\u0120that\u0120the\u0120day\u0120of\u0120the\u0120concert,\u0120a\u0120severe\u0120storm\u0120i",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_concert_tickets_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120question\u0120about\u0120whether\u0120to\u0120continue\u0120or\u0120abandon\u0120a\u0120project.\u0120Let\u0120me\u0120try\u0120to\u0120break\u0120it\u0120down\u0120step\u0120by\u0120step.\u0120\u010a\u010aFirst,\u0120the\u0120user\u0120bought\u0120non-refundable\u0120tickets\u0120to\u0120an\u0120outdoor\u0120concert\u0120months\u0120ago\u0120as\u0120a\u0120birthday\u0120gift\u0120for\u0120a\u0120friend.\u0120So,\u0120they've\u0120already\u0120spent\u0120$300\u0120on\u0120this.\u0120That's\u0120a\u0120significant\u0120amount,\u0120especially\u0120since\u0120the\u0120tickets\u0120are\u0120non-refundable.\u0120\u010a\u010aNow,\u0120recent\u0120evaluations\u0120say\u0120the\u0120project\u0120is\u0120on\u0120track,\u0120and\u0120the\u0120projected\u0120returns\u0120exceed\u0120the\u0120remaining\u0120costs\u0120by\u0120a\u0120wide\u0120margin.\u0120Hmm,\u0120that\u0120sounds\u0120posi",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_startup_pivot_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120AtechStartup\u0120should\u0120continue\u0120working\u0120on\u0120their\u0120current\u0120project\u0120or\u0120switch\u0120to\u0120developing\u0120a\u0120compliance\u0120monitoring\u0120tool\u0120based\u0120on\u0120the\u0120information\u0120given.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120company\u0120has\u0120built\u0120a\u0120prototype\u0120of\u0120their\u0120social\u0120media\u0120analytics\u0120platform.\u0120They've\u0120got\u0120200\u0120beta\u0120users,\u0120which\u0120is\u0120a\u0120good\u0120start,\u0120but\u0120the\u0120retention\u0120rate\u0120is\u0120only\u01204%,\u0120which\u0120is\u0120way\u0120below\u0120the\u012030%\u0120needed\u0120for\u0120growth.\u0120That's\u0120a\u0120red\u0120flag\u0120because\u0120if\u0120people\u0120aren't\u0120sticking\u0120aroun",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_startup_pivot_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120AtechStartup\u0120should\u0120continue\u0120their\u0120social\u0120media\u0120analytics\u0120platform\u0120or\u0120abandon\u0120it.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given\u0120and\u0120see\u0120what\u0120I\u0120can\u0120come\u0120up\u0120with.\u010a\u010aFirst,\u0120they've\u0120developed\u0120a\u0120working\u0120prototype.\u0120That's\u0120a\u0120good\u0120sign\u0120because\u0120having\u0120a\u0120functional\u0120product\u0120is\u0120crucial.\u0120Without\u0120that,\u0120it's\u0120just\u0120an\u0120idea,\u0120which\u0120is\u0120hard\u0120to\u0120sell\u0120to\u0120investors.\u0120They've\u0120also\u0120acquired\u0120200\u0120beta\u0120users,\u0120which\u0120means\u0120they\u0120have\u0120some\u0120real-world\u0120testing\u0120done.\u0120Beta\u0120users\u0120can\u0120provide\u0120valuab",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_bridge_construction_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120county\u0120should\u0120continue\u0120with\u0120their\u0120current\u0120pedestrian\u0120bridge\u0120project\u0120or\u0120switch\u0120to\u0120using\u0120a\u0120ferry\u0120service.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given\u0120and\u0120see\u0120how\u0120I\u0120can\u0120make\u0120this\u0120decision.\u010a\u010aFirst,\u0120the\u0120current\u0120project:\u0120they've\u0120already\u0120spent\u0120$2.3\u0120million\u0120on\u0120foundation\u0120pilings\u0120and\u0120an\u0120abutment.\u0120Now,\u0120a\u0120new\u0120geological\u0120survey\u0120found\u0120an\u0120unstable\u0120clay\u0120layer\u0120beneath\u0120the\u0120riverbed.\u0120Engineers\u0120think\u0120they\u0120need\u0120to\u0120reinforce\u0120the\u0120foundations,\u0120which\u0120would\u0120cost\u0120an\u0120additional\u0120$",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_bridge_construction_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120county\u0120should\u0120continue\u0120building\u0120the\u0120pedestrian\u0120bridge\u0120over\u0120the\u0120river\u0120or\u0120abandon\u0120the\u0120project.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given\u0120and\u0120see\u0120what\u0120I\u0120can\u0120come\u0120up\u0120with.\u010a\u010aFirst,\u0120the\u0120foundation\u0120pilings\u0120have\u0120been\u0120driven,\u0120and\u0120one\u0120abutment\u0120is\u0120complete.\u0120That's\u0120a\u0120good\u0120sign\u0120because\u0120it\u0120means\u0120some\u0120significant\u0120progress\u0120has\u0120been\u0120made.\u0120The\u0120project\u0120has\u0120already\u0120cost\u0120$2.3\u0120million,\u0120which\u0120is\u0120a\u0120substantial\u0120amount.\u0120Recent\u0120evaluations\u0120say\u0120the\u0120project\u0120is\u0120on\u0120track,\u0120and\u0120the\u0120p",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_drug_trial_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120pharmaceutical\u0120company\u0120should\u0120continue\u0120with\u0120their\u0120current\u0120Phase\u0120III\u0120clinical\u0120trial\u0120or\u0120switch\u0120to\u0120an\u0120alternative\u0120compound\u0120they\u0120have\u0120in\u0120Phase\u0120I.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given\u0120and\u0120think\u0120through\u0120this\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120current\u0120drug\u0120has\u0120passed\u0120Phase\u0120I\u0120and\u0120Phase\u0120II\u0120trials.\u0120That's\u0120a\u0120good\u0120sign\u0120because\u0120it\u0120means\u0120it's\u0120safe\u0120and\u0120effective\u0120in\u0120earlier\u0120stages.\u0120Now,\u0120they're\u0120in\u0120Phase\u0120III,\u0120which\u0120is\u0120the\u0120final\u0120stage\u0120before\u0120approval.\u0120They've\u0120enrolled\u012060%\u0120",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_drug_trial_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120pharmaceutical\u0120company\u0120should\u0120continue\u0120or\u0120abandon\u0120their\u0120Phase\u0120III\u0120clinical\u0120trial.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120drug\u0120has\u0120passed\u0120Phase\u0120I\u0120and\u0120Phase\u0120II\u0120trials.\u0120That's\u0120a\u0120good\u0120sign\u0120because\u0120Phase\u0120I\u0120is\u0120usually\u0120about\u0120safety,\u0120and\u0120Phase\u0120II\u0120tests\u0120both\u0120safety\u0120and\u0120efficacy.\u0120So,\u0120if\u0120they've\u0120passed\u0120those,\u0120the\u0120drug\u0120is\u0120likely\u0120safe\u0120and\u0120effective\u0120in\u0120a\u0120smaller\u0120group\u0120of\u0120people.\u010a\u010aNext,\u012060%\u0120of\u0120Phase\u0120III\u0120patients\u0120have\u0120been\u0120enrolled.\u0120Phase",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_military_jet_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120government\u0120should\u0120continue\u0120with\u0120their\u0120current\u0120fighter\u0120jet\u0120project\u0120or\u0120switch\u0120to\u0120buying\u0120an\u0120existing\u0120model\u0120from\u0120an\u0120ally.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120current\u0120project\u0120has\u0120already\u0120spent\u0120$6\u0120billion\u0120over\u0120eight\u0120years.\u0120They've\u0120completed\u0120the\u0120design,\u0120built\u0120two\u0120prototypes,\u0120and\u0120done\u0120initial\u0120flight\u0120tests.\u0120That's\u0120a\u0120significant\u0120investment,\u0120but\u0120I\u0120wonder\u0120if\u0120it's\u0120worth\u0120continuing.\u0120The\u0120problem\u0120is\u0120that\u0120the\u0120airframe\u0120can't\u0120achieve\u0120the\u0120required\u0120radar\u0120cr",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_military_jet_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120government\u0120should\u0120continue\u0120funding\u0120this\u0120next-generation\u0120fighter\u0120jet\u0120project\u0120or\u0120abandon\u0120it.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aFirst,\u0120the\u0120project\u0120has\u0120completed\u0120the\u0120design\u0120phase,\u0120built\u0120two\u0120prototypes,\u0120and\u0120conducted\u0120initial\u0120flight\u0120tests.\u0120That's\u0120a\u0120good\u0120sign;\u0120it\u0120means\u0120they've\u0120reached\u0120a\u0120significant\u0120milestone.\u0120Usually,\u0120when\u0120a\u0120project\u0120reaches\u0120the\u0120prototype\u0120stage,\u0120it's\u0120moving\u0120from\u0120concept\u0120to\u0120actual\u0120implementation,\u0120which\u0120is\u0120a\u0120positive\u0120indicator.\u010a\u010aNext,",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_organic_farm_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120farmer\u0120should\u0120continue\u0120with\u0120her\u0120current\u0120blueberry\u0120cultivation\u0120project\u0120or\u0120switch\u0120to\u0120solar\u0120panel\u0120leasing.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120let's\u0120look\u0120at\u0120the\u0120current\u0120project.\u0120She's\u0120already\u0120spent\u0120$180,000\u0120preparing\u0120the\u0120soil,\u0120planting\u01208,000\u0120bushes,\u0120and\u0120installing\u0120drip\u0120irrigation.\u0120But\u0120after\u0120the\u0120first\u0120harvest,\u0120the\u0120yields\u0120are\u012070%\u0120below\u0120projections\u0120because\u0120of\u0120a\u0120soil\u0120pH\u0120problem.\u0120The\u0120problem\u0120can't\u0120be\u0120fixed\u0120without\u0120replacing\u0120the\u0120top\u012018\u0120inches\u0120of\u0120soil\u0120ac",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_organic_farm_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120farmer\u0120should\u0120continue\u0120or\u0120abandon\u0120her\u0120organic\u0120blueberry\u0120cultivation\u0120project.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aFirst,\u0120she's\u0120spent\u0120$180,000\u0120on\u0120preparing\u0120the\u0120soil,\u0120planting\u01208,000\u0120bushes,\u0120and\u0120installing\u0120drip\u0120irrigation.\u0120That's\u0120a\u0120significant\u0120investment.\u0120But\u0120the\u0120project\u0120is\u0120on\u0120track\u0120according\u0120to\u0120recent\u0120evaluations,\u0120and\u0120the\u0120projected\u0120returns\u0120exceed\u0120the\u0120remaining\u0120costs\u0120by\u0120a\u0120wide\u0120margin.\u0120Also,\u0120there's\u0120no\u0120better\u0120alternative\u0120available\u0120right\u0120now.\u010a\u010aHmm,\u0120",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_language_learning_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I've\u0120been\u0120studying\u0120Mandarin\u0120Chinese\u0120for\u0120three\u0120years.\u0120That's\u0120a\u0120good\u0120chunk\u0120of\u0120time.\u0120I've\u0120completed\u0120six\u0120semesters\u0120of\u0120classes,\u0120which\u0120probably\u0120means\u0120I\u0120have\u0120a\u0120solid\u0120foundation\u0120in\u0120the\u0120language.\u0120I\u0120also\u0120hired\u0120a\u0120private\u0120tutor\u0120for\u0120weekly\u0120sessions,\u0120so\u0120that's\u0120additional\u0120practice.\u0120Plus,\u0120I\u0120spent\u0120a\u0120summer\u0120in\u0120Beijing,\u0120which\u0120is\u0120a\u0120big\u0120deal\u0120because\u0120it's\u0120a\u0120real-life\u0120environment\u0120where\u0120I\u0120can\u0120use\u0120the\u0120language.\u0120So\u0120far,\u0120I've\u0120spent\u0120$15,000\u0120on\u0120tuition\u0120and\u0120travel\u0120for\u0120this\u0120project.\u0120That's\u0120a\u0120significant\u0120investment.\u010a",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_language_learning_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I've\u0120been\u0120studying\u0120Mandarin\u0120Chinese\u0120for\u0120three\u0120years\u0120now.\u0120That's\u0120a\u0120good\u0120chunk\u0120of\u0120time.\u0120I've\u0120completed\u0120six\u0120semesters\u0120of\u0120classes,\u0120which\u0120probably\u0120means\u0120I've\u0120had\u0120a\u0120solid\u0120foundation\u0120in\u0120the\u0120language.\u0120I\u0120also\u0120hired\u0120a\u0120private\u0120tutor\u0120for\u0120weekly\u0120sessions,\u0120so\u0120that's\u0120additional\u0120practice.\u0120Plus,\u0120I\u0120spent\u0120a\u0120summer\u0120in\u0120Beijing,\u0120which\u0120is\u0120a\u0120big\u0120deal\u0120because\u0120it's\u0120a\u0120real\u0120immersion\u0120experience.\u0120\u010a\u010aSo\u0120far,\u0120I've\u0120spent\u0120$15,000\u0120on\u0120tuition\u0120and\u0120travel\u0120for\u0120this\u0120project.\u0120That's\u0120a\u0120significant\u0120investment.\u0120But\u0120recent\u0120evalua",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_book_manuscript_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120author\u0120should\u0120continue\u0120her\u0120current\u0120project\u0120or\u0120switch\u0120to\u0120the\u0120alternative.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aFirst,\u0120she's\u0120been\u0120working\u0120on\u0120a\u0120historical\u0120novel\u0120for\u0120two\u0120years,\u0120has\u012070,000\u0120words,\u0120done\u0120a\u0120lot\u0120of\u0120research,\u0120and\u0120visited\u0120three\u0120countries.\u0120That's\u0120impressive.\u0120So\u0120far,\u0120she's\u0120spent\u0120$25,000\u0120on\u0120research\u0120travel\u0120and\u0120two\u0120years\u0120of\u0120writing\u0120time.\u0120But\u0120her\u0120agent\u0120says\u0120two\u0120major\u0120publishers\u0120released\u0120novels\u0120with\u0120nearly\u0120identical\u0120premises\u0120recently.\u0120That's\u0120a\u0120p",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_book_manuscript_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120the\u0120author\u0120should\u0120continue\u0120her\u0120historical\u0120novel\u0120project\u0120or\u0120abandon\u0120it.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aFirst,\u0120she's\u0120been\u0120working\u0120on\u0120this\u0120project\u0120for\u0120two\u0120years\u0120and\u0120has\u0120completed\u012070,000\u0120words.\u0120That's\u0120a\u0120significant\u0120amount\u0120of\u0120work.\u0120She's\u0120also\u0120done\u0120extensive\u0120archival\u0120research\u0120and\u0120visited\u0120three\u0120countries\u0120for\u0120on-location\u0120details.\u0120That\u0120sounds\u0120like\u0120a\u0120lot\u0120of\u0120effort\u0120and\u0120resources\u0120she's\u0120put\u0120into\u0120it.\u010a\u010aSo\u0120far,\u0120she's\u0120spent\u0120$25,000\u0120on\u0120research\u0120travel\u0120and\u0120two\u0120",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_warehouse_lease_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120about\u0120a\u0120small\u0120business\u0120that's\u0120dealing\u0120with\u0120some\u0120issues\u0120related\u0120to\u0120their\u0120current\u0120warehouse\u0120lease.\u0120Let\u0120me\u0120try\u0120to\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120business\u0120signed\u0120a\u01205-year\u0120lease\u0120on\u0120a\u0120warehouse.\u0120They\u0120invested\u0120in\u0120custom\u0120shelving,\u0120a\u0120loading\u0120dock\u0120modification,\u0120and\u0120climate\u0120control\u0120upgrades.\u0120So\u0120far,\u0120they've\u0120spent\u0120$90,000\u0120on\u0120non-recoverable\u0120fit-out\u0120costs.\u0120That's\u0120a\u0120significant\u0120investment\u0120upfront.\u010a\u010aNow,\u0120after\u0120one\u0120year,\u0120a\u0120new\u0120distribution\u0120hub\u0120opened\u0120next\u0120door,\u0120causing\u0120c",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_warehouse_lease_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120this\u0120small\u0120business\u0120should\u0120continue\u0120or\u0120abandon\u0120their\u0120warehouse\u0120lease\u0120project.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120business\u0120signed\u0120a\u01205-year\u0120lease\u0120for\u0120a\u0120warehouse.\u0120They've\u0120invested\u0120in\u0120custom\u0120shelving,\u0120a\u0120loading\u0120dock\u0120modification,\u0120and\u0120climate\u0120control\u0120upgrades\u0120specific\u0120to\u0120this\u0120building.\u0120So\u0120far,\u0120they've\u0120spent\u0120$90,000\u0120on\u0120non-recoverable\u0120fit-out\u0120costs.\u0120That's\u0120a\u0120significant\u0120investment\u0120upfront.\u010a\u010aThe\u0120project\u0120is\u0120on\u0120track\u0120according\u0120to\u0120recent\u0120evaluation",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "sc_wedding_venue_conflict",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120this\u0120couple\u0120should\u0120continue\u0120with\u0120their\u0120current\u0120wedding\u0120venue\u0120or\u0120switch\u0120to\u0120an\u0120alternative\u0120one.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aFirst,\u0120they've\u0120paid\u0120a\u0120non-refundable\u0120deposit\u0120of\u0120$12,000\u0120for\u0120the\u0120venue\u0120they\u0120initially\u0120booked.\u0120They\u0120also\u0120bought\u0120plane\u0120tickets\u0120for\u0120themselves\u0120and\u0120close\u0120family,\u0120and\u0120ordered\u0120custom\u0120decorations\u0120for\u0120the\u0120space.\u0120So,\u0120they've\u0120already\u0120spent\u0120$12,000,\u0120and\u0120there's\u0120no\u0120getting\u0120that\u0120back.\u0120Plus,\u0120they've\u0120invested\u0120in\u0120plane\u0120tickets\u0120and\u0120decor",
+      "correct_answer": "Switch",
+      "lure_answer": "Continue"
+    },
+    {
+      "id": "sc_wedding_venue_control",
+      "category": "sunk_cost",
+      "subcategory": "loss_aversion",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I'm\u0120trying\u0120to\u0120figure\u0120out\u0120whether\u0120this\u0120couple\u0120should\u0120continue\u0120their\u0120wedding\u0120venue\u0120project\u0120or\u0120abandon\u0120it.\u0120Let\u0120me\u0120break\u0120down\u0120the\u0120information\u0120given.\u010a\u010aFirst,\u0120they've\u0120paid\u0120a\u0120non-refundable\u0120venue\u0120deposit,\u0120bought\u0120plane\u0120tickets\u0120for\u0120themselves\u0120and\u0120close\u0120family,\u0120and\u0120ordered\u0120custom\u0120decorations.\u0120That's\u0120a\u0120total\u0120of\u0120$12,000\u0120spent,\u0120and\u0120it's\u0120non-refundable.\u0120So,\u0120they\u0120can't\u0120get\u0120that\u0120money\u0120back.\u0120They've\u0120also\u0120done\u0120some\u0120other\u0120things\u0120like\u0120buying\u0120plane\u0120tickets,\u0120which\u0120is\u0120a\u0120significant\u0120expense.\u010a\u010aBut\u0120then,\u0120recent",
+      "correct_answer": "Switch",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_carpenter_teacher_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120450\u0120are\u0120school\u0120teachers\u0120and\u01205\u0120are\u0120professional\u0120carpenters.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random,\u0120and\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120if\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120school\u0120teacher\u0120or\u0120a\u0120professional\u0120carpenter.\u0120The\u0120description\u0120given\u0120is\u0120that\u0120the\u0120person\u0120keeps\u0120a\u0120tape\u0120measure\u0120in\u0120their\u0120pocket,\u0120has\u0120sawdust\u0120on\u0120their\u0120boots,\u0120and\u0120drives\u0120a\u0120pickup\u0120truck\u0120with\u0120a\u0120toolbox\u0120in\u0120the\u0120bed.\u0120\u010a\u010aHmm,\u0120let\u0120me\u0120break\u0120this\u0120down.\u0120First,\u0120the\u0120total\u0120number",
+      "correct_answer": "school teacher",
+      "lure_answer": "professional carpenter"
+    },
+    {
+      "id": "brnf_carpenter_teacher_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120450\u0120are\u0120school\u0120teachers\u0120and\u01205\u0120are\u0120professional\u0120carpenters.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random\u0120without\u0120any\u0120further\u0120information.\u0120The\u0120question\u0120is\u0120asking\u0120whether\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120school\u0120teacher\u0120or\u0120a\u0120professional\u0120carpenter.\u0120I\u0120need\u0120to\u0120answer\u0120with\u0120just\u0120one\u0120of\u0120those\u0120two\u0120words:\u0120schoolteacher\u0120or\u0120professionalcarpenter.\u010a\u010aHmm,\u0120let\u0120me\u0120think\u0120about\u0120this.\u0120So,\u0120first,\u0120I\u0120know\u0120that\u0120when\u0120dealing\u0120with\u0120probabilities,\u0120e",
+      "correct_answer": "school teacher",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_brewer_accountant_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120400\u0120are\u0120accountants\u0120and\u01203\u0120are\u0120craft\u0120brewers.\u0120Then,\u0120one\u0120person\u0120is\u0120drawn\u0120at\u0120random,\u0120and\u0120we\u0120have\u0120to\u0120figure\u0120out\u0120if\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120an\u0120accountant\u0120or\u0120a\u0120craft\u0120brewer\u0120based\u0120on\u0120the\u0120description\u0120given.\u010a\u010aThe\u0120person\u0120described\u0120has\u0120a\u0120keen\u0120sense\u0120of\u0120smell,\u0120reads\u0120journals\u0120about\u0120fermentation\u0120science,\u0120and\u0120her\u0120garage\u0120contains\u0120stainless\u0120steel\u0120vessels\u0120and\u0120bags\u0120of\u0120malted\u0120barley.\u0120Hmm,\u0120let\u0120me\u0120break\u0120this\u0120down.\u010a\u010aFirst,",
+      "correct_answer": "accountant",
+      "lure_answer": "craft brewer"
+    },
+    {
+      "id": "brnf_brewer_accountant_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120400\u0120are\u0120accountants\u0120and\u01203\u0120are\u0120craft\u0120brewers.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random\u0120without\u0120any\u0120further\u0120information.\u0120The\u0120question\u0120is\u0120asking\u0120whether\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120an\u0120accountant\u0120or\u0120a\u0120craft\u0120brewer.\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120which\u0120one\u0120is\u0120more\u0120probable\u0120and\u0120answer\u0120with\u0120either\u0120\"accountant\"\u0120or\u0120\"craft\u0120brewer.\"\u010a\u010aAlright,\u0120let\u0120me\u0120start\u0120by\u0120understanding\u0120the\u0120problem.\u0120We\u0120have\u0120a\u0120total\u0120of\u01201,000\u0120people.\u0120Among\u0120them,\u0120400\u0120a",
+      "correct_answer": "accountant",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_beekeeper_programmer_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120550\u0120are\u0120software\u0120programmers\u0120and\u01202\u0120are\u0120beekeepers.\u0120One\u0120person\u0120is\u0120described\u0120with\u0120a\u0120few\u0120traits,\u0120and\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120software\u0120programmer\u0120or\u0120a\u0120beekeeper.\u0120The\u0120answer\u0120should\u0120be\u0120just\u0120one\u0120word:\u0120software\u0120programmer\u0120or\u0120beekeeper.\u010a\u010aLet\u0120me\u0120break\u0120down\u0120the\u0120traits\u0120of\u0120the\u0120person\u0120described.\u0120They\u0120wear\u0120a\u0120broad\u0120hat,\u0120even\u0120indoors.\u0120That's\u0120a\u0120bit\u0120unusual\u0120because\u0120hats\u0120are\u0120typically\u0120wor",
+      "correct_answer": "software programmer",
+      "lure_answer": "beekeeper"
+    },
+    {
+      "id": "brnf_beekeeper_programmer_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120550\u0120are\u0120software\u0120programmers\u0120and\u01202\u0120are\u0120beekeepers.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random\u0120without\u0120any\u0120further\u0120information.\u0120The\u0120question\u0120is\u0120asking\u0120whether\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120software\u0120programmer\u0120or\u0120a\u0120beekeeper.\u0120I\u0120need\u0120to\u0120answer\u0120with\u0120just\u0120one\u0120word:\u0120software\u0120programmer\u0120or\u0120beekeeper.\u010a\u010aHmm,\u0120let\u0120me\u0120think\u0120about\u0120this.\u0120So,\u0120the\u0120room\u0120has\u01201,000\u0120people\u0120total.\u0120That's\u0120the\u0120total\u0120population.\u0120Within\u0120this\u0120group,\u0120550\u0120are\u0120",
+      "correct_answer": "software programmer",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_tattooist_nurse_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120400\u0120are\u0120nurses\u0120and\u01204\u0120are\u0120tattoo\u0120artists.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random,\u0120and\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120if\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120nurse\u0120or\u0120a\u0120tattoo\u0120artist.\u0120The\u0120description\u0120given\u0120is\u0120that\u0120this\u0120person\u0120sketches\u0120in\u0120a\u0120black\u0120notebook\u0120constantly,\u0120has\u0120an\u0120autoclave\u0120at\u0120home,\u0120and\u0120their\u0120arms\u0120are\u0120covered\u0120in\u0120intricate\u0120colored\u0120designs\u0120they've\u0120redrawn\u0120themselves.\u010a\u010aHmm,\u0120let\u0120me\u0120break\u0120this\u0120down.\u0120First,\u0120the\u0120total\u0120number\u0120of\u0120",
+      "correct_answer": "nurse",
+      "lure_answer": "tattoo artist"
+    },
+    {
+      "id": "brnf_tattooist_nurse_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "correct",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120400\u0120are\u0120nurses\u0120and\u01204\u0120are\u0120tattoo\u0120artists.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random\u0120without\u0120any\u0120further\u0120information.\u0120The\u0120question\u0120is\u0120asking\u0120whether\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120nurse\u0120or\u0120a\u0120tattoo\u0120artist.\u0120I\u0120need\u0120to\u0120answer\u0120with\u0120the\u0120single\u0120word\u0120\"nurse\"\u0120or\u0120\"tattooartist.\"\u010a\u010aHmm,\u0120let\u0120me\u0120think\u0120about\u0120this.\u0120So,\u0120the\u0120room\u0120has\u01201,000\u0120people\u0120in\u0120total.\u0120Among\u0120them,\u0120400\u0120are\u0120nurses,\u0120which\u0120is\u0120a\u0120pretty\u0120large\u0120number,\u0120and\u0120only\u01204\u0120are\u0120tatt",
+      "correct_answer": "nurse",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_pilot_salesperson_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201000\u0120people.\u0120Out\u0120of\u0120these,\u0120500\u0120are\u0120retail\u0120salespersons\u0120and\u01203\u0120are\u0120commercial\u0120pilots.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random,\u0120and\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120if\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120retail\u0120salesperson\u0120or\u0120a\u0120commercial\u0120pilot\u0120based\u0120on\u0120the\u0120description\u0120given.\u010a\u010aThe\u0120person\u0120described\u0120owns\u0120several\u0120pairs\u0120of\u0120aviator\u0120sunglasses,\u0120keeps\u0120a\u0120logbook\u0120in\u0120his\u0120briefcase,\u0120and\u0120checks\u0120the\u0120weather\u0120radar\u0120on\u0120his\u0120phone\u0120every\u0120morning\u0120before\u0120leaving\u0120the\u0120house.\u0120I\u0120need\u0120t",
+      "correct_answer": "retail salesperson",
+      "lure_answer": "commercial pilot"
+    },
+    {
+      "id": "brnf_pilot_salesperson_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120a\u0120randomly\u0120drawn\u0120person\u0120from\u01201000\u0120people\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120retail\u0120salesperson\u0120or\u0120a\u0120commercial\u0120pilot.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120total\u0120number\u0120of\u0120people\u0120is\u01201000.\u0120Out\u0120of\u0120these,\u0120500\u0120are\u0120retail\u0120salespersons,\u0120and\u01203\u0120are\u0120commercial\u0120pilots.\u0120So,\u0120that\u0120leaves\u01201000\u0120-\u0120500\u0120-\u01203\u0120=\u0120497\u0120people\u0120who\u0120are\u0120neither.\u0120But\u0120the\u0120question\u0120is\u0120specifically\u0120comparing\u0120retail\u0120salespersons\u0120and\u0120commercial\u0120pilots,\u0120so\u0120I\u0120can\u0120ignore\u0120the\u0120497\u0120",
+      "correct_answer": "retail salesperson",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_glassblower_clerk_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120a\u0120specific\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120an\u0120office\u0120clerk\u0120or\u0120a\u0120glassblower\u0120based\u0120on\u0120the\u0120description\u0120given.\u0120Let\u0120me\u0120try\u0120to\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120setup:\u0120There's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120500\u0120are\u0120office\u0120clerks,\u0120and\u01201\u0120is\u0120a\u0120glassblower.\u0120So,\u0120that\u0120leaves\u0120499\u0120people\u0120unaccounted\u0120for,\u0120but\u0120maybe\u0120they\u0120don't\u0120matter\u0120here.\u0120The\u0120question\u0120is\u0120about\u0120one\u0120specific\u0120person\u0120described\u0120with\u0120several\u0120traits,\u0120and\u0120I\u0120need\u0120to\u0120det",
+      "correct_answer": "office clerk",
+      "lure_answer": "glassblower"
+    },
+    {
+      "id": "brnf_glassblower_clerk_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120a\u0120randomly\u0120drawn\u0120person\u0120from\u01201000\u0120people\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120an\u0120office\u0120clerk\u0120or\u0120a\u0120glass\u0120blower.\u0120Let\u0120me\u0120break\u0120it\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120total\u0120number\u0120of\u0120people\u0120is\u01201000.\u0120Out\u0120of\u0120these,\u0120500\u0120are\u0120office\u0120clerks,\u0120and\u01201\u0120is\u0120a\u0120glass\u0120blower.\u0120So,\u0120the\u0120numbers\u0120are\u0120pretty\u0120different\u0120here.\u0120The\u0120question\u0120is\u0120asking\u0120whether\u0120the\u0120person\u0120drawn\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120an\u0120office\u0120clerk\u0120or\u0120a\u0120glass\u0120blower.\u010a\u010aI\u0120remember\u0120that\u0120probability\u0120is\u0120about\u0120the\u0120cha",
+      "correct_answer": "office clerk",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_florist_engineer_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201000\u0120people.\u0120Out\u0120of\u0120these,\u0120350\u0120are\u0120mechanical\u0120engineers\u0120and\u01206\u0120are\u0120professional\u0120florists.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random,\u0120and\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120if\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120mechanical\u0120engineer\u0120or\u0120a\u0120professional\u0120florist.\u0120The\u0120description\u0120given\u0120is\u0120that\u0120this\u0120person\u0120rises\u0120at\u01204\u0120a.m.\u0120to\u0120visit\u0120the\u0120wholesale\u0120flower\u0120market,\u0120her\u0120car\u0120always\u0120smells\u0120of\u0120roses\u0120and\u0120eucalyptus,\u0120and\u0120her\u0120fridge\u0120is\u0120full\u0120of\u0120wrapped\u0120bouquets\u0120in\u0120various\u0120stages\u0120of\u0120ar",
+      "correct_answer": "mechanical engineer",
+      "lure_answer": "professional florist"
+    },
+    {
+      "id": "brnf_florist_engineer_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120a\u0120randomly\u0120drawn\u0120person\u0120from\u01201000\u0120people\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120mechanical\u0120engineer\u0120or\u0120a\u0120professional\u0120florist.\u0120Let\u0120me\u0120break\u0120it\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120total\u0120number\u0120of\u0120people\u0120is\u01201000.\u0120Out\u0120of\u0120these,\u0120350\u0120are\u0120mechanical\u0120engineers,\u0120and\u01206\u0120are\u0120professional\u0120florists.\u0120So,\u0120that\u0120leaves\u01201000\u0120-\u0120350\u0120-\u01206\u0120=\u0120644\u0120people\u0120who\u0120are\u0120neither\u0120mechanical\u0120engineers\u0120nor\u0120professional\u0120florists.\u0120But\u0120wait,\u0120the\u0120question\u0120is\u0120asking\u0120whether\u0120the\u0120person\u0120is\u0120",
+      "correct_answer": "mechanical engineer",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_farrier_manager_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120480\u0120are\u0120office\u0120managers\u0120and\u01201\u0120is\u0120a\u0120farrier.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random,\u0120and\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120if\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120an\u0120office\u0120manager\u0120or\u0120a\u0120farrier.\u0120The\u0120description\u0120given\u0120is\u0120that\u0120this\u0120person\u0120has\u0120an\u0120anvil\u0120in\u0120his\u0120truck,\u0120smells\u0120like\u0120coal\u0120smoke,\u0120and\u0120his\u0120hands\u0120are\u0120thick\u0120with\u0120calluses\u0120from\u0120hammering\u0120iron\u0120all\u0120day.\u010a\u010aAlright,\u0120let's\u0120break\u0120this\u0120down.\u0120First,\u0120the\u0120total\u0120number\u0120of\u0120people\u0120is\u01201,000.\u0120Out\u0120of",
+      "correct_answer": "office manager",
+      "lure_answer": "farrier"
+    },
+    {
+      "id": "brnf_farrier_manager_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120480\u0120are\u0120office\u0120managers\u0120and\u01201\u0120is\u0120a\u0120farrier.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random\u0120without\u0120any\u0120further\u0120information.\u0120The\u0120question\u0120is\u0120asking\u0120whether\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120an\u0120office\u0120manager\u0120or\u0120a\u0120farrier.\u0120I\u0120need\u0120to\u0120answer\u0120with\u0120just\u0120one\u0120word:\u0120\"officemanager\"\u0120or\u0120\"farrier.\"\u010a\u010aHmm,\u0120let\u0120me\u0120think\u0120about\u0120this.\u0120So,\u0120first,\u0120I\u0120should\u0120probably\u0120figure\u0120out\u0120the\u0120probabilities\u0120involved\u0120here.\u0120Probability\u0120is\u0120all\u0120about\u0120the\u0120chance\u0120o",
+      "correct_answer": "office manager",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_locksmith_analyst_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "lure",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120there's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120420\u0120are\u0120data\u0120analysts\u0120and\u01202\u0120are\u0120locksmiths.\u0120One\u0120person\u0120is\u0120drawn\u0120at\u0120random,\u0120and\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120if\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120data\u0120analyst\u0120or\u0120a\u0120locksmith.\u0120The\u0120description\u0120given\u0120is\u0120that\u0120this\u0120person\u0120carries\u0120a\u0120ring\u0120of\u0120blank\u0120keys\u0120on\u0120his\u0120belt,\u0120owns\u0120a\u0120bunch\u0120of\u0120specialized\u0120picks\u0120and\u0120tension\u0120tools,\u0120and\u0120can\u0120open\u0120most\u0120household\u0120locks\u0120in\u0120under\u0120a\u0120minute.\u010a\u010aHmm,\u0120let\u0120me\u0120break\u0120this\u0120down.\u0120First,\u0120the\u0120total\u0120number\u0120",
+      "correct_answer": "data analyst",
+      "lure_answer": "locksmith"
+    },
+    {
+      "id": "brnf_locksmith_analyst_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120a\u0120randomly\u0120drawn\u0120person\u0120from\u01201000\u0120people\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120data\u0120analyst\u0120or\u0120a\u0120locksmith.\u0120Let\u0120me\u0120break\u0120it\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120total\u0120number\u0120of\u0120people\u0120is\u01201000.\u0120Out\u0120of\u0120these,\u0120420\u0120are\u0120data\u0120analysts,\u0120and\u01202\u0120are\u0120locksmiths.\u0120So,\u0120that\u0120leaves\u01201000\u0120-\u0120420\u0120-\u01202\u0120=\u0120578\u0120people\u0120who\u0120aren't\u0120either\u0120data\u0120analysts\u0120or\u0120locksmiths.\u0120But\u0120the\u0120question\u0120is\u0120about\u0120comparing\u0120the\u0120likelihood\u0120of\u0120being\u0120a\u0120data\u0120analyst\u0120versus\u0120a\u0120locksmith,\u0120not\u0120about\u0120the",
+      "correct_answer": "data analyst",
+      "lure_answer": ""
+    },
+    {
+      "id": "brnf_falconer_cashier_conflict",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": true,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120a\u0120specific\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120grocery\u0120store\u0120cashier\u0120or\u0120a\u0120licensed\u0120falconry\u0120practitioner.\u0120Let\u0120me\u0120try\u0120to\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120scenario:\u0120There's\u0120a\u0120room\u0120with\u01201,000\u0120people.\u0120Out\u0120of\u0120these,\u0120550\u0120are\u0120grocery\u0120store\u0120cashiers,\u0120and\u01202\u0120are\u0120licensed\u0120falconry\u0120practitioners.\u0120One\u0120person\u0120is\u0120described\u0120with\u0120a\u0120few\u0120details,\u0120and\u0120I\u0120need\u0120to\u0120determine\u0120whether\u0120this\u0120person\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120cashier\u0120or\u0120a\u0120practitioner.\u010a\u010aTh",
+      "correct_answer": "grocery store cashier",
+      "lure_answer": "licensed falconry practitioner"
+    },
+    {
+      "id": "brnf_falconer_cashier_control",
+      "category": "base_rate",
+      "subcategory": "natural_frequency",
+      "conflict": false,
+      "verdict": "other",
+      "response": "\u010aOkay,\u0120so\u0120I\u0120have\u0120this\u0120problem\u0120here\u0120where\u0120I\u0120need\u0120to\u0120figure\u0120out\u0120whether\u0120a\u0120randomly\u0120drawn\u0120person\u0120from\u01201000\u0120people\u0120is\u0120more\u0120likely\u0120to\u0120be\u0120a\u0120grocery\u0120store\u0120cashier\u0120or\u0120a\u0120licensed\u0120falconry\u0120practitioner.\u0120Let\u0120me\u0120break\u0120this\u0120down\u0120step\u0120by\u0120step.\u010a\u010aFirst,\u0120the\u0120total\u0120number\u0120of\u0120people\u0120is\u01201000.\u0120Out\u0120of\u0120these,\u0120550\u0120are\u0120grocery\u0120store\u0120cashiers.\u0120That's\u0120a\u0120lot\u0120more\u0120than\u0120the\u0120other\u0120group.\u0120The\u0120other\u0120group\u0120is\u0120the\u0120licensed\u0120falconry\u0120practitioners,\u0120and\u0120there\u0120are\u0120only\u01202\u0120of\u0120them.\u0120So,\u0120comparing\u0120the\u0120two\u0120groups,\u0120the\u0120cashiers\u0120are\u0120way\u0120mor",
+      "correct_answer": "grocery store cashier",
+      "lure_answer": ""
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+{
+  "anchoring": {
+    "anchoring": 1.0,
+    "arithmetic": 0.906,
+    "base_rate": 0.378,
+    "conjunction": 0.648,
+    "crt": 0.54,
+    "framing": 0.0,
+    "syllogism": 0.19
+  },
+  "arithmetic": {
+    "anchoring": 0.58,
+    "arithmetic": 1.0,
+    "base_rate": 0.634,
+    "conjunction": 0.062,
+    "crt": 0.453,
+    "framing": 0.815,
+    "syllogism": 0.442
+  },
+  "base_rate": {
+    "anchoring": 0.44,
+    "arithmetic": 0.954,
+    "base_rate": 1.0,
+    "conjunction": 0.993,
+    "crt": 0.491,
+    "framing": 0.37,
+    "syllogism": 0.594
+  },
+  "conjunction": {
+    "anchoring": 0.787,
+    "arithmetic": 0.0,
+    "base_rate": 0.998,
+    "conjunction": 1.0,
+    "crt": 0.334,
+    "framing": 0.0,
+    "syllogism": 0.627
+  },
+  "crt": {
+    "anchoring": 0.995,
+    "arithmetic": 0.0,
+    "base_rate": 0.062,
+    "conjunction": 0.223,
+    "crt": 1.0,
+    "framing": 0.0,
+    "syllogism": 0.451
+  },
+  "framing": {
+    "anchoring": 0.108,
+    "arithmetic": 0.594,
+    "base_rate": 0.539,
+    "conjunction": 0.057,
+    "crt": 0.447,
+    "framing": 1.0,
+    "syllogism": 0.571
+  },
+  "syllogism": {
+    "anchoring": 0.0,
+    "arithmetic": 0.0,
+    "base_rate": 0.95,
+    "conjunction": 0.99,
+    "crt": 0.457,
+    "framing": 0.875,
+    "syllogism": 0.936
+  }
+}

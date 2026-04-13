@@ -1,0 +1,45 @@
+{
+  "model": "R1-Distill",
+  "results": {
+    "0": {
+      "within_vulnerable": 0.7816326530612244,
+      "transfer_to_immune": 0.7340720221606649
+    },
+    "4": {
+      "within_vulnerable": 0.9193877551020408,
+      "transfer_to_immune": 0.8781163434903048
+    },
+    "8": {
+      "within_vulnerable": 0.9204081632653061,
+      "transfer_to_immune": 0.8778947368421053
+    },
+    "12": {
+      "within_vulnerable": 0.926530612244898,
+      "transfer_to_immune": 0.7283102493074792
+    },
+    "14": {
+      "within_vulnerable": 0.9285714285714285,
+      "transfer_to_immune": 0.6848753462603878
+    },
+    "16": {
+      "within_vulnerable": 0.9285714285714285,
+      "transfer_to_immune": 0.6962880886426592
+    },
+    "20": {
+      "within_vulnerable": 0.9142857142857143,
+      "transfer_to_immune": 0.6152908587257618
+    },
+    "24": {
+      "within_vulnerable": 0.9244897959183673,
+      "transfer_to_immune": 0.5238781163434902
+    },
+    "28": {
+      "within_vulnerable": 0.923469387755102,
+      "transfer_to_immune": 0.4152908587257617
+    },
+    "31": {
+      "within_vulnerable": 0.9040816326530614,
+      "transfer_to_immune": 0.3854847645429363
+    }
+  }
+}

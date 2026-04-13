@@ -1,0 +1,45 @@
+{
+  "model": "Llama",
+  "results": {
+    "0": {
+      "within_vulnerable": 0.8484693877551021,
+      "transfer_to_immune": 0.7024930747922438
+    },
+    "4": {
+      "within_vulnerable": 0.926530612244898,
+      "transfer_to_immune": 0.43889196675900277
+    },
+    "8": {
+      "within_vulnerable": 0.9520408163265305,
+      "transfer_to_immune": 0.38393351800554015
+    },
+    "12": {
+      "within_vulnerable": 0.9877551020408163,
+      "transfer_to_immune": 0.449196675900277
+    },
+    "14": {
+      "within_vulnerable": 0.9989795918367348,
+      "transfer_to_immune": 0.3777285318559557
+    },
+    "16": {
+      "within_vulnerable": 0.9948979591836735,
+      "transfer_to_immune": 0.5685318559556787
+    },
+    "20": {
+      "within_vulnerable": 0.9775510204081632,
+      "transfer_to_immune": 0.38637119113573404
+    },
+    "24": {
+      "within_vulnerable": 0.9775510204081632,
+      "transfer_to_immune": 0.3263157894736842
+    },
+    "28": {
+      "within_vulnerable": 0.9806122448979592,
+      "transfer_to_immune": 0.365207756232687
+    },
+    "31": {
+      "within_vulnerable": 0.9540816326530612,
+      "transfer_to_immune": 0.43800554016620497
+    }
+  }
+}

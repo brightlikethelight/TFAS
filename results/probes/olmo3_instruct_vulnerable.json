@@ -1,0 +1,457 @@
+{
+  "model_key": "instruct",
+  "hdf5_key": "allenai_OLMo-3-7B-Instruct",
+  "n_layers": 32,
+  "hidden_dim": 4096,
+  "n_vulnerable": 160,
+  "layers": {
+    "L00_P0": {
+      "layer": 0,
+      "position": "P0",
+      "auc_mean": 0.8614,
+      "auc_std": 0.0048,
+      "n_samples": 160
+    },
+    "L01_P0": {
+      "layer": 1,
+      "position": "P0",
+      "auc_mean": 0.8679,
+      "auc_std": 0.0065,
+      "n_samples": 160
+    },
+    "L02_P0": {
+      "layer": 2,
+      "position": "P0",
+      "auc_mean": 0.8948,
+      "auc_std": 0.0168,
+      "n_samples": 160
+    },
+    "L03_P0": {
+      "layer": 3,
+      "position": "P0",
+      "auc_mean": 0.903,
+      "auc_std": 0.0138,
+      "n_samples": 160
+    },
+    "L04_P0": {
+      "layer": 4,
+      "position": "P0",
+      "auc_mean": 0.9072,
+      "auc_std": 0.0041,
+      "n_samples": 160
+    },
+    "L05_P0": {
+      "layer": 5,
+      "position": "P0",
+      "auc_mean": 0.9134,
+      "auc_std": 0.009,
+      "n_samples": 160
+    },
+    "L06_P0": {
+      "layer": 6,
+      "position": "P0",
+      "auc_mean": 0.9481,
+      "auc_std": 0.0016,
+      "n_samples": 160
+    },
+    "L07_P0": {
+      "layer": 7,
+      "position": "P0",
+      "auc_mean": 0.9395,
+      "auc_std": 0.0009,
+      "n_samples": 160
+    },
+    "L08_P0": {
+      "layer": 8,
+      "position": "P0",
+      "auc_mean": 0.956,
+      "auc_std": 0.0038,
+      "n_samples": 160
+    },
+    "L09_P0": {
+      "layer": 9,
+      "position": "P0",
+      "auc_mean": 0.9675,
+      "auc_std": 0.0004,
+      "n_samples": 160
+    },
+    "L10_P0": {
+      "layer": 10,
+      "position": "P0",
+      "auc_mean": 0.9697,
+      "auc_std": 0.0031,
+      "n_samples": 160
+    },
+    "L11_P0": {
+      "layer": 11,
+      "position": "P0",
+      "auc_mean": 0.9688,
+      "auc_std": 0.0048,
+      "n_samples": 160
+    },
+    "L12_P0": {
+      "layer": 12,
+      "position": "P0",
+      "auc_mean": 0.9906,
+      "auc_std": 0.0011,
+      "n_samples": 160
+    },
+    "L13_P0": {
+      "layer": 13,
+      "position": "P0",
+      "auc_mean": 0.9924,
+      "auc_std": 0.002,
+      "n_samples": 160
+    },
+    "L14_P0": {
+      "layer": 14,
+      "position": "P0",
+      "auc_mean": 0.9953,
+      "auc_std": 0.0009,
+      "n_samples": 160
+    },
+    "L15_P0": {
+      "layer": 15,
+      "position": "P0",
+      "auc_mean": 0.9966,
+      "auc_std": 0.0011,
+      "n_samples": 160
+    },
+    "L16_P0": {
+      "layer": 16,
+      "position": "P0",
+      "auc_mean": 0.9975,
+      "auc_std": 0.0017,
+      "n_samples": 160
+    },
+    "L17_P0": {
+      "layer": 17,
+      "position": "P0",
+      "auc_mean": 0.9974,
+      "auc_std": 0.0014,
+      "n_samples": 160
+    },
+    "L18_P0": {
+      "layer": 18,
+      "position": "P0",
+      "auc_mean": 0.9973,
+      "auc_std": 0.0012,
+      "n_samples": 160
+    },
+    "L19_P0": {
+      "layer": 19,
+      "position": "P0",
+      "auc_mean": 0.9978,
+      "auc_std": 0.0017,
+      "n_samples": 160
+    },
+    "L20_P0": {
+      "layer": 20,
+      "position": "P0",
+      "auc_mean": 0.998,
+      "auc_std": 0.0014,
+      "n_samples": 160
+    },
+    "L21_P0": {
+      "layer": 21,
+      "position": "P0",
+      "auc_mean": 0.9983,
+      "auc_std": 0.0011,
+      "n_samples": 160
+    },
+    "L22_P0": {
+      "layer": 22,
+      "position": "P0",
+      "auc_mean": 0.9982,
+      "auc_std": 0.001,
+      "n_samples": 160
+    },
+    "L23_P0": {
+      "layer": 23,
+      "position": "P0",
+      "auc_mean": 0.9979,
+      "auc_std": 0.0009,
+      "n_samples": 160
+    },
+    "L24_P0": {
+      "layer": 24,
+      "position": "P0",
+      "auc_mean": 0.9979,
+      "auc_std": 0.001,
+      "n_samples": 160
+    },
+    "L25_P0": {
+      "layer": 25,
+      "position": "P0",
+      "auc_mean": 0.9974,
+      "auc_std": 0.0013,
+      "n_samples": 160
+    },
+    "L26_P0": {
+      "layer": 26,
+      "position": "P0",
+      "auc_mean": 0.9972,
+      "auc_std": 0.0017,
+      "n_samples": 160
+    },
+    "L27_P0": {
+      "layer": 27,
+      "position": "P0",
+      "auc_mean": 0.9957,
+      "auc_std": 0.0035,
+      "n_samples": 160
+    },
+    "L28_P0": {
+      "layer": 28,
+      "position": "P0",
+      "auc_mean": 0.994,
+      "auc_std": 0.0055,
+      "n_samples": 160
+    },
+    "L29_P0": {
+      "layer": 29,
+      "position": "P0",
+      "auc_mean": 0.9938,
+      "auc_std": 0.0054,
+      "n_samples": 160
+    },
+    "L30_P0": {
+      "layer": 30,
+      "position": "P0",
+      "auc_mean": 0.9904,
+      "auc_std": 0.0068,
+      "n_samples": 160
+    },
+    "L31_P0": {
+      "layer": 31,
+      "position": "P0",
+      "auc_mean": 0.9856,
+      "auc_std": 0.0058,
+      "n_samples": 160
+    },
+    "L00_P2": {
+      "layer": 0,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L01_P2": {
+      "layer": 1,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L02_P2": {
+      "layer": 2,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L03_P2": {
+      "layer": 3,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L04_P2": {
+      "layer": 4,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L05_P2": {
+      "layer": 5,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L06_P2": {
+      "layer": 6,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L07_P2": {
+      "layer": 7,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L08_P2": {
+      "layer": 8,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L09_P2": {
+      "layer": 9,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L10_P2": {
+      "layer": 10,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L11_P2": {
+      "layer": 11,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L12_P2": {
+      "layer": 12,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L13_P2": {
+      "layer": 13,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L14_P2": {
+      "layer": 14,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L15_P2": {
+      "layer": 15,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L16_P2": {
+      "layer": 16,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L17_P2": {
+      "layer": 17,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L18_P2": {
+      "layer": 18,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L19_P2": {
+      "layer": 19,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L20_P2": {
+      "layer": 20,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L21_P2": {
+      "layer": 21,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L22_P2": {
+      "layer": 22,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L23_P2": {
+      "layer": 23,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L24_P2": {
+      "layer": 24,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L25_P2": {
+      "layer": 25,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L26_P2": {
+      "layer": 26,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L27_P2": {
+      "layer": 27,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L28_P2": {
+      "layer": 28,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L29_P2": {
+      "layer": 29,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L30_P2": {
+      "layer": 30,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    },
+    "L31_P2": {
+      "layer": 31,
+      "position": "P2",
+      "auc_mean": 0.5,
+      "auc_std": 0.0,
+      "n_samples": 160
+    }
+  }
+}
