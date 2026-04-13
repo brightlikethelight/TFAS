@@ -377,6 +377,18 @@ expose different biases, consistent with the view that bias
 susceptibility is not a universal ``System~1'' property but depends on
 what heuristics each model has internalized.  Probing confirms the mechanistic pattern: OLMo Instruct reaches AUC\,=\,0.998 at layer~21, while OLMo Think reaches AUC\,=\,0.993 at layer~28---the same direction of blurring observed in the Llama pair, with the standard model showing higher separability in 30 of 32 layers.
 
+\paragraph{Implicit conflict detection.}
+The De~Neys confidence paradigm \citep{deneys2012bias} predicts that
+conflict detection manifests as reduced confidence even when the
+heuristic response prevails.  Llama's first-token probability is 4.2
+percentage points lower on conflict items (0.751 vs.\ 0.793), and
+top-10 token entropy is 16\% higher (0.948 vs.\ 0.817).  The model
+exhibits reduced confidence on items where the heuristic cue conflicts
+with the normative answer, paralleling the human finding that conflict
+monitoring occurs even when the heuristic response prevails.  (R1-Distill
+always begins generation with \texttt{<think>}, making the first-token
+metric uninformative for reasoning models.)
+
 \subsection{Layer-Wise Probe Results}
 \label{sec:results_probes}
 
