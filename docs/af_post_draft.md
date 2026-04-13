@@ -120,19 +120,15 @@ Three independent architecture families, same pattern: behavioral improvement, r
 
 ### Natural frequency reversal
 
-Gigerenzer's (1995) ecological rationality thesis predicts that natural frequency formats ("3 out of 100") should reduce base rate neglect compared to probability formats ("3%") because natural frequencies preserve the nested-set structure humans evolved to process. This is a robust finding in human experiments.
+Gigerenzer's (1995) ecological rationality thesis predicts that natural frequency formats ("3 out of 100") should reduce base rate neglect compared to probability formats ("3%"). Robust finding in human experiments. We reformulated our base rate items in natural frequency format.
 
-We reformulated our base rate items in natural frequency format. The prediction: lower lure rates.
+**Llama: 100% lure rate** -- every item wrong, vs. 84% for probability format. Natural frequencies made Llama *worse*. **R1-Distill: 50% lure rate** (corrected from 40% after a scoring bug fix), up from 4% on the standard format. Reasoning distillation's resistance partially collapses when the problem is reframed in the format designed to *help* human reasoners.
 
-**Llama: 100% lure rate.** Every single natural frequency conflict item elicited the wrong answer, compared to 84% for the standard probability format. Natural frequencies made Llama *worse*, not better.
-
-**R1-Distill: 50% lure rate** (corrected from an earlier reported 40% after fixing a scoring pipeline bug). This is a striking result: R1-Distill goes from 4% lure rate on standard-format base rate items to 50% on the natural frequency versions. Reasoning distillation provides substantial resistance to the standard format, but that resistance partially collapses when the problem is reframed in a format designed to *help* human reasoners.
-
-The natural frequency format appears to strengthen the narrative framing (the concrete "3 out of 100 engineers are described as...") rather than activating frequency-based reasoning. The ecological rationality thesis does not transfer to systems without the relevant evolutionary history.
+The natural frequency format appears to strengthen narrative framing rather than activating frequency-based reasoning. The ecological rationality thesis does not transfer to systems without the relevant evolutionary history.
 
 ### OLMo loss aversion vulnerability
 
-When we tested loss aversion items (sunk cost framing), most models showed 0% lure rates. OLMo was the exception: **33% lure rate** on loss aversion items. Llama, R1-Distill, and Qwen all show floor effects on this category. The vulnerability is specific to OLMo's training data or architecture, demonstrating that different model families have different vulnerability profiles -- testing on a single architecture gives an incomplete picture of the failure surface.
+Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulnerability is OLMo-specific, demonstrating that different model families have different vulnerability profiles. Single-architecture testing misses these.
 
 ## 5. Limitations
 
