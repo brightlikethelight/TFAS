@@ -561,6 +561,18 @@ reduction; \citealp{huang2026cogbias}), our results suggest a practical
 strategy: steer standard models along directions that reasoning training
 reorganizes.
 
+\paragraph{Generation strategy dependence.}
+Multi-seed evaluation with sampled decoding (temperature 0.7) reveals that
+behavioral vulnerability profiles are generation-strategy-dependent.  Under
+sampling, Llama's overall lure rate remains stable (27.5\% $\pm$ 1.3pp across
+3 seeds), but the category profile shifts: framing rises from 0\% (greedy) to
+53\%, CRT from 0\% to 36\%, while conjunction drops from 55\% to 3\%.  This
+suggests that the ``immune'' categories are immune only under greedy decoding,
+and that our primary results should be interpreted as reflecting the model's
+maximum-probability behavior rather than its distributional behavior.
+Crucially, the probe results at \pzero{} are unaffected by generation strategy,
+as they measure the pre-decision representation before any tokens are generated.
+
 \paragraph{Safeguards.}
 We mitigate known probing pitfalls \citep{meloux2025dead,
 sanitychecks2026} via five controls: Hewitt--Liang selectivity $>$40pp,
