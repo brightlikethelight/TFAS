@@ -54,7 +54,7 @@
 
 **Supporting data.**
 - Cross-architecture replication: Llama-3.1-8B-Instruct (84% base rate lure), Qwen-3-8B NO_THINK (56%), OLMo-3-7B-Instruct (45.7%) -- all show high base rate and conjunction vulnerability.
-- OLMo replicates the core pattern: 14.9% overall lure rate, probe AUC peaking at 0.998 at L16-24, sunk cost immune (0%).
+- OLMo replicates the core pattern: 14.9% overall lure rate, probe AUC 0.996 [0.988, 1.000] at L24, sunk cost immune (0%).
 - Three model families: Meta (Llama), Alibaba (Qwen), AI2 (OLMo). Independent training pipelines.
 - Two comparison types: cross-training (Llama vs. R1-Distill), within-model (Qwen THINK vs. NO_THINK). Same story from both.
 
@@ -71,7 +71,7 @@
 - Behavioral gap: overall 27.3% vs. 2.4% lure rate. Base rate: 84% vs. 4%. Conjunction: 55% vs. 0%. Syllogism: 52% vs. 0%.
 - Lure susceptibility sign flip: +0.422 to -0.326 (total shift 0.748).
 - Peak layer shift: L16 (Llama) to L31 (R1-Distill). Reasoning training relocates peak processing-mode encoding from mid-network to near-final layers.
-- OLMo Instruct corroborates: AUC 0.998 at L16-24 with 14.9% lure rate. High probe separability + behavioral vulnerability = the Llama pattern replicates.
+- OLMo Instruct corroborates: AUC 0.996 [0.988, 1.000] at L24 with 14.9% lure rate. OLMo Think: 0.962 [0.934, 0.982] at L22. Non-overlapping CIs confirm the gap (0.034). High probe separability + behavioral vulnerability = the Llama pattern replicates.
 
 **Citations.** Efron & Tibshirani (1993), *An Introduction to the Bootstrap*. Cohen (1988) on interpreting effect sizes in context.
 
@@ -138,7 +138,7 @@
 
 ## Objection 10: "CogBias (Huang et al., 2026) already showed that cognitive biases are linearly separable in LLM activations and can be steered. What is new here?"
 
-**Response.** CogBias probed standard instruction-tuned models only and targeted bias-for-mitigation. We add five contributions that CogBias does not provide. (a) *Reasoning model comparison*: we show that linear separability of the S1/S2 boundary *decreases* under reasoning training (AUC 0.974 to 0.930, non-overlapping CIs), establishing that reasoning distillation compresses the representational distinction rather than amplifying it. CogBias has no reasoning-model comparison. (b) *Training-vs-inference dissociation*: Qwen THINK/NO_THINK identical probe AUC (0.971) with different behavior (21% vs. 7% lure rate) establishes that inference-time CoT and training-time distillation have mechanistically distinct effects. CogBias does not test this. (c) *Cross-category transfer matrix*: we show that base rate and conjunction fallacy share a representation (transfer AUC 0.993/0.998) while being orthogonal to immune categories (transfer AUC 0.378). CogBias does not test cross-category transfer. (d) *Continuous lure susceptibility*: the P0 score provides a graded measure (Llama +0.422, R1-Distill -0.326) rather than a binary classification. (e) *Cross-architecture replication* with OLMo (AUC 0.998, 14.9% lure rate), confirming the pattern generalizes beyond Meta/Alibaba model families.
+**Response.** CogBias probed standard instruction-tuned models only and targeted bias-for-mitigation. We add five contributions that CogBias does not provide. (a) *Reasoning model comparison*: we show that linear separability of the S1/S2 boundary *decreases* under reasoning training (AUC 0.974 to 0.930, non-overlapping CIs), establishing that reasoning distillation compresses the representational distinction rather than amplifying it. CogBias has no reasoning-model comparison. (b) *Training-vs-inference dissociation*: Qwen THINK/NO_THINK identical probe AUC (0.971) with different behavior (21% vs. 7% lure rate) establishes that inference-time CoT and training-time distillation have mechanistically distinct effects. CogBias does not test this. (c) *Cross-category transfer matrix*: we show that base rate and conjunction fallacy share a representation (transfer AUC 0.993/0.998) while being orthogonal to immune categories (transfer AUC 0.378). CogBias does not test cross-category transfer. (d) *Continuous lure susceptibility*: the P0 score provides a graded measure (Llama +0.422, R1-Distill -0.326) rather than a binary classification. (e) *Cross-architecture replication* with OLMo (Instruct AUC 0.996 [0.988, 1.000], Think AUC 0.962 [0.934, 0.982], 14.9% lure rate), confirming the pattern generalizes beyond Meta/Alibaba model families.
 
 **Supporting data.**
 - CogBias: probed Llama-family standard models. Achieved 26-32% bias reduction via steering. No reasoning model comparison. No cross-architecture replication.
@@ -147,7 +147,7 @@
   - Qwen dissociation: identical 0.971 AUC, different behavior (21% vs. 7%).
   - Transfer matrix: base_rate -> conjunction = 0.993, conjunction -> base_rate = 0.998. Vulnerable -> immune = 0.378.
   - Lure susceptibility sign flip: +0.422 to -0.326 (shift of 0.748).
-  - OLMo replication: AUC 0.998, 14.9% overall lure rate, sunk cost 0%. Third architecture.
+  - OLMo replication: AUC 0.996 [0.988, 1.000] (Instruct) -> 0.962 [0.934, 0.982] (Think), 14.9% overall lure rate, sunk cost 0%. Third architecture.
   - Natural frequency reversal: format-specific fragility not tested by CogBias.
 
 **Citations.** Huang et al. (2026), "CogBias: Mitigating Cognitive Biases in LLMs via Internal Representations." Coda-Forno et al. (2025), "Dual-process theory in LLMs" (who also found overlapping subspaces, but did not test reasoning models).

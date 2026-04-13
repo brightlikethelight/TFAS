@@ -557,7 +557,7 @@ Table~\ref{tab:cross_pred_full} reports cross-prediction AUC at all
 
 \paragraph{Llama-3.1-8B-Instruct.}
 Transfer AUC drops dramatically from within-category performance at
-all mid-to-late layers.  At the peak layer (L14), transfer AUC is
+all mid-to-late layers.  At the peak layer (L16), transfer AUC is
 0.378---\emph{below} chance (0.5), indicating that the probe's
 learned direction is \emph{anticorrelated} with the immune-category
 conflict/control distinction.  This anticorrelation is strong
@@ -640,7 +640,7 @@ findings from the available data:
   \item \textbf{Base rate $\leftrightarrow$ conjunction transfer is
   near-perfect} (AUC = 0.993 in both directions).  These two
   representativeness-heuristic categories share a processing-mode
-  direction that is nearly identical in the residual stream at L14.
+  direction that is nearly identical in the residual stream at L16.
 
   \item \textbf{CRT probes do not transfer to vulnerable categories}
   (AUC = 0.062, as reported in the main text).  This confirms that
@@ -1008,8 +1008,8 @@ models.
 \toprule
 \textbf{Model} & \textbf{Peak Layer} & \textbf{Peak AUC} & \textbf{Mean AUC} & \textbf{Min AUC} \\
 \midrule
-OLMo-3-Instruct & 21 & 0.998 & 0.969 & 0.861 \\
-OLMo-3-Think    & 28 & 0.993 & 0.946 & 0.841 \\
+OLMo-3-Instruct & 24 & 0.996 [0.988, 1.000] & 0.969 & 0.861 \\
+OLMo-3-Think    & 22 & 0.962 [0.934, 0.982] & 0.946 & 0.841 \\
 \midrule
 \multicolumn{5}{l}{Instruct higher at 30/32 layers; max gap 0.068 at L12; mean gap 0.023} \\
 \bottomrule
@@ -1018,11 +1018,11 @@ OLMo-3-Think    & 28 & 0.993 & 0.946 & 0.841 \\
 
 \noindent Key findings:
 \begin{itemize}[leftmargin=*,itemsep=2pt]
-  \item \textbf{OLMo-3-Instruct peaks at L21} (AUC = 0.998), similar
-  to Llama's peak at L14 (in the 60--70\% depth range of the network).
-  \item \textbf{OLMo-3-Think peaks later at L28} (AUC = 0.993),
-  consistent with the pattern that reasoning-tuned models shift peak
-  probe accuracy to deeper layers.
+  \item \textbf{OLMo-3-Instruct peaks at L24} (AUC = 0.996 [0.988, 1.000]),
+  similar to Llama's peak at L16 (in the 60--75\% depth range of the network).
+  \item \textbf{OLMo-3-Think peaks at L22} (AUC = 0.962 [0.934, 0.982]),
+  with bootstrap CIs non-overlapping with Instruct, confirming the gap
+  is statistically robust (0.034 AUC).
   \item The Instruct model has higher probe AUC at 30 of 32 layers,
   mirroring the Llama $>$ R1 pattern despite both OLMo models being
   behaviourally immune.
@@ -1068,14 +1068,14 @@ OLMo-3-Think    & 28 & 0.993 & 0.946 & 0.841 \\
 18 & 0.997 & 0.001 & 0.986 & 0.004 \\
 19 & 0.998 & 0.002 & 0.987 & 0.003 \\
 20 & 0.998 & 0.001 & 0.986 & 0.003 \\
-\textbf{21} & \textbf{0.998} & 0.001 & 0.985 & 0.002 \\
-22 & 0.998 & 0.001 & 0.991 & 0.002 \\
+21 & 0.998 & 0.001 & 0.985 & 0.002 \\
+\textbf{22} & 0.998 & 0.001 & \textbf{0.991} & 0.002 \\
 23 & 0.998 & 0.001 & 0.992 & 0.002 \\
-24 & 0.998 & 0.001 & 0.992 & 0.002 \\
+\textbf{24} & \textbf{0.998} & 0.001 & 0.992 & 0.002 \\
 25 & 0.997 & 0.001 & 0.991 & 0.002 \\
 26 & 0.997 & 0.002 & 0.992 & 0.002 \\
 27 & 0.996 & 0.004 & 0.992 & 0.003 \\
-\textbf{28} & 0.994 & 0.006 & \textbf{0.993} & 0.002 \\
+28 & 0.994 & 0.006 & 0.993 & 0.002 \\
 29 & 0.994 & 0.005 & 0.992 & 0.002 \\
 30 & 0.990 & 0.007 & 0.991 & 0.002 \\
 31 & 0.986 & 0.006 & 0.991 & 0.001 \\
