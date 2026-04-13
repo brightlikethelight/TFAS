@@ -318,12 +318,12 @@ responses on conflict items) across all models and categories.
 \midrule
 Base rate      & \textbf{84} & 4   & \textbf{56} & 4   & \textbf{46} & 0 \\
 Conjunction    & \textbf{55} & 0   & \textbf{95} & \textbf{55} & \textbf{50} & 0 \\
-Syllogism      & \textbf{52} & 0   & 0   & 0   & 0   & 0 \\
+Syllogism      & \textbf{52} & 0   & 0   & 0   & 0   & 4 \\
 \midrule
-CRT variants   & 0   & 0   & 0   & 0   & 3   & 0 \\
+CRT variants   & 0   & 3   & 0   & 0   & 3   & 3 \\
 Arithmetic     & 0   & 0   & 0   & 0   & 0   & 0 \\
 Framing        & 0   & 0   & 0   & 0   & 0   & 0 \\
-Anchoring      & 0   & 0   & 0   & 0   & 5   & 0 \\
+Anchoring      & 0   & \textbf{10} & \textbf{10} & 0 & 5 & 0 \\
 \midrule
 \textbf{Overall lure} & \textbf{27.3} & \textbf{2.4} & \textbf{21.0} & \textbf{7.0} & \textbf{14.9} & \textbf{0.9} \\
 \bottomrule
@@ -334,8 +334,9 @@ Four findings emerge.  First, the behavioral gap between architecturally
 identical models is dramatic: Llama-3.1-8B-Instruct produces heuristic
 lures at a 27.3\% rate; R1-Distill-Llama-8B reduces this to 2.4\%.
 Second, vulnerability is \emph{category-specific}: base rate neglect,
-conjunction fallacy, and syllogisms are susceptible, while CRT,
-arithmetic, framing, and anchoring are immune across all models.  Third,
+conjunction fallacy, and syllogisms are the primary susceptible categories,
+while CRT, arithmetic, framing, and anchoring are largely immune
+(with sporadic low-level lure rates $\leq$10\% in some models).  Third,
 Qwen~3-8B without thinking shows a distinct vulnerability
 profile---95\% conjunction lure rate but 0\% syllogism lure
 rate---suggesting different models encode different heuristic biases
@@ -456,8 +457,8 @@ conjunction, syllogism) and test it on the \emph{immune} categories
 (CRT, arithmetic, framing, anchoring).  If the probe captures a
 universal processing-mode signal, it should transfer; if it captures
 category-specific lure susceptibility, it should not.  At the peak layer
-(L16), the Llama probe achieves transfer AUC\,=\,0.378---below chance
-parity and far below the within-category AUC of 0.974.  The probe is
+(L14), the Llama probe achieves transfer AUC\,=\,0.378---below chance
+parity and far below the within-category AUC of 0.987.  The probe is
 specific to the categories where the model is actually vulnerable.  For
 R1-Distill, results are mixed: transfer AUC\,=\,0.878 at L4 (early,
 likely surface features) but 0.385 at L31 (late, consistent with
@@ -465,11 +466,12 @@ specificity).
 
 \paragraph{Transfer matrix.}
 Training probes on each vulnerable category and testing on all others
-(Llama, L16) reveals a structured pattern: base rate neglect,
-conjunction, and syllogism probes transfer well to each other
-(AUC\,$\geq$\,0.950), but CRT probes do not transfer to any vulnerable
-category (AUC\,=\,0.062).  This confirms a shared processing-mode
-direction across the three vulnerable categories that is absent in
+(Llama, L14) reveals a structured pattern: base rate and conjunction
+probes transfer near-perfectly to each other (AUC\,$>$\,0.99), while
+transfer to syllogism is weaker (0.59--0.63), and CRT probes transfer
+poorly to vulnerable categories (AUC\,=\,0.06--0.45).  This suggests a
+shared processing-mode direction for base rate and conjunction that is
+partially shared with syllogism but absent in
 immune categories.
 
 \paragraph{Lure susceptibility scores.}
@@ -486,9 +488,9 @@ away from it.
 \paragraph{Cross-model probe transfer.}
 Cross-model transfer further validates the signal: a probe trained on
 Llama's vulnerable categories achieves AUC\,=\,0.920 when tested on
-R1-Distill's activations at layer~23 (vs.\ within-model AUC of 0.987).
+R1-Distill's activations at layer~23 (vs.\ within-model AUC of 0.963).
 The reverse transfer---R1-Distill to Llama---achieves AUC\,=\,0.954 at
-layer~15 (vs.\ self AUC of 0.943).  The \sone{}/\stwo{} processing-mode
+layer~15 (vs.\ self AUC of 0.919).  The \sone{}/\stwo{} processing-mode
 direction is substantially shared across models that differ in reasoning
 training but share architecture and vocabulary, contrasting with
 \citet{huang2026cogbias}'s near-orthogonal finding on architecturally
