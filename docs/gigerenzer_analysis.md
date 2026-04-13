@@ -25,7 +25,7 @@ Sunk cost items (tested alongside) showed 0% lure rate for both models in both f
 
 **Llama-3.1-8B-Instruct**: 10/10 conflict items answered with the lure. 10/10 controls answered correctly. The model uniformly fails.
 
-**R1-Distill-Llama-8B**: 4/10 lure, 2/10 correct, 4/10 other (ambiguous/unparseable). The reasoning model shows a mixed pattern -- it no longer reliably reaches the correct answer, but it does not uniformly default to the lure either. The high "other" rate (40%) suggests the frequency format disrupts the model's reasoning chain without consistently redirecting it toward either the correct or lure answer.
+**R1-Distill-Llama-8B**: 5/10 lure, 5/10 correct, 0/10 other. With fixed scoring (corrected BPE artifact and truncation bugs), the reasoning model splits exactly 50/50 between lure and correct answers. Unlike the base Llama model which uniformly falls for the lure, R1-Distill's reasoning sometimes overcomes the representativeness heuristic -- but only half the time. Controls: 10/10 correct. The clean 50/50 split (zero "other") confirms that the model always reaches a definitive answer; the earlier 40% "other" rate was entirely a scoring artifact.
 
 ---
 
@@ -43,7 +43,7 @@ This matters for three reasons:
 
 2. **It demonstrates mechanistic divergence between LLM and human cognition.** Gigerenzer's frequency facilitation effect depends on an evolutionary argument about the computational architecture of the mind being adapted to frequency-based input. LLMs have no such evolutionary history -- their "ecological niche" is the training corpus, where probability format is far more common than frequency format.
 
-3. **It reveals fragility in reasoning training.** R1-Distill's leap from 4% to 40% means the reasoning distillation that nearly eliminated base rate neglect in probability format is highly sensitive to input framing. The learned strategy appears to be pattern-specific rather than principle-general.
+3. **It reveals fragility in reasoning training.** R1-Distill's leap from 4% to 50% means the reasoning distillation that nearly eliminated base rate neglect in probability format is highly sensitive to input framing. The learned strategy is partially format-dependent rather than principle-general.
 
 ---
 
@@ -61,13 +61,13 @@ Natural frequency prompts are longer and more syntactically complex: "Out of eve
 
 ### 3.3 Fragility of reasoning training
 
-R1-Distill's regression from 4% to 40% is the most striking result. This model nearly solved base rate neglect in probability format -- but that solution does not transfer to frequency format. This suggests the reasoning distillation did not teach the model a general Bayesian reasoning principle. Instead, it likely reinforced a format-specific strategy (e.g., "when you see a percentage and a personality description, apply Bayes' rule") that does not activate under different surface presentations.
+R1-Distill's regression from 4% to 50% is the most striking result. This model nearly solved base rate neglect in probability format -- but that solution transfers to frequency format only half the time. This suggests the reasoning distillation taught a partially format-dependent strategy: the model can sometimes invoke Bayesian reasoning on frequency-format items (5/10 correct), but the surface-level cues that reliably trigger this strategy in probability format ("the probability is 1%") are absent in frequency format ("10 out of 1000"), causing the strategy to fire inconsistently.
 
 This has direct implications for evaluating reasoning models: benchmark performance in one format may dramatically overestimate general reasoning capability.
 
-### 3.4 R1-Distill's "other" responses
+### 3.4 R1-Distill's clean 50/50 split
 
-40% of R1-Distill's responses on frequency-format items were classified as "other" (neither clearly correct nor clearly lure). This is unusual -- on probability-format items, the model almost always produces a parseable answer. The frequency format appears to confuse the reasoning chain itself, leading to hedging, circular reasoning, or off-topic responses. This is a different failure mode from straightforward lure susceptibility and may indicate that the model's chain-of-thought process cannot recover when its expected input pattern is disrupted.
+With corrected scoring, R1-Distill produces 0% "other" responses on frequency-format items -- every response clearly maps to either the lure or correct answer. The earlier 40% "other" rate was entirely a scoring artifact (BPE artifacts breaking substring matching). The real pattern is more informative: the model always reasons to a definitive conclusion, but the conclusion is correct only half the time. Examining the 5 lured items vs. the 5 correct items may reveal which item features (base rate ratio, description vividness, occupation rarity) tip the balance between the representativeness heuristic and Bayesian reasoning.
 
 ---
 
