@@ -381,7 +381,7 @@ architecture families.  Notably, OLMo Instruct reveals a
 items, where Llama showed 0\%.  Different training data and procedures
 expose different biases, consistent with the view that bias
 susceptibility is not a universal ``System~1'' property but depends on
-what heuristics each model has internalized.  Probing confirms the mechanistic pattern: OLMo Instruct reaches AUC\,=\,0.998 at layer~21, while OLMo Think reaches AUC\,=\,0.993 at layer~28---the same direction of blurring observed in the Llama pair, with the standard model showing higher separability in 30 of 32 layers.
+what heuristics each model has internalized.  Probing confirms the mechanistic pattern: OLMo Instruct reaches AUC\,=\,0.996 [0.988, 1.000] at layer~24, while OLMo Think reaches AUC\,=\,0.962 [0.934, 0.982] at layer~22---a statistically significant gap (non-overlapping 95\% CIs), the same direction of blurring observed in the Llama pair, with the standard model showing higher separability in 30 of 32 layers.
 
 \paragraph{Implicit conflict detection.}
 The De~Neys confidence paradigm \citep{deneys2012bias} predicts that
@@ -500,8 +500,8 @@ R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.52 & 0.410 \\
 Qwen~3-8B (no think)  & L34 & 0.971 & ---             & ---  & --- \\
 Qwen~3-8B (think)     & L34 & 0.971 & ---             & ---  & --- \\
 \midrule
-OLMo-3-7B-Instruct    & L21 & 0.998 & ---             & ---  & --- \\
-OLMo-3-7B-Think       & L28 & 0.993 & ---             & ---  & --- \\
+OLMo-3-7B-Instruct    & L24 & 0.996 & [0.988, 1.000]  & ---  & --- \\
+OLMo-3-7B-Think       & L22 & 0.962 & [0.934, 0.982]  & ---  & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -597,9 +597,9 @@ before chain-of-thought unfolds.
 The reasoning model shows \emph{less} distinct conflict encoding
 (AUC\,=\,0.930) yet dramatically better resolution (2.4\% lure rate)---a
 pattern confirmed both behaviorally and mechanistically in the OLMo
-family (14.9\% $\to$ 0.9\% lure rate; AUC 0.998 $\to$ 0.993, higher
-in 30/32 layers), establishing this as a general phenomenon across
-architectures.
+family (14.9\% $\to$ 0.9\% lure rate; AUC 0.996 $\to$ 0.962,
+non-overlapping 95\% CIs, higher in 30/32 layers), establishing this
+as a general phenomenon across architectures.
 If reasoning training simply added a ``System~2 module'' that overrides
 System~1, we would expect sharper separability.  Instead, the AUC drop
 suggests that reasoning distillation makes Type~2 processing
