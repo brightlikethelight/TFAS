@@ -81,12 +81,12 @@ This is a new finding that complicates any simple "reasoning training fixes prob
 
 The results:
 
-- **Llama**: 100% correct with natural frequency framing (vs. 16% correct with probability framing)
-- **R1-Distill**: 40% correct with natural frequency framing (vs. 96% correct with probability framing)
+- **Llama**: **100% lure rate** with natural frequency framing (vs. 84% lure with probability framing) — WORSE
+- **R1-Distill**: **40% lure rate** with natural frequency framing (vs. 4% lure with probability framing) — MUCH WORSE
 
-Llama's result replicates the Gigerenzer effect perfectly: natural frequency format eliminates the heuristic lure. But R1-Distill shows the opposite -- natural frequency framing actually *degrades* performance from 96% to 40%. The reasoning-trained model performs WORSE when given the ecologically rational format.
+This is the **opposite** of Gigerenzer's prediction. Natural frequency format makes BOTH models MORE susceptible to base rate neglect, not less. Llama goes from 84% to 100% lure (ceiling). R1-Distill goes from near-immunity (4%) to substantial vulnerability (40%) — a 10x increase.
 
-This reversal has a plausible mechanistic interpretation. R1-Distill's reasoning distillation was trained primarily on mathematical/probabilistic content expressed in standard notation. The model has learned robust deliberative processing for the percentage format it was trained on, but the natural frequency format falls outside the distribution of its reasoning training data. The frequency format may actually bypass the deliberative circuits that reasoning distillation installed, producing a novel vulnerability in a model that otherwise appears highly capable.
+This has a plausible mechanistic interpretation. LLMs were trained primarily on text where probabilities are expressed as percentages, not natural frequencies. The "ecological" format for LLMs is percentages (their training data distribution), not frequencies (the human ecological format). Natural frequency framing may actually disrupt the learned heuristics and reasoning patterns that handle probability-format problems, producing a novel vulnerability in both models. R1-Distill's reasoning distillation was trained on mathematical content in standard notation — the frequency format falls outside the distribution of its reasoning training, bypassing the deliberative circuits that reasoning distillation installed.
 
 The implication for safety is significant: reasoning training can create *format-specific* competence. A model that handles a problem class well in one notation may fail on the same problem in a different notation. Robustness evaluations must test across surface formats, not just problem types.
 
@@ -114,7 +114,7 @@ The convergence across two independent architectures and two types of comparison
 | Qwen 3-8B NO_THINK | 21% | 56% | 95% | 0% | -- | -- | -- | -- | -- | -- |
 | Qwen 3-8B THINK | 7% | 4% | 55% | -- | -- | -- | -- | -- | -- | -- |
 
-\* Llama 100% correct on natural frequency = 0% lure rate
+\* Llama 100% LURE on natural frequency (worse than 84% probability-format lure rate)
 \** R1-Distill 40% correct on natural frequency = 60% lure rate (REVERSAL)
 
 ### Probe AUC with bootstrap 95% CIs (vulnerable categories)
@@ -169,7 +169,7 @@ CIs for Llama and R1-Distill do not overlap (significant difference).
 4. **Cross-prediction resolves specificity confound** -- Llama probe transfer AUC 0.378 at L14. The probe detects processing mode, not task structure.
 5. **Shared bias representations** -- base_rate and conjunction transfer at 0.993. Common circuit for probabilistic estimation under uncertainty.
 6. **Lure susceptibility is graded** -- Llama +0.422 vs. R1-Distill -0.326. Continuous dimension, not binary switch.
-7. **Natural frequency reversal** -- Llama 100% correct vs. R1-Distill 40% correct on frequency-format base rate problems. Reasoning training creates format-specific competence.
+7. **Natural frequency reversal** -- Llama 100% LURE vs. R1-Distill 40% LURE on frequency-format base rate problems (both WORSE than probability format). LLMs' "ecological" format is percentages, not frequencies.
 8. **Sunk cost immunity** -- 0% lure rate for both Llama and R1-Distill. Vulnerability is specific to probabilistic estimation, not heuristic reasoning in general.
 
 ### Pending (data collected, analysis in progress)
@@ -191,7 +191,7 @@ The Gigerenzer (1995) natural frequency finding is the most provocative result i
 
 **What happened**: Base rate neglect items were reformulated from percentage format ("the probability is 3%") to natural frequency format ("3 out of every 100 people"). The Gigerenzer hypothesis predicts that natural frequencies should reduce base rate neglect because they align with the format in which frequency information was encountered ancestrally.
 
-**The Llama result confirms Gigerenzer**: Llama goes from 16% correct (probability format) to 100% correct (frequency format). The frequency format completely eliminates base rate neglect. This is consistent with the hypothesis that Llama's base rate errors arise from a processing shortcut triggered by the percentage format specifically, and the frequency format sidesteps that shortcut.
+**The Llama result REJECTS Gigerenzer**: Llama goes from 84% lure (probability format) to 100% lure (frequency format). The frequency format makes base rate neglect WORSE, not better. This suggests that LLMs' "ecological niche" is percentage-format text (dominant in training data), and frequency format is actually harder for them — the reverse of humans, whose ecological niche is concrete frequency experience.
 
 **The R1-Distill result contradicts it**: R1-Distill goes from 96% correct (probability format) to 40% correct (frequency format). The reasoning model, which had largely solved base rate neglect in standard format, becomes substantially worse when given the "easier" format.
 
