@@ -24,9 +24,8 @@ import argparse
 import hashlib
 import json
 import re
-import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import h5py
@@ -170,10 +169,7 @@ def run_extraction(
     n_heads = model.config.num_attention_heads
     n_kv_heads = getattr(model.config, "num_key_value_heads", n_heads)
 
-    if enable_thinking:
-        position_labels = ["P0", "P2", "T0", "Tend"]
-    else:
-        position_labels = ["P0", "P2"]
+    position_labels = ["P0", "P2", "T0", "Tend"] if enable_thinking else ["P0", "P2"]
     n_positions = len(position_labels)
 
     print(f"\n{'='*60}")
@@ -317,7 +313,7 @@ def run_extraction(
         meta.attrs["benchmark_path"] = args.benchmark
         bm_hash = hashlib.sha256(Path(args.benchmark).read_bytes()).hexdigest()
         meta.attrs["benchmark_sha256"] = bm_hash
-        meta.attrs["created_at"] = datetime.now(timezone.utc).isoformat()
+        meta.attrs["created_at"] = datetime.now(UTC).isoformat()
         meta.attrs["git_sha"] = "unknown"
         meta.attrs["seed"] = 0
         meta.attrs["config"] = json.dumps(
@@ -381,7 +377,7 @@ def run_extraction(
         mmeta.attrs["hidden_dim"] = hidden_dim
         mmeta.attrs["head_dim"] = hidden_dim // n_heads
         mmeta.attrs["dtype"] = "float16"
-        mmeta.attrs["extracted_at"] = datetime.now(timezone.utc).isoformat()
+        mmeta.attrs["extracted_at"] = datetime.now(UTC).isoformat()
         mmeta.attrs["is_reasoning_model"] = enable_thinking
         mmeta.attrs["enable_thinking"] = enable_thinking
 
@@ -425,7 +421,7 @@ def run_extraction(
         gen = mgrp.create_group("generations")
         gen.create_dataset(
             "full_text",
-            data=np.array(["".encode()[:8192]] * n_problems, dtype="S8192"),
+            data=np.array([b""[:8192]] * n_problems, dtype="S8192"),
         )
         gen.create_dataset(
             "thinking_text",

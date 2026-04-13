@@ -14,9 +14,6 @@ from __future__ import annotations
 
 import json
 import os
-import re
-import sys
-import time
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
@@ -129,8 +126,11 @@ def run_model(
             log(f"    {i+1}/{len(items)} done")
 
     del model, tok
-    import gc; gc.collect()
-    import torch; torch.cuda.empty_cache()
+    import gc
+
+    import torch
+    gc.collect()
+    torch.cuda.empty_cache()
     return results
 
 

@@ -87,6 +87,7 @@ select = [
 ]
 ignore = [
     "E501",  # line too long (handled by black)
+    "E741",  # ambiguous variable name — `l` used throughout as layer index
     "B008",  # do not perform function calls in argument defaults (Hydra)
     "F821",  # jaxtyping shape strings (e.g. Float[ndarray, "n d"]) look like undefined names to ruff
     "F722",  # jaxtyping multi-dim shape strings (e.g. Float[ndarray, "n d"]) trigger forward-annotation-syntax-error

@@ -26,7 +26,7 @@ import subprocess
 import sys
 import time
 import traceback
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -61,7 +61,7 @@ def log(msg: str) -> None:
     global _log_fh
     if _log_fh is None:
         LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-        _log_fh = open(LOG_FILE, "a")
+        _log_fh = open(LOG_FILE, "a")  # noqa: SIM115
     _log_fh.write(line + "\n")
     _log_fh.flush()
 
@@ -124,7 +124,7 @@ def save_state(state: dict[str, Any]) -> None:
 
 def mark_completed(state: dict[str, Any], job_name: str, elapsed: float) -> None:
     state["completed"][job_name] = {
-        "finished_at": datetime.now(timezone.utc).isoformat(),
+        "finished_at": datetime.now(UTC).isoformat(),
         "elapsed_seconds": round(elapsed, 1),
     }
     # Clear from failed if it was there from a prior run
@@ -134,7 +134,7 @@ def mark_completed(state: dict[str, Any], job_name: str, elapsed: float) -> None
 
 def mark_failed(state: dict[str, Any], job_name: str, error: str) -> None:
     state["failed"][job_name] = {
-        "failed_at": datetime.now(timezone.utc).isoformat(),
+        "failed_at": datetime.now(UTC).isoformat(),
         "error": error[:2000],
     }
     save_state(state)

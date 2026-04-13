@@ -23,7 +23,7 @@ from scipy import stats as sp_stats
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT / "src"))
 
-from s1s2.utils.stats import (
+from s1s2.utils.stats import (  # noqa: E402
     bh_fdr,
     bootstrap_ci,
     cohens_d,
@@ -300,7 +300,7 @@ def test_cross_prediction_specificity() -> dict[str, Any]:
     """
     llama_arr = np.array(list(LLAMA_CROSS.values()), dtype=np.float64)
     r1_arr = np.array(list(R1_CROSS.values()), dtype=np.float64)
-    llama_layers = np.array(list(LLAMA_CROSS.keys()))
+    np.array(list(LLAMA_CROSS.keys()))
 
     # One-sample t-test: is Llama cross-AUC < 0.5?
     t_stat_l, p_two_l = sp_stats.ttest_1samp(llama_arr, 0.5)
@@ -308,7 +308,7 @@ def test_cross_prediction_specificity() -> dict[str, Any]:
 
     # Same for R1
     t_stat_r, p_two_r = sp_stats.ttest_1samp(r1_arr, 0.5)
-    p_one_above_r = p_two_r / 2.0 if t_stat_r > 0 else 1.0 - p_two_r / 2.0
+    p_two_r / 2.0 if t_stat_r > 0 else 1.0 - p_two_r / 2.0
 
     # Bootstrap CI on mean cross-AUC
     llama_ci = bootstrap_ci(

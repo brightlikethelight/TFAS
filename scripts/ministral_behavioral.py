@@ -30,14 +30,11 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sys
 import time
 from pathlib import Path
-from typing import Optional
 
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
 
 # -- Ministral pair specs -------------------------------------------------
 PAIR = {
@@ -93,11 +90,11 @@ def validate_chat_template(tok: AutoTokenizer, model_name: str) -> None:
 def run_model(
     model_id: str,
     benchmark_path: str,
-    n_items: Optional[int],
+    n_items: int | None,
     max_new_tokens: int,
     cache_dir: str,
-    output_path: Optional[str],
-    hf_token: Optional[str],
+    output_path: str | None,
+    hf_token: str | None,
 ) -> dict:
     """Run behavioral validation for a single model."""
     print(f"\n{'='*60}")
@@ -208,7 +205,7 @@ def run_model(
     )
 
     # Per-category breakdown
-    categories = sorted(set(r["category"] for r in results))
+    categories = sorted({r["category"] for r in results})
     cat_stats = {}
     for cat in categories:
         cat_items = [r for r in results if r["category"] == cat]
@@ -248,7 +245,7 @@ def run_model(
         else:
             print(">>> CAUTION: lure rate < 30%")
 
-    print(f"\nPer-category:")
+    print("\nPer-category:")
     for cat, st in cat_stats.items():
         print(f"  {cat:16s}  {st['n_lured']}/{st['n_conflict']} lured "
               f"({st['lure_rate']:.0%})")
@@ -337,7 +334,7 @@ def main() -> None:
                   f"time={s['elapsed_s']:.0f}s")
 
         # Per-category delta
-        print(f"\nPer-category lure rate delta (Instruct - Reasoning):")
+        print("\nPer-category lure rate delta (Instruct - Reasoning):")
         cats_i = summaries["instruct"]["per_category"]
         cats_r = summaries["reasoning"]["per_category"]
         for cat in sorted(cats_i.keys()):

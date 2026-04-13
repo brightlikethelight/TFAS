@@ -17,7 +17,6 @@ The script saves everything to results/sae/llama31_goodfire_l19/.
 from __future__ import annotations
 
 import json
-import os
 import sys
 import time
 from dataclasses import asdict
@@ -109,12 +108,12 @@ def load_activations() -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]:
         conflict = f["/problems/conflict"][:].astype(bool)
         categories_raw = f["/problems/category"][:]
         categories = np.array(
-            [c.decode("utf-8") if isinstance(c, (bytes, bytearray)) else str(c)
+            [c.decode("utf-8") if isinstance(c, bytes | bytearray) else str(c)
              for c in categories_raw]
         )
         prompts_raw = f["/problems/prompt_text"][:]
         prompts = [
-            p.decode("utf-8") if isinstance(p, (bytes, bytearray)) else str(p)
+            p.decode("utf-8") if isinstance(p, bytes | bytearray) else str(p)
             for p in prompts_raw
         ]
 
@@ -130,7 +129,7 @@ def load_activations() -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]:
         # Find P0 position index
         labels = f[f"/models/{MODEL_KEY}/position_index/labels"][:]
         labels_str = [
-            lb.decode("utf-8") if isinstance(lb, (bytes, bytearray)) else str(lb)
+            lb.decode("utf-8") if isinstance(lb, bytes | bytearray) else str(lb)
             for lb in labels
         ]
         if "P0" not in labels_str:
@@ -139,7 +138,7 @@ def load_activations() -> tuple[np.ndarray, np.ndarray, np.ndarray, list[str]]:
         p0_activations = resid[:, p0_idx, :].astype(np.float32)
 
     log.info("Loaded %d problems, hidden_dim=%d", p0_activations.shape[0], p0_activations.shape[1])
-    log.info("Categories: %s", dict(zip(*np.unique(categories, return_counts=True))))
+    log.info("Categories: %s", dict(zip(*np.unique(categories, return_counts=True), strict=False)))
     log.info("Conflict items: %d, Control items: %d", conflict.sum(), (~conflict).sum())
 
     return p0_activations, conflict, categories, prompts
@@ -161,8 +160,9 @@ def load_goodfire_sae():
 
     # Strategy 1: Use the project's _SAELensHandle wrapper directly
     try:
-        from s1s2.sae.loaders import _SAELensHandle
         import sae_lens
+
+        from s1s2.sae.loaders import _SAELensHandle
 
         log.info("Attempting sae_lens.SAE.from_pretrained(release=%s, sae_id=%s)", SAE_RELEASE, SAE_ID)
         sae_raw = sae_lens.SAE.from_pretrained(
@@ -441,7 +441,7 @@ def filter_and_encode(
 
     activations_filtered = activations[mask]
     conflict_filtered = conflict[mask]
-    prompts_filtered = [p for p, m in zip(prompts, mask) if m]
+    prompts_filtered = [p for p, m in zip(prompts, mask, strict=False) if m]
     cats_filtered = categories[mask]
 
     for cat in VULNERABLE_CATEGORIES:
@@ -495,7 +495,7 @@ def run_differential(
     """
     import pandas as pd
 
-    _banner("Differential activation analysis (BH-FDR q=%.2f)" % FDR_Q)
+    _banner(f"Differential activation analysis (BH-FDR q={FDR_Q:.2f})")
 
     try:
         from s1s2.sae.differential import differential_activation
@@ -610,7 +610,6 @@ def run_falsification(
 
     Returns (list of FalsificationResult dicts, n_surviving).
     """
-    import pandas as pd
 
     _banner(f"Ma et al. falsification (cheap mode, top {TOP_K_FALSIFY} candidates)")
 
@@ -649,7 +648,7 @@ def run_falsification(
         result_dicts = []
         n_spurious = 0
         mean_residual = activations.mean(axis=0)
-        rng_base = np.random.default_rng(42)
+        np.random.default_rng(42)
 
         for fid in candidates:
             col = feature_activations[:, fid]
@@ -658,7 +657,7 @@ def run_falsification(
 
             # Build trigger centroid from top-activating problems
             top_prob_idx = np.argsort(-col)[:10]
-            top_texts = [prompts[int(i)] for i in top_prob_idx]
+            [prompts[int(i)] for i in top_prob_idx]
             # Collect candidate trigger tokens
             token_scores: dict[str, float] = {}
             stoplist = {
@@ -667,7 +666,7 @@ def run_falsification(
                 "with", "as", "be", "has", "have", "had", "but", "not", "if",
                 ",", ".", "?", "!", ":", ";",
             }
-            for idx_i, p_idx in enumerate(top_prob_idx):
+            for _idx_i, p_idx in enumerate(top_prob_idx):
                 toks = prompts[int(p_idx)].split()
                 w = float(col[int(p_idx)])
                 for t in toks:
@@ -733,7 +732,6 @@ def run_falsification(
 
 def make_volcano(diff_df, falsification_results: list[dict], out_dir: Path) -> None:
     """Generate volcano plot with falsification overlay."""
-    import pandas as pd
 
     _banner("Generating volcano plot")
 
@@ -814,7 +812,6 @@ def save_results(
     elapsed: float,
 ) -> None:
     """Save all results to the output directory."""
-    import pandas as pd
 
     _banner(f"Saving results to {out_dir}")
     out_dir.mkdir(parents=True, exist_ok=True)

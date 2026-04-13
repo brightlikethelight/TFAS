@@ -24,7 +24,7 @@ import re
 import sys
 import time
 import traceback
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -36,14 +36,14 @@ if str(_SRC) not in sys.path:
 
 os.environ.setdefault("KMP_DUPLICATE_LIB_OK", "TRUE")
 
-import h5py
-import numpy as np
-import torch
-from sklearn.linear_model import LogisticRegression
-from sklearn.metrics import roc_auc_score
-from sklearn.model_selection import StratifiedKFold
-from sklearn.preprocessing import StandardScaler
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import h5py  # noqa: E402
+import numpy as np  # noqa: E402
+import torch  # noqa: E402
+from sklearn.linear_model import LogisticRegression  # noqa: E402
+from sklearn.metrics import roc_auc_score  # noqa: E402
+from sklearn.model_selection import StratifiedKFold  # noqa: E402
+from sklearn.preprocessing import StandardScaler  # noqa: E402
+from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: E402
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -181,7 +181,7 @@ def run_behavioral(
     model: AutoModelForCausalLM,
 ) -> list[dict]:
     """Run behavioral validation on all benchmark items. Returns per-item results."""
-    hf_id = model_cfg["hf_id"]
+    model_cfg["hf_id"]
     max_new_tokens = model_cfg["max_new_tokens"]
     think_tags = model_cfg["think_tags"]
     open_tag = think_tags[0] if think_tags else "<think>"
@@ -260,8 +260,8 @@ def run_behavioral(
     log(f"    Time: {elapsed_total:.0f}s")
 
     # Per-category breakdown
-    categories = sorted(set(r["category"] for r in results))
-    log(f"\n  Per-category lure rates:")
+    categories = sorted({r["category"] for r in results})
+    log("\n  Per-category lure rates:")
     for cat in categories:
         cat_conflict = [r for r in results if r["category"] == cat and r["conflict"]]
         cat_lured = sum(1 for r in cat_conflict if r["verdict"] == "lure")
@@ -408,7 +408,7 @@ def run_extraction(
         meta.attrs["benchmark_path"] = str(BENCHMARK_PATH)
         bm_hash = hashlib.sha256(BENCHMARK_PATH.read_bytes()).hexdigest()
         meta.attrs["benchmark_sha256"] = bm_hash
-        meta.attrs["created_at"] = datetime.now(timezone.utc).isoformat()
+        meta.attrs["created_at"] = datetime.now(UTC).isoformat()
         meta.attrs["git_sha"] = "unknown"
         meta.attrs["seed"] = 0
         meta.attrs["config"] = json.dumps(
@@ -472,7 +472,7 @@ def run_extraction(
         mmeta.attrs["hidden_dim"] = hidden_dim
         mmeta.attrs["head_dim"] = hidden_dim // n_heads
         mmeta.attrs["dtype"] = "float16"
-        mmeta.attrs["extracted_at"] = datetime.now(timezone.utc).isoformat()
+        mmeta.attrs["extracted_at"] = datetime.now(UTC).isoformat()
         mmeta.attrs["is_reasoning_model"] = is_reasoning
 
         # /models/{key}/residual
@@ -515,7 +515,7 @@ def run_extraction(
         gen = mgrp.create_group("generations")
         gen.create_dataset(
             "full_text",
-            data=np.array(["".encode()[:8192]] * n_problems, dtype="S8192"),
+            data=np.array([b""[:8192]] * n_problems, dtype="S8192"),
         )
         gen.create_dataset(
             "thinking_text",
@@ -571,7 +571,7 @@ def run_probes_on_h5(
 
     # Target: conflict (1) vs control (0) restricted to vulnerable categories
     y_full = conflict[vulnerable_mask].astype(np.int8)
-    stratify_cats = categories[vulnerable_mask]
+    categories[vulnerable_mask]
 
     n_vuln = vulnerable_mask.sum()
     n_pos = int(y_full.sum())
@@ -683,11 +683,11 @@ def cross_model_comparison(
         instruct_layers = {}
         think_layers = {}
 
-        for key, val in instruct_probes.get("layers", {}).items():
+        for _key, val in instruct_probes.get("layers", {}).items():
             if val["position"] == position:
                 instruct_layers[val["layer"]] = val["auc_mean"]
 
-        for key, val in think_probes.get("layers", {}).items():
+        for _key, val in think_probes.get("layers", {}).items():
             if val["position"] == position:
                 think_layers[val["layer"]] = val["auc_mean"]
 
@@ -781,7 +781,7 @@ def process_one_model(
         log(f"  Chat template OK. Sample prefix: {test_text[:100]}...")
     except Exception as e:
         log(f"  WARNING: Chat template failed: {e}")
-        log(f"  Will attempt to continue anyway")
+        log("  Will attempt to continue anyway")
 
     # Check for think tokens in tokenizer (OLMo-3-7B-Think)
     if model_cfg["think_tags"]:
@@ -791,7 +791,7 @@ def process_one_model(
         log(f"  Think tokens: '{open_tag}' -> {open_ids}, '{close_tag}' -> {close_ids}")
 
     # --- Stage 1: Behavioral validation ---
-    log(f"\n  --- Stage 1: Behavioral Validation ---")
+    log("\n  --- Stage 1: Behavioral Validation ---")
     behavioral_results = run_behavioral(model_key, model_cfg, items, tokenizer, model)
 
     RESULTS_BEHAVIORAL_DIR.mkdir(parents=True, exist_ok=True)
@@ -804,7 +804,7 @@ def process_one_model(
     log(f"  Behavioral saved: {behavioral_path}")
 
     # --- Stage 2: Activation extraction ---
-    log(f"\n  --- Stage 2: Activation Extraction ---")
+    log("\n  --- Stage 2: Activation Extraction ---")
     run_extraction(model_key, model_cfg, items, tokenizer, model, h5_path)
 
     # --- Free GPU memory before probing ---
@@ -817,7 +817,7 @@ def process_one_model(
     log(f"  GPU memory freed. VRAM after: {torch.cuda.memory_allocated() / 1e9:.1f} GB")
 
     # --- Stage 3: Probing ---
-    log(f"\n  --- Stage 3: Probing (vulnerable categories) ---")
+    log("\n  --- Stage 3: Probing (vulnerable categories) ---")
     probe_results = run_probes_on_h5(model_key, h5_path, items)
 
     RESULTS_PROBES_DIR.mkdir(parents=True, exist_ok=True)
@@ -833,7 +833,7 @@ def main() -> int:
 
     # Open log file
     LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
-    _log_fh = open(LOG_PATH, "w")
+    _log_fh = open(LOG_PATH, "w")  # noqa: SIM115
 
     log("=" * 70)
     log("OLMo-3-7B FULL PIPELINE")
@@ -912,7 +912,7 @@ def main() -> int:
                 f"/{pos_data['n_layers_total']} layers"
             )
             if pos_data["all_positive"]:
-                log(f"    All deltas positive: YES (instruct always more separable)")
+                log("    All deltas positive: YES (instruct always more separable)")
             else:
                 log(
                     f"    Think higher at {pos_data['n_layers_think_higher']}"
@@ -925,7 +925,7 @@ def main() -> int:
 
     # --- Behavioral comparison ---
     if all_behavioral.get("instruct") and all_behavioral.get("think"):
-        log(f"\n  BEHAVIORAL COMPARISON:")
+        log("\n  BEHAVIORAL COMPARISON:")
         for label, results in [("Instruct", all_behavioral["instruct"]), ("Think", all_behavioral["think"])]:
             n_conflict = sum(1 for r in results if r["conflict"])
             n_lured = sum(1 for r in results if r["conflict"] and r["verdict"] == "lure")
@@ -933,7 +933,7 @@ def main() -> int:
             log(f"    {label:10s}: {n_lured}/{n_conflict} lured ({rate:.1%})")
 
         # Per vulnerable category
-        log(f"\n  Per vulnerable category lure rates:")
+        log("\n  Per vulnerable category lure rates:")
         for cat in sorted(VULNERABLE_CATEGORIES):
             instruct_conflict = [r for r in all_behavioral["instruct"] if r["category"] == cat and r["conflict"]]
             think_conflict = [r for r in all_behavioral["think"] if r["category"] == cat and r["conflict"]]
@@ -952,12 +952,12 @@ def main() -> int:
     log(f"Finished: {datetime.now().isoformat()}")
     log(f"{'='*70}")
 
-    log(f"\nOutput files:")
+    log("\nOutput files:")
     for model_key in MODELS:
         log(f"  Behavioral: results/behavioral/olmo3_{model_key}_ALL.json")
         log(f"  Activations: data/activations/olmo3_{model_key}.h5")
         log(f"  Probes: results/probes/olmo3_{model_key}_vulnerable.json")
-    log(f"  Comparison: results/probes/olmo3_instruct_vs_think_comparison.json")
+    log("  Comparison: results/probes/olmo3_instruct_vs_think_comparison.json")
     log(f"  Log: {LOG_PATH}")
 
     _log_fh.close()

@@ -36,15 +36,13 @@ import json
 import os
 import re
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 import h5py
 import numpy as np
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
 
 # -- OLMo-3-7B pair specs ---------------------------------------------------
 PAIR = {
@@ -117,9 +115,9 @@ def extract_model(
     output_path: str,
     max_new_tokens: int,
     cache_dir: str,
-    n_items: Optional[int],
-    layers_str: Optional[str],
-    hf_token: Optional[str],
+    n_items: int | None,
+    layers_str: str | None,
+    hf_token: str | None,
 ) -> dict:
     """Extract activations from a single OLMo model."""
     print(f"\n{'='*60}")
@@ -310,7 +308,7 @@ def extract_model(
         meta.attrs["benchmark_path"] = benchmark_path
         bm_hash = hashlib.sha256(Path(benchmark_path).read_bytes()).hexdigest()
         meta.attrs["benchmark_sha256"] = bm_hash
-        meta.attrs["created_at"] = datetime.now(timezone.utc).isoformat()
+        meta.attrs["created_at"] = datetime.now(UTC).isoformat()
         meta.attrs["git_sha"] = "unknown"
         meta.attrs["seed"] = 0
         meta.attrs["config"] = json.dumps({
@@ -377,7 +375,7 @@ def extract_model(
         mmeta.attrs["hidden_dim"] = hidden_dim
         mmeta.attrs["head_dim"] = hidden_dim // n_heads
         mmeta.attrs["dtype"] = "float16"
-        mmeta.attrs["extracted_at"] = datetime.now(timezone.utc).isoformat()
+        mmeta.attrs["extracted_at"] = datetime.now(UTC).isoformat()
         mmeta.attrs["is_reasoning_model"] = is_reasoning
 
         # Residual streams
@@ -426,7 +424,7 @@ def extract_model(
         gen = mgrp.create_group("generations")
         gen.create_dataset(
             "full_text",
-            data=np.array(["".encode()[:8192]] * n_problems, dtype="S8192"),
+            data=np.array([b""[:8192]] * n_problems, dtype="S8192"),
         )
         gen.create_dataset(
             "thinking_text",

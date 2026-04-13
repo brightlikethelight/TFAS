@@ -438,7 +438,7 @@ def as_python(obj: Any) -> Any:
         return [as_python(x) for x in obj.tolist()]
     if isinstance(obj, dict):
         return {str(k): as_python(v) for k, v in obj.items()}
-    if isinstance(obj, (list, tuple)):
+    if isinstance(obj, list | tuple):
         return [as_python(x) for x in obj]
     if isinstance(obj, Path):
         return str(obj)

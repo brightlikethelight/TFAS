@@ -13,14 +13,12 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import shlex
 import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Any
-
 
 # ---------------------------------------------------------------------------
 # Constants
@@ -84,11 +82,7 @@ def parse_ssh_cmd(ssh_cmd: str) -> tuple[list[str], str, list[str]]:
 
 def ssh_exec(ssh_args: list[str], cmd: str, timeout: int = 30) -> str | None:
     """Execute a command on the pod via SSH. Returns stdout or None on failure."""
-    full_cmd = ssh_args + [
-        "-o", "ConnectTimeout=10",
-        "-o", "StrictHostKeyChecking=no",
-        cmd,
-    ]
+    full_cmd = [*ssh_args, "-o", "ConnectTimeout=10", "-o", "StrictHostKeyChecking=no", cmd]
     try:
         result = subprocess.run(
             full_cmd,
@@ -226,7 +220,7 @@ def print_pipeline_status(state: dict[str, Any]) -> None:
 
     n_done = 0
     n_fail = 0
-    for name, desc in all_jobs:
+    for name, _desc in all_jobs:
         if name in completed:
             info = completed[name]
             elapsed = info.get("elapsed_seconds", "?")
@@ -293,12 +287,12 @@ def download_results(
             recursive=True,
         )
         if ok:
-            print(f"    OK")
+            print("    OK")
         else:
-            print(f"    FAILED")
+            print("    FAILED")
 
     # Also grab the pipeline state and log
-    print(f"  Downloading pipeline state and log...")
+    print("  Downloading pipeline state and log...")
     state_local = PROJECT_ROOT / "results" / "gpu_pipeline_state.json"
     state_local.parent.mkdir(parents=True, exist_ok=True)
     scp_download(user_host, scp_opts, STATE_FILE, str(state_local), recursive=False)
@@ -381,7 +375,7 @@ def main() -> None:
         print("  No activation files found")
 
     # Log tail
-    print_section("Pipeline Log (last %d lines)" % args.log_lines)
+    print_section(f"Pipeline Log (last {args.log_lines} lines)")
     log_tail = get_log_tail(ssh_args, args.log_lines)
     if log_tail:
         for line in log_tail.strip().split("\n"):
