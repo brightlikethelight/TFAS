@@ -1,5 +1,6 @@
 % ==============================================================================
-% ICML 2026 MechInterp Workshop Paper (4 pages + references)
+% ICML 2026 Workshop on Compositional Learning: Safety, Interpretability,
+% and Agents — 8-page submission
 % Self-contained file — does not use \input
 % ==============================================================================
 
@@ -114,6 +115,16 @@ rather than universal \citep{schwartz2025clinical}.  A growing literature
 documents these parallels \citep{xie2025cogsci, codaforno2025dual,
 ziabari2025reasoning}, and \citet{huang2026cogbias} showed that linear
 probes can detect and steer cognitive biases via internal representations.
+
+Deliberation-intensive reasoning is inherently \textbf{compositional}:
+it involves sequentially combining sub-steps---conflict detection,
+hypothesis generation, normative evaluation, response
+selection---in a structured inference pipeline \citep{evans2013dual}.
+A model that has internalized this compositional pipeline into its
+default forward pass should show \emph{reduced} representational
+separation between deliberation and heuristic modes, because
+deliberation has become the default computation rather than a
+separately triggered pathway.  We test this prediction directly.
 
 Yet behavior alone cannot distinguish genuine processing-mode differences
 from surface mimicry---chain-of-thought traces are often unfaithful,
@@ -362,7 +373,7 @@ bias types but fails to overcome deeply encoded heuristics for others.
 To test generality, we evaluate OLMo-3-7B-Instruct and
 OLMo-3-7B-Think \citep{olmo3}, which share the same base but differ in
 reasoning training (analogous to the Llama pair).  OLMo Instruct
-reproduces the core vulnerability pattern: 45.7\% base rate and 50.0\%
+reproduces the core vulnerability pattern: 46\% base rate and 50\%
 conjunction lure rates, with an overall rate of 14.9\%.  OLMo Think
 reduces this to 0.9\%---near-complete elimination, even more effective
 than R1-Distill (2.4\%).  The pattern replicates across two independent
@@ -381,28 +392,19 @@ conflict/control classification on the three vulnerable categories.
 
 \begin{figure}[t]
 \centering
-% \includegraphics[width=\linewidth]{figures/probe_layer_curves.pdf}
-\fbox{\parbox{0.95\linewidth}{\centering\vspace{2.2cm}
-  \textbf{Figure 1: Layer-wise probe AUC (vulnerable categories)}\\[4pt]
-  \small X-axis: layer index (0--35). \quad Y-axis: ROC-AUC.\\[2pt]
-  \textcolor{blue}{Blue}: Llama-3.1-8B-Instruct (peak AUC = 0.974 at L16).\\
-  \textcolor{red}{Red}: R1-Distill-Llama-8B (peak AUC = 0.930 at L31).\\
-  \textcolor{orange}{Orange}: Qwen~3-8B no-think (peak AUC = 0.971 at L34).\\
-  \textcolor{orange}{Orange dashed}: Qwen~3-8B think (peak AUC = 0.971 at L34).\\
-  Gray dashed: Hewitt--Liang control task ceiling.\\[2pt]
-  Qwen think and no-think curves overlap exactly.\\
-  Llama peaks at mid-layers; Qwen peaks later (L34).
-\vspace{2.2cm}}}
+\includegraphics[width=\linewidth]{figures/fig1_probe_auc_curves.pdf}
 \caption{Layer-wise probe ROC-AUC for classifying conflict vs.\
   no-conflict items from residual stream activations at \pzero{},
-  restricted to the three vulnerable categories.  Llama-3.1-8B-Instruct
-  (blue) peaks at AUC\,=\,0.974 [0.952, 0.992] at L16;
-  R1-Distill-Llama-8B (red) peaks at AUC\,=\,0.930 [0.894, 0.960] at
-  L31---non-overlapping CIs confirm statistical significance.  Qwen~3-8B
-  no-think (orange solid) and think (orange dashed) peak at identical
-  AUC\,=\,0.971 at L34---the thinking toggle does not change
-  pre-generation representations.
-  Dashed gray line: Hewitt--Liang control task ceiling.}
+  restricted to the three vulnerable categories.
+  X-axis: layer index (0--31 for Llama/R1-Distill; 0--35 for Qwen~3-8B).
+  \textcolor{blue}{Blue}: Llama-3.1-8B-Instruct peaks at
+  AUC\,=\,0.974 [0.952, 0.992] at L16;
+  \textcolor{red}{red}: R1-Distill-Llama-8B peaks at
+  AUC\,=\,0.930 [0.894, 0.960] at L31---non-overlapping CIs confirm
+  statistical significance.  \textcolor{orange}{Orange}: Qwen~3-8B
+  no-think and think (dashed) peak at identical AUC\,=\,0.971 at
+  L34---the thinking toggle does not change pre-generation
+  representations.  Gray dashed: Hewitt--Liang control task ceiling.}
 \label{fig:probe_curves}
 \end{figure}
 
@@ -526,10 +528,60 @@ about separability of conflict/control conditions but about the
 leans toward the lure before generation begins; the reasoning model leans
 away from it.
 
+\subsection{Attention Analysis}
+\label{sec:results_attention}
+
+Head-level attention entropy analysis (Mann-Whitney~U, BH-FDR $q < 0.05$,
+effect size $|r_{rb}| \geq 0.3$) reveals a striking reorganization under
+reasoning training.  \textbf{Llama-3.1-8B-Instruct} has \textbf{30
+\stwo{}-specialized heads} (2.9\% of 1024 heads)---heads with significantly
+higher normalized entropy on conflict vs.\ control items, concentrated in
+layers~7--13 (peak gap $\Delta_H = -0.0156$ at layer~7).
+\textbf{R1-Distill-Llama-8B} has \textbf{57 \stwo{}-specialized heads}
+(5.6\%)---nearly twice as many (BH-FDR corrected)---with the peak gap
+shifting deeper to layer~11 ($\Delta_H = -0.0167$).  KV-group analysis
+corroborates: R1-Distill has 24 KV-group-specialized heads (9.4\%) vs.\
+Llama's 13 (5.1\%).
+
+\begin{table}[t]
+\centering
+\caption{Attention head analysis. \stwo{}-specialized: $q < 0.05$ (BH-FDR)
+  AND $|r_{rb}| \geq 0.3$ AND conflict entropy higher.
+  Peak gap layer: layer with maximum mean entropy difference
+  $|\bar{H}_{\mathrm{conflict}} - \bar{H}_{\mathrm{control}}|$.}
+\label{tab:attention}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{Sig.\ heads} & \textbf{\stwo{}-spec.} & \textbf{KV-spec.} & \textbf{Peak layer} \\
+\midrule
+Llama-3.1-8B   & 473/1024 (46\%) & 30 (2.9\%) & 13 (5.1\%) & L7 ($\Delta\!=\!-0.016$) \\
+R1-Distill-8B  & 515/1024 (50\%) & \textbf{57 (5.6\%)} & 24 (9.4\%) & L11 ($\Delta\!=\!-0.017$) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This near-doubling of \stwo{}-specialized heads is directionally consistent
+with R1-Distill's behavioral improvement yet \emph{not} with a sharpening
+interpretation---more specialized heads coexist with \emph{lower} probe
+separability.  We interpret this as complementary evidence for
+\textbf{compositional internalization}: reasoning training distributes
+conflict-detection across more attention heads (increasing redundancy),
+while the resulting representation is less linearly decodable because the
+conflict signal is spread across more dimensions rather than concentrated
+in a single dominant direction.
+
 \subsection{SAE Feature Analysis}
 \label{sec:results_sae}
 
-Sparse autoencoder analysis of Llama's layer 19 residual stream (Goodfire SAE, 65,536 features) identified 41 features with statistically significant differential activation between conflict and control items (BH-FDR $q < 0.05$). All 41 features survived Ma et al.\ falsification testing \citep{ma2026falsification}: injecting top-activating tokens into random text did not reproduce the activation pattern. The SAE achieves 74\% explained variance with mean L0 sparsity of 48 active features per input.
+Sparse autoencoder analysis of Llama's layer~19 residual stream (Llama Scope
+SAE, $\sim$65,000 features) identified 41 features with statistically
+significant differential activation between conflict and control items
+(BH-FDR $q < 0.05$). All 41 features survived Ma et al.\ falsification
+testing \citep{ma2026falsification}: injecting top-activating tokens into
+random text did not reproduce the activation pattern. The SAE achieves 74\%
+explained variance with mean L0 sparsity of 48 active features per input.
 
 % ============================================================
 % 5. Discussion
