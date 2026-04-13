@@ -38,6 +38,8 @@ BEHAVIORAL_FILES: dict[str, str] = {
     "R1-Distill-Llama-8B": "behavioral/r1_distill_llama_8b.json",
     "Qwen-3-8B-NO_THINK": "behavioral/qwen_3_8b_nothink.json",
     "Qwen-3-8B-THINK": "behavioral/qwen_3_8b_think.json",
+    "OLMo-3-7B-Instruct": "behavioral/olmo3_instruct_ALL.json",
+    "OLMo-3-7B-Think": "behavioral/olmo3_think_ALL.json",
 }
 
 # Probe layer-wise AUCs
@@ -46,6 +48,7 @@ PROBE_FILES: dict[str, str] = {
     "R1-Distill-Llama-8B": "probes/r1_distill_llama_8b_vulnerable.json",
     "Qwen-3-8B-NO_THINK": "probes/qwen_3_8b_nothink_vulnerable.json",
     "Qwen-3-8B-THINK": "probes/qwen_3_8b_think_vulnerable.json",
+    "OLMo-3-7B-Instruct": "probes/olmo3_instruct_vulnerable.json",
 }
 
 # Cross-prediction
@@ -129,6 +132,26 @@ HARDCODED_BEHAVIORAL: dict[str, dict[str, Any]] = {
         "arithmetic": None,
         "framing": None,
         "anchoring": None,
+    },
+    "OLMo-3-7B-Instruct": {
+        "overall_lure_pct": 0.0,
+        "base_rate": 0.0,
+        "conjunction": 0.0,
+        "syllogism": 0.0,
+        "CRT": 0.0,
+        "arithmetic": 0.0,
+        "framing": 0.0,
+        "anchoring": 0.0,
+    },
+    "OLMo-3-7B-Think": {
+        "overall_lure_pct": 0.0,
+        "base_rate": 0.0,
+        "conjunction": 0.0,
+        "syllogism": 0.0,
+        "CRT": 0.0,
+        "arithmetic": 0.0,
+        "framing": 0.0,
+        "anchoring": 0.0,
     },
 }
 
