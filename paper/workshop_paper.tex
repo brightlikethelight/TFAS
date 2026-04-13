@@ -661,8 +661,11 @@ Cross-prediction (Section~\ref{sec:specificity}) resolves the
 surface-feature confound: Llama's vulnerable-category probe yields
 transfer AUC\,=\,0.378 on immune categories, and the transfer matrix
 shows vulnerable categories share a processing-mode direction
-(mutual AUC\,$\geq$\,0.950) absent in CRT (AUC\,=\,0.062).  The probe
-captures how the model processes lures, not that lures are present.
+(mutual AUC\,$\geq$\,0.950) absent in CRT (AUC\,=\,0.062).
+Cross-model transfer (Llama$\to$R1: 0.920; R1$\to$Llama: 0.954)
+confirms that this direction is shared across reasoning-differentiated
+models, not model-specific.  The probe captures how the model processes
+lures, not that lures are present.
 
 \paragraph{Relation to CogBias.}
 \citet{huang2026cogbias} showed that bias-related directions are
@@ -672,8 +675,12 @@ This suggests a practical strategy: steer standard models along the
 directions that reasoning training blurs, approximating the reasoning
 model's robustness without chain-of-thought cost.  We extend CogBias
 methodologically via (i)~continuous lure susceptibility scores,
-(ii)~cross-category transfer analysis, and (iii)~a within-model
-reasoning toggle (Qwen think/no-think).
+(ii)~cross-category transfer analysis, (iii)~a within-model
+reasoning toggle (Qwen think/no-think), and (iv)~cross-model probe
+transfer showing the \sone{}/\stwo{} direction is shared when
+architecture is held constant (AUC\,$>$\,0.92 both directions), in
+contrast to CogBias's near-orthogonal finding across architecturally
+distinct models.
 
 \paragraph{Methodological safeguards.}
 Probing can produce plausible results even on random networks
