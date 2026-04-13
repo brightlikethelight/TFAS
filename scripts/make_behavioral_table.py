@@ -264,10 +264,14 @@ def generate_full_table(
 
 
 def generate_compact_table(
-    all_stats: dict[str, dict[str, dict[str, Any]]],
-    all_overall: dict[str, dict[str, Any]],
+    all_orig_stats: dict[str, dict[str, dict[str, Any]]],
+    all_orig_overall: dict[str, dict[str, Any]],
 ) -> str:
-    """Compact main-paper table: 6 models x 7 original categories + overall."""
+    """Compact main-paper table: 6 models x 7 original categories + overall.
+
+    Uses original-only stats (excludes natural frequency / new-category items)
+    so that per-category cells and overall are self-consistent.
+    """
     cats = ORIGINAL_CATEGORIES
     n_cats = len(cats)
     col_spec = "l c " + " ".join(["c"] * n_cats)
@@ -294,16 +298,10 @@ def generate_compact_table(
     for spec in MODEL_SPECS:
         key = spec["key"]
         display = spec["display"]
-        overall = all_overall[key]
-        cat_stats = all_stats[key]
+        overall = all_orig_overall[key]
+        cat_stats = all_orig_stats[key]
 
-        # For compact, compute overall only on original 7 categories
-        orig_results_conflict = overall.get("_orig_items", None)
-        if orig_results_conflict is not None:
-            overall_cell = _fmt_cell_compact(orig_results_conflict)
-        else:
-            overall_cell = _fmt_cell_compact(overall)
-
+        overall_cell = _fmt_cell_compact(overall)
         cat_cells = [_fmt_cell_compact(cat_stats.get(cat)) for cat in cats]
         row = f"{display} & {overall_cell} & " + " & ".join(cat_cells) + r" \\"
         lines.append(row)
@@ -403,33 +401,74 @@ def build_json_summary(
 
 
 # ---------------------------------------------------------------------------
+# Original-item filtering for compact table
+# ---------------------------------------------------------------------------
+
+# Canonical original-330 item IDs from llama31_8b_ALL.json (the reference file).
+# All models in the original benchmark share the same 330 items.
+_ORIGINAL_330_IDS: set[str] | None = None
+
+
+def _get_original_330_ids() -> set[str]:
+    """Lazily load the canonical set of 330 item IDs from the Llama reference file."""
+    global _ORIGINAL_330_IDS
+    if _ORIGINAL_330_IDS is None:
+        ref_path = BEHAVIORAL_DIR / "llama31_8b_ALL.json"
+        with open(ref_path) as f:
+            data = json.load(f)
+        _ORIGINAL_330_IDS = {r["id"] for r in data["results"]}
+    return _ORIGINAL_330_IDS
+
+
+def _filter_original_items(
+    spec: dict[str, Any], results: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Filter results to only the original 330-item benchmark.
+
+    Uses the canonical Llama 330-item ID set as reference. This excludes
+    natural frequency base_rate items (brnf_*), sunk cost, availability,
+    certainty effect, and loss aversion items — even for OLMo which has
+    them all in a single file.
+    """
+    orig_ids = _get_original_330_ids()
+    return [r for r in results if r["id"] in orig_ids]
+
+
+# ---------------------------------------------------------------------------
 # Main
 # ---------------------------------------------------------------------------
 
 def main() -> None:
     all_stats: dict[str, dict[str, dict[str, Any]]] = {}
     all_overall: dict[str, dict[str, Any]] = {}
+    # Original-only stats for the compact table (excludes new-category / natural-freq items)
+    all_orig_stats: dict[str, dict[str, dict[str, Any]]] = {}
+    all_orig_overall: dict[str, dict[str, Any]] = {}
 
     for spec in MODEL_SPECS:
         key = spec["key"]
         results = load_results(spec["files"])
+
+        # Full stats (all categories merged)
         cat_stats = compute_category_stats(results)
         overall = compute_overall(results)
-
-        # For the compact table, also compute overall on original categories only
-        orig_results = [r for r in results if r["category"] in ORIGINAL_CATEGORIES]
-        orig_overall = compute_overall(orig_results)
-        overall["_orig_items"] = orig_overall
-
         all_stats[key] = cat_stats
         all_overall[key] = overall
+
+        # Original-330-item-only stats: restrict to items from the original files
+        # (i.e., categories in ORIGINAL_CATEGORIES, and only IDs from the *_ALL.json files)
+        orig_results = _filter_original_items(spec, results)
+        orig_cat_stats = compute_category_stats(orig_results)
+        orig_overall = compute_overall(orig_results)
+        all_orig_stats[key] = orig_cat_stats
+        all_orig_overall[key] = orig_overall
 
     # Print human-readable summary
     print_summary(all_stats, all_overall)
 
     # Generate LaTeX
     full_tex = generate_full_table(all_stats, all_overall)
-    compact_tex = generate_compact_table(all_stats, all_overall)
+    compact_tex = generate_compact_table(all_orig_stats, all_orig_overall)
 
     # Write LaTeX
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)

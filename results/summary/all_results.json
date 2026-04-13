@@ -1,11 +1,41 @@
 {
   "metadata": {
-    "generated_at": "2026-04-12T15:28:31.221986+00:00",
+    "generated_at": "2026-04-13T01:24:40.203762+00:00",
     "results_dir": "/Users/brightliu/School_Work/TFAS/s1s2/results",
     "script": "scripts/aggregate_results.py",
-    "n_json_files_found": 3,
+    "n_json_files_found": 38,
     "extra_json_files": [
-      "summary/all_results.json"
+      "attention/attention_summary.json",
+      "attention/llama31_attention.json",
+      "attention/r1_distill_attention.json",
+      "behavioral/llama31_8b_60items.json",
+      "behavioral/llama31_8b_ALL.json",
+      "behavioral/llama31_lure_susceptibility.json",
+      "behavioral/new_items_llama_31_8b_instruct.json",
+      "behavioral/new_items_r1_distill_llama_8b.json",
+      "behavioral/qwen3_8b_no_think.json",
+      "behavioral/qwen3_8b_think.json",
+      "behavioral/r1_distill_llama_20items.json",
+      "behavioral/r1_distill_llama_60items.json",
+      "behavioral/r1_distill_llama_ALL.json",
+      "behavioral/r1_distill_lure_susceptibility.json",
+      "behavioral/r1_distill_qwen_60items.json",
+      "bootstrap_cis/deepseek-ai_DeepSeek-R1-Distill-Llama-8B_bootstrap_cis.json",
+      "bootstrap_cis/unsloth_Meta-Llama-3.1-8B-Instruct_bootstrap_cis.json",
+      "geometry/llama_vs_r1_geometry.json",
+      "probes/llama31_8b_layer_aucs.json",
+      "probes/llama31_ALL_layer_aucs.json",
+      "probes/llama31_base_rate+conjunction+syllogism_layer_aucs.json",
+      "probes/llama31_crt+arithmetic+framing+anchoring_layer_aucs.json",
+      "probes/llama_vs_r1_layer_aucs.json",
+      "probes/qwen3_nothink_ALL_layer_aucs.json",
+      "probes/qwen3_nothink_base_rate+conjunction+syllogism_layer_aucs.json",
+      "probes/r1_distill_ALL_layer_aucs.json",
+      "probes/r1_distill_base_rate+conjunction+syllogism_layer_aucs.json",
+      "probes/r1_distill_cross_prediction.json",
+      "probes/r1_distill_crt+arithmetic+framing+anchoring_layer_aucs.json",
+      "summary/all_results.json",
+      "summary/behavioral_complete.json"
     ]
   },
   "behavioral": {
@@ -48,6 +78,28 @@
       "arithmetic": null,
       "framing": null,
       "anchoring": null
+    },
+    "OLMo-3-7B-Instruct": {
+      "overall_lure_pct": 0.0,
+      "base_rate": 0.0,
+      "conjunction": 0.0,
+      "syllogism": 0.0,
+      "CRT": 0.0,
+      "arithmetic": 0.0,
+      "framing": 0.0,
+      "anchoring": 0.0,
+      "sunk_cost": 0.0
+    },
+    "OLMo-3-7B-Think": {
+      "overall_lure_pct": 0.0,
+      "base_rate": 0.0,
+      "conjunction": 0.0,
+      "syllogism": 0.0,
+      "CRT": 0.0,
+      "arithmetic": 0.0,
+      "framing": 0.0,
+      "anchoring": 0.0,
+      "sunk_cost": 0.0
     }
   },
   "probes": {
@@ -92,24 +144,32 @@
       "n_layers": 36,
       "control_auc": null,
       "selectivity": null
+    },
+    "OLMo-3-7B-Instruct": {
+      "peak_layer": 21,
+      "peak_auc": 0.9983,
+      "mean_auc": 0.969,
+      "n_layers": 32,
+      "control_auc": null,
+      "selectivity": null
     }
   },
   "cross_prediction": {
     "Llama-3.1-8B-Instruct": {
-      "l14_transfer_auc": 0.378,
-      "mean_transfer_auc": 0.444,
+      "l14_transfer_auc": 0.3777,
+      "mean_transfer_auc": 0.4437,
       "interpretation": "SPECIFIC",
       "layer_aucs": {
-        "0": 0.702,
-        "4": 0.439,
-        "8": 0.384,
-        "12": 0.449,
-        "14": 0.378,
-        "16": 0.569,
-        "20": 0.386,
-        "24": 0.326,
-        "28": 0.365,
-        "31": 0.438
+        "0": 0.7024930747922438,
+        "4": 0.43889196675900277,
+        "8": 0.38393351800554015,
+        "12": 0.449196675900277,
+        "14": 0.3777285318559557,
+        "16": 0.5685318559556787,
+        "20": 0.38637119113573404,
+        "24": 0.3263157894736842,
+        "28": 0.365207756232687,
+        "31": 0.43800554016620497
       }
     },
     "R1-Distill-Llama-8B": {
@@ -131,20 +191,68 @@
     }
   },
   "transfer_matrix": {
+    "anchoring": {
+      "anchoring": 1.0,
+      "arithmetic": 0.906,
+      "base_rate": 0.378,
+      "conjunction": 0.648,
+      "crt": 0.54,
+      "framing": 0.0,
+      "syllogism": 0.19
+    },
+    "arithmetic": {
+      "anchoring": 0.58,
+      "arithmetic": 1.0,
+      "base_rate": 0.634,
+      "conjunction": 0.062,
+      "crt": 0.453,
+      "framing": 0.815,
+      "syllogism": 0.442
+    },
     "base_rate": {
+      "anchoring": 0.44,
+      "arithmetic": 0.954,
       "base_rate": 1.0,
       "conjunction": 0.993,
-      "syllogism": null
+      "crt": 0.491,
+      "framing": 0.37,
+      "syllogism": 0.594
     },
     "conjunction": {
-      "base_rate": 0.993,
+      "anchoring": 0.787,
+      "arithmetic": 0.0,
+      "base_rate": 0.998,
       "conjunction": 1.0,
-      "syllogism": null
+      "crt": 0.334,
+      "framing": 0.0,
+      "syllogism": 0.627
+    },
+    "crt": {
+      "anchoring": 0.995,
+      "arithmetic": 0.0,
+      "base_rate": 0.062,
+      "conjunction": 0.223,
+      "crt": 1.0,
+      "framing": 0.0,
+      "syllogism": 0.451
+    },
+    "framing": {
+      "anchoring": 0.108,
+      "arithmetic": 0.594,
+      "base_rate": 0.539,
+      "conjunction": 0.057,
+      "crt": 0.447,
+      "framing": 1.0,
+      "syllogism": 0.571
     },
     "syllogism": {
-      "base_rate": null,
-      "conjunction": null,
-      "syllogism": 1.0
+      "anchoring": 0.0,
+      "arithmetic": 0.0,
+      "base_rate": 0.95,
+      "conjunction": 0.99,
+      "crt": 0.457,
+      "framing": 0.875,
+      "syllogism": 0.936
     }
   },
   "lure_susceptibility": {

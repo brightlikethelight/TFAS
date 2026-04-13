@@ -1,6 +1,6 @@
 % ============================================================
 % Auto-generated LaTeX tables for the s1s2 workshop paper
-% Generated: 2026-04-12T15:28:31.221986+00:00
+% Generated: 2026-04-13T01:24:40.203762+00:00
 % Script: scripts/aggregate_results.py
 % ============================================================
 
@@ -18,6 +18,8 @@ Llama-3.1-8B & 27.3\% & 84.0\% & 55.0\% & 52.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\%
 R1-Distill-8B & 2.4\% & 4.0\% & 0.0\% & 0.0\% & -- & -- & -- & -- \\
 Qwen-3-8B (no think) & 21.0\% & 56.0\% & 95.0\% & 0.0\% & -- & -- & -- & -- \\
 Qwen-3-8B (think) & 7.0\% & 4.0\% & 55.0\% & -- & -- & -- & -- & -- \\
+OLMo-3-7B & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% \\
+OLMo-3-7B (think) & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% & 0.0\% \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -36,6 +38,7 @@ Llama-3.1-8B & 32 & L14 & \textbf{0.999} & 0.962 & -- \\
 R1-Distill-8B & 32 & L14 & 0.929 & 0.912 & -- \\
 Qwen-3-8B (no think) & 36 & L34 & 0.971 & -- & -- \\
 Qwen-3-8B (think) & 36 & L34 & 0.971 & -- & -- \\
+OLMo-3-7B & 32 & L21 & 0.998 & 0.969 & -- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -66,9 +69,9 @@ R1-Distill-8B & 0.734 & 0.878 & 0.878 & 0.728 & 0.685 & 0.696 & 0.615 & 0.524 & 
 \toprule
 Train $\backslash$ Test & base\_rate & conjunction & syllogism \\
 \midrule
-base\_rate & -- & 0.993 & -- \\
-conjunction & 0.993 & -- & -- \\
-syllogism & -- & -- & -- \\
+base\_rate & -- & 0.993 & 0.594 \\
+conjunction & 0.998 & -- & 0.627 \\
+syllogism & 0.950 & 0.990 & -- \\
 \bottomrule
 \end{tabular}
 \end{table}

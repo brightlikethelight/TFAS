@@ -453,6 +453,21 @@ def _parse_cross_prediction(
     for model, raw in data.items():
         if "l14_transfer_auc" in raw:
             parsed[model] = raw
+        elif "results" in raw and isinstance(raw["results"], dict):
+            # Format: {results: {layer: {transfer_to_immune: auc, ...}}}
+            int_aucs: dict[int, float] = {}
+            for layer_str, layer_data in raw["results"].items():
+                if isinstance(layer_data, dict) and "transfer_to_immune" in layer_data:
+                    int_aucs[int(layer_str)] = layer_data["transfer_to_immune"]
+            l14 = int_aucs.get(14)
+            mean_auc = sum(int_aucs.values()) / len(int_aucs) if int_aucs else None
+            interp = "SPECIFIC" if mean_auc is not None and mean_auc < 0.55 else "MIXED"
+            parsed[model] = {
+                "l14_transfer_auc": round(l14, 4) if l14 is not None else None,
+                "mean_transfer_auc": round(mean_auc, 4) if mean_auc is not None else None,
+                "interpretation": interp,
+                "layer_aucs": int_aucs,
+            }
         elif "cross_aucs" in raw or "layer_aucs" in raw:
             aucs = raw.get("cross_aucs", raw.get("layer_aucs", {}))
             # Ensure keys are ints for sorting
@@ -689,12 +704,14 @@ def generate_table2_probes(probes: dict[str, Any]) -> str:
         "R1-Distill-Llama-8B",
         "Qwen-3-8B-NO_THINK",
         "Qwen-3-8B-THINK",
+        "OLMo-3-7B-Instruct",
     ]
     display_names = {
         "Llama-3.1-8B-Instruct": "Llama-3.1-8B",
         "R1-Distill-Llama-8B": "R1-Distill-8B",
         "Qwen-3-8B-NO_THINK": "Qwen-3-8B (no think)",
         "Qwen-3-8B-THINK": "Qwen-3-8B (think)",
+        "OLMo-3-7B-Instruct": "OLMo-3-7B",
     }
 
     peak_aucs = [probes.get(m, {}).get("peak_auc") for m in models]
