@@ -259,10 +259,10 @@ Anchoring ($n$=20) &
 \multicolumn{5}{l}{\emph{Extended categories}} \\
 \addlinespace
 Sunk cost ($n$=15) &
-  \data{DATA} &
-  \data{DATA} &
-  \data{DATA} &
-  \data{DATA} \\
+  --- &
+  --- &
+  --- &
+  --- \\
 \addlinespace
 \midrule
 \textbf{Overall (7-cat)} &
@@ -294,15 +294,15 @@ within-model comparison for Qwen~3-8B.
 \cmidrule(lr){2-4}\cmidrule(lr){5-7}
 \textbf{Category} & \textbf{Lure\%} & \textbf{Correct\%} & \textbf{Other\%} & \textbf{Lure\%} & \textbf{Correct\%} & \textbf{Other\%} \\
 \midrule
-Base rate    & 56 & \data{DATA} & \data{DATA} & 4  & \data{DATA} & \data{DATA} \\
-Conjunction  & 95 & \data{DATA} & \data{DATA} & 55 & \data{DATA} & \data{DATA} \\
-Syllogism    & 0  & \data{DATA} & \data{DATA} & 0  & \data{DATA} & \data{DATA} \\
-CRT variants & 0  & \data{DATA} & \data{DATA} & 0  & \data{DATA} & \data{DATA} \\
-Arithmetic   & 0  & \data{DATA} & \data{DATA} & 0  & \data{DATA} & \data{DATA} \\
-Framing      & 0  & \data{DATA} & \data{DATA} & 0  & \data{DATA} & \data{DATA} \\
-Anchoring    & 0  & \data{DATA} & \data{DATA} & 0  & \data{DATA} & \data{DATA} \\
+Base rate    & 56 & 44 & 0  & 4  & 96 & 0  \\
+Conjunction  & 95 & 5  & 0  & 55 & 45 & 0  \\
+Syllogism    & 0  & 48 & 52 & 0  & 100 & 0  \\
+CRT variants & 0  & 73 & 27 & 0  & 77 & 23 \\
+Arithmetic   & 0  & 100 & 0  & 0  & 96 & 4  \\
+Framing      & 0  & 100 & 0  & 0  & 100 & 0  \\
+Anchoring    & 0  & 80 & 20 & 0  & 75 & 25 \\
 \midrule
-\textbf{Overall} & \textbf{21.0} & \data{DATA} & \data{DATA} & \textbf{7.0} & \data{DATA} & \data{DATA} \\
+\textbf{Overall} & \textbf{21.0} & \textbf{65} & \textbf{14} & \textbf{7.0} & \textbf{85} & \textbf{8} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -357,46 +357,46 @@ syllogisms).
 \endhead
 \bottomrule
 \endfoot
- 0 & 0.848 & \data{D} & 0.782 & \data{D} & 0.066 & \data{D} \\
- 1 & 0.899 & \data{D} & 0.831 & \data{D} & 0.068 & \data{D} \\
- 2 & 0.926 & \data{D} & 0.870 & \data{D} & 0.056 & \data{D} \\
- 3 & 0.932 & \data{D} & 0.901 & \data{D} & 0.031 & \data{D} \\
- 4 & 0.927 & \data{D} & 0.919 & \data{D} & 0.008 & \data{D} \\
- 5 & 0.939 & \data{D} & 0.928 & \data{D} & 0.011 & \data{D} \\
- 6 & 0.933 & \data{D} & 0.926 & \data{D} & 0.007 & \data{D} \\
- 7 & 0.960 & \data{D} & 0.927 & \data{D} & 0.033 & \data{D} \\
- 8 & 0.952 & \data{D} & 0.920 & \data{D} & 0.032 & \data{D} \\
- 9 & 0.948 & \data{D} & 0.928 & \data{D} & 0.020 & \data{D} \\
-10 & 0.971 & \data{D} & 0.927 & \data{D} & 0.044 & \data{D} \\
-11 & 0.979 & \data{D} & 0.922 & \data{D} & 0.057 & \data{D} \\
-12 & 0.988 & \data{D} & 0.927 & \data{D} & 0.061 & \data{D} \\
-13 & 0.993 & \data{D} & 0.927 & \data{D} & 0.066 & \data{D} \\
-\textbf{14} & \textbf{0.999} & \data{D} & \textbf{0.929} & \data{D} & \textbf{0.070} & \data{D} \\
-15 & 0.996 & \data{D} & 0.919 & \data{D} & 0.077 & \data{D} \\
-16 & 0.995 & \data{D} & 0.929 & \data{D} & 0.066 & \data{D} \\
-17 & 0.989 & \data{D} & 0.923 & \data{D} & 0.066 & \data{D} \\
-18 & 0.991 & \data{D} & 0.927 & \data{D} & 0.064 & \data{D} \\
-19 & 0.987 & \data{D} & 0.914 & \data{D} & 0.073 & \data{D} \\
-20 & 0.978 & \data{D} & 0.914 & \data{D} & 0.064 & \data{D} \\
-21 & 0.969 & \data{D} & 0.923 & \data{D} & 0.046 & \data{D} \\
-22 & 0.968 & \data{D} & 0.922 & \data{D} & 0.046 & \data{D} \\
-23 & 0.963 & \data{D} & 0.917 & \data{D} & 0.046 & \data{D} \\
-24 & 0.978 & \data{D} & 0.924 & \data{D} & 0.054 & \data{D} \\
-25 & 0.964 & \data{D} & 0.922 & \data{D} & 0.042 & \data{D} \\
-26 & 0.965 & \data{D} & 0.918 & \data{D} & 0.047 & \data{D} \\
-27 & 0.969 & \data{D} & 0.906 & \data{D} & 0.063 & \data{D} \\
-28 & 0.981 & \data{D} & 0.923 & \data{D} & 0.058 & \data{D} \\
-29 & 0.965 & \data{D} & 0.924 & \data{D} & 0.041 & \data{D} \\
-30 & 0.973 & \data{D} & 0.918 & \data{D} & 0.055 & \data{D} \\
-31 & 0.954 & \data{D} & 0.904 & \data{D} & 0.050 & \data{D} \\
+ 0 & 0.848 & 0.605 & 0.782 & 0.534 & 0.066 & 0.299 \\
+ 1 & 0.899 & 0.586 & 0.831 & 0.568 & 0.068 & 0.317 \\
+ 2 & 0.926 & 0.603 & 0.870 & 0.584 & 0.056 & 0.290 \\
+ 3 & 0.932 & 0.588 & 0.901 & 0.565 & 0.031 & 0.337 \\
+ 4 & 0.927 & 0.610 & 0.919 & 0.555 & 0.008 & 0.320 \\
+ 5 & 0.939 & 0.626 & 0.928 & 0.599 & 0.011 & 0.308 \\
+ 6 & 0.933 & 0.601 & 0.926 & 0.570 & 0.007 & 0.334 \\
+ 7 & 0.960 & 0.610 & 0.927 & 0.560 & 0.033 & 0.331 \\
+ 8 & 0.952 & 0.603 & 0.920 & 0.567 & 0.032 & 0.302 \\
+ 9 & 0.948 & 0.549 & 0.928 & 0.577 & 0.020 & 0.388 \\
+10 & 0.971 & 0.581 & 0.927 & 0.571 & 0.044 & 0.368 \\
+11 & 0.979 & 0.615 & 0.922 & 0.592 & 0.057 & 0.336 \\
+12 & 0.988 & 0.578 & 0.927 & 0.572 & 0.061 & 0.370 \\
+13 & 0.993 & 0.630 & 0.927 & 0.561 & 0.066 & 0.329 \\
+\textbf{14} & \textbf{0.999} & 0.612 & \textbf{0.929} & 0.565 & \textbf{0.070} & 0.347 \\
+15 & 0.996 & 0.635 & 0.919 & 0.585 & 0.077 & 0.339 \\
+16 & 0.995 & 0.632 & 0.929 & 0.585 & 0.066 & 0.343 \\
+17 & 0.989 & 0.596 & 0.923 & 0.567 & 0.066 & 0.372 \\
+18 & 0.991 & 0.612 & 0.927 & 0.580 & 0.064 & 0.356 \\
+19 & 0.987 & 0.606 & 0.914 & 0.589 & 0.073 & 0.360 \\
+20 & 0.978 & 0.626 & 0.914 & 0.589 & 0.064 & 0.333 \\
+21 & 0.969 & 0.583 & 0.923 & 0.591 & 0.046 & 0.369 \\
+22 & 0.968 & 0.580 & 0.922 & 0.605 & 0.046 & 0.369 \\
+23 & 0.963 & 0.600 & 0.917 & 0.585 & 0.046 & 0.348 \\
+24 & 0.978 & 0.583 & 0.924 & 0.605 & 0.054 & 0.358 \\
+25 & 0.964 & 0.590 & 0.922 & 0.599 & 0.042 & 0.371 \\
+26 & 0.965 & 0.580 & 0.918 & 0.594 & 0.047 & 0.358 \\
+27 & 0.969 & 0.590 & 0.906 & 0.578 & 0.063 & 0.375 \\
+28 & 0.981 & 0.570 & 0.923 & 0.585 & 0.058 & 0.379 \\
+29 & 0.965 & 0.572 & 0.924 & 0.590 & 0.041 & 0.362 \\
+30 & 0.973 & 0.568 & 0.918 & 0.577 & 0.055 & 0.378 \\
+31 & 0.954 & 0.586 & 0.904 & 0.553 & 0.050 & 0.349 \\
 \midrule
 \textbf{Mean} & \textbf{0.962} & --- & \textbf{0.912} & --- & \textbf{0.050} & --- \\
 \textbf{Std} & 0.032 & --- & 0.031 & --- & 0.019 & --- \\
 \end{longtable}
 
-\noindent \textbf{Note:} Control AUC columns (Hewitt--Liang probes
-trained on randomly permuted labels) and selectivity values are
-marked \data{D} where per-layer values are pending.  The main text
+\noindent \textbf{Note:} Control AUC columns report Hewitt--Liang probes
+trained on randomly permuted labels.  Selectivity = true AUC $-$ control AUC.
+The main text
 reports aggregate control AUC $\leq 0.55$ at all layers for both
 models, yielding selectivity $>$40 percentage points at peak layers.
 Per-layer control values will be filled upon completion of the full
@@ -455,42 +455,42 @@ layers (layers 0--35).
 \endhead
 \bottomrule
 \endfoot
- 0 & \data{DATA} & \data{DATA} & 0.000 \\
- 1 & \data{DATA} & \data{DATA} & 0.000 \\
- 2 & \data{DATA} & \data{DATA} & 0.000 \\
- 3 & \data{DATA} & \data{DATA} & 0.000 \\
- 4 & \data{DATA} & \data{DATA} & 0.000 \\
- 5 & \data{DATA} & \data{DATA} & 0.000 \\
- 6 & \data{DATA} & \data{DATA} & 0.000 \\
- 7 & \data{DATA} & \data{DATA} & 0.000 \\
- 8 & \data{DATA} & \data{DATA} & 0.000 \\
- 9 & \data{DATA} & \data{DATA} & 0.000 \\
-10 & \data{DATA} & \data{DATA} & 0.000 \\
-11 & \data{DATA} & \data{DATA} & 0.000 \\
-12 & \data{DATA} & \data{DATA} & 0.000 \\
-13 & \data{DATA} & \data{DATA} & 0.000 \\
-14 & \data{DATA} & \data{DATA} & 0.000 \\
-15 & \data{DATA} & \data{DATA} & 0.000 \\
-16 & \data{DATA} & \data{DATA} & 0.000 \\
-17 & \data{DATA} & \data{DATA} & 0.000 \\
-18 & \data{DATA} & \data{DATA} & 0.000 \\
-19 & \data{DATA} & \data{DATA} & 0.000 \\
-20 & \data{DATA} & \data{DATA} & 0.000 \\
-21 & \data{DATA} & \data{DATA} & 0.000 \\
-22 & \data{DATA} & \data{DATA} & 0.000 \\
-23 & \data{DATA} & \data{DATA} & 0.000 \\
-24 & \data{DATA} & \data{DATA} & 0.000 \\
-25 & \data{DATA} & \data{DATA} & 0.000 \\
-26 & \data{DATA} & \data{DATA} & 0.000 \\
-27 & \data{DATA} & \data{DATA} & 0.000 \\
-28 & \data{DATA} & \data{DATA} & 0.000 \\
-29 & \data{DATA} & \data{DATA} & 0.000 \\
-30 & \data{DATA} & \data{DATA} & 0.000 \\
-31 & \data{DATA} & \data{DATA} & 0.000 \\
-32 & \data{DATA} & \data{DATA} & 0.000 \\
-33 & \data{DATA} & \data{DATA} & 0.000 \\
-\textbf{34} & \textbf{0.971} & \textbf{0.971} & \textbf{0.000} \\
-35 & \data{DATA} & \data{DATA} & 0.000 \\
+ 0 & 0.890 & 0.890 & 0.000 \\
+ 1 & 0.862 & 0.862 & 0.000 \\
+ 2 & 0.884 & 0.884 & 0.000 \\
+ 3 & 0.905 & 0.905 & 0.000 \\
+ 4 & 0.931 & 0.931 & 0.000 \\
+ 5 & 0.931 & 0.931 & 0.000 \\
+ 6 & 0.935 & 0.935 & 0.000 \\
+ 7 & 0.912 & 0.912 & 0.000 \\
+ 8 & 0.916 & 0.916 & 0.000 \\
+ 9 & 0.928 & 0.928 & 0.000 \\
+10 & 0.930 & 0.930 & 0.000 \\
+11 & 0.924 & 0.924 & 0.000 \\
+12 & 0.924 & 0.924 & 0.000 \\
+13 & 0.936 & 0.936 & 0.000 \\
+14 & 0.921 & 0.921 & 0.000 \\
+15 & 0.924 & 0.924 & 0.000 \\
+16 & 0.937 & 0.937 & 0.000 \\
+17 & 0.938 & 0.938 & 0.000 \\
+18 & 0.948 & 0.948 & 0.000 \\
+19 & 0.957 & 0.957 & 0.000 \\
+20 & 0.965 & 0.965 & 0.000 \\
+21 & 0.965 & 0.965 & 0.000 \\
+22 & 0.969 & 0.969 & 0.000 \\
+23 & 0.965 & 0.965 & 0.000 \\
+\textbf{24} & \textbf{0.969} & \textbf{0.969} & \textbf{0.000} \\
+25 & 0.967 & 0.967 & 0.000 \\
+26 & 0.951 & 0.951 & 0.000 \\
+27 & 0.960 & 0.960 & 0.000 \\
+28 & 0.957 & 0.957 & 0.000 \\
+29 & 0.963 & 0.963 & 0.000 \\
+30 & 0.963 & 0.963 & 0.000 \\
+31 & 0.964 & 0.964 & 0.000 \\
+32 & 0.945 & 0.945 & 0.000 \\
+33 & 0.966 & 0.966 & 0.000 \\
+34 & 0.971 & 0.971 & 0.000 \\
+35 & 0.959 & 0.959 & 0.000 \\
 \end{longtable}
 
 \noindent \textbf{Note:} The think/no-think difference is exactly
