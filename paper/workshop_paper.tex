@@ -1,5 +1,5 @@
 % ==============================================================================
-% ICML 2026 MechInterp Workshop Paper (4 pages + references)
+% ICML 2026 MechInterp Workshop Paper — 8-page long format + references
 % Self-contained file — does not use \input
 % ==============================================================================
 
@@ -223,13 +223,14 @@ matched pairs} across 11 categories spanning four heuristic families:
   (availability family).
 \end{itemize}
 
-\noindent Of the final four categories, sunk cost has been validated
-(0\% lure rate for both models---immune); loss aversion has been
-validated on OLMo (33\% lure for OLMo Instruct, 0\% for OLMo Think);
-certainty effect and availability are pending.  The 10 natural frequency
-base rate pairs have been validated (see Discussion).  All primary
-analyses use the original 7-category, 165-pair subset (330 items) plus
-the OLMo cross-architecture replication.
+\noindent Of the final four categories, sunk cost (0\% lure, both
+models), certainty effect (0\%, both), and loss aversion (0\% Llama;
+33\% OLMo Instruct, 0\% OLMo Think) are validated.  Availability shows
+a Llama-specific vulnerability (13.3\% lure) but 0\% for R1-Distill.
+The 10 natural frequency base rate pairs have been validated (see
+Discussion).  All primary analyses use the original 7-category,
+165-pair subset (330 items) plus the OLMo cross-architecture
+replication.
 
 \noindent Each item is scored on a four-way classification: \emph{correct},
 \emph{S1-lure} (the specific heuristic-predicted wrong answer),
@@ -362,7 +363,7 @@ bias types but fails to overcome deeply encoded heuristics for others.
 To test generality, we evaluate OLMo-3-7B-Instruct and
 OLMo-3-7B-Think \citep{olmo3}, which share the same base but differ in
 reasoning training (analogous to the Llama pair).  OLMo Instruct
-reproduces the core vulnerability pattern: 45.7\% base rate and 50.0\%
+reproduces the core vulnerability pattern: 46\% base rate and 50\%
 conjunction lure rates, with an overall rate of 14.9\%.  OLMo Think
 reduces this to 0.9\%---near-complete elimination, even more effective
 than R1-Distill (2.4\%).  The pattern replicates across two independent
@@ -384,7 +385,7 @@ conflict/control classification on the three vulnerable categories.
 % \includegraphics[width=\linewidth]{figures/probe_layer_curves.pdf}
 \fbox{\parbox{0.95\linewidth}{\centering\vspace{2.2cm}
   \textbf{Figure 1: Layer-wise probe AUC (vulnerable categories)}\\[4pt]
-  \small X-axis: layer index (0--35). \quad Y-axis: ROC-AUC.\\[2pt]
+  \small X-axis: layer index (0--31 for Llama/R1-Distill/OLMo, 0--35 for Qwen). \quad Y-axis: ROC-AUC.\\[2pt]
   \textcolor{blue}{Blue}: Llama-3.1-8B-Instruct (peak AUC = 0.974 at L16).\\
   \textcolor{red}{Red}: R1-Distill-Llama-8B (peak AUC = 0.930 at L31).\\
   \textcolor{orange}{Orange}: Qwen~3-8B no-think (peak AUC = 0.971 at L34).\\
@@ -530,6 +531,11 @@ away from it.
 \label{sec:results_sae}
 
 Sparse autoencoder analysis of Llama's layer 19 residual stream (Goodfire SAE, 65,536 features) identified 41 features with statistically significant differential activation between conflict and control items (BH-FDR $q < 0.05$). All 41 features survived Ma et al.\ falsification testing \citep{ma2026falsification}: injecting top-activating tokens into random text did not reproduce the activation pattern. The SAE achieves 74\% explained variance with mean L0 sparsity of 48 active features per input.
+
+\subsection{Attention Head Specialization}
+\label{sec:results_attention}
+
+Per-head Mann-Whitney U tests (BH-FDR $q < 0.05$) on attention entropy reveal that R1-Distill has nearly twice as many \stwo{}-specialized heads---heads with significantly higher entropy on conflict items and effect size $|r_{rb}| \geq 0.3$---as Llama (57 vs.\ 30 out of 1024 total heads, 5.6\% vs.\ 2.9\%). Reasoning training appears to increase the proportion of attention heads that behave differently on deliberation-requiring items.
 
 % ============================================================
 % 5. Discussion
