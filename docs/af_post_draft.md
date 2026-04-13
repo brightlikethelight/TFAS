@@ -41,16 +41,16 @@ We extracted residual stream activations at every layer for all 330 items and tr
 
 | Model | Peak Layer | AUC |
 |---|---|---|
-| Llama-3.1-8B-Instruct | L14 | **0.999** |
-| R1-Distill-Llama-8B | L14 | **0.929** |
-| OLMo-7B-Instruct | -- | **0.998** |
-| OLMo-7B-Think | -- | **0.993** |
+| Llama-3.1-8B-Instruct | L16 | **0.974** [0.952, 0.992] |
+| R1-Distill-Llama-8B | L31 | **0.930** [0.894, 0.960] |
+| OLMo-7B-Instruct | L24 | **0.996** [0.988, 1.000] |
+| OLMo-7B-Think | L22 | **0.962** [0.934, 0.982] |
 | Qwen-3-8B (no think) | L34 | **0.971** |
 | Qwen-3-8B (think) | L34 | **0.971** |
 
 We pre-registered the prediction that reasoning models would show *stronger* internal separation -- a sharper boundary between "this needs deliberation" and "this is routine." The data say the opposite.
 
-Llama achieves near-perfect internal separation (AUC `0.999`) while falling for biases 27% of the time. R1-Distill achieves *reduced* separation (AUC `0.929`) while resisting them. Both peak at the same layer (14 of 32). The locus does not move; the sharpness decreases. The OLMo pair shows the same pattern: `0.998 -> 0.993`.
+Llama achieves near-perfect internal separation (AUC `0.974` [0.952, 0.992]) while falling for biases 27% of the time. R1-Distill achieves *reduced* separation (AUC `0.930` [0.894, 0.960]) while resisting them. Peak layer shifts from L16 to L31 -- reasoning training relocates peak processing-mode encoding deeper. The OLMo pair shows the same pattern: `0.996` [0.988, 1.000] -> `0.962` [0.934, 0.982].
 
 The interpretation: **"S2-by-default" processing.** The standard model maintains a crisp internal flag -- "this input is dangerous, engage deliberation" -- but often fails to act on it. The reasoning-trained model has partially lost this flag because it applies deliberation-like computation to *everything*. It does not need to distinguish dangerous inputs from safe ones because its default processing already incorporates the extra effort.
 
@@ -116,7 +116,7 @@ OLMo (Allen AI) provides the strongest available test. It is a fully open-source
 
 **Behavioral replication:** OLMo-7B-Instruct shows a 14.9% lure rate on base rate neglect. OLMo-7B-Think shows 0.9%. The same pattern: instruct model susceptible, reasoning model resistant.
 
-**Probe replication:** OLMo-7B-Instruct achieves AUC `0.998`. OLMo-7B-Think achieves AUC `0.993`. The gap is smaller than Llama's (`0.005` vs. `0.070`), but the direction is the same: reasoning training reduces probe separability. The instruct model detects the conflict better internally while failing to act on it more often.
+**Probe replication:** OLMo-7B-Instruct achieves AUC `0.996` [0.988, 1.000]. OLMo-7B-Think achieves AUC `0.962` [0.934, 0.982]. The gap (`0.034`, non-overlapping bootstrap CIs) is smaller than Llama's (`0.044`), but statistically robust and directionally consistent: reasoning training reduces probe separability. The instruct model detects the conflict better internally while failing to act on it more often.
 
 With three independent architecture families all showing the same pattern -- behavioral improvement, representational blurring, detection without resolution -- this is no longer a one-model curiosity. It is a consistent consequence of reasoning training.
 
@@ -150,7 +150,7 @@ This is a category where Llama, R1-Distill, and Qwen all show floor effects. The
 
 **SAE-based monitoring looks promising.** The 41 features that survive Ma et al. falsification provide interpretable, feature-level handles on conflict processing. Unlike linear probes (which operate in the full residual stream), SAE features decompose the representation into individually inspectable units. With zero spurious features in our analysis, the signal-to-noise ratio is high enough for practical monitoring. The matched-pair benchmark design appears to be doing significant work here -- it constrains which features can appear significant to ones that genuinely track processing mode.
 
-**Runtime monitoring is feasible, with caveats.** The high probe AUC (`0.998-0.999` in instruct models, `0.971-0.993` in reasoning models) at identified layers suggests lightweight linear probes could flag when a model is in a heuristic-prone state *before* it generates an answer. The attention specialization finding (5.6% vs. 2.9% of heads) provides a complementary signal. But the training-vs-inference dissociation means these monitors track the model's *default disposition*, not its *runtime reasoning*. They can tell you the model is predisposed to fail; they cannot tell you whether the CoT will save it.
+**Runtime monitoring is feasible, with caveats.** The high probe AUC (`0.974-0.996` in instruct models, `0.930-0.971` in reasoning models) at identified layers suggests lightweight linear probes could flag when a model is in a heuristic-prone state *before* it generates an answer. The attention specialization finding (5.6% vs. 2.9% of heads) provides a complementary signal. But the training-vs-inference dissociation means these monitors track the model's *default disposition*, not its *runtime reasoning*. They can tell you the model is predisposed to fail; they cannot tell you whether the CoT will save it.
 
 ## 6. What is next
 

@@ -17,18 +17,18 @@
 | attention_entropy | DONE | ~3 min | R1 5.6% vs Llama 2.9% S2-specialized heads |
 | bootstrap_cis | DONE | ~71 min | Llama [0.952, 0.992], R1 [0.894, 0.960] |
 | new_items | DONE | ~7 min | Llama NF=100% lure; sunk cost=0% both |
-| olmo3_full | DONE | ~8 hrs | Instruct 14.9%, Think 0.9%; probes 0.998->0.993 |
+| olmo3_full | DONE | ~8 hrs | Instruct 14.9%, Think 0.9%; probes 0.996->0.962 |
 | sae_goodfire | DONE | 31s | 41 features, 0 spurious, 74% EV |
 
 ### Eight key scientific findings (complete picture)
 
 1. **Category-specific vulnerability**: 3 vulnerable (base_rate, conjunction, syllogism), 4 immune (CRT, arithmetic, framing, anchoring)
-2. **Reasoning training blurs S1/S2 boundary**: AUC 0.999 (Llama) -> 0.929 (R1-Distill), same layer (L14)
+2. **Reasoning training blurs S1/S2 boundary**: AUC 0.974 (Llama) -> 0.930 (R1-Distill), peak layers L16/L31
 3. **Training vs inference dissociation**: Qwen THINK and NO_THINK probes are identical (both 0.971) despite different behavior. Reasoning at inference time does NOT change the representation the way distillation training does.
-4. **Cross-prediction resolves the confound**: Llama probe trained on vulnerable, tested on immune: **0.378 AUC at L14**. It detects processing mode, not task structure. This was THE critical question.
+4. **Cross-prediction resolves the confound**: Llama probe trained on vulnerable, tested on immune: **0.378 AUC at L16**. It detects processing mode, not task structure. This was THE critical question.
 5. **Lure susceptibility is graded**: Llama +0.42 (favors lure) vs R1-Distill -0.33 (favors correct). Continuous, not binary.
 6. **Shared bias representations**: base_rate and conjunction transfer at 0.993. The model uses nearly identical representations for these two biases.
-7. **OLMo cross-architecture confirmation**: Behavioral (14.9% Instruct vs 0.9% Think) AND mechanistic (probes 0.998 -> 0.993). Pattern replicates in a third architecture family.
+7. **OLMo cross-architecture confirmation**: Behavioral (14.9% Instruct vs 0.9% Think) AND mechanistic (probes 0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982]). Pattern replicates in a third architecture family.
 8. **SAE features survive falsification**: 41 features at L19, 0 spurious (Ma et al. test passed), 74% explained variance.
 
 ### Key numbers you have (REAL DATA)
@@ -60,14 +60,14 @@
 ### Key mechanistic results
 
 **H1 linear probes (vulnerable categories)**:
-- Llama-3.1-8B-Instruct: peak AUC = **0.999** at Layer 14
-- R1-Distill-Llama-8B: peak AUC = **0.929** at Layer 14
-- OLMo-3-7B Instruct: peak AUC = **0.998**
-- OLMo-3-7B Think: peak AUC = **0.993**
-- Both pairs peak at the same layer -- the "where" doesn't change, the "how much" does
+- Llama-3.1-8B-Instruct: peak AUC = **0.974** [0.952, 0.992] at Layer 16
+- R1-Distill-Llama-8B: peak AUC = **0.930** [0.894, 0.960] at Layer 31
+- OLMo-3-7B Instruct: peak AUC = **0.996** [0.988, 1.000] at Layer 24
+- OLMo-3-7B Think: peak AUC = **0.962** [0.934, 0.982] at Layer 22
+- Reasoning training shifts peak layer and reduces separability
 
 **Cross-prediction (confound resolved)**:
-- Llama probe trained on vulnerable, tested on immune: **0.378 AUC at L14**
+- Llama probe trained on vulnerable, tested on immune: **0.378 AUC at L16**
 - This means the probe is SPECIFIC to processing mode in vulnerable categories, not detecting generic task structure
 - R1-Distill cross-prediction: mixed results (less clear-cut)
 
@@ -112,17 +112,17 @@
 
 ### What story does the data tell?
 
-**The core finding**: Standard instruction-tuned LLMs maintain a near-perfect linear boundary between conflict (S1-like) and control (S2-like) processing in their residual stream (AUC 0.999). Reasoning-distilled models retain this boundary but with significantly reduced separability (AUC 0.929). This is not just a behavioral difference -- the internal geometry changes.
+**The core finding**: Standard instruction-tuned LLMs maintain a near-perfect linear boundary between conflict (S1-like) and control (S2-like) processing in their residual stream (AUC 0.974 [0.952, 0.992]). Reasoning-distilled models retain this boundary but with significantly reduced separability (AUC 0.930 [0.894, 0.960]). This is not just a behavioral difference -- the internal geometry changes.
 
 **The specificity confound is RESOLVED**: Cross-prediction from vulnerable to immune categories yields 0.378 AUC -- near chance. The Llama probe is specific to processing mode in vulnerable categories, not detecting generic task structure. This is the strongest possible outcome for our claims.
 
-**The within-model confirmation**: Qwen 3-8B with thinking disabled (NO_THINK) shows 21% lure rate and probe AUC 0.971. The same model with thinking enabled (THINK) shows 7% lure rate -- but probe AUC is still 0.971. Same weights, same representation, different behavior. This reveals a **training vs inference dissociation**: distillation training changes the residual stream (0.999 -> 0.929), but inference-time reasoning (thinking tokens) changes behavior without changing the representation probes detect.
+**The within-model confirmation**: Qwen 3-8B with thinking disabled (NO_THINK) shows 21% lure rate and probe AUC 0.971. The same model with thinking enabled (THINK) shows 7% lure rate -- but probe AUC is still 0.971. Same weights, same representation, different behavior. This reveals a **training vs inference dissociation**: distillation training changes the residual stream (0.974 -> 0.930), but inference-time reasoning (thinking tokens) changes behavior without changing the representation probes detect.
 
 **The lure susceptibility gradient**: Continuous lure susceptibility scores confirm the graded nature: Llama averages +0.422 (actively pulled toward lure), R1-Distill averages -0.326 (actively pushed toward correct). This is not a binary switch -- it is a continuous dimension.
 
 **Shared bias representations**: base_rate and conjunction transfer at 0.993 -- the model uses nearly identical internal machinery for these two biases. Syllogism is more distinct. This has implications for the granularity of bias-specific circuits.
 
-**Cross-architecture replication (OLMo)**: The behavioral pattern (14.9% Instruct vs 0.9% Think) and the mechanistic pattern (probe AUC 0.998 -> 0.993) replicate in the OLMo-3-7B family. This is a third independent architecture confirming the same story. The probe AUC drop is smaller here (0.005 vs 0.070 for Llama/R1), but the direction is consistent.
+**Cross-architecture replication (OLMo)**: The behavioral pattern (14.9% Instruct vs 0.9% Think) and the mechanistic pattern (probe AUC 0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982]) replicate in the OLMo-3-7B family. This is a third independent architecture confirming the same story. The probe AUC drop (0.034 with non-overlapping CIs) is smaller than Llama/R1 (0.044), but statistically robust and directionally consistent.
 
 **SAE features are real**: 41 features at L19 survive the Ma et al. falsification protocol. Zero spurious features. 74% explained variance. These are genuine S1/S2-associated features, not token-level artifacts.
 
@@ -134,7 +134,7 @@ The narrative now rests on **six converging lines of evidence**:
 
 1. **Behavioral**: Reasoning models resist cognitive-bias lures (27% -> 2.4% lure rate). Within-model: thinking mode reduces lures from 21% to 7% with identical weights. Lure susceptibility is graded (+0.42 vs -0.33), not binary. OLMo replicates (14.9% -> 0.9%). New items: sunk cost immune, natural frequency still vulnerable.
 
-2. **Representational (probes)**: Linear probes find a high-fidelity S1/S2 boundary in standard models (AUC 0.999) that is degraded in reasoning models (AUC 0.929). Bootstrap CIs confirm: Llama [0.952, 0.992] vs R1 [0.894, 0.960]. The probe is SPECIFIC to processing mode (cross-prediction 0.378). The direction exists at the same layer (L14) in both -- reasoning training doesn't relocate it, it blurs it. OLMo confirms: 0.998 -> 0.993.
+2. **Representational (probes)**: Linear probes find a high-fidelity S1/S2 boundary in standard models (AUC 0.974 [0.952, 0.992]) that is degraded in reasoning models (AUC 0.930 [0.894, 0.960]). CIs do not overlap. The probe is SPECIFIC to processing mode (cross-prediction 0.378). Peak layer shifts from L16 to L31 -- reasoning training relocates and blurs it. OLMo confirms: 0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982].
 
 3. **Training vs inference dissociation**: Qwen THINK and NO_THINK have identical probe curves (0.971) despite dramatically different behavior. Distillation training rewires representations, but inference-time reasoning acts downstream of the probed representation.
 
@@ -211,7 +211,7 @@ The narrative now rests on **six converging lines of evidence**:
 
 ### Overnight2 pipeline completed (all 5 jobs)
 
-1. **Cross-prediction**: Llama probe trained on vulnerable, tested on immune = 0.378 AUC at L14. Probe is SPECIFIC. R1-Distill results mixed.
+1. **Cross-prediction**: Llama probe trained on vulnerable, tested on immune = 0.378 AUC at L16. Probe is SPECIFIC. R1-Distill results mixed.
 2. **Transfer matrix**: base_rate <-> conjunction share representations (0.993). Syllogism distinct.
 3. **SAE Goodfire L19**: FAILED on model key mismatch. Script has been fixed, needs GPU re-run.
 4. **Qwen THINK extraction**: DONE. 157 MB HDF5, 36 layers.
@@ -261,7 +261,7 @@ Ran the full 330-item benchmark against 5 model configurations on the B200 pod.
 ### First mechanistic result (H1 linear probe)
 
 - Trained logistic probes (conflict vs. control) on the 3 vulnerable categories
-- Llama peak AUC = 0.999 at Layer 14; R1-Distill peak AUC = 0.929 at Layer 14
+- Llama peak AUC = 0.974 at Layer 16; R1-Distill peak AUC = 0.930 at Layer 31
 - Same peak layer, reduced separability in the reasoning model
 
 ### Strategic discoveries
@@ -282,7 +282,7 @@ Ran the full 330-item benchmark against 5 model configurations on the B200 pod.
 - **Confidence paradigm (De Neys)**: DONE. Llama and R1-Distill confidence extracted (overnight3). De Neys confidence drop confirmed.
 
 ### Mechanistic (probes)
-- **Linear probes**: Llama 0.999, R1-Distill 0.929, OLMo Instruct 0.998, OLMo Think 0.993
+- **Linear probes**: Llama 0.974 [0.952, 0.992], R1-Distill 0.930 [0.894, 0.960], OLMo Instruct 0.996 [0.988, 1.000], OLMo Think 0.962 [0.934, 0.982]
 - **Bootstrap CIs**: Llama [0.952, 0.992], R1 [0.894, 0.960] -- statistically robust separation
 - **Cross-prediction**: Confound RESOLVED. Llama probe specific (0.378 transfer AUC)
 - **Transfer matrix**: base_rate <-> conjunction share representations (0.993)

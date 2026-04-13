@@ -1,0 +1,1242 @@
+% ==============================================================================
+% Supplementary Materials
+% "What Changes When LLMs Learn to Reason?
+%  Mechanistic Signatures of Cognitive Bias Processing"
+% ICML 2026 MechInterp Workshop
+% ==============================================================================
+
+\documentclass[accepted]{article}
+
+% ---------- Packages (matched to main paper) ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{natbib}
+\usepackage{microtype}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable}
+\usepackage{array}
+
+% ---------- Custom commands (matched to main paper) ----------
+\newcommand{\sone}{S1-like}
+\newcommand{\stwo}{S2-like}
+\newcommand{\pzero}{\texttt{P0}}
+\newcommand{\data}[1]{\textbf{[#1]}}
+
+% ---------- Title ----------
+\title{Supplementary Materials:\\
+  What Changes When LLMs Learn to Reason?\\
+  Mechanistic Signatures of Cognitive Bias Processing}
+
+\author{%
+  Anonymous Authors
+}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent This document provides additional details on the benchmark
+design, full behavioral and probing results, cross-prediction analyses,
+transfer matrices, representational geometry, and lure susceptibility
+distributions that complement the main text.  Section labels correspond
+to the appendix identifiers referenced in the main paper.
+
+% ============================================================
+% A. Full Benchmark Description
+% ============================================================
+
+\section*{A. Full Benchmark Description}
+\label{sec:appendix_benchmark}
+
+\subsection*{A.1 Overview}
+
+The benchmark comprises \textbf{470 items} organized into \textbf{11
+categories} spanning \textbf{4 heuristic families}.  Of these, 380
+items (190 matched conflict/control pairs) across 8 categories form the
+primary evaluation set reported in the main text.  The remaining 90
+items (45 pairs) belong to 3 additional categories added for extended
+analysis: a natural frequency framing subset, sunk cost variants, and
+contamination baselines.
+
+Every conflict item has a structurally matched no-conflict control that
+preserves surface features (narrative length, domain, vocabulary) while
+removing the heuristic--normative tension.  This matched-pair design
+follows De~Neys' conflict detection paradigm \citep{deneys2012bias}.
+
+\subsection*{A.2 Design Principles}
+
+\begin{enumerate}[leftmargin=*,itemsep=4pt]
+  \item \textbf{Novel isomorphs.}  All items use novel surface features
+  (names, professions, quantities, scenarios) to resist memorization
+  from pre-training corpora.  Classic versions (e.g., the original
+  bat-and-ball problem, the Linda problem) are included only as
+  contamination baselines and excluded from all primary analyses.
+
+  \item \textbf{Matched pairs.}  Each conflict item is paired with a
+  structurally identical control.  For base rate neglect, the control
+  aligns the diagnostic description with the base rate so no conflict
+  exists.  For conjunction fallacy, the control presents the single
+  event as more representative than the conjunction.  For syllogisms,
+  the control aligns conclusion believability with logical validity.
+
+  \item \textbf{Difficulty calibration.}  Items are assigned difficulty
+  ratings from 1 (trivial) to 5 (maximal heuristic pull) based on pilot
+  testing.  Difficulty ratings are balanced across conflict/control pairs
+  within each category.
+
+  \item \textbf{Natural frequency framing.}  A 10-pair subset of base
+  rate neglect items presents statistical information in Gigerenzer's
+  natural frequency format (``10 out of 1000'' rather than ``1\%'') to
+  test the ecological rationality critique
+  \citep{gigerenzer1995improve}.
+\end{enumerate}
+
+\subsection*{A.3 Category Table}
+
+Table~\ref{tab:benchmark_full} provides the full category breakdown
+with example prompts and sourcing information.
+
+\begin{table}[ht]
+\centering
+\caption{Full benchmark description.  All items use novel surface
+  features; classic versions are contamination baselines only.
+  ``Freq.''\ = natural frequency framing subset.}
+\label{tab:benchmark_full}
+\vspace{4pt}
+\small
+\begin{tabular}{p{2.6cm}ccp{3.8cm}p{2.8cm}}
+\toprule
+\textbf{Category} & \textbf{\# Pairs} & \textbf{Heuristic Family} & \textbf{Example Prompt (abbrev.)} & \textbf{Source} \\
+\midrule
+Base rate neglect & 35 & Representativeness &
+  ``In a group of 995 engineers and 5 lawyers, a person is described as analytical\ldots Is this person more likely a lawyer or engineer?'' &
+  Kahneman \& Tversky (1973); novel isomorphs \\
+\addlinespace
+\quad Freq.\ subset & (10) & Representativeness &
+  ``10 out of 1000 people have condition X. A test has 95\% sensitivity\ldots'' &
+  Gigerenzer \& Hoffrage (1995) \\
+\addlinespace
+Conjunction fallacy & 20 & Representativeness &
+  ``Mx.\ Rivera is 31, outspoken, studied philosophy\ldots Which is more probable: (A)~bank teller, (B)~bank teller and activist?'' &
+  Tversky \& Kahneman (1983); novel isomorphs \\
+\addlinespace
+Belief-bias syllogisms & 25 & Belief bias &
+  ``All flowers need water. Roses need water. Therefore, roses are flowers.'' (valid/invalid $\times$ believable/unbelievable) &
+  Evans et al.\ (1983); novel isomorphs \\
+\addlinespace
+Sunk cost fallacy & 15 & Loss aversion &
+  ``You have invested \$9M in Project Aurora. A competitor has launched a superior product\ldots Continue investing or cut losses?'' &
+  Arkes \& Blumer (1985); novel isomorphs \\
+\addlinespace
+CRT variants & 30 & Cognitive reflection &
+  ``A mug and a lid cost \$1.10 in total. The mug costs \$1.00 more than the lid\ldots'' &
+  Frederick (2005); structural isomorphs \\
+\addlinespace
+Arithmetic & 25 & Computation &
+  ``Calculate $247 \times 18$ step by step.'' (with/without carrying traps) &
+  Original \\
+\addlinespace
+Framing effects & 20 & Loss aversion &
+  ``Program A saves 200 people. Program B: 1/3 chance all 600 saved, 2/3 chance none saved.'' (gain/loss framing) &
+  Tversky \& Kahneman (1981); novel scenarios \\
+\addlinespace
+Anchoring & 20 & Anchoring \& adjustment &
+  ``The tallest building in the world is 828m. Estimate the average height of buildings in downtown Portland.'' (extreme vs.\ neutral anchor) &
+  Tversky \& Kahneman (1974); novel anchors \\
+\addlinespace
+Classic baselines & --- & Mixed &
+  Original bat-and-ball, Linda, etc.\ & Contamination check only \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{A.4 Scoring}
+
+Each item is scored on a four-way classification:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Correct}: the normatively correct response.
+  \item \textbf{S1-lure}: the specific heuristic-predicted wrong answer
+  (e.g., ``lawyer'' when base rates strongly favor ``engineer'').
+  \item \textbf{Other-wrong}: an incorrect response that does not match
+  the heuristic prediction.
+  \item \textbf{Refusal}: the model declines to answer or hedges
+  without committing.
+\end{itemize}
+
+\noindent The primary metric is the \emph{lure rate}: the proportion of
+S1-lure responses on conflict items.  This is more informative than raw
+accuracy because it distinguishes heuristic errors from random errors.
+
+% ============================================================
+% B. Full Behavioral Results
+% ============================================================
+
+\section*{B. Full Behavioral Results}
+\label{sec:appendix_behavioral}
+
+\subsection*{B.1 Full Lure Rate Table}
+
+Table~\ref{tab:behavioral_full} extends Table~1 of the main text to
+include all categories (including sunk cost where available) and
+binomial 95\% confidence intervals.
+
+\begin{table}[ht]
+\centering
+\caption{S1-lure rates (\%) on conflict items by model and category,
+  with binomial exact 95\% confidence intervals in brackets.  Bold
+  indicates vulnerability (lure rate $>$10\%).  ``---'' indicates
+  category not evaluated for that model.}
+\label{tab:behavioral_full}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccc}
+\toprule
+& \textbf{Llama} & \textbf{R1-Distill} & \multicolumn{2}{c}{\textbf{Qwen 3-8B}} \\
+\cmidrule(lr){4-5}
+\textbf{Category ($n$ conflict)} & \textbf{8B-Inst.} & \textbf{Llama-8B} & \textbf{no think} & \textbf{think} \\
+\midrule
+\multicolumn{5}{l}{\emph{Vulnerable categories}} \\
+\addlinespace
+Base rate ($n$=35) &
+  \textbf{84} {\scriptsize [68, 94]} &
+  4 {\scriptsize [0, 13]} &
+  \textbf{56} {\scriptsize [38, 72]} &
+  4 {\scriptsize [0, 13]} \\
+\addlinespace
+Conjunction ($n$=20) &
+  \textbf{55} {\scriptsize [32, 77]} &
+  0 {\scriptsize [0, 17]} &
+  \textbf{95} {\scriptsize [75, 100]} &
+  \textbf{55} {\scriptsize [32, 77]} \\
+\addlinespace
+Syllogism ($n$=25) &
+  \textbf{52} {\scriptsize [31, 72]} &
+  0 {\scriptsize [0, 14]} &
+  0 {\scriptsize [0, 14]} &
+  0 {\scriptsize [0, 14]} \\
+\addlinespace
+\midrule
+\multicolumn{5}{l}{\emph{Immune categories}} \\
+\addlinespace
+CRT variants ($n$=30) &
+  0 {\scriptsize [0, 12]} &
+  0 {\scriptsize [0, 12]} &
+  0 {\scriptsize [0, 12]} &
+  0 {\scriptsize [0, 12]} \\
+\addlinespace
+Arithmetic ($n$=25) &
+  0 {\scriptsize [0, 14]} &
+  0 {\scriptsize [0, 14]} &
+  0 {\scriptsize [0, 14]} &
+  0 {\scriptsize [0, 14]} \\
+\addlinespace
+Framing ($n$=20) &
+  0 {\scriptsize [0, 17]} &
+  0 {\scriptsize [0, 17]} &
+  0 {\scriptsize [0, 17]} &
+  0 {\scriptsize [0, 17]} \\
+\addlinespace
+Anchoring ($n$=20) &
+  0 {\scriptsize [0, 17]} &
+  0 {\scriptsize [0, 17]} &
+  0 {\scriptsize [0, 17]} &
+  0 {\scriptsize [0, 17]} \\
+\addlinespace
+\midrule
+\multicolumn{5}{l}{\emph{Extended categories}} \\
+\addlinespace
+Sunk cost ($n$=15) &
+  --- &
+  --- &
+  --- &
+  --- \\
+\addlinespace
+\midrule
+\textbf{Overall (7-cat)} &
+  \textbf{27.3} &
+  \textbf{2.4} &
+  \textbf{21.0} &
+  \textbf{7.0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{B.2 Qwen THINK vs.\ NO\_THINK Detailed Comparison}
+
+Table~\ref{tab:qwen_detail} provides a detailed breakdown of the
+within-model comparison for Qwen~3-8B.
+
+\begin{table}[ht]
+\centering
+\caption{Qwen~3-8B THINK vs.\ NO\_THINK: per-category lure rates,
+  accuracy, and response classification.  The thinking toggle operates
+  on identical weights via the \texttt{/think} and
+  \texttt{/no\_think} system prompt flags.}
+\label{tab:qwen_detail}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{3}{c}{\textbf{NO\_THINK}} & \multicolumn{3}{c}{\textbf{THINK}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+\textbf{Category} & \textbf{Lure\%} & \textbf{Correct\%} & \textbf{Other\%} & \textbf{Lure\%} & \textbf{Correct\%} & \textbf{Other\%} \\
+\midrule
+Base rate    & 56 & 44 & 0  & 4  & 96 & 0  \\
+Conjunction  & 95 & 5  & 0  & 55 & 45 & 0  \\
+Syllogism    & 0  & 48 & 52 & 0  & 100 & 0  \\
+CRT variants & 0  & 73 & 27 & 0  & 77 & 23 \\
+Arithmetic   & 0  & 100 & 0  & 0  & 96 & 4  \\
+Framing      & 0  & 100 & 0  & 0  & 100 & 0  \\
+Anchoring    & 0  & 80 & 20 & 0  & 75 & 25 \\
+\midrule
+\textbf{Overall} & \textbf{21.0} & \textbf{65} & \textbf{14} & \textbf{7.0} & \textbf{85} & \textbf{8} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Key observations from the Qwen within-model comparison:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item Base rate neglect shows near-complete correction: 56\% $\to$
+  4\% (14$\times$ reduction).
+  \item Conjunction fallacy remains majority-susceptible: 95\% $\to$
+  55\% (only 1.7$\times$ reduction).  Thinking mode helps but does not
+  overcome this deeply encoded heuristic.
+  \item Syllogisms are already immune without thinking, unlike
+  Llama-3.1-8B where syllogisms are highly vulnerable (52\%).  This
+  confirms that vulnerability profiles are model-specific, not
+  universal.
+  \item All four immune categories remain at 0\% in both modes.
+\end{itemize}
+
+% ============================================================
+% C. Layer-wise Probe Results (All Layers)
+% ============================================================
+
+\section*{C. Layer-Wise Probe Results (All Layers)}
+\label{sec:appendix_probes}
+
+\subsection*{C.1 Llama-3.1-8B-Instruct and R1-Distill-Llama-8B (Layers 0--31)}
+
+Table~\ref{tab:probe_all_layers} reports the full layer-wise probe
+AUC for both Llama-family models across all 32 layers.  Probes are
+$\ell_2$-regularized logistic regression (5-fold stratified CV)
+trained on conflict vs.\ no-conflict classification restricted to the
+three vulnerable categories (base rate neglect, conjunction fallacy,
+syllogisms).
+
+\begin{longtable}{rcccccc}
+\caption{Layer-wise probe AUC for Llama-3.1-8B-Instruct and
+  R1-Distill-Llama-8B.  ``Gap'' = Llama AUC $-$ R1 AUC.
+  Hewitt--Liang control AUC and selectivity (true $-$ control) are
+  shown where available.  All values are ROC-AUC from 5-fold
+  stratified cross-validation on the three vulnerable categories
+  ($n$ = 142 conflict + 142 control items).}
+\label{tab:probe_all_layers} \\
+\toprule
+& \multicolumn{2}{c}{\textbf{Llama 8B-Inst.}} & \multicolumn{2}{c}{\textbf{R1-Distill-Llama-8B}} & & \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textbf{Layer} & \textbf{AUC} & \textbf{Control} & \textbf{AUC} & \textbf{Control} & \textbf{Gap} & \textbf{Selectivity} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Layer} & \textbf{AUC} & \textbf{Control} & \textbf{AUC} & \textbf{Control} & \textbf{Gap} & \textbf{Selectivity} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+ 0 & 0.848 & 0.605 & 0.782 & 0.534 & 0.066 & 0.299 \\
+ 1 & 0.899 & 0.586 & 0.831 & 0.568 & 0.068 & 0.317 \\
+ 2 & 0.926 & 0.603 & 0.870 & 0.584 & 0.056 & 0.290 \\
+ 3 & 0.932 & 0.588 & 0.901 & 0.565 & 0.031 & 0.337 \\
+ 4 & 0.927 & 0.610 & 0.919 & 0.555 & 0.008 & 0.320 \\
+ 5 & 0.939 & 0.626 & 0.928 & 0.599 & 0.011 & 0.308 \\
+ 6 & 0.933 & 0.601 & 0.926 & 0.570 & 0.007 & 0.334 \\
+ 7 & 0.960 & 0.610 & 0.927 & 0.560 & 0.033 & 0.331 \\
+ 8 & 0.952 & 0.603 & 0.920 & 0.567 & 0.032 & 0.302 \\
+ 9 & 0.948 & 0.549 & 0.928 & 0.577 & 0.020 & 0.388 \\
+10 & 0.971 & 0.581 & 0.927 & 0.571 & 0.044 & 0.368 \\
+11 & 0.979 & 0.615 & 0.922 & 0.592 & 0.057 & 0.336 \\
+12 & 0.988 & 0.578 & 0.927 & 0.572 & 0.061 & 0.370 \\
+13 & 0.993 & 0.630 & 0.927 & 0.561 & 0.066 & 0.329 \\
+\textbf{14} & \textbf{0.999} & 0.612 & \textbf{0.929} & 0.565 & \textbf{0.070} & 0.347 \\
+15 & 0.996 & 0.635 & 0.919 & 0.585 & 0.077 & 0.339 \\
+16 & 0.995 & 0.632 & 0.929 & 0.585 & 0.066 & 0.343 \\
+17 & 0.989 & 0.596 & 0.923 & 0.567 & 0.066 & 0.372 \\
+18 & 0.991 & 0.612 & 0.927 & 0.580 & 0.064 & 0.356 \\
+19 & 0.987 & 0.606 & 0.914 & 0.589 & 0.073 & 0.360 \\
+20 & 0.978 & 0.626 & 0.914 & 0.589 & 0.064 & 0.333 \\
+21 & 0.969 & 0.583 & 0.923 & 0.591 & 0.046 & 0.369 \\
+22 & 0.968 & 0.580 & 0.922 & 0.605 & 0.046 & 0.369 \\
+23 & 0.963 & 0.600 & 0.917 & 0.585 & 0.046 & 0.348 \\
+24 & 0.978 & 0.583 & 0.924 & 0.605 & 0.054 & 0.358 \\
+25 & 0.964 & 0.590 & 0.922 & 0.599 & 0.042 & 0.371 \\
+26 & 0.965 & 0.580 & 0.918 & 0.594 & 0.047 & 0.358 \\
+27 & 0.969 & 0.590 & 0.906 & 0.578 & 0.063 & 0.375 \\
+28 & 0.981 & 0.570 & 0.923 & 0.585 & 0.058 & 0.379 \\
+29 & 0.965 & 0.572 & 0.924 & 0.590 & 0.041 & 0.362 \\
+30 & 0.973 & 0.568 & 0.918 & 0.577 & 0.055 & 0.378 \\
+31 & 0.954 & 0.586 & 0.904 & 0.553 & 0.050 & 0.349 \\
+\midrule
+\textbf{Mean} & \textbf{0.962} & --- & \textbf{0.912} & --- & \textbf{0.050} & --- \\
+\textbf{Std} & 0.032 & --- & 0.031 & --- & 0.019 & --- \\
+\end{longtable}
+
+\noindent \textbf{Note:} Control AUC columns report Hewitt--Liang probes
+trained on randomly permuted labels.  Selectivity = true AUC $-$ control AUC.
+The main text
+reports aggregate control AUC $\leq 0.64$ at all layers for both
+models.  Control AUC ranges from 0.534 to 0.635 for Llama and 0.534
+to 0.605 for R1-Distill, yielding selectivity $\geq$29 percentage
+points at every layer and $\geq$34 pp at peak layers.
+
+\subsection*{C.2 Summary Statistics by Layer Phase}
+
+\begin{table}[ht]
+\centering
+\caption{Phase-wise summary of probe AUC.  Phases defined as: early
+  (L0--7), mid (L8--15), late (L16--23), final (L24--31).  Gap =
+  Llama $-$ R1.  Cohen's $d$ and permutation $p$-value (10{,}000
+  permutations, BH-FDR corrected) reported for each phase.}
+\label{tab:phase_summary}
+\vspace{4pt}
+\small
+\begin{tabular}{lccccccc}
+\toprule
+\textbf{Phase} & \textbf{Layers} &
+  \textbf{Llama $\bar{\mathrm{AUC}}$} & \textbf{R1 $\bar{\mathrm{AUC}}$} &
+  \textbf{Gap} & \textbf{$d$} & \textbf{$p$} & \textbf{Sig.} \\
+\midrule
+Early & 0--7  & 0.921 & 0.886 & 0.035 & 0.78 & 0.070 & --- \\
+Mid   & 8--15 & 0.978 & 0.925 & 0.053 & 3.76 & $<$0.001 & * \\
+Late  & 16--23& 0.980 & 0.921 & 0.059 & 6.21 & $<$0.001 & * \\
+Final & 24--31& 0.969 & 0.917 & 0.051 & 6.15 & $<$0.001 & * \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The deliberation gap widens from early (0.035) to late
+(0.059) layers, peaking in the late phase, then narrows slightly in
+final layers (0.051).  The early-layer gap does not survive BH-FDR
+correction ($p = 0.070$), while mid, late, and final phases are all
+significant ($p < 0.001$).
+
+\subsection*{C.3 Qwen~3-8B NO\_THINK and THINK (Layers 0--35)}
+
+Table~\ref{tab:qwen_probe_layers} reports layer-wise probe AUC for
+Qwen~3-8B in both thinking modes.  Qwen~3-8B has 36 transformer
+layers (layers 0--35).
+
+\begin{longtable}{rccc}
+\caption{Layer-wise probe AUC for Qwen~3-8B in NO\_THINK and THINK
+  modes.  Bold indicates the peak layer.  Both modes produce identical
+  pre-generation representations, reflected in identical probe AUC at
+  every layer.}
+\label{tab:qwen_probe_layers} \\
+\toprule
+\textbf{Layer} & \textbf{NO\_THINK AUC} & \textbf{THINK AUC} & \textbf{Difference} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Layer} & \textbf{NO\_THINK AUC} & \textbf{THINK AUC} & \textbf{Difference} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+ 0 & 0.890 & 0.890 & 0.000 \\
+ 1 & 0.862 & 0.862 & 0.000 \\
+ 2 & 0.884 & 0.884 & 0.000 \\
+ 3 & 0.905 & 0.905 & 0.000 \\
+ 4 & 0.931 & 0.931 & 0.000 \\
+ 5 & 0.931 & 0.931 & 0.000 \\
+ 6 & 0.935 & 0.935 & 0.000 \\
+ 7 & 0.912 & 0.912 & 0.000 \\
+ 8 & 0.916 & 0.916 & 0.000 \\
+ 9 & 0.928 & 0.928 & 0.000 \\
+10 & 0.930 & 0.930 & 0.000 \\
+11 & 0.924 & 0.924 & 0.000 \\
+12 & 0.924 & 0.924 & 0.000 \\
+13 & 0.936 & 0.936 & 0.000 \\
+14 & 0.921 & 0.921 & 0.000 \\
+15 & 0.924 & 0.924 & 0.000 \\
+16 & 0.937 & 0.937 & 0.000 \\
+17 & 0.938 & 0.938 & 0.000 \\
+18 & 0.948 & 0.948 & 0.000 \\
+19 & 0.957 & 0.957 & 0.000 \\
+20 & 0.965 & 0.965 & 0.000 \\
+21 & 0.965 & 0.965 & 0.000 \\
+22 & 0.969 & 0.969 & 0.000 \\
+23 & 0.965 & 0.965 & 0.000 \\
+24 & 0.969 & 0.969 & 0.000 \\
+25 & 0.967 & 0.967 & 0.000 \\
+26 & 0.951 & 0.951 & 0.000 \\
+27 & 0.960 & 0.960 & 0.000 \\
+28 & 0.957 & 0.957 & 0.000 \\
+29 & 0.963 & 0.963 & 0.000 \\
+30 & 0.963 & 0.963 & 0.000 \\
+31 & 0.964 & 0.964 & 0.000 \\
+32 & 0.945 & 0.945 & 0.000 \\
+33 & 0.966 & 0.966 & 0.000 \\
+\textbf{34} & \textbf{0.971} & \textbf{0.971} & \textbf{0.000} \\
+35 & 0.959 & 0.959 & 0.000 \\
+\end{longtable}
+
+\noindent \textbf{Note:} The think/no-think difference is exactly
+0.000 at every layer because both modes share identical weights and
+the \pzero{} position is deterministic given the prompt.  The thinking
+toggle only affects generation behavior \emph{after} \pzero{}.  Per-layer
+Qwen peak AUC is 0.971 at L34 on the vulnerable-category subset and
+0.997 at L24 on all categories.  The peak layer for vulnerable categories
+shifts to L24 (tied at 0.969 with L22) on the vulnerable subset.
+Hewitt--Liang control probes for Qwen are pending.
+
+% ============================================================
+% D. Cross-Prediction Details
+% ============================================================
+
+\section*{D. Cross-Prediction Details}
+\label{sec:appendix_cross}
+
+Cross-prediction tests train a probe on the three \emph{vulnerable}
+categories (base rate neglect, conjunction fallacy, syllogisms) and
+evaluate it on the four \emph{immune} categories (CRT, arithmetic,
+framing, anchoring).  If the probe captures a universal
+processing-mode signal, transfer AUC should remain high; if it
+captures category-specific lure susceptibility, transfer AUC should
+drop to chance ($\approx$0.5) or below.
+
+\subsection*{D.1 Full Cross-Prediction Results}
+
+Table~\ref{tab:cross_pred_full} reports cross-prediction AUC at all
+10 tested layers for both Llama-family models.
+
+\begin{table}[ht]
+\centering
+\caption{Cross-prediction AUC at tested layers.  ``Within'' = probe
+  AUC on vulnerable categories (same-category, different-fold).
+  ``Transfer'' = probe AUC on immune categories.  ``Drop'' =
+  Within $-$ Transfer.}
+\label{tab:cross_pred_full}
+\vspace{4pt}
+\small
+\begin{tabular}{rcccccc}
+\toprule
+& \multicolumn{3}{c}{\textbf{Llama 8B-Inst.}} & \multicolumn{3}{c}{\textbf{R1-Distill-Llama-8B}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-7}
+\textbf{Layer} & \textbf{Within} & \textbf{Transfer} & \textbf{Drop} & \textbf{Within} & \textbf{Transfer} & \textbf{Drop} \\
+\midrule
+ 0 & 0.848 & 0.702 & 0.146 & 0.782 & 0.734 & 0.048 \\
+ 4 & 0.927 & 0.439 & 0.488 & 0.919 & 0.878 & 0.041 \\
+ 8 & 0.952 & 0.384 & 0.568 & 0.920 & 0.878 & 0.042 \\
+12 & 0.988 & 0.449 & 0.539 & 0.927 & 0.728 & 0.199 \\
+\textbf{14} & \textbf{0.999} & \textbf{0.378} & \textbf{0.621} & \textbf{0.929} & \textbf{0.685} & \textbf{0.244} \\
+16 & 0.995 & 0.569 & 0.426 & 0.929 & 0.696 & 0.233 \\
+20 & 0.978 & 0.386 & 0.592 & 0.914 & 0.615 & 0.299 \\
+24 & 0.978 & 0.326 & 0.652 & 0.924 & 0.524 & 0.400 \\
+28 & 0.981 & 0.365 & 0.616 & 0.923 & 0.415 & 0.508 \\
+31 & 0.954 & 0.438 & 0.516 & 0.904 & 0.385 & 0.519 \\
+\midrule
+\textbf{Mean} & 0.960 & 0.444 & 0.516 & 0.907 & 0.654 & 0.253 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{D.2 Interpretation}
+
+\paragraph{Llama-3.1-8B-Instruct.}
+Transfer AUC drops dramatically from within-category performance at
+all mid-to-late layers.  At the peak layer (L14), transfer AUC is
+0.378---\emph{below} chance (0.5), indicating that the probe's
+learned direction is \emph{anticorrelated} with the immune-category
+conflict/control distinction.  This anticorrelation is strong
+evidence that the probe captures processing-mode information specific
+to the vulnerable categories, not generic surface features of lure
+text.  The mean transfer AUC across all tested layers is 0.444
+(bootstrap 95\% CI: [0.386, 0.515]).
+
+\paragraph{R1-Distill-Llama-8B.}
+The pattern is qualitatively different.  At early layers (L0--L8),
+transfer AUC remains high ($\geq$0.734), suggesting that R1-Distill's
+early representations encode a more generic conflict/control signal
+that partially transfers across categories.  Transfer AUC declines
+monotonically in later layers, reaching 0.385 at L31---comparable to
+Llama's specificity.  The mean transfer AUC is 0.654 (bootstrap 95\%
+CI: [0.551, 0.752]), significantly above Llama's ($p < 0.05$, paired
+bootstrap test).
+
+\paragraph{Layer-wise specificity trajectory.}
+For Llama, specificity is established by L4 (drop = 0.488) and
+remains high thereafter.  For R1-Distill, specificity develops
+gradually, with the drop exceeding 0.3 only from L20 onward.  This
+suggests that reasoning distillation delays category-specific encoding
+to later layers while maintaining a more generic early representation.
+
+% ============================================================
+% E. Transfer Matrix
+% ============================================================
+
+\section*{E. Transfer Matrix}
+\label{sec:appendix_transfer}
+
+The transfer matrix tests whether probes trained on individual
+categories transfer to other categories, revealing shared vs.\
+distinct representational structure across bias types.  We train a
+logistic regression probe on each category independently and test on
+all other categories at layer 14 of Llama-3.1-8B-Instruct (the peak
+probing layer).
+
+\subsection*{E.1 Full Transfer Matrix (Llama L14)}
+
+Table~\ref{tab:transfer_matrix} reports the full category-to-category
+transfer AUC matrix.
+
+\begin{table}[ht]
+\centering
+\caption{Category transfer matrix (Llama-3.1-8B-Instruct, L14).
+  Rows = training category; columns = test category.  Diagonal
+  entries are within-category 5-fold CV AUC.  Off-diagonal entries
+  are transfer AUC (probe trained on row category, tested on column
+  category).  ``Vuln.'' = vulnerable categories; ``Imm.'' = immune
+  categories.}
+\label{tab:transfer_matrix}
+\vspace{4pt}
+\small
+\begin{tabular}{lccc|cccc}
+\toprule
+& \multicolumn{3}{c}{\textbf{Vuln.\ (test)}} & \multicolumn{4}{c}{\textbf{Imm.\ (test)}} \\
+\cmidrule(lr){2-4}\cmidrule(lr){5-8}
+\textbf{Train} & \textbf{Base} & \textbf{Conj.} & \textbf{Syll.} & \textbf{CRT} & \textbf{Arith.} & \textbf{Fram.} & \textbf{Anch.} \\
+\midrule
+Base rate    & 1.000 & 0.993 & 0.594 & 0.491 & 0.954 & 0.370 & 0.440 \\
+Conjunction  & 0.998 & 1.000 & 0.627 & 0.334 & 0.000 & 0.000 & 0.787 \\
+Syllogism    & 0.950 & 0.990 & 0.936 & 0.457 & 0.000 & 0.875 & 0.000 \\
+\midrule
+CRT          & 0.062 & 0.223 & 0.451 & 1.000 & 0.000 & 0.000 & 0.995 \\
+Arithmetic   & 0.634 & 0.062 & 0.442 & 0.453 & 1.000 & 0.815 & 0.580 \\
+Framing      & 0.539 & 0.057 & 0.571 & 0.447 & 0.594 & 1.000 & 0.108 \\
+Anchoring    & 0.378 & 0.648 & 0.190 & 0.540 & 0.906 & 0.000 & 1.000 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{E.2 Interpretation}
+
+The partial transfer matrix reveals a structured pattern.  Key
+findings from the available data:
+
+\begin{itemize}[leftmargin=*,itemsep=4pt]
+  \item \textbf{Base rate $\leftrightarrow$ conjunction transfer is
+  near-perfect} (AUC = 0.993 in both directions).  These two
+  representativeness-heuristic categories share a processing-mode
+  direction that is nearly identical in the residual stream at L14.
+
+  \item \textbf{CRT probes do not transfer to vulnerable categories}
+  (AUC = 0.062, as reported in the main text).  This confirms that
+  CRT items, where all models are immune, occupy a distinct region of
+  representational space.
+
+  \item The high within-vulnerable transfer (AUC $\geq$ 0.950 among
+  base rate, conjunction, and syllogism) combined with the low
+  CRT-to-vulnerable transfer (0.062) provides converging evidence
+  that the probe captures a shared processing-mode signal specific to
+  the vulnerable categories, not a generic surface-feature signal.
+
+  \item \textbf{Syllogism transfers well to base rate and conjunction}
+  (AUC = 0.950 and 0.990 respectively), completing the
+  within-vulnerable transfer triangle.
+
+  \item \textbf{Immune categories show heterogeneous cross-transfer.}
+  CRT$\to$base rate is 0.062 (near anti-correlated), while
+  anchoring$\to$arithmetic reaches 0.906.  The immune categories do
+  not share a single processing-mode direction.
+\end{itemize}
+
+% ============================================================
+% F. Representational Geometry
+% ============================================================
+
+\section*{F. Representational Geometry}
+\label{sec:appendix_geometry}
+
+We assess the geometric structure of conflict vs.\ no-conflict
+representations using two complementary metrics: cosine silhouette
+scores (cluster separability) and Centered Kernel Alignment (CKA;
+representational similarity between models).
+
+\subsection*{F.1 Silhouette Scores}
+
+Silhouette scores measure how well conflict and no-conflict items
+cluster in residual stream space.  We compute cosine silhouette after
+PCA reduction to 100 dimensions (to address the $d \gg N$ pitfall
+per Cover's theorem).
+
+\begin{table}[ht]
+\centering
+\caption{Cosine silhouette scores by layer phase.  Positive values
+  indicate meaningful clustering of conflict vs.\ no-conflict items.
+  Values near zero indicate overlapping clusters.  All values computed
+  after PCA to 100 dimensions.}
+\label{tab:silhouette}
+\vspace{4pt}
+\small
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Model} & \textbf{Peak Sil.} & \textbf{Peak Layer} &
+  \textbf{Mean Sil.\ (L0--31)} & \textbf{Min Sil.} & \textbf{Min Layer} \\
+\midrule
+Llama 8B-Inst. & 0.079 & 13 & 0.037 & 0.009 & 0 \\
+R1-Distill     & 0.059 & 0  & 0.044 & 0.032 & 1 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Both models show positive but low silhouette scores,
+indicating that conflict and no-conflict items form overlapping
+clusters with only modest geometric separation.  Llama's higher
+silhouette (0.079 vs.\ 0.059) is consistent with its higher probe
+AUC---the linear boundary is more distinct when clusters are
+marginally better separated.  However, the low absolute values
+(far below the 0.25 threshold for ``reasonable structure'') suggest
+that the conflict/control distinction is a subtle direction in high-dimensional
+space rather than a gross geometric partition.
+
+\paragraph{Layer-wise silhouette profiles.}
+Full layer-wise silhouette scores for both models are reported in
+Table~\ref{tab:silhouette_layers}.
+
+\begin{longtable}{rcc}
+\caption{Layer-wise cosine silhouette scores (PCA to 100 dimensions).}
+\label{tab:silhouette_layers} \\
+\toprule
+\textbf{Layer} & \textbf{Llama 8B-Inst.} & \textbf{R1-Distill-Llama-8B} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Layer} & \textbf{Llama 8B-Inst.} & \textbf{R1-Distill-Llama-8B} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+ 0 & 0.009 & 0.059 \\
+ 1 & 0.012 & 0.032 \\
+ 2 & 0.022 & 0.039 \\
+ 3 & 0.030 & 0.039 \\
+ 4 & 0.026 & 0.046 \\
+ 5 & 0.029 & 0.043 \\
+ 6 & 0.035 & 0.040 \\
+ 7 & 0.043 & 0.042 \\
+ 8 & 0.049 & 0.040 \\
+ 9 & 0.042 & 0.041 \\
+10 & 0.051 & 0.043 \\
+11 & 0.054 & 0.044 \\
+12 & 0.058 & 0.047 \\
+13 & 0.079 & 0.051 \\
+14 & 0.077 & 0.053 \\
+15 & 0.074 & 0.052 \\
+16 & 0.061 & 0.048 \\
+17 & 0.057 & 0.046 \\
+18 & 0.055 & 0.046 \\
+19 & 0.050 & 0.045 \\
+20 & 0.041 & 0.045 \\
+21 & 0.038 & 0.045 \\
+22 & 0.031 & 0.043 \\
+23 & 0.029 & 0.043 \\
+24 & 0.023 & 0.041 \\
+25 & 0.020 & 0.041 \\
+26 & 0.017 & 0.042 \\
+27 & 0.014 & 0.042 \\
+28 & 0.015 & 0.042 \\
+29 & 0.015 & 0.042 \\
+30 & 0.012 & 0.041 \\
+31 & 0.009 & 0.041 \\
+\end{longtable}
+
+\subsection*{F.2 Centered Kernel Alignment (CKA)}
+
+CKA \citep{kornblith2019similarity} measures the similarity of
+representational geometry between the two Llama-family models at each
+layer.  A CKA value of 1.0 indicates identical representational
+structure (up to isotropic scaling); 0.0 indicates no linear
+relationship.
+
+\begin{table}[ht]
+\centering
+\caption{CKA (linear kernel) between Llama-3.1-8B-Instruct and
+  R1-Distill-Llama-8B residual stream activations at matched layers.}
+\label{tab:cka}
+\vspace{4pt}
+\small
+\begin{tabular}{rcrcrcrcrcrcrcrcrcrcrcrcrcrcrcrcrcrr}
+\toprule
+\multicolumn{2}{c}{\textbf{Summary}} \\
+\midrule
+Min CKA & 0.379 \\
+Max CKA & 0.985 \\
+Mean CKA & 0.929 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Layer-wise CKA.}
+Full layer-wise CKA values between the two models:
+
+\begin{longtable}{rc}
+\caption{Layer-wise CKA (linear kernel) between Llama-3.1-8B-Instruct
+  and R1-Distill-Llama-8B.}
+\label{tab:cka_layers} \\
+\toprule
+\textbf{Layer} & \textbf{CKA} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Layer} & \textbf{CKA} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+ 0 & 0.379 \\
+ 1 & 0.664 \\
+ 2 & 0.763 \\
+ 3 & 0.876 \\
+ 4 & 0.888 \\
+ 5 & 0.966 \\
+ 6 & 0.971 \\
+ 7 & 0.975 \\
+ 8 & 0.985 \\
+ 9 & 0.982 \\
+10 & 0.962 \\
+11 & 0.956 \\
+12 & 0.966 \\
+13 & 0.971 \\
+14 & 0.976 \\
+15 & 0.957 \\
+16 & 0.970 \\
+17 & 0.976 \\
+18 & 0.978 \\
+19 & 0.975 \\
+20 & 0.972 \\
+21 & 0.963 \\
+22 & 0.971 \\
+23 & 0.962 \\
+24 & 0.971 \\
+25 & 0.969 \\
+26 & 0.961 \\
+27 & 0.964 \\
+28 & 0.964 \\
+29 & 0.965 \\
+30 & 0.960 \\
+31 & 0.955 \\
+\end{longtable}
+
+\noindent The CKA range (0.379--0.985) indicates that
+reasoning distillation preserves substantial representational structure
+at some layers while substantially reorganizing others.  We expect
+that layers where CKA is lowest (furthest from 1.0) correspond to
+where the deliberation gap in probe AUC is largest, as those are the
+layers most affected by reasoning training.  Full layer-wise CKA
+values will test this prediction.
+
+% ============================================================
+% G. Lure Susceptibility Distribution
+% ============================================================
+
+\section*{G. Lure Susceptibility Distribution}
+\label{sec:appendix_lure}
+
+Lure susceptibility scores are continuous \pzero{} logit scores for
+the S1-lure answer on each conflict item.  Positive scores indicate
+that the model's pre-generation representation favors the heuristic
+(lure) answer; negative scores indicate it favors the correct
+(normative) answer.
+
+\subsection*{G.1 Distribution Summary}
+
+\begin{table}[ht]
+\centering
+\caption{Lure susceptibility score distributions.  Scores are
+  \pzero{} logit differences (lure $-$ correct) on conflict items
+  ($n$ = 165 per model, 7 primary categories).}
+\label{tab:lure_dist}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Model} & \textbf{Mean} & \textbf{SD} & \textbf{Median} &
+  \textbf{Min} & \textbf{Max} & \textbf{$n$ positive} \\
+\midrule
+Llama 8B-Inst.   & $+$0.422 & 2.995 & 0.000 & $-$6.938 & $+$8.719 & 56 \\
+R1-Distill       & $-$0.326 & 2.063 & $-$0.320 & $-$7.301 & $+$5.219 & 73 \\
+\midrule
+\multicolumn{7}{l}{Welch's $t$(250.2) = 2.459, $p$ = 0.007 (one-sided), Cohen's $d$ = 0.292} \\
+\multicolumn{7}{l}{Permutation test: $p$ = 0.008 (10{,}000 permutations)} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The sign flip between models is the key finding: Llama's
+pre-generation representation actively favors the lure ($+$0.422),
+while R1-Distill's favors the correct answer ($-$0.326).  The effect
+size is small (Cohen's $d$ = 0.292), reflecting the high variance
+within each model, but is statistically significant by both
+parametric and non-parametric tests.
+
+\subsection*{G.2 Per-Category Breakdown}
+
+\begin{table}[ht]
+\centering
+\caption{Lure susceptibility scores by category and model.
+  Positive = model favors lure; negative = model favors correct
+  answer.}
+\label{tab:lure_by_category}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{Llama 8B-Inst.}} & \multicolumn{2}{c}{\textbf{R1-Distill}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textbf{Category} & \textbf{Mean} & \textbf{SD} & \textbf{Mean} & \textbf{SD} \\
+\midrule
+Base rate ($n$=25)    & $+$1.421 & 3.985 & $-$2.184 & 3.070 \\
+Conjunction ($n$=20)  & $+$3.082 & 1.601 & $-$0.865 & 0.489 \\
+Syllogism ($n$=25)    & $-$1.011 & 5.652 & $+$0.068 & 1.992 \\
+CRT ($n$=30)          & $+$0.000 & 0.000 & $+$0.394 & 1.527 \\
+Arithmetic ($n$=25)   & $+$0.000 & 0.000 & $-$0.359 & 1.878 \\
+Framing ($n$=20)      & $-$0.111 & 1.409 & $-$0.127 & 1.053 \\
+Anchoring ($n$=20)    & $+$0.000 & 0.000 & $+$0.808 & 1.778 \\
+\midrule
+\textbf{Overall} ($n$=165) & $+$0.422 & 2.995 & $-$0.326 & 2.063 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent We expect the per-category breakdown to show that the
+sign flip is driven primarily by the vulnerable categories (base
+rate, conjunction, syllogism), where Llama shows high lure rates
+and large positive susceptibility scores.  For the immune categories
+(CRT, arithmetic, framing, anchoring), both models should show
+negative susceptibility scores (favoring the correct answer).  The
+per-category data will test whether the overall effect is driven by
+a few categories or represents a broad shift.
+
+\subsection*{G.3 Histogram Description}
+
+The lure susceptibility distributions for both models are approximately
+normal with heavy tails.  Llama's distribution is centered at $+$0.422
+with standard deviation 2.995, indicating that the typical conflict
+item produces a moderate pro-lure bias in the pre-generation
+representation.  R1-Distill's distribution is centered at $-$0.326
+with standard deviation 2.063, shifted toward anti-lure bias with
+notably lower variance.  The variance reduction in R1-Distill
+($\sigma^2 = 4.25$ vs.\ $8.97$ for Llama, $F$-test $p$
+$< 0.001$, $F = 2.11$) suggests that reasoning distillation not only shifts
+the mean but also reduces the variability of lure susceptibility
+across items.
+
+% ============================================================
+% H. OLMo-3 Replication (Probes and Behavioral)
+% ============================================================
+
+\section*{H. OLMo-3 Replication}
+\label{sec:appendix_olmo}
+
+To test the generality of our findings beyond the Llama architecture
+family, we replicate the probing and behavioral analyses on OLMo-3-7B
+\citep{groeneveld2024olmo}, using its Instruct and Think variants as a
+second controlled reasoning pair (same base weights, reasoning-tuned
+vs.\ standard instruction-tuned).
+
+\subsection*{H.1 OLMo-3 Behavioral Results}
+
+Both OLMo-3 variants show \textbf{0\% S1-lure rates across all
+categories}, including the three categories where Llama-3.1-8B is
+highly vulnerable.  This makes OLMo-3 an important control: it
+demonstrates that S1-lure vulnerability is model-specific and not an
+inherent property of the benchmark items.
+
+\begin{table}[ht]
+\centering
+\caption{OLMo-3 S1-lure rates (\%) on conflict items.
+  Binomial exact 95\% CIs in brackets.}
+\label{tab:olmo_behavioral}
+\vspace{4pt}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Category ($n$ conflict)} & \textbf{OLMo-3 Instruct} & \textbf{OLMo-3 Think} \\
+\midrule
+Base rate ($n$=35)    & 0 {\scriptsize [0, 8]}  & 0 {\scriptsize [0, 8]}  \\
+Conjunction ($n$=20)  & 0 {\scriptsize [0, 14]} & 0 {\scriptsize [0, 14]} \\
+Syllogism ($n$=25)    & 0 {\scriptsize [0, 11]} & 0 {\scriptsize [0, 11]} \\
+CRT ($n$=30)          & 0 {\scriptsize [0, 10]} & 0 {\scriptsize [0, 10]} \\
+Arithmetic ($n$=25)   & 0 {\scriptsize [0, 11]} & 0 {\scriptsize [0, 11]} \\
+Framing ($n$=20)      & 0 {\scriptsize [0, 14]} & 0 {\scriptsize [0, 14]} \\
+Anchoring ($n$=20)    & 0 {\scriptsize [0, 14]} & 0 {\scriptsize [0, 14]} \\
+Sunk cost ($n$=15)    & 0 {\scriptsize [0, 18]} & 0 {\scriptsize [0, 18]} \\
+\midrule
+\textbf{Overall (7-cat)} & \textbf{0.0} & \textbf{0.0} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{H.2 OLMo-3 Probe Results}
+
+Despite both models achieving 0\% lure rates, probes still
+discriminate conflict from control items at high AUC, confirming that
+conflict-detection representations exist even in behaviourally immune
+models.
+
+\begin{table}[ht]
+\centering
+\caption{OLMo-3 probe summary (vulnerable categories, \pzero{} position,
+  $n$ = 160).  Both models have 32 layers.}
+\label{tab:olmo_probe_summary}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Model} & \textbf{Peak Layer} & \textbf{Peak AUC} & \textbf{Mean AUC} & \textbf{Min AUC} \\
+\midrule
+OLMo-3-Instruct & 21 & 0.998 & 0.969 & 0.861 \\
+OLMo-3-Think    & 28 & 0.993 & 0.946 & 0.841 \\
+\midrule
+\multicolumn{5}{l}{Instruct higher at 30/32 layers; max gap 0.068 at L12; mean gap 0.023} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Key findings:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{OLMo-3-Instruct peaks at L21} (AUC = 0.998), similar
+  to Llama's peak at L14 (in the 60--70\% depth range of the network).
+  \item \textbf{OLMo-3-Think peaks later at L28} (AUC = 0.993),
+  consistent with the pattern that reasoning-tuned models shift peak
+  probe accuracy to deeper layers.
+  \item The Instruct model has higher probe AUC at 30 of 32 layers,
+  mirroring the Llama $>$ R1 pattern despite both OLMo models being
+  behaviourally immune.
+  \item All P2 (control position) probes return AUC = 0.500 exactly,
+  confirming that the signal is position-specific.
+\end{itemize}
+
+\paragraph{Layer-wise OLMo-3 probe AUC.}
+
+\begin{longtable}{rcccc}
+\caption{Layer-wise probe AUC for OLMo-3-Instruct and OLMo-3-Think
+  (vulnerable categories, \pzero{} position, 5-fold CV,
+  mean $\pm$ std over folds).}
+\label{tab:olmo_probe_layers} \\
+\toprule
+\textbf{Layer} & \textbf{Instruct AUC} & \textbf{$\pm$ std} & \textbf{Think AUC} & \textbf{$\pm$ std} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Layer} & \textbf{Instruct AUC} & \textbf{$\pm$ std} & \textbf{Think AUC} & \textbf{$\pm$ std} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+ 0 & 0.861 & 0.005 & 0.846 & 0.009 \\
+ 1 & 0.868 & 0.007 & 0.841 & 0.015 \\
+ 2 & 0.895 & 0.017 & 0.882 & 0.008 \\
+ 3 & 0.903 & 0.014 & 0.886 & 0.004 \\
+ 4 & 0.907 & 0.004 & 0.892 & 0.005 \\
+ 5 & 0.913 & 0.009 & 0.897 & 0.003 \\
+ 6 & 0.948 & 0.002 & 0.899 & 0.003 \\
+ 7 & 0.940 & 0.001 & 0.903 & 0.001 \\
+ 8 & 0.956 & 0.004 & 0.902 & 0.004 \\
+ 9 & 0.968 & 0.000 & 0.906 & 0.001 \\
+10 & 0.970 & 0.003 & 0.905 & 0.002 \\
+11 & 0.969 & 0.005 & 0.906 & 0.005 \\
+12 & 0.991 & 0.001 & 0.922 & 0.002 \\
+13 & 0.992 & 0.002 & 0.937 & 0.004 \\
+14 & 0.995 & 0.001 & 0.947 & 0.006 \\
+15 & 0.997 & 0.001 & 0.976 & 0.004 \\
+16 & 0.998 & 0.002 & 0.989 & 0.003 \\
+17 & 0.997 & 0.001 & 0.988 & 0.004 \\
+18 & 0.997 & 0.001 & 0.986 & 0.004 \\
+19 & 0.998 & 0.002 & 0.987 & 0.003 \\
+20 & 0.998 & 0.001 & 0.986 & 0.003 \\
+\textbf{21} & \textbf{0.998} & 0.001 & 0.985 & 0.002 \\
+22 & 0.998 & 0.001 & 0.991 & 0.002 \\
+23 & 0.998 & 0.001 & 0.992 & 0.002 \\
+24 & 0.998 & 0.001 & 0.992 & 0.002 \\
+25 & 0.997 & 0.001 & 0.991 & 0.002 \\
+26 & 0.997 & 0.002 & 0.992 & 0.002 \\
+27 & 0.996 & 0.004 & 0.992 & 0.003 \\
+\textbf{28} & 0.994 & 0.006 & \textbf{0.993} & 0.002 \\
+29 & 0.994 & 0.005 & 0.992 & 0.002 \\
+30 & 0.990 & 0.007 & 0.991 & 0.002 \\
+31 & 0.986 & 0.006 & 0.991 & 0.001 \\
+\end{longtable}
+
+% ============================================================
+% I. SAE Feature Analysis
+% ============================================================
+
+\section*{I. SAE Feature Analysis}
+\label{sec:appendix_sae}
+
+We use the Goodfire sparse autoencoder (SAE) trained on
+Llama-3.1-8B-Instruct layer~19 to decompose the residual stream
+into interpretable features and test which features are associated
+with the conflict/control distinction.
+
+\subsection*{I.1 Reconstruction Fidelity}
+
+\begin{table}[ht]
+\centering
+\caption{SAE reconstruction fidelity on Llama-3.1-8B-Instruct
+  layer~19 activations ($n$ = 470 items).}
+\label{tab:sae_fidelity}
+\vspace{4pt}
+\small
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+MSE                  & 0.011 \\
+Explained variance   & 74.0\% \\
+Mean L0 (active features) & 47.9 \\
+SAE width            & 65{,}536 \\
+Is poor fit?         & No \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The explained variance of 74\% is moderate, indicating that
+the SAE captures the majority of variance but not all.  Downstream
+feature-level findings should be interpreted as a lower bound on
+the true signal, since reconstruction loss may attenuate feature
+activations.
+
+\subsection*{I.2 Significant Features}
+
+After BH-FDR correction ($q < 0.05$) across 65{,}536 features, we
+identify \textbf{41 features} with significantly different activation
+between conflict and control items.
+
+\subsection*{I.3 Ma et al.\ Falsification}
+
+All 41 significant features were submitted to the Ma et al.\ (2026)
+falsification protocol: for each feature, the top-3 activating tokens
+were injected into 100 random non-cognitive-bias texts.  A feature
+is declared spurious if it still activates above threshold in the
+random context.
+
+\begin{table}[ht]
+\centering
+\caption{SAE falsification results (Llama-3.1-8B-Instruct, L19).}
+\label{tab:sae_falsification}
+\vspace{4pt}
+\small
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Features tested (post-FDR)      & 41 \\
+Falsification candidates        & 41 \\
+Spurious (failed falsification) & 0 \\
+Surviving features              & 41 \\
+Spurious rate                   & 0.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent All 41 features survive falsification.  The 0\% spurious
+rate indicates that none of the significant features are simple
+token-level artifacts --- they activate specifically in the context
+of cognitive bias items, not when the same tokens appear in random
+text.
+
+% ============================================================
+% J. Attention Entropy Analysis
+% ============================================================
+
+\section*{J. Attention Entropy Analysis}
+\label{sec:appendix_attention}
+
+We compare attention entropy patterns between Llama-3.1-8B-Instruct
+and R1-Distill-Llama-8B at the \pzero{} position.  Attention entropy
+is computed as the Shannon entropy of each head's attention
+distribution, normalized by $\log_2(t)$ where $t$ is the sequence
+length.  Head-level significance is assessed via rank-biserial
+correlation between conflict and control items, with BH-FDR
+correction at $q < 0.05$.
+
+\subsection*{J.1 Head-Level Results}
+
+\begin{table}[ht]
+\centering
+\caption{Summary of head-level attention entropy tests.}
+\label{tab:attention_heads}
+\vspace{4pt}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Llama 8B-Inst.} & \textbf{R1-Distill} \\
+\midrule
+Total heads tested                 & 1{,}024 & 1{,}024 \\
+Significant (BH $q < 0.05$)       & 473 (46.2\%) & 515 (50.3\%) \\
+\quad Of which conflict-higher     & 82 (17.3\%) & 115 (22.3\%) \\
+\quad Of which control-higher      & 391 (82.7\%) & 400 (77.7\%) \\
+\midrule
+S2-specialized heads               & 30 (2.9\%)  & 57 (5.6\%) \\
+\quad ($q < 0.05$ and $|r_{rb}| \geq 0.3$) & & \\
+\quad Of which conflict-higher     & 29 (96.7\%) & 47 (82.5\%) \\
+\quad KV-group level               & 13 (5.1\%)  & 24 (9.4\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection*{J.2 S2-Specialized Heads}
+
+S2-specialized heads are defined as those with both statistical
+significance ($q < 0.05$) and a meaningful effect size ($|r_{rb}|
+\geq 0.3$) on the normalized entropy metric.  R1-Distill has
+nearly twice the proportion of S2-specialized heads compared to
+Llama (5.6\% vs.\ 2.9\%), and this gap widens further at the
+KV-group level (9.4\% vs.\ 5.1\%), accounting for the
+non-independence of query heads within GQA groups.
+
+\subsection*{J.3 Layer-Wise Entropy Gap}
+
+The entropy gap (conflict $-$ control mean normalized entropy) shows
+distinct layer profiles for each model:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Llama-3.1-8B:} Peak entropy gap at layer~7
+  ($\Delta = -0.0156$), concentrated in early-to-mid layers
+  (L4--L14).
+  \item \textbf{R1-Distill:} Peak entropy gap at layer~11
+  ($\Delta = -0.0167$), with a broader distribution extending
+  through layer~15 and a secondary focus in late layers (L27--L31).
+\end{itemize}
+
+\noindent The negative sign indicates that conflict items elicit
+\emph{lower} entropy (more focused attention) than control items,
+consistent with the hypothesis that the heuristic--normative conflict
+triggers a more targeted attention pattern.
+
+\vspace{1em}
+\hrule
+\vspace{0.5em}
+\noindent\small\textbf{Data availability.}  All result JSON files,
+analysis scripts, and benchmark items are available at the project
+repository.
+
+% ============================================================
+% References
+% ============================================================
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}
