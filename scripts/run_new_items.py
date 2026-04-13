@@ -36,12 +36,28 @@ def log(msg: str) -> None:
 
 
 def parse_answer(text: str, correct: str, lure: str) -> str:
-    """Classify the model's response."""
+    """Classify the model's response.
+
+    For reasoning models with long CoT, we check the LAST occurrence
+    (the final answer after deliberation), not the first (which may be
+    in the problem restatement). Also clean BPE artifacts from some
+    tokenizers (e.g., R1-Distill emits U+0120 for spaces).
+    """
+    # Clean BPE artifacts that break substring matching
+    text = text.replace("\u0120", " ").replace("\u010a", "\n")
     text_lower = text.lower().strip()
     correct_lower = correct.lower().strip()
     lure_lower = lure.lower().strip() if lure else ""
 
-    # Check for exact matches first, then broader
+    # For reasoning models, check the LAST 200 chars (the actual answer)
+    # to avoid matching keywords in the problem restatement
+    answer_region = text_lower[-200:] if len(text_lower) > 200 else text_lower
+
+    if correct_lower in answer_region:
+        return "correct"
+    if lure_lower and lure_lower in answer_region:
+        return "lure"
+    # Fall back to full text if answer region didn't match
     if correct_lower in text_lower:
         return "correct"
     if lure_lower and lure_lower in text_lower:
@@ -105,7 +121,7 @@ def run_model(
             "subcategory": item.get("subcategory", ""),
             "conflict": item["conflict"],
             "verdict": verdict,
-            "response": response[:500],
+            "response": response[:4000],  # Don't truncate CoT — scoring needs full text
             "correct_answer": item["correct_answer"],
             "lure_answer": item.get("lure_answer", ""),
         })
