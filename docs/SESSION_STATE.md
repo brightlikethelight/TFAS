@@ -1,7 +1,7 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-12 (ALL GPU experiments complete)
-**Active focus**: Paper writing and final polish. All GPU jobs done. Natural freq R1 re-run in progress (scoring bug fix). **Targeting ICML MechInterp Workshop (May 8, ~26 days).**
+**Last updated**: 2026-04-12 (overnight3 results in, pushing to GitHub)
+**Active focus**: Paper writing (switching to 8pp long format). All GPU jobs done. overnight3: 5/6 succeeded, SAE R1 failed (dependency issue, being fixed). **Targeting ICML MechInterp Workshop (May 8, ~26 days).**
 
 ---
 
@@ -146,6 +146,34 @@ The narrative now rests on **six converging lines of evidence**:
 
 ---
 
+## What happened session 8 (April 12 night -> push, 2026)
+
+### Overnight3 pipeline: 5/6 succeeded
+
+| Job | Status | Key Result |
+|-----|--------|------------|
+| confidence_llama | DONE | De Neys confidence paradigm confirmed -- Llama shows confidence drop on conflict items |
+| confidence_r1 | DONE | R1-Distill confidence extraction complete |
+| cross_model_transfer | DONE | Direction shared between Llama and R1-Distill (cross-model probe transfer) |
+| behavioral_470 (Llama, R1, Qwen NO_THINK, Qwen THINK) | DONE | All 4 models re-run on expanded 470-item benchmark |
+| SAE R1 | FAILED | Dependency issue (being fixed separately) |
+
+### New findings from overnight3
+
+1. **Confidence paradigm (De Neys confirmed)**: Llama shows the predicted confidence drop on conflict items, matching De Neys' conflict detection framework. R1-Distill confidence data also extracted.
+2. **Cross-model transfer**: Probe direction is shared between Llama and R1-Distill -- the S1/S2 linear direction transfers across models, not just within-model.
+3. **Qwen 470 results**: Both Qwen 3-8B NO_THINK and THINK re-run on the full 470-item benchmark.
+
+### Paper format change
+- **Switching to 8-page long format** (was 4pp workshop). More room for the six converging lines of evidence and supplementary material.
+
+### Results copied to permanent locations
+- `results/confidence/llama_confidence.json`, `r1_distill_confidence.json`
+- `results/probes/cross_model_transfer_llama_r1.json`
+- `results/behavioral/llama31_8b_470.json`, `r1_distill_llama_470.json`, `qwen3_8b_no_think_470.json`, `qwen3_8b_think_470.json`
+
+---
+
 ## What happened session 7 (April 13 afternoon, 2026)
 
 ### Benchmark expanded from 330 to 380 items
@@ -247,9 +275,11 @@ Ran the full 330-item benchmark against 5 model configurations on the B200 pod.
 
 ### Behavioral
 - **Full benchmark**: 470 items (11 categories, 4 heuristic families), 7 model configurations tested
+- **470-item re-runs**: Llama, R1-Distill, Qwen NO_THINK, Qwen THINK all re-run on expanded benchmark (overnight3)
 - **Lure susceptibility**: Continuous scores computed for Llama (+0.422) and R1-Distill (-0.326)
 - **New items validated**: Sunk cost (immune), natural frequency (Llama 100% lure), loss aversion (OLMo 33%)
 - **OLMo behavioral**: Instruct 14.9% vs Think 0.9% lure rate
+- **Confidence paradigm (De Neys)**: DONE. Llama and R1-Distill confidence extracted (overnight3). De Neys confidence drop confirmed.
 
 ### Mechanistic (probes)
 - **Linear probes**: Llama 0.999, R1-Distill 0.929, OLMo Instruct 0.998, OLMo Think 0.993
@@ -257,6 +287,7 @@ Ran the full 330-item benchmark against 5 model configurations on the B200 pod.
 - **Cross-prediction**: Confound RESOLVED. Llama probe specific (0.378 transfer AUC)
 - **Transfer matrix**: base_rate <-> conjunction share representations (0.993)
 - **Qwen THINK probes**: 0.971 = identical to NO_THINK. Training vs inference dissociation.
+- **Cross-model transfer**: DONE. Llama/R1 direction shared (overnight3). Probe transfers across models.
 
 ### Mechanistic (other)
 - **SAE (Goodfire L19)**: 41 features, 0 spurious, 74% explained variance. Ma et al. falsification passed.
@@ -278,19 +309,19 @@ Ran the full 330-item benchmark against 5 model configurations on the B200 pod.
 
 ## What's NOT done
 
+- **SAE R1 re-run**: Failed in overnight3 (dependency issue). Being fixed. Not blocking paper.
 - **Natural frequency R1-Distill re-run**: In progress with fixed scoring bug. Minor -- affects one cell in one table.
-- **Paper final polish**: Agents working on integrating last results into `paper/workshop_paper.tex`.
+- **Paper rewrite to 8pp long format**: Switching from 4pp workshop to 8pp. Main remaining work.
 - **Certainty effect + availability behavioral**: New categories, not run yet. Stretch goal -- not needed for paper.
-- **Confidence paradigm extraction**: Stretch goal (De Neys confidence drop). Script exists but not run.
 - **Causal interventions**: Steering/ablation. Descoped to ICLR paper, not this workshop submission.
 - Ministral-3-8B: deprioritized (transformers version issue). Not needed.
-- FASRC access: irrelevant now (RunPod B200 was sufficient for everything).
 
 ## Active blockers
 
-- **NONE for GPU work.** All GPU experiments are complete.
+- **NONE for GPU work.** All GPU experiments are complete (overnight3: 5/6 passed).
+- SAE R1 dependency issue -- being fixed, not blocking paper.
 - Natural freq R1 re-run is minor and in progress.
-- Paper integration is the critical path to submission.
+- Paper rewrite to 8pp long format is the critical path to submission.
 
 ## Key W&B / artifact pointers
 

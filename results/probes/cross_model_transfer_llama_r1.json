@@ -1,0 +1,660 @@
+{
+  "description": "Cross-model probe transfer: Llama <-> R1-Distill",
+  "categories": [
+    "base_rate",
+    "conjunction",
+    "syllogism"
+  ],
+  "n_items": 160,
+  "n_layers": 32,
+  "results": {
+    "llama_to_r1": [
+      {
+        "layer": 0,
+        "auc": 0.6925,
+        "skipped": false
+      },
+      {
+        "layer": 1,
+        "auc": 0.6886,
+        "skipped": false
+      },
+      {
+        "layer": 2,
+        "auc": 0.7309,
+        "skipped": false
+      },
+      {
+        "layer": 3,
+        "auc": 0.7791,
+        "skipped": false
+      },
+      {
+        "layer": 4,
+        "auc": 0.7945,
+        "skipped": false
+      },
+      {
+        "layer": 5,
+        "auc": 0.6488,
+        "skipped": false
+      },
+      {
+        "layer": 6,
+        "auc": 0.787,
+        "skipped": false
+      },
+      {
+        "layer": 7,
+        "auc": 0.8588,
+        "skipped": false
+      },
+      {
+        "layer": 8,
+        "auc": 0.7097,
+        "skipped": false
+      },
+      {
+        "layer": 9,
+        "auc": 0.8312,
+        "skipped": false
+      },
+      {
+        "layer": 10,
+        "auc": 0.8086,
+        "skipped": false
+      },
+      {
+        "layer": 11,
+        "auc": 0.7858,
+        "skipped": false
+      },
+      {
+        "layer": 12,
+        "auc": 0.842,
+        "skipped": false
+      },
+      {
+        "layer": 13,
+        "auc": 0.5012,
+        "skipped": false
+      },
+      {
+        "layer": 14,
+        "auc": 0.6259,
+        "skipped": false
+      },
+      {
+        "layer": 15,
+        "auc": 0.8278,
+        "skipped": false
+      },
+      {
+        "layer": 16,
+        "auc": 0.7047,
+        "skipped": false
+      },
+      {
+        "layer": 17,
+        "auc": 0.812,
+        "skipped": false
+      },
+      {
+        "layer": 18,
+        "auc": 0.8642,
+        "skipped": false
+      },
+      {
+        "layer": 19,
+        "auc": 0.8117,
+        "skipped": false
+      },
+      {
+        "layer": 20,
+        "auc": 0.7447,
+        "skipped": false
+      },
+      {
+        "layer": 21,
+        "auc": 0.8823,
+        "skipped": false
+      },
+      {
+        "layer": 22,
+        "auc": 0.9055,
+        "skipped": false
+      },
+      {
+        "layer": 23,
+        "auc": 0.92,
+        "skipped": false
+      },
+      {
+        "layer": 24,
+        "auc": 0.8864,
+        "skipped": false
+      },
+      {
+        "layer": 25,
+        "auc": 0.8733,
+        "skipped": false
+      },
+      {
+        "layer": 26,
+        "auc": 0.8417,
+        "skipped": false
+      },
+      {
+        "layer": 27,
+        "auc": 0.7619,
+        "skipped": false
+      },
+      {
+        "layer": 28,
+        "auc": 0.6622,
+        "skipped": false
+      },
+      {
+        "layer": 29,
+        "auc": 0.763,
+        "skipped": false
+      },
+      {
+        "layer": 30,
+        "auc": 0.7486,
+        "skipped": false
+      },
+      {
+        "layer": 31,
+        "auc": 0.6941,
+        "skipped": false
+      }
+    ],
+    "r1_to_llama": [
+      {
+        "layer": 0,
+        "auc": 0.6367,
+        "skipped": false
+      },
+      {
+        "layer": 1,
+        "auc": 0.7722,
+        "skipped": false
+      },
+      {
+        "layer": 2,
+        "auc": 0.7867,
+        "skipped": false
+      },
+      {
+        "layer": 3,
+        "auc": 0.8725,
+        "skipped": false
+      },
+      {
+        "layer": 4,
+        "auc": 0.7156,
+        "skipped": false
+      },
+      {
+        "layer": 5,
+        "auc": 0.6091,
+        "skipped": false
+      },
+      {
+        "layer": 6,
+        "auc": 0.7284,
+        "skipped": false
+      },
+      {
+        "layer": 7,
+        "auc": 0.765,
+        "skipped": false
+      },
+      {
+        "layer": 8,
+        "auc": 0.6973,
+        "skipped": false
+      },
+      {
+        "layer": 9,
+        "auc": 0.8556,
+        "skipped": false
+      },
+      {
+        "layer": 10,
+        "auc": 0.8242,
+        "skipped": false
+      },
+      {
+        "layer": 11,
+        "auc": 0.9166,
+        "skipped": false
+      },
+      {
+        "layer": 12,
+        "auc": 0.8478,
+        "skipped": false
+      },
+      {
+        "layer": 13,
+        "auc": 0.9134,
+        "skipped": false
+      },
+      {
+        "layer": 14,
+        "auc": 0.8873,
+        "skipped": false
+      },
+      {
+        "layer": 15,
+        "auc": 0.9542,
+        "skipped": false
+      },
+      {
+        "layer": 16,
+        "auc": 0.8544,
+        "skipped": false
+      },
+      {
+        "layer": 17,
+        "auc": 0.8323,
+        "skipped": false
+      },
+      {
+        "layer": 18,
+        "auc": 0.9131,
+        "skipped": false
+      },
+      {
+        "layer": 19,
+        "auc": 0.8578,
+        "skipped": false
+      },
+      {
+        "layer": 20,
+        "auc": 0.7719,
+        "skipped": false
+      },
+      {
+        "layer": 21,
+        "auc": 0.8873,
+        "skipped": false
+      },
+      {
+        "layer": 22,
+        "auc": 0.7942,
+        "skipped": false
+      },
+      {
+        "layer": 23,
+        "auc": 0.753,
+        "skipped": false
+      },
+      {
+        "layer": 24,
+        "auc": 0.7838,
+        "skipped": false
+      },
+      {
+        "layer": 25,
+        "auc": 0.7902,
+        "skipped": false
+      },
+      {
+        "layer": 26,
+        "auc": 0.7495,
+        "skipped": false
+      },
+      {
+        "layer": 27,
+        "auc": 0.7084,
+        "skipped": false
+      },
+      {
+        "layer": 28,
+        "auc": 0.6617,
+        "skipped": false
+      },
+      {
+        "layer": 29,
+        "auc": 0.7447,
+        "skipped": false
+      },
+      {
+        "layer": 30,
+        "auc": 0.6806,
+        "skipped": false
+      },
+      {
+        "layer": 31,
+        "auc": 0.5897,
+        "skipped": false
+      }
+    ],
+    "llama_self": [
+      {
+        "layer": 0,
+        "auc": 0.9059,
+        "skipped": false
+      },
+      {
+        "layer": 1,
+        "auc": 0.9239,
+        "skipped": false
+      },
+      {
+        "layer": 2,
+        "auc": 0.8798,
+        "skipped": false
+      },
+      {
+        "layer": 3,
+        "auc": 0.8612,
+        "skipped": false
+      },
+      {
+        "layer": 4,
+        "auc": 0.9019,
+        "skipped": false
+      },
+      {
+        "layer": 5,
+        "auc": 0.9427,
+        "skipped": false
+      },
+      {
+        "layer": 6,
+        "auc": 0.9445,
+        "skipped": false
+      },
+      {
+        "layer": 7,
+        "auc": 0.9264,
+        "skipped": false
+      },
+      {
+        "layer": 8,
+        "auc": 0.9233,
+        "skipped": false
+      },
+      {
+        "layer": 9,
+        "auc": 0.9313,
+        "skipped": false
+      },
+      {
+        "layer": 10,
+        "auc": 0.953,
+        "skipped": false
+      },
+      {
+        "layer": 11,
+        "auc": 0.9508,
+        "skipped": false
+      },
+      {
+        "layer": 12,
+        "auc": 0.9625,
+        "skipped": false
+      },
+      {
+        "layer": 13,
+        "auc": 0.9753,
+        "skipped": false
+      },
+      {
+        "layer": 14,
+        "auc": 0.9867,
+        "skipped": false
+      },
+      {
+        "layer": 15,
+        "auc": 0.967,
+        "skipped": false
+      },
+      {
+        "layer": 16,
+        "auc": 0.9781,
+        "skipped": false
+      },
+      {
+        "layer": 17,
+        "auc": 0.9761,
+        "skipped": false
+      },
+      {
+        "layer": 18,
+        "auc": 0.9695,
+        "skipped": false
+      },
+      {
+        "layer": 19,
+        "auc": 0.9645,
+        "skipped": false
+      },
+      {
+        "layer": 20,
+        "auc": 0.958,
+        "skipped": false
+      },
+      {
+        "layer": 21,
+        "auc": 0.952,
+        "skipped": false
+      },
+      {
+        "layer": 22,
+        "auc": 0.9616,
+        "skipped": false
+      },
+      {
+        "layer": 23,
+        "auc": 0.9678,
+        "skipped": false
+      },
+      {
+        "layer": 24,
+        "auc": 0.9542,
+        "skipped": false
+      },
+      {
+        "layer": 25,
+        "auc": 0.9617,
+        "skipped": false
+      },
+      {
+        "layer": 26,
+        "auc": 0.9581,
+        "skipped": false
+      },
+      {
+        "layer": 27,
+        "auc": 0.9663,
+        "skipped": false
+      },
+      {
+        "layer": 28,
+        "auc": 0.9655,
+        "skipped": false
+      },
+      {
+        "layer": 29,
+        "auc": 0.9653,
+        "skipped": false
+      },
+      {
+        "layer": 30,
+        "auc": 0.9555,
+        "skipped": false
+      },
+      {
+        "layer": 31,
+        "auc": 0.9634,
+        "skipped": false
+      }
+    ],
+    "r1_self": [
+      {
+        "layer": 0,
+        "auc": 0.88,
+        "skipped": false
+      },
+      {
+        "layer": 1,
+        "auc": 0.8898,
+        "skipped": false
+      },
+      {
+        "layer": 2,
+        "auc": 0.9081,
+        "skipped": false
+      },
+      {
+        "layer": 3,
+        "auc": 0.8995,
+        "skipped": false
+      },
+      {
+        "layer": 4,
+        "auc": 0.9184,
+        "skipped": false
+      },
+      {
+        "layer": 5,
+        "auc": 0.9325,
+        "skipped": false
+      },
+      {
+        "layer": 6,
+        "auc": 0.8658,
+        "skipped": false
+      },
+      {
+        "layer": 7,
+        "auc": 0.9138,
+        "skipped": false
+      },
+      {
+        "layer": 8,
+        "auc": 0.9066,
+        "skipped": false
+      },
+      {
+        "layer": 9,
+        "auc": 0.9141,
+        "skipped": false
+      },
+      {
+        "layer": 10,
+        "auc": 0.9328,
+        "skipped": false
+      },
+      {
+        "layer": 11,
+        "auc": 0.9305,
+        "skipped": false
+      },
+      {
+        "layer": 12,
+        "auc": 0.9128,
+        "skipped": false
+      },
+      {
+        "layer": 13,
+        "auc": 0.9187,
+        "skipped": false
+      },
+      {
+        "layer": 14,
+        "auc": 0.9275,
+        "skipped": false
+      },
+      {
+        "layer": 15,
+        "auc": 0.9363,
+        "skipped": false
+      },
+      {
+        "layer": 16,
+        "auc": 0.9353,
+        "skipped": false
+      },
+      {
+        "layer": 17,
+        "auc": 0.9356,
+        "skipped": false
+      },
+      {
+        "layer": 18,
+        "auc": 0.9425,
+        "skipped": false
+      },
+      {
+        "layer": 19,
+        "auc": 0.9375,
+        "skipped": false
+      },
+      {
+        "layer": 20,
+        "auc": 0.9369,
+        "skipped": false
+      },
+      {
+        "layer": 21,
+        "auc": 0.9408,
+        "skipped": false
+      },
+      {
+        "layer": 22,
+        "auc": 0.9409,
+        "skipped": false
+      },
+      {
+        "layer": 23,
+        "auc": 0.9356,
+        "skipped": false
+      },
+      {
+        "layer": 24,
+        "auc": 0.9405,
+        "skipped": false
+      },
+      {
+        "layer": 25,
+        "auc": 0.9381,
+        "skipped": false
+      },
+      {
+        "layer": 26,
+        "auc": 0.9345,
+        "skipped": false
+      },
+      {
+        "layer": 27,
+        "auc": 0.9372,
+        "skipped": false
+      },
+      {
+        "layer": 28,
+        "auc": 0.9323,
+        "skipped": false
+      },
+      {
+        "layer": 29,
+        "auc": 0.9328,
+        "skipped": false
+      },
+      {
+        "layer": 30,
+        "auc": 0.933,
+        "skipped": false
+      },
+      {
+        "layer": 31,
+        "auc": 0.9409,
+        "skipped": false
+      }
+    ]
+  }
+}
