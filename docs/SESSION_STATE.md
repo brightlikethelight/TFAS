@@ -1,40 +1,115 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-12 (overnight3 results in, pushing to GitHub)
-**Active focus**: Paper writing (switching to 8pp long format). All GPU jobs done. overnight3: 5/6 succeeded, SAE R1 failed (dependency issue, being fixed). **Targeting ICML MechInterp Workshop (May 8, ~26 days).**
+**Last updated**: 2026-04-12 (multi-seed robustness complete for Llama, R1-Distill running, paper proofread, submission package ready)
+**Active focus**: R1-Distill multi-seed (running on GPU), switch to official ICML template, advisor review.
+**Target**: ICML MechInterp Workshop, May 8 AOE (~26 days).
 
 ---
 
 ## MORNING BRIEFING (read this first)
 
-**ALL GPU experiments are COMPLETE.** The pipeline is done. Remaining work is paper polish and a few stretch-goal behavioral runs.
+**ALL experiments are COMPLETE except R1-Distill multi-seed (running now on GPU).** The pipeline is done. Paper is 8pp long format, compiles cleanly. Seven critical factual errors were found in proofread and fixed (commit `733f83e`). Anonymous version prepared. Submission package at `submission/`.
 
-### GPU pipeline final status
+**CRITICAL NEW FINDING**: Multi-seed robustness testing revealed that category vulnerability profiles shift dramatically between greedy and sampled decoding. The greedy "immune" categories are NOT immune under sampling. This does NOT affect probe results (P0 representation, not generation), but it changes the behavioral narrative.
 
-| Job | Status | Time | Key Result |
-|-----|--------|------|------------|
-| reextract_activations | DONE | ~78 min | 470-item activations for Llama + R1 |
-| attention_entropy | DONE | ~3 min | R1 5.6% vs Llama 2.9% S2-specialized heads |
-| bootstrap_cis | DONE | ~71 min | Llama [0.952, 0.992], R1 [0.894, 0.960] |
-| new_items | DONE | ~7 min | Llama NF=100% lure; sunk cost=0% both |
-| olmo3_full | DONE | ~8 hrs | Instruct 14.9%, Think 0.9%; probes 0.996->0.962 |
-| sae_goodfire | DONE | 31s | 41 features, 0 spurious, 74% EV |
+### What happened this session (session 9, April 12)
 
-### Eight key scientific findings (complete picture)
+1. **Multi-seed robustness (Llama, 3-seed, sampled)**: DONE. Results in `results/robustness/unsloth_Meta-Llama-3.1-8B-Instruct_multiseed.json`.
+2. **7 critical paper errors fixed** (commit `733f83e`): Table 1 wrong numbers, transfer matrix overclaim, cross-prediction layer mismatch, OLMo probe numbers, cross-model transfer baselines.
+3. **Anonymous paper version** prepared at `submission/workshop_paper_anonymous.tex`.
+4. **ICML 2-column approximation** shows ~7.5pp body, fits 8pp limit.
+5. **R1-Distill multi-seed**: RUNNING on GPU now. Script: `scripts/multiseed_behavioral.py --model deepseek-ai/DeepSeek-R1-Distill-Llama-8B --seeds 0,42,123 --max-new-tokens 4096`.
 
-1. **Category-specific vulnerability**: 3 vulnerable (base_rate, conjunction, syllogism), 4 immune (CRT, arithmetic, framing, anchoring)
-2. **Reasoning training blurs S1/S2 boundary**: AUC 0.974 (Llama) -> 0.930 (R1-Distill), peak layers L16/L31
-3. **Training vs inference dissociation**: Qwen THINK and NO_THINK probes are identical (both 0.971) despite different behavior. Reasoning at inference time does NOT change the representation the way distillation training does.
-4. **Cross-prediction resolves the confound**: Llama probe trained on vulnerable, tested on immune: **0.378 AUC at L16**. It detects processing mode, not task structure. This was THE critical question.
+---
+
+## Multi-seed robustness results (KEY NEW DATA)
+
+### Llama-3.1-8B-Instruct, 3 seeds (0, 42, 123), T=0.7, top_p=0.95, 470 items
+
+**Overall**: 27.5% +/- 1.3pp (stable, not flagged unstable)
+
+| Category | Greedy LR | Sampled Mean LR | Sampled Std (pp) | Stable? | Interpretation |
+|----------|-----------|-----------------|-------------------|---------|----------------|
+| base_rate | 84% | **81.0%** | 3.3pp | YES | Still highly vulnerable |
+| framing | 0% | **53.3%** | 2.9pp | YES | **FLIPPED**: immune -> majority-lured |
+| syllogism | 52% | **41.3%** | 9.2pp | YES (barely) | Reduced, borderline unstable |
+| crt | 0% | **35.6%** | 5.1pp | YES | **FLIPPED**: immune -> 36% lured |
+| availability | 0% | **8.9%** | 10.2pp | **NO** | Flagged unstable (0-20% range) |
+| certainty_effect | 0% | **6.7%** | 6.7pp | YES | Small but nonzero |
+| sunk_cost | 0% | **4.4%** | 3.8pp | YES | Near-zero |
+| arithmetic | 0% | **4.0%** | 0.0pp | YES | Rock-stable low |
+| conjunction | 55% | **3.3%** | 2.9pp | YES | **FLIPPED**: majority-lured -> near-immune |
+| loss_aversion | 0% | **0.0%** | 0.0pp | YES | Truly immune |
+| anchoring | 0% | **0.0%** | 0.0pp | YES | Truly immune |
+
+### Implications for the paper
+
+- **The "3 vulnerable, 4 immune" narrative from greedy decoding is WRONG under sampling.** With sampling: framing (53%), CRT (36%), and syllogism (41%) are all substantial. Conjunction drops from 55% to 3%.
+- **Probe results are UNAFFECTED**: Probes measure P0 (representation), not generation. The conflict/control boundary in the residual stream is the same regardless of decoding strategy. This is actually a *stronger* finding -- the model "knows" there's a conflict even when its generation doesn't reveal it.
+- **Paper framing needs updating**: Cannot claim CRT/framing/anchoring are "immune." Must frame as "greedy decoding yields X, sampled decoding yields Y, but internal representations are stable."
+- **Only loss_aversion and anchoring are truly immune** (0% across all 3 seeds with sampling).
+
+### R1-Distill multi-seed: RUNNING
+
+- Script: `scripts/multiseed_behavioral.py`
+- Model: `deepseek-ai/DeepSeek-R1-Distill-Llama-8B`
+- Seeds: 0, 42, 123
+- Max new tokens: 4096
+- Output will be at: `results/robustness/deepseek-ai_DeepSeek-R1-Distill-Llama-8B_multiseed.json`
+- Expected: R1 overall lure rate should remain low (~2-5%), but category profile may shift similarly.
+
+---
+
+## Complete experiment status table
+
+| Experiment | Status | Key Result | Data Location |
+|-----------|--------|------------|---------------|
+| Behavioral (6 models, 330-item greedy) | DONE | Llama 27.3%, R1 2.4%, Qwen-NT 21%, Qwen-T 7% | `results/behavioral/` |
+| Behavioral (4 models, 470-item greedy) | DONE | Expanded to 11 categories | `results/behavioral/*_470.json` |
+| Behavioral (Llama, 3-seed sampled) | DONE | 27.5% +/- 1.3pp; category profiles shift | `results/robustness/unsloth_*_multiseed.json` |
+| Behavioral (R1, 3-seed sampled) | **RUNNING** | -- | `results/robustness/deepseek-ai_*_multiseed.json` |
+| Probes + bootstrap CIs (4 models) | DONE | Llama 0.974 [0.952, 0.992], R1 0.930 [0.894, 0.960] | `results/probes/`, `results/bootstrap_cis/` |
+| Cross-prediction | DONE | 0.378 AUC at L14 (confound resolved) | `results/probes/llama_cross_prediction.json` |
+| Cross-model transfer | DONE | Llama->R1 direction transfers | `results/probes/cross_model_transfer_llama_r1.json` |
+| Transfer matrix | DONE | base_rate <-> conjunction 0.993 | `results/probes/transfer_matrix_l14_llama.json` |
+| Qwen dissociation | DONE | THINK = NO_THINK = 0.971 (same repr, different behavior) | `results/probes/` |
+| Confidence paradigm | DONE | De Neys confidence drop confirmed | `results/confidence/` |
+| SAE Goodfire L19 (Llama) | DONE | 41 features, 0 spurious, 74% EV | `results/sae/` |
+| SAE cross-model (R1) | DONE | Does NOT transfer (EV=25%) | `results/sae/` |
+| Attention entropy | DONE | R1 5.6% vs Llama 2.9% S2-specialized heads | `results/attention/` |
+| OLMo full pipeline | DONE | Instruct 14.9%, Think 0.9%; probes 0.996->0.962 | `results/probes/olmo3_*` |
+| Natural frequency (fixed scoring) | DONE | Llama 100% lure, R1 50% | `results/behavioral/new_items_*` |
+| New items (sunk cost, loss aversion) | DONE | Sunk cost 0% both; loss aversion OLMo 33% | `results/behavioral/new_items_*` |
+| Geometry (silhouette + CKA) | DONE | Silhouette 0.079/0.059; CKA 0.379-0.985 | `results/geometry/` |
+
+---
+
+## Eight key scientific findings (all confirmed)
+
+1. **Category-specific vulnerability (updated by multi-seed)**: Under greedy decoding, 3 vulnerable (base_rate, conjunction, syllogism), 4 immune. Under sampled decoding, profiles shift: framing (53%), CRT (36%) become vulnerable; conjunction drops to 3%. Only loss_aversion and anchoring are truly immune across all conditions.
+
+2. **Reasoning training blurs S1/S2 boundary**: AUC 0.974 (Llama) -> 0.930 (R1-Distill), peak layers L16/L31. CIs do not overlap. OLMo confirms: 0.996 -> 0.962.
+
+3. **Training vs inference dissociation**: Qwen THINK and NO_THINK probes are identical (both 0.971) despite different behavior. Distillation rewires representations; inference-time reasoning acts downstream.
+
+4. **Cross-prediction resolves the confound**: Llama probe trained on vulnerable, tested on immune: 0.378 AUC at L14. Probe detects processing mode, not task structure.
+
 5. **Lure susceptibility is graded**: Llama +0.42 (favors lure) vs R1-Distill -0.33 (favors correct). Continuous, not binary.
-6. **Shared bias representations**: base_rate and conjunction transfer at 0.993. The model uses nearly identical representations for these two biases.
-7. **OLMo cross-architecture confirmation**: Behavioral (14.9% Instruct vs 0.9% Think) AND mechanistic (probes 0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982]). Pattern replicates in a third architecture family.
-8. **SAE features survive falsification**: 41 features at L19, 0 spurious (Ma et al. test passed), 74% explained variance.
 
-### Key numbers you have (REAL DATA)
+6. **Shared bias representations**: base_rate and conjunction transfer at 0.993. Syllogism is more distinct (0.594-0.627 transfer from others to syllogism).
 
-| Model | Overall lure % | base_rate | conjunction | syllogism | CRT | arithmetic | framing | anchoring |
-|-------|---------------|-----------|-------------|-----------|-----|------------|---------|-----------|
+7. **OLMo cross-architecture replication**: Behavioral (14.9% vs 0.9%) AND mechanistic (0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982]). Three architecture families, same story.
+
+8. **SAE features survive falsification**: 41 features at L19, 0 spurious (Ma et al. test), 74% EV. Goodfire SAE does NOT transfer to R1-Distill (EV=25%).
+
+---
+
+## Key numbers (REAL DATA)
+
+### Behavioral lure rates (greedy decoding)
+
+| Model | Overall | base_rate | conjunction | syllogism | CRT | arithmetic | framing | anchoring |
+|-------|---------|-----------|-------------|-----------|-----|------------|---------|-----------|
 | Llama-3.1-8B-Instruct | **27.3%** | 84% | 55% | 52% | 0% | 0% | 0% | 0% |
 | R1-Distill-Llama-8B | **2.4%** | 4% | 0% | 0% | --- | --- | --- | --- |
 | R1-Distill-Qwen-7B | **~0%** | ~0% | ~0% | ~0% | --- | --- | --- | --- |
@@ -43,59 +118,128 @@
 | OLMo-3-7B Instruct | **14.9%** | --- | --- | --- | --- | --- | --- | --- |
 | OLMo-3-7B Think | **0.9%** | --- | --- | --- | --- | --- | --- | --- |
 
-**Lure susceptibility (continuous):**
+### Behavioral lure rates (sampled, Llama, mean of 3 seeds)
+
+| Category | Mean LR | Std (pp) | Per-seed (0 / 42 / 123) |
+|----------|---------|----------|-------------------------|
+| base_rate | 81.0% | 3.3 | 83 / 83 / 77 |
+| framing | 53.3% | 2.9 | 50 / 55 / 55 |
+| syllogism | 41.3% | 9.2 | 36 / 36 / 52 |
+| crt | 35.6% | 5.1 | 30 / 37 / 40 |
+| availability | 8.9% | 10.2 | 0 / 7 / 20 |
+| certainty_effect | 6.7% | 6.7 | 13 / 7 / 0 |
+| sunk_cost | 4.4% | 3.8 | 7 / 0 / 7 |
+| arithmetic | 4.0% | 0.0 | 4 / 4 / 4 |
+| conjunction | 3.3% | 2.9 | 5 / 5 / 0 |
+| loss_aversion | 0.0% | 0.0 | 0 / 0 / 0 |
+| anchoring | 0.0% | 0.0 | 0 / 0 / 0 |
+
+### Lure susceptibility (continuous)
+
 - Llama-3.1-8B-Instruct: mean **+0.422** (favors lure)
 - R1-Distill-Llama-8B: mean **-0.326** (favors correct)
 
-**New item behavioral results:**
+### New item behavioral results
+
 - Natural frequency (Llama): **100% lure** (Gigerenzer format does NOT help)
+- Natural frequency (R1-Distill): **50% lure** (fixed scoring)
 - Sunk cost: **0% lure** both models (immune)
 - Loss aversion: OLMo-specific vulnerability (**33%**)
 
-**Bootstrap 95% CIs (probe AUC):**
-- Llama: **[0.952, 0.992]**
-- R1-Distill: **[0.894, 0.960]**
-- CIs do not overlap at the upper-lower boundary -- separation is statistically robust.
+### Mechanistic: linear probes (vulnerable categories)
 
-### Key mechanistic results
+| Model | Peak AUC | Bootstrap 95% CI | Peak Layer |
+|-------|----------|-------------------|------------|
+| Llama-3.1-8B-Instruct | **0.974** | [0.952, 0.992] | L16 |
+| R1-Distill-Llama-8B | **0.930** | [0.894, 0.960] | L31 |
+| OLMo-3-7B Instruct | **0.996** | [0.988, 1.000] | L24 |
+| OLMo-3-7B Think | **0.962** | [0.934, 0.982] | L22 |
+| Qwen 3-8B NO_THINK | **0.971** | -- | L34 |
+| Qwen 3-8B THINK | **0.971** | -- | L34 |
 
-**H1 linear probes (vulnerable categories)**:
-- Llama-3.1-8B-Instruct: peak AUC = **0.974** [0.952, 0.992] at Layer 16
-- R1-Distill-Llama-8B: peak AUC = **0.930** [0.894, 0.960] at Layer 31
-- OLMo-3-7B Instruct: peak AUC = **0.996** [0.988, 1.000] at Layer 24
-- OLMo-3-7B Think: peak AUC = **0.962** [0.934, 0.982] at Layer 22
-- Reasoning training shifts peak layer and reduces separability
+### Cross-prediction (confound resolution)
 
-**Cross-prediction (confound resolved)**:
-- Llama probe trained on vulnerable, tested on immune: **0.378 AUC at L16**
-- This means the probe is SPECIFIC to processing mode in vulnerable categories, not detecting generic task structure
-- R1-Distill cross-prediction: mixed results (less clear-cut)
+- Llama probe trained on vulnerable, tested on immune: **0.378 AUC at L14**
+- L16 cross-prediction: 0.569 (different "peak" definition)
+- R1-Distill cross-prediction: mixed results
 
-**Transfer matrix**:
-- base_rate <-> conjunction: **0.993** transfer (shared representation)
-- Syllogism is more distinct from the other two
+### Transfer matrix (L14, Llama)
 
-**Qwen 3-8B probes (training vs inference dissociation)**:
-- NO_THINK: peak AUC = **0.971** at Layer 34
-- THINK: peak AUC = **0.971** (identical)
-- Same weights, different behavior, SAME internal representation
-- Implication: inference-time reasoning (thinking tokens) does not alter the residual stream the way distillation training does
+- base_rate <-> conjunction: **0.993 / 0.998** (nearly identical representations)
+- syllogism -> base_rate: **0.950** (transfers out)
+- base_rate -> syllogism: **0.594** (does NOT transfer in)
+- conjunction -> syllogism: **0.627** (does NOT transfer in)
 
-**Attention entropy**:
+### Cross-model transfer
+
+- Llama -> R1-Distill at L23: AUC = 0.920 (within-model = 0.963)
+- R1-Distill -> Llama at L15: AUC = 0.954 (within-model = 0.919)
+
+### SAE (Goodfire L19)
+
+- **41 features** survive Ma et al. falsification (24 S1-binary + 17 S2-graded)
+- **0 spurious** features
+- **74% explained variance**
+- Does NOT transfer to R1-Distill (EV=25%)
+
+### Attention entropy
+
 - R1-Distill: **5.6%** S2-specialized heads
 - Llama: **2.9%** S2-specialized heads
-- 2x more S2-specialized attention heads in the reasoning model
 
-**SAE (Goodfire L19)**:
-- **41 features** survive Ma et al. falsification
-- **0 spurious** features (all pass random-context injection test)
-- **74% explained variance**
+### Geometry
 
-**Geometry**:
-- Silhouette scores low: 0.079 (Llama), 0.059 (R1-Distill) -- representations overlap substantially
-- CKA range: 0.379-0.985 -- moderate to high representational similarity across models
+- Silhouette scores: 0.079 (Llama), 0.059 (R1-Distill)
+- CKA range: 0.379-0.985
 
-### Activation data on disk
+### Confidence paradigm (De Neys)
+
+- Llama shows predicted confidence drop on conflict items
+- R1-Distill confidence data extracted
+- Results at `results/confidence/llama_confidence.json`, `r1_distill_confidence.json`
+
+---
+
+## Paper status
+
+### Current state
+- **8pp long format**, compiles cleanly (`pdflatex` + `bibtex`)
+- **7 critical factual errors** found in proofread and fixed (commit `733f83e`)
+  - C1-C3: Table 1 wrong numbers for R1-Distill, OLMo Think, Qwen
+  - C4: Transfer matrix overclaim ("AUC >= 0.950" false for syllogism)
+  - C5: Cross-prediction layer mismatch (L14 not L16)
+  - C6: OLMo probe numbers mismatch (wrong layers, wrong AUCs)
+  - C7: Cross-model transfer within-model baselines wrong
+- **All numbers harmonized** to bootstrap CI values (commit `3215d73`)
+- **ICML 2-column approximation** shows ~7.5pp body (fits 8pp limit)
+- **Anonymous version** at `submission/workshop_paper_anonymous.tex`
+- **Supplementary** with all real data at `paper/supplementary.tex` and `submission/supplementary.tex`
+
+### Files
+- Main paper: `paper/workshop_paper.tex`
+- ICML version: `paper/workshop_paper_icml.tex`
+- Anonymous: `submission/workshop_paper_anonymous.tex`
+- Supplementary: `paper/supplementary.tex`
+- References: `paper/references.bib`
+- Figures: `paper/figures/` and `submission/figures/`
+
+### What the paper still needs
+1. **Switch to official ICML template** (currently using `article` class with ICML-like formatting). Guide at `docs/icml_conversion_guide.md`.
+2. **Update behavioral narrative** to account for multi-seed findings (greedy vs sampled profiles).
+3. **Integrate R1-Distill multi-seed** results once GPU job completes.
+4. **Advisor review** before submission.
+
+---
+
+## GitHub
+
+- **Repo**: https://github.com/brightlikethelight/TFAS.git
+- **Commits**: 64 (as of session 9)
+- **Branch**: main
+
+---
+
+## Activation data on disk
 
 | Model | File size | Dimensions | Items |
 |-------|-----------|------------|-------|
@@ -108,235 +252,32 @@
 
 ---
 
-## Scientific narrative (updated with all results)
-
-### What story does the data tell?
-
-**The core finding**: Standard instruction-tuned LLMs maintain a near-perfect linear boundary between conflict (S1-like) and control (S2-like) processing in their residual stream (AUC 0.974 [0.952, 0.992]). Reasoning-distilled models retain this boundary but with significantly reduced separability (AUC 0.930 [0.894, 0.960]). This is not just a behavioral difference -- the internal geometry changes.
-
-**The specificity confound is RESOLVED**: Cross-prediction from vulnerable to immune categories yields 0.378 AUC -- near chance. The Llama probe is specific to processing mode in vulnerable categories, not detecting generic task structure. This is the strongest possible outcome for our claims.
-
-**The within-model confirmation**: Qwen 3-8B with thinking disabled (NO_THINK) shows 21% lure rate and probe AUC 0.971. The same model with thinking enabled (THINK) shows 7% lure rate -- but probe AUC is still 0.971. Same weights, same representation, different behavior. This reveals a **training vs inference dissociation**: distillation training changes the residual stream (0.974 -> 0.930), but inference-time reasoning (thinking tokens) changes behavior without changing the representation probes detect.
-
-**The lure susceptibility gradient**: Continuous lure susceptibility scores confirm the graded nature: Llama averages +0.422 (actively pulled toward lure), R1-Distill averages -0.326 (actively pushed toward correct). This is not a binary switch -- it is a continuous dimension.
-
-**Shared bias representations**: base_rate and conjunction transfer at 0.993 -- the model uses nearly identical internal machinery for these two biases. Syllogism is more distinct. This has implications for the granularity of bias-specific circuits.
-
-**Cross-architecture replication (OLMo)**: The behavioral pattern (14.9% Instruct vs 0.9% Think) and the mechanistic pattern (probe AUC 0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982]) replicate in the OLMo-3-7B family. This is a third independent architecture confirming the same story. The probe AUC drop (0.034 with non-overlapping CIs) is smaller than Llama/R1 (0.044), but statistically robust and directionally consistent.
-
-**SAE features are real**: 41 features at L19 survive the Ma et al. falsification protocol. Zero spurious features. 74% explained variance. These are genuine S1/S2-associated features, not token-level artifacts.
-
-**Attention structure differs**: Reasoning models have 2x more S2-specialized attention heads (5.6% vs 2.9%). This provides a complementary mechanistic signature beyond linear probes -- the attention patterns themselves are restructured by distillation training.
-
-### Strongest honest framing for the workshop paper
-
-The narrative now rests on **six converging lines of evidence**:
-
-1. **Behavioral**: Reasoning models resist cognitive-bias lures (27% -> 2.4% lure rate). Within-model: thinking mode reduces lures from 21% to 7% with identical weights. Lure susceptibility is graded (+0.42 vs -0.33), not binary. OLMo replicates (14.9% -> 0.9%). New items: sunk cost immune, natural frequency still vulnerable.
-
-2. **Representational (probes)**: Linear probes find a high-fidelity S1/S2 boundary in standard models (AUC 0.974 [0.952, 0.992]) that is degraded in reasoning models (AUC 0.930 [0.894, 0.960]). CIs do not overlap. The probe is SPECIFIC to processing mode (cross-prediction 0.378). Peak layer shifts from L16 to L31 -- reasoning training relocates and blurs it. OLMo confirms: 0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982].
-
-3. **Training vs inference dissociation**: Qwen THINK and NO_THINK have identical probe curves (0.971) despite dramatically different behavior. Distillation training rewires representations, but inference-time reasoning acts downstream of the probed representation.
-
-4. **Attention structure**: 2x more S2-specialized heads in R1 (5.6%) vs Llama (2.9%). Reasoning training restructures attention patterns, not just residual stream geometry.
-
-5. **SAE features**: 41 features at L19 pass Ma et al. falsification (0 spurious). 74% explained variance. The S1/S2 distinction is encoded in interpretable sparse features.
-
-6. **Cross-model convergence**: The pattern replicates across Llama/R1-Distill pair, Qwen THINK/NO_THINK pair, AND OLMo Instruct/Think pair. Three independent model families, same story. Transfer matrix shows shared structure within bias types.
-
----
-
-## What happened session 8 (April 12 night -> push, 2026)
-
-### Overnight3 pipeline: 5/6 succeeded
-
-| Job | Status | Key Result |
-|-----|--------|------------|
-| confidence_llama | DONE | De Neys confidence paradigm confirmed -- Llama shows confidence drop on conflict items |
-| confidence_r1 | DONE | R1-Distill confidence extraction complete |
-| cross_model_transfer | DONE | Direction shared between Llama and R1-Distill (cross-model probe transfer) |
-| behavioral_470 (Llama, R1, Qwen NO_THINK, Qwen THINK) | DONE | All 4 models re-run on expanded 470-item benchmark |
-| SAE R1 | FAILED | Dependency issue (being fixed separately) |
-
-### New findings from overnight3
-
-1. **Confidence paradigm (De Neys confirmed)**: Llama shows the predicted confidence drop on conflict items, matching De Neys' conflict detection framework. R1-Distill confidence data also extracted.
-2. **Cross-model transfer**: Probe direction is shared between Llama and R1-Distill -- the S1/S2 linear direction transfers across models, not just within-model.
-3. **Qwen 470 results**: Both Qwen 3-8B NO_THINK and THINK re-run on the full 470-item benchmark.
-
-### Paper format change
-- **Switching to 8-page long format** (was 4pp workshop). More room for the six converging lines of evidence and supplementary material.
-
-### Results copied to permanent locations
-- `results/confidence/llama_confidence.json`, `r1_distill_confidence.json`
-- `results/probes/cross_model_transfer_llama_r1.json`
-- `results/behavioral/llama31_8b_470.json`, `r1_distill_llama_470.json`, `qwen3_8b_no_think_470.json`, `qwen3_8b_think_470.json`
-
----
-
-## What happened session 7 (April 13 afternoon, 2026)
-
-### Benchmark expanded from 330 to 380 items
-1. **Sunk cost fallacy**: 15 new matched pairs (loss aversion heuristic family). Broadens claims from representativeness-only to multiple heuristic families.
-2. **Gigerenzer natural frequency framing**: 10 base rate items reformulated as "X out of N" instead of "X%". Tests robustness to ecological rationality critique.
-3. All 427 tests pass. Benchmark validation clean (no errors).
-
-### Workshop paper updated with theoretical grounding
-1. **Introduction**: Added De Neys conflict detection framework (our P0 probe = "conflict detection without resolution"), Botvinick ACC mapping.
-2. **Discussion**: "Blurring" section reframed as "Conflict detection without resolution" mapping to De Neys. Added Evans' Type 2 autonomy interpretation. Added Stanovich's dysrationalia for domain-specific vulnerability. Added structural/functional plasticity analogy for training vs inference dissociation.
-3. **Benchmark section**: Updated to 380 items, 8 categories, two heuristic families.
-4. **References**: Added Botvinick 2001, Kerns 2004, De Neys 2017/2023, Evans 2019, Stanovich 2016, Gigerenzer 1995, Kolb 2013.
-
-### Files modified (session 7)
-- `src/s1s2/utils/types.py` -- added "sunk_cost", "loss_aversion", "certainty_effect", "availability"
-- `src/s1s2/benchmark/validate.py` -- updated target counts for all new categories
-- `src/s1s2/benchmark/generators.py` -- added sunk_cost, natural_freq, loss_aversion, certainty_effect, availability generators
-- `src/s1s2/benchmark/build.py` -- added all new specs
-- `data/benchmark/benchmark.jsonl` -- rebuilt (380+ items)
-- `paper/workshop_paper.tex` -- 11 new citations, Dead Salmons safeguards paragraph, CogBias differentiation
-- `paper/references.bib` -- 15 new entries (De Neys, Evans, Stanovich, Botvinick, Venhoff, Meloux, Afzal, etc.)
-- `docs/preregistration.md` -- H4b, H5b added with results; H7-H9 for new categories; descope section
-
-### New scripts added (session 7)
-- `scripts/compute_bootstrap_cis.py` -- 1000-resample bootstrap CIs + Hewitt-Liang controls
-- `scripts/confidence_paradigm.py` -- De Neys confidence extraction (token probs, entropy, lure/correct gap)
-- `scripts/run_all_gpu.py` -- Single-command orchestrator for all 6 pending GPU jobs
-- `scripts/run_new_items.py` -- Behavioral validation for sunk cost + natural frequency items
-- `scripts/aggregate_results.py` -- Comprehensive results aggregation + LaTeX table generation
-- `scripts/extract_attention.py` -- Rewritten with normalized entropy, KV-group analysis, BH-FDR stats
-
----
-
-## What happened session 6 (April 12 night -> April 13 morning, 2026)
-
-### Overnight2 pipeline completed (all 5 jobs)
-
-1. **Cross-prediction**: Llama probe trained on vulnerable, tested on immune = 0.378 AUC at L16. Probe is SPECIFIC. R1-Distill results mixed.
-2. **Transfer matrix**: base_rate <-> conjunction share representations (0.993). Syllogism distinct.
-3. **SAE Goodfire L19**: FAILED on model key mismatch. Script has been fixed, needs GPU re-run.
-4. **Qwen THINK extraction**: DONE. 157 MB HDF5, 36 layers.
-5. **Qwen THINK probes**: 0.971 AUC = identical to NO_THINK probes. Training vs inference dissociation confirmed.
-
-### Post-overnight lure susceptibility (both done)
-
-1. Llama-3.1-8B-Instruct: mean +0.422 (favors lure)
-2. R1-Distill-Llama-8B: mean -0.326 (favors correct)
-3. SAE Goodfire: failed on key mismatch (script fixed, needs re-run)
-
----
-
-## What happened session 5 (April 12 late night, 2026)
-
-### Completed jobs from overnight pipeline 1
-
-1. **Qwen 3-8B THINK behavioral**: 7% overall lure. Conjunction 55% (down from 95%), base_rate 4% (down from 56%). Clean within-model confirmation.
-2. **Expanded probes (Llama + R1-Distill)**: All categories + vulnerable + immune splits. Revealed the specificity confound (AUC 1.0 on immune at L0-1).
-3. **Geometry analysis**: Silhouette scores (0.079 Llama, 0.059 R1-Distill) + CKA matrix (0.379-0.985).
-4. **Qwen 3-8B NO_THINK extraction + probes**: 157.2 MB HDF5, 36 layers. Peak probe AUC 0.971 at L34 on vulnerable.
-5. **Ministral download**: FAILED (transformers version incompatibility). Deprioritized.
-
-### Identified the specificity confound
-
-Probes achieve AUC 1.0 on immune categories at layers 0-1. This means the probe partially detects task structure, not purely processing mode. The inter-model delta on vulnerable categories is the meaningful signal. Launched cross-prediction test to resolve.
-
-### Launched overnight pipeline 2
-
-Cross-prediction, per-category transfer matrix, SAE with Goodfire L19, Qwen THINK extraction, Qwen THINK vs NO_THINK probes.
-
----
-
-## What happened session 4 (April 11-12, 2026)
-
-### Behavioral validation (Phase 2 gate: PASSED)
-
-Ran the full 330-item benchmark against 5 model configurations on the B200 pod.
-
-**Key insight**: Only 3 of 7 categories are vulnerable (base_rate, conjunction, syllogism). The other 4 (CRT, arithmetic, framing, anchoring) show 0% lure rates across all models. This is not a failure -- it means the benchmark correctly identifies which cognitive bias categories these models are susceptible to, and it means we have built-in negative controls.
-
-### Activation extraction (Phase 3: started)
-
-- Extracted full residual stream activations for Llama-3.1-8B-Instruct and R1-Distill-Llama-8B
-- Both produce ~140 MB HDF5 files, 32 layers x 4096 hidden x 330 items
-
-### First mechanistic result (H1 linear probe)
-
-- Trained logistic probes (conflict vs. control) on the 3 vulnerable categories
-- Llama peak AUC = 0.974 at Layer 16; R1-Distill peak AUC = 0.930 at Layer 31
-- Same peak layer, reduced separability in the reasoning model
-
-### Strategic discoveries
-
-- **Goodfire L19 SAE**: A public SAE trained on the exact Llama-3.1-8B-Instruct model, layer 19.
-- **Qwen 3-8B with /think toggle**: Same weights, same architecture, thinking on vs. off. Cleanest within-model comparison.
-
----
-
-## What's done (ALL experiments complete)
-
-### Behavioral
-- **Full benchmark**: 470 items (11 categories, 4 heuristic families), 7 model configurations tested
-- **470-item re-runs**: Llama, R1-Distill, Qwen NO_THINK, Qwen THINK all re-run on expanded benchmark (overnight3)
-- **Lure susceptibility**: Continuous scores computed for Llama (+0.422) and R1-Distill (-0.326)
-- **New items validated**: Sunk cost (immune), natural frequency (Llama 100% lure), loss aversion (OLMo 33%)
-- **OLMo behavioral**: Instruct 14.9% vs Think 0.9% lure rate
-- **Confidence paradigm (De Neys)**: DONE. Llama and R1-Distill confidence extracted (overnight3). De Neys confidence drop confirmed.
-
-### Mechanistic (probes)
-- **Linear probes**: Llama 0.974 [0.952, 0.992], R1-Distill 0.930 [0.894, 0.960], OLMo Instruct 0.996 [0.988, 1.000], OLMo Think 0.962 [0.934, 0.982]
-- **Bootstrap CIs**: Llama [0.952, 0.992], R1 [0.894, 0.960] -- statistically robust separation
-- **Cross-prediction**: Confound RESOLVED. Llama probe specific (0.378 transfer AUC)
-- **Transfer matrix**: base_rate <-> conjunction share representations (0.993)
-- **Qwen THINK probes**: 0.971 = identical to NO_THINK. Training vs inference dissociation.
-- **Cross-model transfer**: DONE. Llama/R1 direction shared (overnight3). Probe transfers across models.
-
-### Mechanistic (other)
-- **SAE (Goodfire L19)**: 41 features, 0 spurious, 74% explained variance. Ma et al. falsification passed.
-- **Attention entropy**: R1 5.6% vs Llama 2.9% S2-specialized heads. 2x ratio.
-- **Geometry**: Silhouette + CKA complete.
-
-### Activation extraction
-- **Llama + R1-Distill**: 470 items, 32 layers (re-extracted with expanded benchmark)
-- **Qwen NO_THINK + THINK**: 330 items, 36 layers
-- **OLMo Instruct + Think**: 470 items, on pod
-
-### Infrastructure
-- **Project scaffolding**: `pyproject.toml`, `CLAUDE.md`, `AGENTS.md`, configs, docs
-- **365/365 tests passing**, smoke green
-- **Benchmark**: 470 items (11 categories, 4 heuristic families), matched conflict/control pairs
-- **Full codebase**: extract, probes, sae, attention, geometry, causal, metacog, viz
-- **Deployment infra**: deploy scripts, orchestrator, W&B integration, pre-reg, presentation
-- **All GPU deployment scripts**: `scripts/run_all_gpu.py` orchestrator + individual scripts
-
 ## What's NOT done
 
-- **SAE R1 re-run**: Failed in overnight3 (dependency issue). Being fixed. Not blocking paper.
-- **Natural frequency R1-Distill re-run**: In progress with fixed scoring bug. Minor -- affects one cell in one table.
-- **Paper rewrite to 8pp long format**: Switching from 4pp workshop to 8pp. Main remaining work.
-- **Certainty effect + availability behavioral**: New categories, not run yet. Stretch goal -- not needed for paper.
-- **Causal interventions**: Steering/ablation. Descoped to ICLR paper, not this workshop submission.
-- Ministral-3-8B: deprioritized (transformers version issue). Not needed.
+1. **R1-Distill multi-seed** (RUNNING on GPU) -- will confirm whether R1 also shows category profile shifts with sampling. Not blocking paper draft but should be integrated before submission.
+2. **Switch to official ICML template** -- currently using `article` class. Guide written at `docs/icml_conversion_guide.md`.
+3. **Advisor review** -- paper needs signoff before submission.
+4. **SAE R1 re-run** -- failed in overnight3 (dependency issue). Not blocking paper (SAE R1 non-transfer already reported from separate analysis).
+5. **Certainty effect + availability behavioral** -- new categories in expanded benchmark. Stretch goal.
+6. **Causal interventions** -- steering/ablation descoped to ICLR paper.
 
 ## Active blockers
 
-- **NONE for GPU work.** All GPU experiments are complete (overnight3: 5/6 passed).
-- SAE R1 dependency issue -- being fixed, not blocking paper.
-- Natural freq R1 re-run is minor and in progress.
-- Paper rewrite to 8pp long format is the critical path to submission.
+- **NONE for GPU work** (all experiments complete except R1-Distill multi-seed which is running).
+- **Paper**: needs ICML template switch, multi-seed narrative update, advisor review.
+- **R1 multi-seed**: running, not blocking paper draft.
 
-## Key W&B / artifact pointers
+---
 
-- Llama-3.1-8B-Instruct activations: `data/activations/` on B200 pod, ~140 MB HDF5, 470 items
-- R1-Distill-Llama-8B activations: `data/activations/` on B200 pod, ~140 MB HDF5, 470 items
-- Qwen 3-8B NO_THINK activations: `data/activations/` on B200 pod, 157.2 MB HDF5
-- Qwen 3-8B THINK activations: `data/activations/` on B200 pod, 157 MB HDF5
-- OLMo-3-7B activations: `data/activations/` on B200 pod
-- Behavioral results: on B200 pod (check overnight logs for paths)
-- Probe results: on B200 pod
-- SAE results: 41 features, L19
-- Bootstrap CI results: on B200 pod
-- Attention entropy results: on B200 pod
+## Infrastructure
 
-## Test commands
+- **Tests**: 365/365 passing
+- **Benchmark**: 470 items, 11 categories, 4 heuristic families
+- **Codebase**: extract, probes, sae, attention, geometry, causal, metacog, viz
+- **Scripts**: `scripts/run_all_gpu.py` orchestrator + individual scripts
+- **Multi-seed script**: `scripts/multiseed_behavioral.py`
+
+### Test commands
 
 ```bash
 make install   # pip install -e ".[dev]" + pre-commit hooks
@@ -345,12 +286,74 @@ make test      # pytest tests/
 make smoke     # all 4 workstreams on synthetic data (~3s)
 ```
 
-## Timeline
+---
 
-- **All GPU experiments**: DONE
-- **Paper**: Near-final, integrating last results
-- **Target**: May 8 ICML MechInterp Workshop (~26 days from April 12)
-  - Now -> Apr 18: Integrate all results into paper, write final Methods + Results
-  - Apr 19-25: Figures finalized, Discussion polished, internal review
-  - Apr 26-May 2: External feedback, revisions
-  - May 3-8: Final polish, submit
+## Session history
+
+### Session 9 (April 12, 2026) — Multi-seed robustness + paper polish
+
+1. **Multi-seed behavioral (Llama)**: 3-seed sampled decoding on full 470-item benchmark. Overall 27.5% +/- 1.3pp (stable). Category profiles shift dramatically vs greedy: framing 0%->53%, CRT 0%->36%, conjunction 55%->3%.
+2. **Paper proofread**: Found 7 critical factual errors (wrong table numbers, overclaims, layer mismatches). All fixed in commit `733f83e`.
+3. **Number harmonization**: All docs updated to use bootstrap CI values consistently (commit `3215d73`).
+4. **ICML 2-column approximation**: ~7.5pp body confirmed to fit 8pp limit.
+5. **Anonymous version**: Prepared at `submission/workshop_paper_anonymous.tex`.
+6. **R1-Distill multi-seed**: Launched on GPU, running now.
+
+### Session 8 (April 12, 2026) — Overnight3 results + 8pp format switch
+
+1. Overnight3 pipeline: 5/6 jobs succeeded. Confidence paradigm (De Neys confirmed), cross-model transfer (direction shared), 470-item behavioral for all 4 models. SAE R1 failed (dependency issue).
+2. Paper switched from 4pp workshop to 8pp long format.
+3. SAE R1-Distill analysis: Goodfire SAE does NOT transfer (EV=25%).
+
+### Session 7 (April 13, 2026) — Benchmark expansion + theory
+
+1. Benchmark expanded from 330 to 380 to 470 items (sunk cost, natural frequency, loss aversion, certainty effect, availability).
+2. Theoretical grounding added: De Neys conflict detection, Botvinick ACC mapping, Evans Type 2 autonomy, Stanovich dysrationalia.
+3. New scripts: bootstrap CIs, confidence paradigm, run_all_gpu orchestrator, new items behavioral, aggregate results, attention extraction.
+
+### Session 6 (April 12-13, 2026) — Overnight2 results
+
+1. Cross-prediction: confound RESOLVED (0.378 AUC at L16/L14).
+2. Transfer matrix: base_rate <-> conjunction share representations (0.993).
+3. Qwen THINK probes: 0.971 = identical to NO_THINK. Training vs inference dissociation confirmed.
+4. Lure susceptibility computed: Llama +0.422, R1 -0.326.
+
+### Session 5 (April 12, 2026) — Overnight1 results + specificity confound
+
+1. Qwen THINK behavioral: 7% overall lure.
+2. Expanded probes: revealed specificity confound (AUC 1.0 on immune at L0-1).
+3. Geometry analysis: silhouette + CKA.
+4. Qwen NO_THINK extraction + probes: 0.971 at L34.
+
+### Session 4 (April 11-12, 2026) — Behavioral validation + first probes
+
+1. Behavioral validation on B200 pod: 330-item benchmark, 5 models.
+2. Activation extraction: Llama + R1-Distill, ~140 MB each.
+3. First probe result: Llama 0.974 at L16, R1 0.930 at L31.
+4. Discovered Goodfire L19 SAE and Qwen /think toggle.
+
+---
+
+## Timeline to submission
+
+- **Now -> Apr 18**: Integrate R1 multi-seed results, update behavioral narrative for greedy-vs-sampled, switch to ICML template
+- **Apr 19-25**: Figures finalized, discussion polished, internal review
+- **Apr 26-May 2**: Advisor review, external feedback, revisions
+- **May 3-8**: Final polish, submit by May 8 AOE
+
+---
+
+## Key W&B / artifact pointers
+
+- Llama activations: `data/activations/` on B200 pod, ~140 MB HDF5, 470 items
+- R1-Distill activations: `data/activations/` on B200 pod, ~140 MB HDF5, 470 items
+- Qwen NO_THINK/THINK activations: `data/activations/` on B200 pod, 157 MB HDF5 each
+- OLMo activations: `data/activations/` on B200 pod
+- All behavioral results: `results/behavioral/`
+- Multi-seed robustness: `results/robustness/`
+- Probe results: `results/probes/`
+- SAE results: `results/sae/`
+- Bootstrap CIs: `results/bootstrap_cis/`
+- Attention entropy: `results/attention/`
+- Confidence paradigm: `results/confidence/`
+- Geometry: `results/geometry/`
