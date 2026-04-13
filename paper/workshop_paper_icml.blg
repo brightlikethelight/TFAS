@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2025)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: workshop_paper_icml.aux
+The style file: plainnat.bst
+Database file #1: references.bib
+Warning--empty booktitle in deneys2017dual
+You've used 32 entries,
+            2773 wiz_defined-function locations,
+            760 strings with 10227 characters,
+and the built_in function-call counts, 14146 in all, are:
+= -- 1199
+> -- 921
+< -- 18
++ -- 314
+- -- 282
+* -- 1111
+:= -- 2247
+add.period$ -- 96
+call.type$ -- 32
+change.case$ -- 184
+chr.to.int$ -- 32
+cite$ -- 65
+duplicate$ -- 662
+empty$ -- 1125
+format.name$ -- 328
+if$ -- 2913
+int.to.chr$ -- 1
+int.to.str$ -- 1
+missing$ -- 35
+newline$ -- 168
+num.names$ -- 128
+pop$ -- 388
+preamble$ -- 1
+purify$ -- 155
+quote$ -- 0
+skip$ -- 505
+stack$ -- 0
+substring$ -- 329
+swap$ -- 45
+text.length$ -- 1
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 337
+warning$ -- 1
+while$ -- 117
+width$ -- 0
+write$ -- 405
+(There was 1 warning)

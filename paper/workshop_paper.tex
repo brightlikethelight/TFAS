@@ -55,8 +55,8 @@
 \begin{abstract}
 Does reasoning training change how LLMs internally represent cognitive
 biases, or merely suppress biased outputs?  We investigate using
-matched-architecture model pairs that share identical weights and
-structure but differ in reasoning training:
+matched-architecture model pairs that share identical structure but
+differ in reasoning training:
 Llama-3.1-8B-Instruct vs.\ R1-Distill-Llama-8B, and
 OLMo-3-7B-Instruct vs.\ OLMo-3-7B-Think.  Behaviorally, reasoning
 training dramatically reduces heuristic lure rates across architectures:
@@ -74,10 +74,11 @@ immune categories, and cross-model probe transfer (Llama$\to$R1:
 0.920; R1$\to$Llama: 0.954) shows the processing-mode direction is
 shared across reasoning-differentiated models.  First-token confidence
 analysis confirms De~Neys' conflict-detection prediction: reduced
-probability and elevated entropy on conflict items.  Attention analysis reveals the reasoning model has nearly
-twice as many \stwo{}-specialized heads (57 vs.\ 30; BH-FDR corrected),
-suggesting redistribution of deliberative computation across the
-network.  A within-model dissociation using Qwen~3-8B's thinking toggle
+probability and elevated entropy on conflict items.  At the attention
+level, the reasoning model has nearly twice as many \stwo{}-specialized
+heads (57 vs.\ 30; BH-FDR corrected), suggesting redistribution of
+deliberative computation across the network.  A within-model
+dissociation using Qwen~3-8B's thinking toggle
 sharpens the picture: inference-time thinking reduces lure rates (21\%
 to 7\%) without changing pre-generation probe signatures (both
 AUC\,=\,0.971).  Training changes \sone{}/\stwo{} encoding;
@@ -336,7 +337,7 @@ lures at a 27.3\% rate; R1-Distill-Llama-8B reduces this to 2.4\%.
 Second, vulnerability is \emph{category-specific}: base rate neglect,
 conjunction fallacy, and syllogisms are the primary susceptible categories,
 while CRT, arithmetic, framing, and anchoring are largely immune
-(with sporadic low-level lure rates $\leq$10\% in some models).  Third,
+(sporadic lure rates $\leq$10\% in individual models).  Third,
 Qwen~3-8B without thinking shows a distinct vulnerability
 profile---95\% conjunction lure rate but 0\% syllogism lure
 rate---suggesting different models encode different heuristic biases
@@ -471,8 +472,7 @@ probes transfer near-perfectly to each other (AUC\,$>$\,0.99), while
 transfer to syllogism is weaker (0.59--0.63), and CRT probes transfer
 poorly to vulnerable categories (AUC\,=\,0.06--0.45).  This suggests a
 shared processing-mode direction for base rate and conjunction that is
-partially shared with syllogism but absent in
-immune categories.
+partially shared with syllogism but absent in immune categories.
 
 \paragraph{Lure susceptibility scores.}
 We extract continuous \pzero{} logit scores for the S1-lure answer on
@@ -533,7 +533,9 @@ R1-Distill favors the correct answer ($-0.326$).
 Category-specificity mirrors Stanovich's \emph{dysrationalia}
 \citep{stanovich2016rationality}: vulnerability is domain- and
 model-specific (e.g., OLMo shows loss aversion vulnerability where Llama
-does not), meaning single-model audits are insufficient.
+does not), and different reasoning models overcome different subsets of
+biases.  This means single-model audits are insufficient for assessing
+bias resistance.
 
 \paragraph{Ecological rationality.}
 Natural frequency framing \emph{increased} lure susceptibility in both
@@ -543,7 +545,7 @@ supplementary material.
 
 \paragraph{Training vs.\ inference.}
 Qwen's think/no-think dissociation is clean: thinking reduces lure rates
-(21\% $\to$ 7\%) without changing \pzero{} encoding (AUC\,=\,0.971
+(21\% $\to$ 7\%) without changing \pzero{} encoding (AUC\,=\,0.971 in
 both modes).  Training rewires the structural substrate
 \citep{kolb2013brain}; inference-time thinking adapts activation dynamics
 on an unchanged substrate \citep{ziabari2025reasoning,
@@ -562,16 +564,17 @@ strategy: steer standard models along directions that reasoning training
 reorganizes.
 
 \paragraph{Generation strategy dependence.}
-Multi-seed evaluation with sampled decoding (temperature 0.7) reveals that
-behavioral vulnerability profiles are generation-strategy-dependent.  Under
-sampling, Llama's overall lure rate remains stable (27.5\% $\pm$ 1.3pp across
-3 seeds), but the category profile shifts: framing rises from 0\% (greedy) to
-53\%, CRT from 0\% to 36\%, while conjunction drops from 55\% to 3\%.  This
-suggests that the ``immune'' categories are immune only under greedy decoding,
-and that our primary results should be interpreted as reflecting the model's
-maximum-probability behavior rather than its distributional behavior.
-Crucially, the probe results at \pzero{} are unaffected by generation strategy,
-as they measure the pre-decision representation before any tokens are generated.
+An important caveat applies to the behavioral results: multi-seed evaluation
+with sampled decoding (temperature 0.7) reveals that vulnerability profiles
+are generation-strategy-dependent.  Under sampling, Llama's overall lure rate
+remains stable (27.5\% $\pm$ 1.3pp across 3 seeds), but the category profile
+shifts: framing rises from 0\% (greedy) to 53\%, CRT from 0\% to 36\%, while
+conjunction drops from 55\% to 3\%.  The ``immune'' categories are thus immune
+only under greedy decoding, and our primary behavioral results should be
+interpreted as reflecting the model's maximum-probability behavior rather than
+its distributional behavior.  Crucially, the probe results at \pzero{} are
+unaffected by generation strategy, as they measure the pre-decision
+representation before any tokens are generated.
 
 \paragraph{Safeguards.}
 We mitigate known probing pitfalls \citep{meloux2025dead,
