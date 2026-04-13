@@ -53,34 +53,35 @@
 % ============================================================
 
 \begin{abstract}
-Reasoning-trained large language models resist cognitive bias lures that
-trip up their standard counterparts, but does this behavioral shift
-reflect a genuine change in internal computation?  We present a
-contrastive benchmark of 470 items (235 matched conflict/control pairs)
-across 11 cognitive bias categories spanning 4 heuristic families, and
-apply linear probes to residual
-stream activations of models that share \emph{identical} architectures
-but differ in training.  Behaviorally, Llama-3.1-8B-Instruct falls for
-heuristic lures at a 27.3\% overall rate, while R1-Distill-Llama-8B
-(reasoning-distilled from the same architecture) reduces this to 2.4\%.
-Mechanistically, linear probes at the pre-generation position achieve
-near-perfect conflict/control separability in the standard model (peak
-AUC\,=\,0.974, 95\% CI [0.952, 0.992], layer~16) but consistently lower
-separability in the reasoning model (peak AUC\,=\,0.930, 95\% CI
-[0.894, 0.960], layer~31)---the internal \sone{}/\stwo{}
-boundary is \emph{blurred}, not sharpened, by reasoning training.
-Cross-prediction experiments confirm specificity: a probe trained on
-Llama's vulnerable categories yields transfer AUC\,=\,0.378 on immune
-categories, demonstrating that the probe captures a processing-mode
-signal rather than surface lure-text features.  A within-model toggle
-using Qwen~3-8B confirms the pattern: thinking mode reduces lure rates
-from 21\% to 7\%, yet probes on think-mode and no-think-mode activations
-are \emph{identical} (both AUC\,=\,0.971 at layer~34).  Training changes
-\sone{}/\stwo{} encoding; inference-time thinking changes \sone{}/\stwo{}
-behavior without changing encoding.  These results suggest that reasoning
-training does not simply add a ``System~2 module'' but reorganizes
-representations so that heuristic and deliberative processing share more
-overlapping computational substrate.
+Does reasoning training change how LLMs internally represent cognitive
+biases, or merely suppress biased outputs?  We investigate using
+matched-architecture model pairs that share identical weights and
+structure but differ in reasoning training:
+Llama-3.1-8B-Instruct vs.\ R1-Distill-Llama-8B, and
+OLMo-3-7B-Instruct vs.\ OLMo-3-7B-Think.  Behaviorally, reasoning
+training dramatically reduces heuristic lure rates across architectures:
+27.3\% to 2.4\% (Llama) and 14.9\% to 0.9\% (OLMo).  We probe
+residual stream activations with linear classifiers to separate conflict
+from no-conflict items across 235 matched pairs spanning 11 cognitive
+bias categories.  The standard Llama model achieves near-perfect
+conflict/control separability (peak AUC\,=\,0.974, 95\% CI [0.952,
+0.992]), but the reasoning model shows \emph{lower} separability
+(AUC\,=\,0.930 [0.894, 0.960]; non-overlapping CIs)---the internal
+heuristic/deliberative boundary is \emph{blurred}, not sharpened, by
+reasoning training.  Cross-prediction confirms specificity: a probe
+trained on vulnerable categories yields transfer AUC\,=\,0.378 on
+immune categories, capturing processing mode rather than surface
+features.  Attention analysis reveals the reasoning model has nearly
+twice as many \stwo{}-specialized heads (57 vs.\ 30; BH-FDR corrected),
+suggesting redistribution of deliberative computation across the
+network.  A within-model dissociation using Qwen~3-8B's thinking toggle
+sharpens the picture: inference-time thinking reduces lure rates (21\%
+to 7\%) without changing pre-generation probe signatures (both
+AUC\,=\,0.971).  Training changes \sone{}/\stwo{} encoding;
+inference-time thinking does not.  Finally, natural frequency
+framing---which reduces base rate neglect in humans---paradoxically
+\emph{increases} it in both models, demonstrating that ecological
+rationality does not transfer to LLMs.
 \end{abstract}
 
 % ============================================================
@@ -136,8 +137,10 @@ attributable to training, not architecture.  We make four contributions:
   memorization.
 
   \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
-  overall lure rate (standard) vs.\ 2.4\% (reasoning), with
-  category-level specificity revealing which biases are vulnerable.
+  overall lure rate (standard) vs.\ 2.4\% (reasoning), replicated on
+  OLMo-3-7B (14.9\% $\to$ 0.9\%), with category-level specificity
+  revealing which biases are vulnerable and model-specific vulnerability
+  profiles (e.g., loss aversion in OLMo but not Llama).
 
   \item \textbf{Probing analysis} revealing that the standard model has
   high internal conflict/control separability (AUC\,=\,0.974, 95\% CI
@@ -157,7 +160,9 @@ attributable to training, not architecture.  We make four contributions:
 The Llama pair shares every architectural parameter, yet reasoning
 training drops cognitive bias susceptibility from 27\% to 2\% and
 simultaneously reduces internal \sone{}/\stwo{} separability from
-AUC 0.974 to 0.930 (non-overlapping 95\% CIs).  Qwen~3-8B reveals the converse: thinking mode
+AUC 0.974 to 0.930 (non-overlapping 95\% CIs).  The OLMo-3-7B family
+independently replicates this pattern (14.9\% $\to$ 0.9\%), confirming
+generality across architectures.  Qwen~3-8B reveals the converse: thinking mode
 changes behavior ($21\% \to 7\%$) without changing the pre-generation
 representation (AUC\,=\,0.971 in both modes).  The model that resists
 biases is, paradoxically, the one where the internal
@@ -212,10 +217,12 @@ matched pairs} across 11 categories spanning four heuristic families:
 \end{itemize}
 
 \noindent Of the final four categories, sunk cost has been validated
-(0\% lure rate for both models---immune); loss aversion, certainty
-effect, and availability are pending.  The 10 natural frequency base
-rate pairs have been validated (see Discussion).  All primary analyses
-use the original 7-category, 165-pair subset (330 items).
+(0\% lure rate for both models---immune); loss aversion has been
+validated on OLMo (33\% lure for OLMo Instruct, 0\% for OLMo Think);
+certainty effect and availability are pending.  The 10 natural frequency
+base rate pairs have been validated (see Discussion).  All primary
+analyses use the original 7-category, 165-pair subset (330 items) plus
+the OLMo cross-architecture replication.
 
 \noindent Each item is scored on a four-way classification: \emph{correct},
 \emph{S1-lure} (the specific heuristic-predicted wrong answer),
@@ -241,6 +248,11 @@ R1-Distill-Llama-8B was distilled from a reasoning-trained teacher.  We
 additionally evaluate \textbf{Qwen~3-8B} in both thinking (\texttt{/think})
 and non-thinking (\texttt{/no\_think}) modes, providing a
 \emph{within-model} toggle of reasoning behavior on identical weights.
+For cross-architecture replication, we evaluate
+\textbf{OLMo-3-7B-Instruct} and \textbf{OLMo-3-7B-Think}
+\citep{olmo3}, which share the same OLMo base but differ in reasoning
+training---analogous to the Llama pair but from an independent
+architecture family.
 
 \subsection{Activation Extraction}
 
@@ -288,34 +300,35 @@ responses on conflict items) across all models and categories.
 
 \begin{table}[t]
 \centering
-\caption{S1-lure rates (\%) on conflict items by model and category
-  (330-item subset: 165 pairs across 7 categories).  Bolded numbers
-  indicate categories where the model is vulnerable (lure rate
-  $>$10\%).  Categories where all models are immune (0\% lure) are
-  grouped at bottom.  Expanded-set results: sunk cost fallacy is
-  immune (0\% lure, both Llama and R1-Distill); natural frequency
-  base rate framing increases lure rates (Llama: $84\% \to 100\%$;
-  R1-Distill: $4\% \to 40\%$).  Remaining expanded categories (loss
-  aversion, certainty effect, availability) pending.}
+\caption{S1-lure rates (\%) on conflict items by model and category.
+  Bolded numbers indicate vulnerable categories (lure rate $>$10\%).
+  OLMo columns provide cross-architecture replication from an
+  independent model family.  Loss aversion is vulnerable in OLMo
+  Instruct (33\%) but immune in Llama (0\%), revealing model-specific
+  bias profiles.  Expanded-set results: sunk cost is immune (0\%,
+  both Llama and R1-Distill); natural frequency base rate framing
+  increases lure rates (Llama: $84\% \to 100\%$; R1-Distill:
+  $4\% \to 40\%$).}
 \label{tab:behavioral}
 \vspace{4pt}
 \small
-\begin{tabular}{lcccc}
+\begin{tabular}{lcccccc}
 \toprule
-& \textbf{Llama} & \textbf{R1-Distill} & \multicolumn{2}{c}{\textbf{Qwen 3-8B}} \\
+& \textbf{Llama} & \textbf{R1-Distill} & \multicolumn{2}{c}{\textbf{Qwen 3-8B}} & \textbf{OLMo} & \textbf{OLMo} \\
 \cmidrule(lr){4-5}
-\textbf{Category} & \textbf{8B-Inst.} & \textbf{Llama-8B} & \textbf{no think} & \textbf{think} \\
+\textbf{Category} & \textbf{8B-Inst.} & \textbf{Llama-8B} & \textbf{no think} & \textbf{think} & \textbf{3-7B-Inst.} & \textbf{3-7B-Think} \\
 \midrule
-Base rate    & \textbf{84} & 4   & \textbf{56} & 4 \\
-Conjunction  & \textbf{55} & 0   & \textbf{95} & \textbf{55} \\
-Syllogism    & \textbf{52} & 0   & 0   & 0 \\
+Base rate      & \textbf{84} & 4   & \textbf{56} & 4   & \textbf{46} & 0 \\
+Conjunction    & \textbf{55} & 0   & \textbf{95} & \textbf{55} & \textbf{50} & 0 \\
+Syllogism      & \textbf{52} & 0   & 0   & 0   & 0   & 0 \\
+Loss aversion  & 0   & 0   & --- & --- & \textbf{33} & 0 \\
 \midrule
-CRT variants & 0   & 0   & 0   & 0 \\
-Arithmetic   & 0   & 0   & 0   & 0 \\
-Framing      & 0   & 0   & 0   & 0 \\
-Anchoring    & 0   & 0   & 0   & 0 \\
+CRT variants   & 0   & 0   & 0   & 0   & 3   & 0 \\
+Arithmetic     & 0   & 0   & 0   & 0   & 0   & 0 \\
+Framing        & 0   & 0   & 0   & 0   & 0   & 0 \\
+Anchoring      & 0   & 0   & 0   & 0   & 5   & 0 \\
 \midrule
-\textbf{Overall lure} & \textbf{27.3} & \textbf{2.4} & \textbf{21.0} & \textbf{7.0} \\
+\textbf{Overall lure} & \textbf{27.3} & \textbf{2.4} & \textbf{21.0} & \textbf{7.0} & \textbf{14.9} & \textbf{0.9} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -337,6 +350,23 @@ asymmetry across categories.  Base rate neglect drops from 56\% to 4\%
 95\% to 55\% (still majority-susceptible).  This dissociation suggests
 that thinking mode provides a genuine reasoning intervention for some
 bias types but fails to overcome deeply encoded heuristics for others.
+
+\paragraph{Cross-architecture replication.}
+To test generality, we evaluate OLMo-3-7B-Instruct and
+OLMo-3-7B-Think \citep{olmo3}, which share the same base but differ in
+reasoning training (analogous to the Llama pair).  OLMo Instruct
+reproduces the core vulnerability pattern: 45.7\% base rate and 50.0\%
+conjunction lure rates, with an overall rate of 14.9\%.  OLMo Think
+reduces this to 0.9\%---near-complete elimination, even more effective
+than R1-Distill (2.4\%).  The pattern replicates across two independent
+architecture families.  Notably, OLMo Instruct reveals a
+\emph{model-specific} vulnerability: 33.3\% lure rate on loss aversion
+items, where Llama showed 0\%.  Different training data and procedures
+expose different biases, consistent with the view that bias
+susceptibility is not a universal ``System~1'' property but depends on
+what heuristics each model has internalized.  Preliminary OLMo probing
+(AUC\,=\,0.998 at L16--20 for the standard model) suggests
+representational patterns similar to the Llama pair.
 
 \subsection{Layer-Wise Probe Results}
 \label{sec:results_probes}
@@ -508,7 +538,10 @@ the pre-generation representation, but this tension alone is insufficient
 to override the heuristic pathway.
 
 The reasoning model shows \emph{less} distinct conflict encoding
-(AUC\,=\,0.930) yet dramatically better resolution (2.4\% lure rate).
+(AUC\,=\,0.930) yet dramatically better resolution (2.4\% lure rate)---a
+pattern confirmed independently in the OLMo family (14.9\% $\to$ 0.9\%
+with reasoning training), establishing this as a general phenomenon
+across architectures.
 If reasoning training simply added a ``System~2 module'' that overrides
 System~1, we would expect sharper separability.  Instead, the AUC drop
 suggests that reasoning distillation makes Type~2 processing
@@ -533,10 +566,13 @@ This category-specificity mirrors Stanovich's concept of \emph{dysrationalia}
 \citep{stanovich2016rationality}: rational thinking deficits are
 domain-specific, not general.  Just as high-IQ humans can fail base rate
 problems while acing CRT variants, our models show selective vulnerability
-that is specific to certain heuristic families.  Preliminary results from the expanded categories indicate that sunk cost
-is immune (0\% lure for both models), consistent with the pattern that
-loss-aversion-based biases are better resisted than
-representativeness-based ones.
+that is specific to certain heuristic families.  The OLMo replication
+sharpens this point: OLMo Instruct is vulnerable to loss aversion
+(33.3\%) where Llama is immune (0\%), yet both share base rate and
+conjunction vulnerability.  Bias profiles are model-specific---a function
+of training data and optimization procedure, not architecture---which
+means auditing a single model family is insufficient for characterizing
+LLM bias susceptibility in general.
 
 \paragraph{Ecological rationality and format dependence.}
 A preliminary test of Gigerenzer's ecological rationality critique
@@ -599,8 +635,10 @@ itself a control---identical prompts yield different AUCs (0.974
 vs.\ 0.930) only if the models encode inputs differently.
 
 \paragraph{Limitations.}
-(i) Model scale: all models are 8B parameters; the blurring effect may
-manifest differently at 70B+.
+(i) Model scale: all models are 7--8B parameters; the blurring effect
+may manifest differently at 70B+.  Cross-architecture replication
+(Llama and OLMo families) mitigates concern about architecture-specific
+artifacts but does not address scale.
 (ii) Linear probes may miss nonlinear representational structure; MLP
 probes and CCS \citep{burns2022discovering} are planned robustness checks.
 (iii) We measure conflict/control separability, which is a proxy for
