@@ -542,6 +542,17 @@ about separability of conflict/control conditions but about the
 leans toward the lure before generation begins; the reasoning model leans
 away from it.
 
+\paragraph{Cross-model probe transfer.}
+Cross-model transfer further validates the signal: a probe trained on
+Llama's vulnerable categories achieves AUC\,=\,0.920 when tested on
+R1-Distill's activations at layer~23 (vs.\ within-model AUC of 0.987).
+The reverse transfer---R1-Distill to Llama---achieves AUC\,=\,0.954 at
+layer~15 (vs.\ self AUC of 0.943).  The \sone{}/\stwo{} processing-mode
+direction is substantially shared across models that differ in reasoning
+training but share architecture and vocabulary, contrasting with
+\citet{huang2026cogbias}'s near-orthogonal finding on architecturally
+distinct models.
+
 \subsection{SAE Feature Analysis}
 \label{sec:results_sae}
 
@@ -570,7 +581,12 @@ kerns2004anterior}---often occurs even when the heuristic response
 prevails.  Our \pzero{} probe functions analogously to an ACC conflict
 signal: it registers the presence of a heuristic--normative tension in
 the pre-generation representation, but this tension alone is insufficient
-to override the heuristic pathway.
+to override the heuristic pathway.  The first-token confidence data
+sharpen this parallel: Llama's reduced first-token probability (0.751
+vs.\ 0.793) and elevated entropy (0.948 vs.\ 0.817) on conflict items
+provide a behavioral analogue of De~Neys' response-time signatures,
+confirming that the model's output reflects the internal tension even
+before chain-of-thought unfolds.
 
 The reasoning model shows \emph{less} distinct conflict encoding
 (AUC\,=\,0.930) yet dramatically better resolution (2.4\% lure rate)---a

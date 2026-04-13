@@ -403,7 +403,6 @@ def make_figure(
     ax.set_xticklabels(["Conflict", "Control"])
     ax.set_ylabel("Top-10 token entropy (bits)")
     ax.set_title("Response uncertainty")
-    ax.set_ylim(0, None)
 
     # Significance annotation
     p_ent = overall_stats["top10_entropy"]["p"]
@@ -415,6 +414,7 @@ def make_figure(
     else:
         y_max = max(m + s for m, s in zip(means, sems)) + 0.06
         ax.text(0.5, y_max, "n.s.", ha="center", fontsize=9, color="gray")
+    ax.set_ylim(0, y_max + 0.12)
 
     fig.suptitle("Llama-3.1-8B-Instruct: Confidence under conflict", fontsize=13, y=1.02)
     fig.tight_layout()
