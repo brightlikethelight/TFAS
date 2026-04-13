@@ -4,7 +4,7 @@
 
 ---
 
-Llama-3.1-8B-Instruct falls for base rate neglect **84% of the time**. DeepSeek-R1-Distill-Llama-8B -- same architecture, same weights before fine-tuning -- falls for it **4%** of the time. We wanted to know what changed inside.
+Llama-3.1-8B-Instruct falls for base rate neglect **84% of the time**. DeepSeek-R1-Distill-Llama-8B -- same architecture, same parameter count, different training -- falls for it **4%** of the time. We wanted to know what changed inside.
 
 Five workstreams of mechanistic analysis across six models and three architecture families converge on a single story: **the model that resists biases has *less* distinct internal encoding of bias-susceptible inputs, not more.** The model that succumbs to biases *detects* the conflict perfectly -- it just fails to act on the detection. Reasoning training does not add a deliberation module. It makes deliberation the default processing mode.
 
@@ -132,37 +132,31 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 
 ## 5. Limitations
 
-We want to be explicit about what this work does not establish.
+**All mechanistic results are correlational.** We have not run activation patching. The SAE features and probe directions are *candidates* for causal intervention, not confirmed mechanisms.
 
-**All mechanistic results are correlational.** The probes, SAE features, and attention patterns are associations between representations and behavior. We have not run activation patching or feature steering to confirm causal relationships. The 41 SAE features and probe-identified directions are *candidates* for causal intervention, not confirmed mechanisms.
+**Scale is untested.** All results are from 7-8B models. 70B+ remains open.
 
-**Scale is untested.** All results come from 7-8B parameter models. Whether the S2-by-default pattern holds at 70B+ is an open question.
+**Decoding dependence weakens behavioral claims.** Category profiles shift between greedy and sampled decoding (framing: 0% vs. 53%). Probe results, which measure representations, are unaffected.
 
-**Decoding dependence weakens behavioral claims.** The category vulnerability profiles shift substantially between greedy and sampled decoding (e.g., framing: 0% greedy vs. 53% sampled). We report both, but claims about which categories are "immune" are conditioned on decoding strategy. The probe results, which measure representations rather than generation, are not affected by this issue.
+**SAE coverage is partial.** Goodfire SAE covers only Llama L19 and does not transfer to R1-Distill.
 
-**SAE coverage is partial.** The Goodfire SAE analysis covers only Llama layer 19. We lack custom SAEs for OLMo and Qwen, and the Llama SAE does not transfer to R1-Distill. We cannot yet say whether the same interpretable features recur across architectures.
-
-**The R1-Distill comparison is not a clean ablation.** R1-Distill differs from Llama in the full fine-tuning pipeline, not just reasoning distillation. OLMo's open training pipeline would enable a cleaner ablation (same data, same recipe, with and without reasoning traces), but we have not run it.
+**Not a clean ablation.** R1-Distill differs from Llama in the full fine-tuning pipeline, not just reasoning distillation.
 
 ## 6. Safety implications
 
-**Monitoring inference-time reasoning from internals is harder than it looks.** If thinking tokens do not change residual stream representations, a probe-based monitor cannot distinguish a model that genuinely conditions on its chain-of-thought from one that ignores it. The internal state looks identical either way. This is directly relevant to detecting performative reasoning -- models that emit CoT as decoration without it influencing the answer. Our result does not prove performative reasoning occurs, but it shows that the tool people might reach for to detect it (residual stream probes) would not catch it.
+**Monitoring inference-time reasoning from internals is harder than it looks.** If thinking tokens do not change residual stream representations, a probe-based monitor cannot distinguish a model that genuinely conditions on its CoT from one that ignores it. This is directly relevant to detecting performative reasoning. Our result does not prove performative reasoning occurs, but the tool people would reach for to detect it (residual stream probes) would not catch it.
 
-**Training-time interventions go deeper than inference-time ones.** If you want models that reason at the representational level, that requires training, not prompting. A model whose default representation already points away from the lure (R1-Distill, susceptibility -0.326) is in a fundamentally different state than a model whose representation points toward the lure but whose CoT sometimes overrides it. This is a concrete data point in the reasoning distillation vs. inference-time scaling debate.
+**Training goes deeper than prompting.** A model whose default representation points away from the lure (R1-Distill, susceptibility -0.326) is in a fundamentally different state than one whose representation points toward the lure but whose CoT sometimes overrides it. Concrete data point in the reasoning distillation vs. inference-time scaling debate.
 
-**Domain-specific vulnerabilities are invisible to aggregate benchmarks.** A model that aces CRT problems under greedy decoding can simultaneously fail at base rate estimation 84% of the time, and fail at CRT 36% of the time under sampled decoding. OLMo can resist every bias category except loss aversion. Safety evaluations that treat "reasoning ability" as a monolithic capability will miss these sharp, context-dependent failure surfaces.
+**Domain-specific vulnerabilities are invisible to aggregate benchmarks.** A model acing CRT under greedy decoding can fail at base rate estimation 84% of the time, and fail at CRT 36% under sampled decoding. Safety evaluations that treat "reasoning ability" as monolithic will miss these sharp failure surfaces.
 
-**SAE-based monitoring looks promising but fragile.** The 41 features that survive Ma et al. falsification provide interpretable, feature-level handles on conflict processing with 74% explained variance. But the failure to transfer from Llama to R1-Distill (74% to 25% EV) means monitoring tools built on one model's SAE decomposition may not generalize, even within the same architecture family. This is a practical obstacle for deployment-time monitoring.
+**SAE-based monitoring: promising but fragile.** 41 features survive falsification with 74% explained variance, but the failure to transfer from Llama to R1-Distill (74% to 25% EV) means monitoring tools may not generalize even within the same architecture family.
 
 ## 7. What is next
 
-**Causal interventions** are the single most important remaining experiment. The 41 SAE features and probe-identified directions are candidates for activation patching: if clamping these features changes the model's answer on conflict items, we have causal evidence that the representations drive behavior, not merely reflect it.
+**Causal interventions** are the single most important remaining experiment. If clamping the 41 SAE features or the probe-identified direction changes the model's answer on conflict items, we move from correlation to mechanism. This is the gap we are most eager to close.
 
-**Scale.** Whether the S2-by-default pattern holds at 70B+ is the remaining axis of generality after the OLMo replication established cross-architecture generality.
-
-**Cross-architecture SAE.** Training custom SAEs for OLMo and Qwen via SAELens would test whether the same interpretable features recur across architectures or whether each model family implements conflict processing through architecture-specific feature sets.
-
-**Clean training ablation.** OLMo's open training pipeline makes a controlled ablation possible: same data, same recipe, with and without reasoning traces, to isolate the contribution of reasoning training to the representational changes.
+Beyond that: **scale** (does S2-by-default hold at 70B+?), **cross-architecture SAE** (custom SAEs for OLMo and Qwen to test whether the same interpretable features recur), and a **clean training ablation** using OLMo's open pipeline to isolate reasoning training from other fine-tuning differences.
 
 ## The punchline
 
