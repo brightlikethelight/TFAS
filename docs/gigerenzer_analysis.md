@@ -15,9 +15,9 @@ We tested Gigerenzer and Hoffrage's (1995) ecological rationality hypothesis: do
 | Model | Probability format | Natural frequency format | Direction |
 |-------|-------------------|------------------------|-----------|
 | Llama-3.1-8B-Instruct | 84% (21/25) | **100% (10/10)** | +16pp WORSE |
-| R1-Distill-Llama-8B | 4% (1/25) | **40% (4/10)** | +36pp WORSE ⚠️ |
+| R1-Distill-Llama-8B | 4% (1/25) | **50% (5/10)** | +46pp MUCH WORSE |
 
-> **⚠️ SCORING BUG IDENTIFIED (2026-04-13)**: R1-Distill's 40% lure rate is likely invalid due to two compounding bugs in `run_new_items.py`: (1) Unicode BPE artifacts (`Ġ`) break substring matching for multi-word answers, (2) response truncation to 500 chars scores the CoT preamble, not the final answer. See `docs/natural_freq_failure_analysis.md`. The Llama 100% result IS valid (short direct answers, no artifacts). **R1-Distill natural frequency results need re-running with the fixed script.**
+> **CORRECTED (2026-04-13)**: Original run showed 40% due to a scoring bug (BPE artifacts + truncation). Re-run with fixed scoring yields **50% lure** (5/10 lured, 5/10 correct, 0 other). The reversal is even more dramatic than initially measured: R1-Distill goes from near-immunity (4%) to coin-flip performance (50%).
 
 Sunk cost items (tested alongside) showed 0% lure rate for both models in both formats, confirming that the effect is specific to base rate problems and not a generic artifact of the new item set.
 
