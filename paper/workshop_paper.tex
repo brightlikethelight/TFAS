@@ -127,7 +127,7 @@ We address this question with a natural experiment: Llama-3.1-8B-Instruct
 and DeepSeek-R1-Distill-Llama-8B share identical architectures (32
 layers, 32 attention heads, 4096 hidden dimensions) but differ in
 reasoning distillation training.  Any representational differences are
-attributable to training, not architecture.  We make four contributions:
+attributable to training, not architecture.  We make five contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
@@ -154,6 +154,13 @@ attributable to training, not architecture.  We make four contributions:
   \emph{identical} probe signatures (AUC\,=\,0.971 in both modes),
   demonstrating that training changes \sone{}/\stwo{} encoding while
   inference-time thinking changes only generation behavior.
+
+  \item \textbf{Sparse autoencoder features surviving falsification}: 41
+  SAE features show significant differential activation between conflict
+  and control items (BH-FDR $q < 0.05$), with all 41 surviving Ma et
+  al.\ falsification testing \citep{ma2026falsification}---zero spurious
+  features---grounding the probe-level findings in interpretable feature
+  directions.
 \end{enumerate}
 
 \noindent Our framing: \textbf{Same Architecture, Different Minds.}
@@ -364,9 +371,7 @@ architecture families.  Notably, OLMo Instruct reveals a
 items, where Llama showed 0\%.  Different training data and procedures
 expose different biases, consistent with the view that bias
 susceptibility is not a universal ``System~1'' property but depends on
-what heuristics each model has internalized.  Preliminary OLMo probing
-(AUC\,=\,0.998 at L16--20 for the standard model) suggests
-representational patterns similar to the Llama pair.
+what heuristics each model has internalized.  Probing confirms the mechanistic pattern: OLMo Instruct reaches AUC\,=\,0.998 at layer~21, while OLMo Think reaches AUC\,=\,0.993 at layer~28---the same direction of blurring observed in the Llama pair, with the standard model showing higher separability in 30 of 32 layers.
 
 \subsection{Layer-Wise Probe Results}
 \label{sec:results_probes}
@@ -456,10 +461,11 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \centering
 \caption{Probing summary at peak layer for the three
   vulnerable categories.  95\% CIs from 1000 bootstrap resamples
-  (Llama and R1-Distill only; Qwen CIs pending).
+  (Llama and R1-Distill).
   Selectivity = true AUC $-$ control AUC.
   Qwen think and no-think produce identical probe results despite
-  a 3$\times$ behavioral difference.}
+  a 3$\times$ behavioral difference.  OLMo replicates the same
+  direction: Instruct $>$ Think.}
 \label{tab:probe_summary}
 \vspace{4pt}
 \small
@@ -471,6 +477,9 @@ Llama-3.1-8B-Instruct & L16 & 0.974 & [0.952, 0.992] & 0.54 & 0.434 \\
 R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.52 & 0.410 \\
 Qwen~3-8B (no think)  & L34 & 0.971 & ---             & ---  & --- \\
 Qwen~3-8B (think)     & L34 & 0.971 & ---             & ---  & --- \\
+\midrule
+OLMo-3-7B-Instruct    & L21 & 0.998 & ---             & ---  & --- \\
+OLMo-3-7B-Think       & L28 & 0.993 & ---             & ---  & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -517,6 +526,11 @@ about separability of conflict/control conditions but about the
 leans toward the lure before generation begins; the reasoning model leans
 away from it.
 
+\subsection{SAE Feature Analysis}
+\label{sec:results_sae}
+
+Sparse autoencoder analysis of Llama's layer 19 residual stream (Goodfire SAE, 65,536 features) identified 41 features with statistically significant differential activation between conflict and control items (BH-FDR $q < 0.05$). All 41 features survived Ma et al.\ falsification testing \citep{ma2026falsification}: injecting top-activating tokens into random text did not reproduce the activation pattern. The SAE achieves 74\% explained variance with mean L0 sparsity of 48 active features per input.
+
 % ============================================================
 % 5. Discussion
 % ============================================================
@@ -539,9 +553,10 @@ to override the heuristic pathway.
 
 The reasoning model shows \emph{less} distinct conflict encoding
 (AUC\,=\,0.930) yet dramatically better resolution (2.4\% lure rate)---a
-pattern confirmed independently in the OLMo family (14.9\% $\to$ 0.9\%
-with reasoning training), establishing this as a general phenomenon
-across architectures.
+pattern confirmed both behaviorally and mechanistically in the OLMo
+family (14.9\% $\to$ 0.9\% lure rate; AUC 0.998 $\to$ 0.993, higher
+in 30/32 layers), establishing this as a general phenomenon across
+architectures.
 If reasoning training simply added a ``System~2 module'' that overrides
 System~1, we would expect sharper separability.  Instead, the AUC drop
 suggests that reasoning distillation makes Type~2 processing
@@ -626,13 +641,16 @@ reasoning toggle (Qwen think/no-think).
 \paragraph{Methodological safeguards.}
 Probing can produce plausible results even on random networks
 \citep{meloux2025dead}, and SAE features often fail falsification
-\citep{sanitychecks2026}.  We address this three ways: (1)~Hewitt--Liang
+\citep{sanitychecks2026}.  We address this four ways: (1)~Hewitt--Liang
 controls (Section~\ref{sec:probes}) show selectivity $>$40pp;
 (2)~cross-prediction (Section~\ref{sec:specificity}) provides structural
 falsification---noise probes would not systematically drop to
 AUC\,=\,0.378 on immune categories; (3)~the inter-model comparison is
 itself a control---identical prompts yield different AUCs (0.974
-vs.\ 0.930) only if the models encode inputs differently.
+vs.\ 0.930) only if the models encode inputs differently;
+(4)~all 41 SAE features survive Ma et al.\ falsification
+(Section~\ref{sec:results_sae}), with zero spurious features after
+token-injection testing.
 
 \paragraph{Limitations.}
 (i) Model scale: all models are 7--8B parameters; the blurring effect
@@ -649,14 +667,14 @@ is thinking.''
 representations shift during chain-of-thought.
 
 \paragraph{Future work.}
-Two directions follow naturally.  First, \textbf{SAE feature analysis}:
-decompose the blurred representations into interpretable features using
-Llama Scope SAEs \citep{he2024llama}, with Ma et al.\ falsification
-controls \citep{ma2026falsification}, to identify which specific features
-are reorganized by reasoning training.  Second, \textbf{causal
-interventions}: steer the identified features to test whether blurring
-the \sone{}/\stwo{} boundary in standard models improves their bias
-resistance.
+SAE analysis has identified 41 falsification-surviving features that
+differentiate conflict and control processing
+(Section~\ref{sec:results_sae}).  The natural next step is
+\textbf{causal interventions}: steer these features in the standard
+model to test whether artificially blurring the \sone{}/\stwo{}
+boundary improves bias resistance without chain-of-thought cost, and
+conversely, whether sharpening the boundary in the reasoning model
+reintroduces vulnerability.
 
 % ============================================================
 % Acknowledgments

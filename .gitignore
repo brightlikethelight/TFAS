@@ -55,6 +55,8 @@ data/raw_outputs/*.jsonl
 results/**/*.npz
 results/**/*.pkl
 results/**/cache/
+results_pod/
+results_downloaded/
 figures/cache/
 
 # Allow benchmark data (small)
