@@ -25,7 +25,7 @@ import sys
 import time
 import traceback
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -83,7 +83,7 @@ def log(msg: str) -> None:
     global _log_fh
     if _log_fh is None:
         LOG_FILE.parent.mkdir(parents=True, exist_ok=True)
-        _log_fh = open(LOG_FILE, "a")
+        _log_fh = open(LOG_FILE, "a")  # noqa: SIM115
     _log_fh.write(line + "\n")
     _log_fh.flush()
 
@@ -113,7 +113,7 @@ def save_state(state: dict[str, Any]) -> None:
 
 def mark_completed(state: dict[str, Any], job_name: str, elapsed: float) -> None:
     state["completed"][job_name] = {
-        "finished_at": datetime.now(timezone.utc).isoformat(),
+        "finished_at": datetime.now(UTC).isoformat(),
         "elapsed_seconds": round(elapsed, 1),
     }
     state["failed"].pop(job_name, None)
@@ -122,7 +122,7 @@ def mark_completed(state: dict[str, Any], job_name: str, elapsed: float) -> None
 
 def mark_failed(state: dict[str, Any], job_name: str, error: str) -> None:
     state["failed"][job_name] = {
-        "failed_at": datetime.now(timezone.utc).isoformat(),
+        "failed_at": datetime.now(UTC).isoformat(),
         "error": error[:2000],
     }
     save_state(state)
@@ -447,7 +447,7 @@ def job_cross_model_probe_transfer() -> None:
                 c.decode("utf-8") if isinstance(c, bytes) else str(c) for c in cats_raw
             ])
 
-            model_key = list(f["/models"].keys())[0]
+            model_key = next(iter(f["/models"].keys()))
             n_layers = int(f[f"/models/{model_key}/metadata"].attrs["n_layers"])
 
             # Position index
@@ -607,7 +607,7 @@ def job_sae_r1_distill() -> None:
     # Load R1-Distill layer-19 P0 activations
     log("  Loading R1-Distill activations (layer 19, P0)...")
     with h5py.File(str(R1_H5), "r") as f:
-        model_key = list(f["/models"].keys())[0]
+        model_key = next(iter(f["/models"].keys()))
         labels_raw = f[f"/models/{model_key}/position_index/labels"][:]
         labels = [s.decode("utf-8") if isinstance(s, bytes) else str(s) for s in labels_raw]
         p0_idx = labels.index("P0")
@@ -642,7 +642,7 @@ def job_sae_r1_distill() -> None:
         repo_files = list_repo_files(SAE_RELEASE)
         weight_files = [f for f in repo_files if f.endswith((".safetensors", ".pt", ".pth", ".bin"))]
         if not weight_files:
-            raise FileNotFoundError(f"No weight files in {SAE_RELEASE}")
+            raise FileNotFoundError(f"No weight files in {SAE_RELEASE}") from exc
         weight_path = hf_hub_download(repo_id=SAE_RELEASE, filename=weight_files[0])
         if weight_path.endswith(".safetensors"):
             import safetensors.torch
@@ -653,7 +653,7 @@ def job_sae_r1_distill() -> None:
         raise RuntimeError(
             f"Manual SAE loading not implemented in overnight3. "
             f"Keys found: {list(state.keys())}. Use run_sae_goodfire.py pattern."
-        )
+        ) from exc
 
     # Reconstruction fidelity check
     log("  Checking reconstruction fidelity on R1-Distill activations...")
@@ -742,7 +742,7 @@ def job_sae_r1_distill() -> None:
         # Top features by effect size
         sig_features = [r for r in results_features if r["significant"]]
         sig_features.sort(key=lambda r: abs(r["effect_size"]), reverse=True)
-        log(f"\n  Top 10 significant features (R1-Distill, L19):")
+        log("\n  Top 10 significant features (R1-Distill, L19):")
         for r in sig_features[:10]:
             direction = "conflict>control" if r["effect_size"] > 0 else "control>conflict"
             log(f"    Feature {r['feature_idx']:>6d}: effect={r['effect_size']:+.4f} "
@@ -755,9 +755,9 @@ def job_sae_r1_distill() -> None:
 
     # Convert numpy types for JSON serialization
     def as_python(obj: Any) -> Any:
-        if isinstance(obj, (np.floating, np.float32, np.float64)):
+        if isinstance(obj, np.floating | np.float32 | np.float64):
             return float(obj)
-        if isinstance(obj, (np.integer, np.int32, np.int64)):
+        if isinstance(obj, np.integer | np.int32 | np.int64):
             return int(obj)
         if isinstance(obj, np.bool_):
             return bool(obj)
@@ -765,7 +765,7 @@ def job_sae_r1_distill() -> None:
             return obj.tolist()
         if isinstance(obj, dict):
             return {str(k): as_python(v) for k, v in obj.items()}
-        if isinstance(obj, (list, tuple)):
+        if isinstance(obj, list | tuple):
             return [as_python(x) for x in obj]
         return obj
 

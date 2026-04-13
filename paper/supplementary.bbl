@@ -1,0 +1,23 @@
+\begin{thebibliography}{3}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[De~Neys(2012)]{deneys2012bias}
+Wim De~Neys.
+\newblock Bias and conflict: {A} case for logical intuitions.
+\newblock \emph{Perspectives on Psychological Science}, 7\penalty0 (1):\penalty0 28--38, 2012.
+
+\bibitem[Gigerenzer and Hoffrage(1995)]{gigerenzer1995improve}
+Gerd Gigerenzer and Ulrich Hoffrage.
+\newblock How to improve {Bayesian} reasoning without instruction: Frequency formats.
+\newblock \emph{Psychological Review}, 102\penalty0 (4):\penalty0 684--704, 1995.
+
+\bibitem[Kornblith et~al.(2019)Kornblith, Norouzi, Lee, and Hinton]{kornblith2019similarity}
+Simon Kornblith, Mohammad Norouzi, Honglak Lee, and Geoffrey Hinton.
+\newblock Similarity of neural network representations revisited.
+\newblock In \emph{Proceedings of the 36th International Conference on Machine Learning}, pages 3519--3529. PMLR, 2019.
+
+\end{thebibliography}

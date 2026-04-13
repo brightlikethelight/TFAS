@@ -16,7 +16,7 @@ import json
 import math
 import sys
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -217,8 +217,8 @@ def generate_full_table(
     col_spec = "l c " + " ".join(["c"] * n_cats)
 
     lines = [
-        r"% Full behavioral results table — all models × all categories",
-        f"% Generated: {datetime.now(timezone.utc).isoformat()}",
+        r"% Full behavioral results table — all models x all categories",
+        f"% Generated: {datetime.now(UTC).isoformat()}",
         r"% Script: scripts/make_behavioral_table.py",
         r"\begin{table*}[t]",
         r"\centering",
@@ -278,7 +278,7 @@ def generate_compact_table(
 
     lines = [
         r"% Compact behavioral results table — main paper",
-        f"% Generated: {datetime.now(timezone.utc).isoformat()}",
+        f"% Generated: {datetime.now(UTC).isoformat()}",
         r"% Script: scripts/make_behavioral_table.py",
         r"\begin{table}[t]",
         r"\centering",
@@ -392,7 +392,7 @@ def build_json_summary(
         models[key] = m
 
     return {
-        "generated": datetime.now(timezone.utc).isoformat(),
+        "generated": datetime.now(UTC).isoformat(),
         "script": "scripts/make_behavioral_table.py",
         "categories_original": ORIGINAL_CATEGORIES,
         "categories_new": NEW_CATEGORIES,
@@ -476,7 +476,7 @@ def main() -> None:
     with open(tex_path, "w") as f:
         f.write("% " + "=" * 70 + "\n")
         f.write("% Comprehensive behavioral results tables for s1s2 paper\n")
-        f.write(f"% Generated: {datetime.now(timezone.utc).isoformat()}\n")
+        f.write(f"% Generated: {datetime.now(UTC).isoformat()}\n")
         f.write("% Script: scripts/make_behavioral_table.py\n")
         f.write("% " + "=" * 70 + "\n\n")
         f.write("% ---- COMPACT TABLE (main paper) ----\n\n")

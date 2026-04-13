@@ -21,9 +21,8 @@ import argparse
 import hashlib
 import json
 import re
-import sys
 import time
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import h5py
@@ -205,7 +204,7 @@ def main():
         meta.attrs["benchmark_path"] = args.benchmark
         bm_hash = hashlib.sha256(Path(args.benchmark).read_bytes()).hexdigest()
         meta.attrs["benchmark_sha256"] = bm_hash
-        meta.attrs["created_at"] = datetime.now(timezone.utc).isoformat()
+        meta.attrs["created_at"] = datetime.now(UTC).isoformat()
         meta.attrs["git_sha"] = "unknown"
         meta.attrs["seed"] = 0
         meta.attrs["config"] = json.dumps(vars(args))
@@ -232,7 +231,7 @@ def main():
         mmeta.attrs["hidden_dim"] = hidden_dim
         mmeta.attrs["head_dim"] = hidden_dim // n_heads
         mmeta.attrs["dtype"] = "float16"
-        mmeta.attrs["extracted_at"] = datetime.now(timezone.utc).isoformat()
+        mmeta.attrs["extracted_at"] = datetime.now(UTC).isoformat()
         mmeta.attrs["is_reasoning_model"] = is_reasoning
 
         # Residual streams
@@ -260,7 +259,7 @@ def main():
 
         # Generations
         gen = mgrp.create_group("generations")
-        gen.create_dataset("full_text", data=np.array(["".encode()[:8192]] * n_problems, dtype="S8192"))
+        gen.create_dataset("full_text", data=np.array([b""[:8192]] * n_problems, dtype="S8192"))
         gen.create_dataset("thinking_text", data=np.array([s.encode()[:8192] for s in behavior["thinking_text"]], dtype="S8192"))
         gen.create_dataset("answer_text", data=np.array([s.encode()[:512] for s in behavior["answer_text"]], dtype="S512"))
         gen.create_dataset("thinking_token_count", data=np.zeros(n_problems, dtype=np.int32))

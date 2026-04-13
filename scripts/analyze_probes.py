@@ -17,7 +17,6 @@ Outputs:
 from __future__ import annotations
 
 import json
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -168,9 +167,9 @@ def generate_interpretation(
     lines = []
 
     lines.append(
-        f"Linear probes trained on residual stream activations discriminated S1-like "
-        f"from S2-like processing in both models, but with markedly different layer-wise "
-        f"profiles."
+        "Linear probes trained on residual stream activations discriminated S1-like "
+        "from S2-like processing in both models, but with markedly different layer-wise "
+        "profiles."
     )
 
     lines.append(
@@ -224,13 +223,13 @@ def generate_interpretation(
     )
 
     lines.append(
-        f"These results are consistent with the hypothesis that reasoning distillation "
-        f"compresses the deliberation-intensity gradient in residual stream geometry, "
-        f"making S1-like and S2-like representations less linearly separable --- "
-        f"particularly in layers 10--15 where the base model shows maximal decodability. "
-        f"Caution is warranted: higher probe AUC in the base model could also reflect "
-        f"greater reliance on shallow heuristic features that probes can exploit, rather "
-        f"than richer processing-mode information per se."
+        "These results are consistent with the hypothesis that reasoning distillation "
+        "compresses the deliberation-intensity gradient in residual stream geometry, "
+        "making S1-like and S2-like representations less linearly separable --- "
+        "particularly in layers 10--15 where the base model shows maximal decodability. "
+        "Caution is warranted: higher probe AUC in the base model could also reflect "
+        "greater reliance on shallow heuristic features that probes can exploit, rather "
+        "than richer processing-mode information per se."
     )
 
     return " ".join(lines)
@@ -350,9 +349,9 @@ def main() -> None:
             return [_stringify_keys(i) for i in obj]
         if isinstance(obj, tuple):
             return [_stringify_keys(i) for i in obj]
-        if isinstance(obj, (np.integer,)):
+        if isinstance(obj, np.integer):
             return int(obj)
-        if isinstance(obj, (np.floating,)):
+        if isinstance(obj, np.floating):
             return float(obj)
         return obj
 
@@ -376,7 +375,7 @@ def main() -> None:
     print(f"  Max gap:     {gap['max_gap']:.4f} (layer {gap['max_gap_layer']})")
     print(f"  Min gap:     {gap['min_gap']:.4f} (layer {gap['min_gap_layer']})")
     print(f"  All layers positive: {gap['all_positive']}")
-    print(f"  Top-5 gap layers: ", end="")
+    print("  Top-5 gap layers: ", end="")
     for layer, diff in gap["top5_gap_layers"]:
         print(f"L{layer}={diff:.3f}  ", end="")
     print()

@@ -138,7 +138,7 @@ PROBE_QWEN_NOTHINK: dict[int, float] = {
                         .001, .002, .001, .003, .002, .001, .002, .001,
                         .002, .001, 0, -.003]),
             0.50, 1.0,
-        ),
+        ), strict=False,
     )
 }
 # Force L34 anchor exactly
@@ -157,7 +157,7 @@ PROBE_QWEN_THINK: dict[int, float] = {
                         .003, .001, .002, .001, .003, .002, .001, .002,
                         .001, .002, 0, -.005]),
             0.50, 1.0,
-        ),
+        ), strict=False,
     )
 }
 PROBE_QWEN_THINK[34] = 0.971
@@ -182,7 +182,7 @@ CROSS_LLAMA_TRANSFER: dict[int, float] = {
             0.52 - 0.08 * np.exp(-0.5 * ((_layers_32 - 14) / 5) ** 2)
             + np.random.default_rng(77).normal(0, 0.015, 32),
             0.35, 0.55,
-        ),
+        ), strict=False,
     )
 }
 
@@ -197,7 +197,7 @@ CROSS_R1_TRANSFER: dict[int, float] = {
             0.50 - 0.04 * np.exp(-0.5 * ((_layers_32 - 16) / 6) ** 2)
             + np.random.default_rng(88).normal(0, 0.012, 32),
             0.38, 0.54,
-        ),
+        ), strict=False,
     )
 }
 
@@ -246,7 +246,7 @@ def make_figure1_behavioral(output_dir: Path) -> Path:
             linewidth=0.5,
         )
         # Value labels above each bar
-        for bar, rate in zip(bars, rates):
+        for bar, rate in zip(bars, rates, strict=False):
             if rate > 0:
                 ax.text(
                     bar.get_x() + bar.get_width() / 2,
@@ -325,9 +325,9 @@ def make_figure2_probe_curves(output_dir: Path) -> Path:
         xy=(pk_llama_layer, pk_llama_auc),
         xytext=(pk_llama_layer + 7, 1.005),
         fontsize=8, color=COLORS["standard"],
-        arrowprops=dict(arrowstyle="->", color=COLORS["standard"], lw=1.2,
-                        connectionstyle="arc3,rad=-0.2"),
-        bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=COLORS["standard"], alpha=0.8),
+        arrowprops={"arrowstyle": "->", "color": COLORS["standard"], "lw": 1.2,
+                        "connectionstyle": "arc3,rad=-0.2"},
+        bbox={"boxstyle": "round,pad=0.3", "fc": "white", "ec": COLORS["standard"], "alpha": 0.8},
     )
 
     # R1 peak annotation
@@ -336,9 +336,9 @@ def make_figure2_probe_curves(output_dir: Path) -> Path:
         xy=(pk_r1_layer, pk_r1_auc),
         xytext=(pk_r1_layer + 5, 0.87),
         fontsize=8, color=COLORS["reasoning"],
-        arrowprops=dict(arrowstyle="->", color=COLORS["reasoning"], lw=1.2,
-                        connectionstyle="arc3,rad=0.2"),
-        bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=COLORS["reasoning"], alpha=0.8),
+        arrowprops={"arrowstyle": "->", "color": COLORS["reasoning"], "lw": 1.2,
+                        "connectionstyle": "arc3,rad=0.2"},
+        bbox={"boxstyle": "round,pad=0.3", "fc": "white", "ec": COLORS["reasoning"], "alpha": 0.8},
     )
 
     # Deliberation gap annotation at the widest point
@@ -350,7 +350,7 @@ def make_figure2_probe_curves(output_dir: Path) -> Path:
         xy=(gap_layer, mid_y),
         xytext=(gap_layer + 5, mid_y - 0.04),
         fontsize=8, color=COLORS["gap"], fontweight="bold",
-        arrowprops=dict(arrowstyle="->", color=COLORS["gap"], lw=1.2),
+        arrowprops={"arrowstyle": "->", "color": COLORS["gap"], "lw": 1.2},
     )
 
     ax_main.set_xlim(-0.5, 31.5)
@@ -387,8 +387,8 @@ def make_figure2_probe_curves(output_dir: Path) -> Path:
         xy=(34, 0.971),
         xytext=(22, 0.985),
         fontsize=8, fontweight="bold", color="#555555",
-        arrowprops=dict(arrowstyle="->", color="#555555", lw=1.2),
-        bbox=dict(boxstyle="round,pad=0.3", fc="lightyellow", ec="#555555", alpha=0.9),
+        arrowprops={"arrowstyle": "->", "color": "#555555", "lw": 1.2},
+        bbox={"boxstyle": "round,pad=0.3", "fc": "lightyellow", "ec": "#555555", "alpha": 0.9},
     )
 
     ax_qwen.set_xlim(-0.5, 35.5)
@@ -447,9 +447,9 @@ def make_figure3_cross_prediction(output_dir: Path) -> Path:
         xy=(14, l14_transfer),
         xytext=(20, 0.38),
         fontsize=8, color=COLORS["standard"], fontweight="bold",
-        arrowprops=dict(arrowstyle="->", color=COLORS["standard"], lw=1.2,
-                        connectionstyle="arc3,rad=-0.2"),
-        bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=COLORS["standard"], alpha=0.8),
+        arrowprops={"arrowstyle": "->", "color": COLORS["standard"], "lw": 1.2,
+                        "connectionstyle": "arc3,rad=-0.2"},
+        bbox={"boxstyle": "round,pad=0.3", "fc": "white", "ec": COLORS["standard"], "alpha": 0.8},
     )
 
     ax.set_xlim(-0.5, 31.5)
@@ -510,16 +510,16 @@ def make_figure4_lure_distribution(output_dir: Path) -> Path:
         xy=(llama_mean, ymax * 0.55),
         xytext=(0.75, ymax * 0.95),
         fontsize=8.5, color=COLORS["standard"], fontweight="bold",
-        arrowprops=dict(arrowstyle="-|>", color=COLORS["standard"], lw=1.3),
-        bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=COLORS["standard"], alpha=0.95),
+        arrowprops={"arrowstyle": "-|>", "color": COLORS["standard"], "lw": 1.3},
+        bbox={"boxstyle": "round,pad=0.3", "fc": "white", "ec": COLORS["standard"], "alpha": 0.95},
     )
     ax.annotate(
         f"R1 mean = {r1_mean:.2f}",
         xy=(r1_mean, ymax * 0.55),
         xytext=(-1.0, ymax * 0.95),
         fontsize=8.5, color=COLORS["reasoning"], fontweight="bold",
-        arrowprops=dict(arrowstyle="-|>", color=COLORS["reasoning"], lw=1.3),
-        bbox=dict(boxstyle="round,pad=0.3", fc="white", ec=COLORS["reasoning"], alpha=0.95),
+        arrowprops={"arrowstyle": "-|>", "color": COLORS["reasoning"], "lw": 1.3},
+        bbox={"boxstyle": "round,pad=0.3", "fc": "white", "ec": COLORS["reasoning"], "alpha": 0.95},
     )
 
     ax.set_xlabel("P0 Lure Susceptibility Score")
@@ -533,12 +533,12 @@ def make_figure4_lure_distribution(output_dir: Path) -> Path:
     # Direction arrows at bottom
     ax.annotate("", xy=(-1.1, -0.09), xytext=(-0.3, -0.09),
                 xycoords=ax.get_xaxis_transform(), textcoords=ax.get_xaxis_transform(),
-                arrowprops=dict(arrowstyle="->", color="#888888", lw=1.0))
+                arrowprops={"arrowstyle": "->", "color": "#888888", "lw": 1.0})
     ax.text(-0.7, -0.13, "Favors correct",
             transform=ax.get_xaxis_transform(), fontsize=7.5, color="#888888", ha="center")
     ax.annotate("", xy=(1.1, -0.09), xytext=(0.3, -0.09),
                 xycoords=ax.get_xaxis_transform(), textcoords=ax.get_xaxis_transform(),
-                arrowprops=dict(arrowstyle="->", color="#888888", lw=1.0))
+                arrowprops={"arrowstyle": "->", "color": "#888888", "lw": 1.0})
     ax.text(0.7, -0.13, "Favors lure",
             transform=ax.get_xaxis_transform(), fontsize=7.5, color="#888888", ha="center")
 

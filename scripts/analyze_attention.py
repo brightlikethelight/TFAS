@@ -29,7 +29,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy.typing import NDArray
 
-
 # ---------------------------------------------------------------------------
 # Project theme (matches make_paper_figures.py conventions)
 # ---------------------------------------------------------------------------
@@ -291,7 +290,7 @@ def make_figure(
 
     fig, axes = plt.subplots(1, 2, figsize=(10, 4), sharey=True)
 
-    for ax, result in zip(axes, model_results):
+    for ax, result in zip(axes, model_results, strict=False):
         profiles = result["profiles"]
         n_layers = len(profiles["conflict_mean"])
         layers = np.arange(n_layers)
@@ -339,7 +338,7 @@ def make_figure(
             f"peak gap L{peak_l}",
             xy=(peak_l, profiles["conflict_mean"][peak_l]),
             xytext=(peak_l + 2, profiles["conflict_mean"][peak_l] + 0.01),
-            arrowprops=dict(arrowstyle="->", color="gray", lw=0.8),
+            arrowprops={"arrowstyle": "->", "color": "gray", "lw": 0.8},
             fontsize=8, color="gray",
         )
 
@@ -499,7 +498,7 @@ def print_summary(summary: dict[str, Any]) -> None:
         print(f"    Direction: {s2['n_conflict_higher']} conflict-higher, "
               f"{s2['n_control_higher']} control-higher")
 
-        print(f"\n  Layer profile:")
+        print("\n  Layer profile:")
         print(f"    Peak gap layer: {lp['peak_gap_layer']} "
               f"(delta={lp['peak_gap_signed']:+.6f})")
         print(f"    Robust peak: layer {lp['robust_peak_layer']}")
@@ -522,7 +521,7 @@ def print_summary(summary: dict[str, Any]) -> None:
                 else:
                     bars += " "
             print(f"    Gap profile: [{bars}]")
-            print(f"    (+ = conflict>control, - = control>conflict)")
+            print("    (+ = conflict>control, - = control>conflict)")
 
     # Comparative summary
     model_names = list(summary["models"].keys())
@@ -530,7 +529,7 @@ def print_summary(summary: dict[str, Any]) -> None:
         m1, m2 = model_names
         s1 = summary["models"][m1]["s2_specialized_heads"]
         s2 = summary["models"][m2]["s2_specialized_heads"]
-        print(f"\n--- Comparative ---")
+        print("\n--- Comparative ---")
         print(f"  S2-specialized heads: {m1}={s1['n_specialized']} vs {m2}={s2['n_specialized']}")
         ratio = s2["proportion"] / s1["proportion"] if s1["proportion"] > 0 else float("inf")
         print(f"  Ratio (R1/Llama): {ratio:.2f}x")

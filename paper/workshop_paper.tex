@@ -312,11 +312,11 @@ responses on conflict items) across all models and categories.
   Bolded numbers indicate vulnerable categories (lure rate $>$10\%).
   OLMo columns provide cross-architecture replication from an
   independent model family.  Loss aversion is vulnerable in OLMo
-  Instruct (33\%) but immune in Llama (0\%), revealing model-specific
-  bias profiles.  Expanded-set results: sunk cost is immune (0\%,
-  both Llama and R1-Distill); natural frequency base rate framing
-  increases lure rates (Llama: $84\% \to 100\%$; R1-Distill:
-  $4\% \to 40\%$).}
+  Instruct (33\%) but immune in Llama (0\%); availability shows a
+  Llama-specific vulnerability (13\%) absent in all other models.
+  Natural frequency base rate framing increases lure rates
+  (Llama: $84\% \to 100\%$; R1-Distill: $4\% \to 40\%$).
+  --- = not yet evaluated on the expanded set.}
 \label{tab:behavioral}
 \vspace{4pt}
 \small
@@ -329,7 +329,10 @@ responses on conflict items) across all models and categories.
 Base rate      & \textbf{84} & 4   & \textbf{56} & 4   & \textbf{46} & 0 \\
 Conjunction    & \textbf{55} & 0   & \textbf{95} & \textbf{55} & \textbf{50} & 0 \\
 Syllogism      & \textbf{52} & 0   & 0   & 0   & 0   & 0 \\
-Loss aversion  & 0   & 0   & --- & --- & \textbf{33} & 0 \\
+Loss aversion  & 0   & 0   & 0   & 0   & \textbf{33} & 0 \\
+Sunk cost      & 0   & 0   & 0   & 0   & ---  & --- \\
+Certainty eff. & 0   & 0   & 0   & 0   & ---  & --- \\
+Availability   & \textbf{13} & 0   & 0   & 0   & ---  & --- \\
 \midrule
 CRT variants   & 0   & 0   & 0   & 0   & 3   & 0 \\
 Arithmetic     & 0   & 0   & 0   & 0   & 0   & 0 \\

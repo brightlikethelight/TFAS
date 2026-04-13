@@ -44,8 +44,7 @@ import json
 import math
 import sys
 import time
-from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -53,7 +52,6 @@ import torch
 from scipy import stats as sp_stats
 from statsmodels.stats.multitest import multipletests
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
 
 # ---------------------------------------------------------------------------
 # Metric computation
@@ -368,7 +366,7 @@ def run_statistical_analysis(
     items (q < 0.05, |r_rb| >= 0.3).
     """
     # Partition items by category and conflict status
-    categories = sorted(set(it["category"] for it in items))
+    categories = sorted({it["category"] for it in items})
 
     # Build arrays: for each (category, layer, head) -> list of metric values
     # Separate by conflict vs control
@@ -392,7 +390,6 @@ def run_statistical_analysis(
             all_labels: list[dict] = []  # (layer, head) for each test
 
             # Also run per-category (for diagnostics, not primary correction)
-            per_category_results: dict[str, list[dict]] = {}
 
             # Global test: all conflict vs all control (primary)
             for layer_idx in range(n_layers):
@@ -672,7 +669,7 @@ def main() -> None:
             "n_conflict": n_conflict,
             "n_control": n_control,
         },
-        "extracted_at": datetime.now(timezone.utc).isoformat(),
+        "extracted_at": datetime.now(UTC).isoformat(),
         "extraction_elapsed_s": round(extract_elapsed, 1),
         "total_elapsed_s": round(total_elapsed, 1),
         "items": results,

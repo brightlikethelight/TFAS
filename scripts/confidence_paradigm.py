@@ -27,7 +27,6 @@ from __future__ import annotations
 import argparse
 import json
 import re
-import sys
 import time
 from collections import defaultdict
 from pathlib import Path
@@ -36,7 +35,6 @@ import numpy as np
 import torch
 from scipy.stats import mannwhitneyu
 from transformers import AutoModelForCausalLM, AutoTokenizer
-
 
 # ---------------------------------------------------------------------------
 # Parsing helpers -- mirrors extract_real.py / behavioral_validation.py
@@ -278,7 +276,7 @@ def print_summary(results: list[dict], model_name: str) -> None:
             if not r["conflict"] and r["matched_pair_id"] in lured_pair_ids
         ]
         if matched_controls:
-            print(f"\n  DE NEYS CRITICAL TEST: Lured conflict items vs matched controls")
+            print("\n  DE NEYS CRITICAL TEST: Lured conflict items vs matched controls")
             _run_mwu(
                 "first_token_prob (lured vs matched control)",
                 [r["first_token_prob"] for r in conflict_lured],
@@ -293,7 +291,7 @@ def print_summary(results: list[dict], model_name: str) -> None:
     # Confidence gap summary (conflict items only)
     gaps = [r["confidence_gap"] for r in results if r["confidence_gap"] is not None]
     if gaps:
-        print(f"\n  Confidence gap (lure_prob - correct_prob) on conflict items:")
+        print("\n  Confidence gap (lure_prob - correct_prob) on conflict items:")
         print(f"    mean={np.mean(gaps):+.4f}, median={np.median(gaps):+.4f}, "
               f"std={np.std(gaps):.4f}, N={len(gaps)}")
         n_favors_lure = sum(1 for g in gaps if g > 0)

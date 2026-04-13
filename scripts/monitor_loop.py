@@ -64,7 +64,7 @@ def ssh_exec(cmd: str, timeout: int = 30) -> tuple[int, str]:
     """Run a command on the pod via SSH. Returns (returncode, stdout)."""
     try:
         result = subprocess.run(
-            SSH_CMD + [cmd],
+            [*SSH_CMD, cmd],
             capture_output=True,
             text=True,
             timeout=timeout,

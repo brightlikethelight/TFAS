@@ -1,0 +1,654 @@
+{
+  "generated": "2026-04-13T13:36:20.157737+00:00",
+  "n_items": 470,
+  "n_categories": 11,
+  "categories_original": [
+    "crt",
+    "base_rate",
+    "conjunction",
+    "syllogism",
+    "arithmetic",
+    "framing",
+    "anchoring"
+  ],
+  "categories_new": [
+    "sunk_cost",
+    "loss_aversion",
+    "certainty_effect",
+    "availability"
+  ],
+  "models": {
+    "llama": {
+      "display_name": "Llama-3.1-8B",
+      "model_id": "unsloth/Meta-Llama-3.1-8B-Instruct",
+      "overall": {
+        "n_conflict": 235,
+        "n_lure": 45,
+        "lure_rate": 0.1915,
+        "ci_95": [
+          0.1463,
+          0.2466
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 0,
+          "n_correct": 26,
+          "n_other": 4,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1135
+          ],
+          "n_control": 30,
+          "control_accuracy": 0.8333
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_lure": 31,
+          "n_correct": 4,
+          "n_other": 0,
+          "lure_rate": 0.8857,
+          "ci_95": [
+            0.7405,
+            0.9546
+          ],
+          "n_control": 35,
+          "control_accuracy": 1.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 9,
+          "n_correct": 11,
+          "n_other": 0,
+          "lure_rate": 0.45,
+          "ci_95": [
+            0.2582,
+            0.6579
+          ],
+          "n_control": 20,
+          "control_accuracy": 1.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 1,
+          "n_correct": 24,
+          "n_other": 0,
+          "lure_rate": 0.04,
+          "ci_95": [
+            0.0071,
+            0.1954
+          ],
+          "n_control": 25,
+          "control_accuracy": 1.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "n_correct": 25,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "control_accuracy": 1.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "n_correct": 20,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "control_accuracy": 1.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 2,
+          "n_correct": 11,
+          "n_other": 7,
+          "lure_rate": 0.1,
+          "ci_95": [
+            0.0279,
+            0.301
+          ],
+          "n_control": 20,
+          "control_accuracy": 0.75
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 0.0
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_lure": 2,
+          "n_correct": 13,
+          "n_other": 0,
+          "lure_rate": 0.1333,
+          "ci_95": [
+            0.0374,
+            0.3788
+          ],
+          "n_control": 15,
+          "control_accuracy": 0.5333
+        }
+      }
+    },
+    "r1_distill": {
+      "display_name": "R1-Distill-8B",
+      "model_id": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+      "overall": {
+        "n_conflict": 235,
+        "n_lure": 24,
+        "lure_rate": 0.1021,
+        "ci_95": [
+          0.0696,
+          0.1475
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 5,
+          "n_correct": 21,
+          "n_other": 4,
+          "lure_rate": 0.1667,
+          "ci_95": [
+            0.0734,
+            0.3356
+          ],
+          "n_control": 30,
+          "control_accuracy": 1.0
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_lure": 14,
+          "n_correct": 21,
+          "n_other": 0,
+          "lure_rate": 0.4,
+          "ci_95": [
+            0.2555,
+            0.5643
+          ],
+          "n_control": 35,
+          "control_accuracy": 0.9714
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "n_correct": 20,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "control_accuracy": 1.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 2,
+          "n_correct": 23,
+          "n_other": 0,
+          "lure_rate": 0.08,
+          "ci_95": [
+            0.0222,
+            0.2497
+          ],
+          "n_control": 25,
+          "control_accuracy": 0.96
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "n_correct": 24,
+          "n_other": 1,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "control_accuracy": 1.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "n_correct": 20,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "control_accuracy": 1.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 3,
+          "n_correct": 12,
+          "n_other": 5,
+          "lure_rate": 0.15,
+          "ci_95": [
+            0.0524,
+            0.3604
+          ],
+          "n_control": 20,
+          "control_accuracy": 0.65
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 0.0
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        }
+      }
+    },
+    "qwen_nothink": {
+      "display_name": "Qwen3-8B (no think)",
+      "model_id": "Qwen/Qwen3-8B",
+      "overall": {
+        "n_conflict": 235,
+        "n_lure": 45,
+        "lure_rate": 0.1915,
+        "ci_95": [
+          0.1463,
+          0.2466
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 0,
+          "n_correct": 22,
+          "n_other": 8,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1135
+          ],
+          "n_control": 30,
+          "control_accuracy": 1.0
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_lure": 23,
+          "n_correct": 12,
+          "n_other": 0,
+          "lure_rate": 0.6571,
+          "ci_95": [
+            0.4915,
+            0.7917
+          ],
+          "n_control": 35,
+          "control_accuracy": 1.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 19,
+          "n_correct": 1,
+          "n_other": 0,
+          "lure_rate": 0.95,
+          "ci_95": [
+            0.7639,
+            0.9911
+          ],
+          "n_control": 20,
+          "control_accuracy": 1.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "n_correct": 12,
+          "n_other": 13,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "control_accuracy": 0.52
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "n_correct": 25,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "control_accuracy": 1.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "n_correct": 20,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "control_accuracy": 1.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 3,
+          "n_correct": 15,
+          "n_other": 2,
+          "lure_rate": 0.15,
+          "ci_95": [
+            0.0524,
+            0.3604
+          ],
+          "n_control": 20,
+          "control_accuracy": 0.65
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 0.0
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 0.6
+        }
+      }
+    },
+    "qwen_think": {
+      "display_name": "Qwen3-8B (think)",
+      "model_id": "Qwen/Qwen3-8B",
+      "overall": {
+        "n_conflict": 235,
+        "n_lure": 22,
+        "lure_rate": 0.0936,
+        "ci_95": [
+          0.0626,
+          0.1377
+        ]
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_lure": 1,
+          "n_correct": 23,
+          "n_other": 6,
+          "lure_rate": 0.0333,
+          "ci_95": [
+            0.0059,
+            0.1667
+          ],
+          "n_control": 30,
+          "control_accuracy": 0.9333
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_lure": 10,
+          "n_correct": 25,
+          "n_other": 0,
+          "lure_rate": 0.2857,
+          "ci_95": [
+            0.1633,
+            0.4506
+          ],
+          "n_control": 35,
+          "control_accuracy": 1.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_lure": 11,
+          "n_correct": 9,
+          "n_other": 0,
+          "lure_rate": 0.55,
+          "ci_95": [
+            0.3421,
+            0.7418
+          ],
+          "n_control": 20,
+          "control_accuracy": 1.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "n_correct": 25,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "control_accuracy": 1.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_lure": 0,
+          "n_correct": 24,
+          "n_other": 1,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "control_accuracy": 1.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "n_correct": 20,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "control_accuracy": 1.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 5,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "control_accuracy": 0.9
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 0.0
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 1.0
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_lure": 0,
+          "n_correct": 15,
+          "n_other": 0,
+          "lure_rate": 0.0,
+          "ci_95": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "control_accuracy": 0.9333
+        }
+      }
+    }
+  }
+}

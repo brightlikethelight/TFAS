@@ -25,7 +25,6 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
-import sys
 from pathlib import Path
 from typing import Any
 
@@ -109,7 +108,7 @@ def _parse_olmo_layers_json(data: dict[str, Any]) -> dict[int, float]:
     """
     aucs: dict[int, float] = {}
     layers_dict = data.get("layers", {})
-    for key, entry in layers_dict.items():
+    for _key, entry in layers_dict.items():
         if entry.get("position") == "P0":
             aucs[int(entry["layer"])] = float(entry["auc_mean"])
     return aucs
@@ -189,7 +188,7 @@ def load_probe_layer_aucs() -> dict[str, dict[int, float]]:
         vals = np.clip(base + jitter, 0.50, 1.0)
         vals[34] = 0.971
         vals[35] = 0.964
-        result["qwen_nothink"] = {int(l): float(v) for l, v in zip(layers, vals)}
+        result["qwen_nothink"] = {int(l): float(v) for l, v in zip(layers, vals, strict=False)}
 
     if "qwen_think" not in result:
         print("  [fallback] Synthesizing Qwen think curve from anchor (0.971 @ L34)")
@@ -200,7 +199,7 @@ def load_probe_layer_aucs() -> dict[str, dict[int, float]]:
         vals = np.clip(base + jitter, 0.50, 1.0)
         vals[34] = 0.971
         vals[35] = 0.960
-        result["qwen_think"] = {int(l): float(v) for l, v in zip(layers, vals)}
+        result["qwen_think"] = {int(l): float(v) for l, v in zip(layers, vals, strict=False)}
 
     # --- OLMo Instruct & Think: load from JSON ---
     for fname, label in [
@@ -221,7 +220,7 @@ def load_probe_layer_aucs() -> dict[str, dict[int, float]]:
         jitter = rng.normal(0, 0.003, 32)
         vals = np.clip(base + jitter, 0.50, 1.0)
         vals[21] = 0.998
-        result["olmo_instruct"] = {int(l): float(v) for l, v in zip(layers, vals)}
+        result["olmo_instruct"] = {int(l): float(v) for l, v in zip(layers, vals, strict=False)}
 
     if "olmo_think" not in result:
         print("  [fallback] Using hardcoded OLMo Think peak (L28=0.993)")
@@ -231,7 +230,7 @@ def load_probe_layer_aucs() -> dict[str, dict[int, float]]:
         jitter = rng.normal(0, 0.003, 32)
         vals = np.clip(base + jitter, 0.50, 1.0)
         vals[28] = 0.993
-        result["olmo_think"] = {int(l): float(v) for l, v in zip(layers, vals)}
+        result["olmo_think"] = {int(l): float(v) for l, v in zip(layers, vals, strict=False)}
 
     return result
 
@@ -538,10 +537,10 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
         xy=(llama_pk_l, llama_pk_v),
         xytext=(llama_pk_l + 8, 1.01),
         fontsize=6, color=C_LLAMA, fontweight="bold",
-        arrowprops=dict(arrowstyle="-", color=C_LLAMA, lw=0.6,
-                        shrinkA=0, shrinkB=2),
-        bbox=dict(boxstyle="round,pad=0.15", fc="white",
-                  ec=C_LLAMA, lw=0.5, alpha=0.85),
+        arrowprops={"arrowstyle": "-", "color": C_LLAMA, "lw": 0.6,
+                        "shrinkA": 0, "shrinkB": 2},
+        bbox={"boxstyle": "round,pad=0.15", "fc": "white",
+                  "ec": C_LLAMA, "lw": 0.5, "alpha": 0.85},
     )
 
     # R1-Distill peak
@@ -560,11 +559,11 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
         xy=(r1_pk_l, r1_pk_v),
         xytext=(r1_pk_l - 14, 0.84),
         fontsize=6, color=C_R1, fontweight="bold",
-        arrowprops=dict(arrowstyle="-", color=C_R1, lw=0.6,
-                        shrinkA=0, shrinkB=2,
-                        connectionstyle="arc3,rad=0.15"),
-        bbox=dict(boxstyle="round,pad=0.15", fc="white",
-                  ec=C_R1, lw=0.5, alpha=0.85),
+        arrowprops={"arrowstyle": "-", "color": C_R1, "lw": 0.6,
+                        "shrinkA": 0, "shrinkB": 2,
+                        "connectionstyle": "arc3,rad=0.15"},
+        bbox={"boxstyle": "round,pad=0.15", "fc": "white",
+                  "ec": C_R1, "lw": 0.5, "alpha": 0.85},
     )
 
     # Qwen convergence annotation (both peak at L34 = 0.971)
@@ -573,8 +572,8 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
         xy=(34, 0.971),
         xytext=(22, 0.76),
         fontsize=6, color=C_QWEN_NOTHINK, fontstyle="italic",
-        arrowprops=dict(arrowstyle="->", color=C_QWEN_NOTHINK,
-                        lw=0.6, connectionstyle="arc3,rad=-0.15"),
+        arrowprops={"arrowstyle": "->", "color": C_QWEN_NOTHINK,
+                        "lw": 0.6, "connectionstyle": "arc3,rad=-0.15"},
     )
 
     # OLMo Instruct peak
@@ -586,10 +585,10 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
         xy=(oi_pk_l, oi_pk_v),
         xytext=(oi_pk_l - 12, 1.035),
         fontsize=6, color=C_OLMO_INSTRUCT, fontweight="bold",
-        arrowprops=dict(arrowstyle="-", color=C_OLMO_INSTRUCT, lw=0.6,
-                        shrinkA=0, shrinkB=2),
-        bbox=dict(boxstyle="round,pad=0.15", fc="white",
-                  ec=C_OLMO_INSTRUCT, lw=0.5, alpha=0.85),
+        arrowprops={"arrowstyle": "-", "color": C_OLMO_INSTRUCT, "lw": 0.6,
+                        "shrinkA": 0, "shrinkB": 2},
+        bbox={"boxstyle": "round,pad=0.15", "fc": "white",
+                  "ec": C_OLMO_INSTRUCT, "lw": 0.5, "alpha": 0.85},
     )
 
     # OLMo Think peak
@@ -601,11 +600,11 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
         xy=(ot_pk_l, ot_pk_v),
         xytext=(ot_pk_l + 2, 0.87),
         fontsize=6, color=C_OLMO_THINK, fontweight="bold",
-        arrowprops=dict(arrowstyle="-", color=C_OLMO_THINK, lw=0.6,
-                        shrinkA=0, shrinkB=2,
-                        connectionstyle="arc3,rad=0.15"),
-        bbox=dict(boxstyle="round,pad=0.15", fc="white",
-                  ec=C_OLMO_THINK, lw=0.5, alpha=0.85),
+        arrowprops={"arrowstyle": "-", "color": C_OLMO_THINK, "lw": 0.6,
+                        "shrinkA": 0, "shrinkB": 2,
+                        "connectionstyle": "arc3,rad=0.15"},
+        bbox={"boxstyle": "round,pad=0.15", "fc": "white",
+                  "ec": C_OLMO_THINK, "lw": 0.5, "alpha": 0.85},
     )
 
     # --- Axes ---
@@ -874,7 +873,7 @@ def make_figure4_lure_distribution(output_dir: Path) -> Path:
     ax.annotate("", xy=(3.5, -0.06), xytext=(0.8, -0.06),
                 xycoords=ax.get_xaxis_transform(),
                 textcoords=ax.get_xaxis_transform(),
-                arrowprops=dict(arrowstyle="->", color="#888888", lw=0.7))
+                arrowprops={"arrowstyle": "->", "color": "#888888", "lw": 0.7})
     ax.text(2.15, -0.10, "Favors lure  \u2192",
             transform=ax.get_xaxis_transform(),
             fontsize=6, color="#888888", ha="center")
@@ -882,7 +881,7 @@ def make_figure4_lure_distribution(output_dir: Path) -> Path:
     ax.annotate("", xy=(-3.5, -0.06), xytext=(-0.8, -0.06),
                 xycoords=ax.get_xaxis_transform(),
                 textcoords=ax.get_xaxis_transform(),
-                arrowprops=dict(arrowstyle="->", color="#888888", lw=0.7))
+                arrowprops={"arrowstyle": "->", "color": "#888888", "lw": 0.7})
     ax.text(-2.15, -0.10, "\u2190  Favors correct",
             transform=ax.get_xaxis_transform(),
             fontsize=6, color="#888888", ha="center")

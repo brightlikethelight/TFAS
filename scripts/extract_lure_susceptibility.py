@@ -26,7 +26,6 @@ from __future__ import annotations
 import argparse
 import json
 import math
-import sys
 import time
 from pathlib import Path
 
@@ -158,7 +157,7 @@ def main() -> None:
         top5_vals, top5_ids = torch.topk(log_probs, 5)
         top5 = [
             {"token": tok.decode([tid.item()]), "log_prob": val.item()}
-            for tid, val in zip(top5_ids, top5_vals)
+            for tid, val in zip(top5_ids, top5_vals, strict=False)
         ]
 
         result = {
