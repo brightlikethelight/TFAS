@@ -70,8 +70,11 @@ conflict/control separability (peak AUC\,=\,0.974, 95\% CI [0.952,
 heuristic/deliberative boundary is \emph{blurred}, not sharpened, by
 reasoning training.  Cross-prediction confirms specificity: a probe
 trained on vulnerable categories yields transfer AUC\,=\,0.378 on
-immune categories, capturing processing mode rather than surface
-features.  Attention analysis reveals the reasoning model has nearly
+immune categories, and cross-model probe transfer (Llama$\to$R1:
+0.920; R1$\to$Llama: 0.954) shows the processing-mode direction is
+shared across reasoning-differentiated models.  First-token confidence
+analysis confirms De~Neys' conflict-detection prediction: reduced
+probability and elevated entropy on conflict items.  Attention analysis reveals the reasoning model has nearly
 twice as many \stwo{}-specialized heads (57 vs.\ 30; BH-FDR corrected),
 suggesting redistribution of deliberative computation across the
 network.  A within-model dissociation using Qwen~3-8B's thinking toggle
@@ -140,14 +143,17 @@ attributable to training, not architecture.  We make five contributions:
   overall lure rate (standard) vs.\ 2.4\% (reasoning), replicated on
   OLMo-3-7B (14.9\% $\to$ 0.9\%), with category-level specificity
   revealing which biases are vulnerable and model-specific vulnerability
-  profiles (e.g., loss aversion in OLMo but not Llama).
+  profiles (e.g., loss aversion in OLMo but not Llama).  First-token
+  confidence analysis confirms De~Neys' conflict-detection prediction:
+  reduced probability and elevated entropy on conflict items.
 
   \item \textbf{Probing analysis} revealing that the standard model has
   high internal conflict/control separability (AUC\,=\,0.974, 95\% CI
   [0.952, 0.992]) while the reasoning model \emph{blurs} this distinction
   (AUC\,=\,0.930, 95\% CI [0.894, 0.960]; non-overlapping CIs), with
-  cross-prediction and transfer matrix experiments confirming specificity
-  to processing mode rather than surface features.
+  cross-prediction, transfer matrix, and cross-model probe transfer
+  (Llama$\to$R1: 0.920; R1$\to$Llama: 0.954) confirming specificity
+  to a shared processing-mode direction.
 
   \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
   thinking toggle changes behavior ($21\% \to 7\%$ lure rate) but produces
@@ -685,14 +691,16 @@ distinct models.
 \paragraph{Methodological safeguards.}
 Probing can produce plausible results even on random networks
 \citep{meloux2025dead}, and SAE features often fail falsification
-\citep{sanitychecks2026}.  We address this four ways: (1)~Hewitt--Liang
+\citep{sanitychecks2026}.  We address this five ways: (1)~Hewitt--Liang
 controls (Section~\ref{sec:probes}) show selectivity $>$40pp;
 (2)~cross-prediction (Section~\ref{sec:specificity}) provides structural
 falsification---noise probes would not systematically drop to
 AUC\,=\,0.378 on immune categories; (3)~the inter-model comparison is
 itself a control---identical prompts yield different AUCs (0.974
 vs.\ 0.930) only if the models encode inputs differently;
-(4)~all 41 SAE features survive Ma et al.\ falsification
+(4)~cross-model probe transfer (AUC\,$>$\,0.92) confirms the signal is
+not model-specific but reflects a shared representational direction;
+(5)~all 41 SAE features survive Ma et al.\ falsification
 (Section~\ref{sec:results_sae}), with zero spurious features after
 token-injection testing.
 
