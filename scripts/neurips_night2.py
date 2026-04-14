@@ -199,9 +199,10 @@ def job_qwen_within_cot() -> None:
     result = run_cmd([
         sys.executable, str(SCRIPTS_DIR / "extract_qwen_toggle.py"),
         "--within-cot",
+        "--mode", "think",
         "--model", "Qwen/Qwen3-8B",
         "--output", "data/activations/qwen3_8b_think_within_cot.h5",
-        "--max-new-tokens", "4096",
+        "--think-max-tokens", "4096",
         "--cache-dir", "/workspace/hf_cache",
     ])
     if result.returncode != 0:

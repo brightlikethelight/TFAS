@@ -342,7 +342,7 @@ def run_extraction(
 
     # --- Write HDF5 ---
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
-    model_key = MODEL_ID.replace("/", "_")
+    model_key = model_id.replace("/", "_")
 
     with h5py.File(output_path, "w") as f:
         # Metadata
@@ -356,7 +356,7 @@ def run_extraction(
         meta.attrs["seed"] = 0
         meta.attrs["config"] = json.dumps(
             {
-                "model": MODEL_ID,
+                "model": model_id,
                 "enable_thinking": enable_thinking,
                 "max_new_tokens": max_new_tokens,
                 "mode": mode_label,
@@ -409,7 +409,7 @@ def run_extraction(
         # Model group
         mgrp = f.create_group(f"/models/{model_key}")
         mmeta = mgrp.create_group("metadata")
-        mmeta.attrs["hf_model_id"] = MODEL_ID
+        mmeta.attrs["hf_model_id"] = model_id
         mmeta.attrs["n_layers"] = n_layers
         mmeta.attrs["n_heads"] = n_heads
         mmeta.attrs["n_kv_heads"] = n_kv_heads
@@ -498,7 +498,7 @@ def run_extraction(
 
     print(f"\n{'='*60}")
     print(f"MODE: {mode_label}")
-    print(f"Model: {MODEL_ID}")
+    print(f"Model: {model_id}")
     print(f"Items: {n_problems}, Layers extracted: {len(extract_layers)}")
     print(f"Hidden dim: {hidden_dim}")
     print(f"Behavioral: {n_correct}/{n_problems} correct, {n_lured}/{n_conflict} lured ({n_lured / max(n_conflict, 1):.1%})")
@@ -649,6 +649,7 @@ def main() -> None:
             output_path=output_path,
             args=args,
             within_cot=args.within_cot,
+            model_id=model_id,
         )
 
     print("\nDone. All requested modes extracted.")
