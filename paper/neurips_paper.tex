@@ -29,7 +29,7 @@
 \newcommand{\sone}{S1-like}
 \newcommand{\stwo}{S2-like}
 \newcommand{\pzero}{\texttt{P0}}
-\newcommand{\pending}[1]{\textcolor{red}{\textbf{[PLACEHOLDER:} #1\textbf{]}}}
+% \newcommand{\pending}[1]{...} % removed before submission
 
 % ---------- Title ----------
 \title{What Changes When LLMs Learn to Reason?\\
@@ -148,8 +148,8 @@ attributable to training, not architecture.  We make six contributions:
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
   (235 matched conflict/control pairs) across 11 categories spanning
-  four heuristic families (representativeness, loss aversion, certainty
-  weighting, and availability), with novel isomorphs to resist
+  four heuristic families (representativeness, cognitive reflection,
+  decision framing, and loss/availability), with novel isomorphs to resist
   memorization.
 
   \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
@@ -541,7 +541,7 @@ between steering strength and lure rate.  At $\alpha = -5$ (toward
 it drops to 31.2\%---a total causal swing of 37.6 percentage points.
 Relative to the unsteered baseline (52.5\%), the \stwo{} direction
 reduces lure rate by 21.3pp, comparable to
-\citet{huang2026cogbias}'s 26--32\% reduction via SAE-based steering.
+\citet{huang2026cogbias}'s 26--32\% reduction via contrastive activation addition.
 
 \paragraph{Random-direction control.}
 For each $\alpha$, we repeat the intervention along five random unit
@@ -645,7 +645,9 @@ captures processing mode, not stimulus features; vulnerability is domain-
 and model-specific \citep{stanovich2016rationality}.
 We apply five controls \citep{meloux2025dead, sanitychecks2026}:
 Hewitt--Liang selectivity $>$34pp, cross-prediction falsification,
-cross-model transfer (AUC\,$>$\,0.92), and Ma et al.\ SAE falsification.
+cross-model transfer (AUC\,$>$\,0.92), random-direction steering baselines
+(null effect vs.\ 37.6pp for the probe direction), and Ma et al.\ SAE
+falsification (0/41 spurious).
 Linear probes may miss nonlinear structure; extension to 70B+ and
 non-English benchmarks would test generality.  Multi-seed robustness
 analysis appears in Appendix~\ref{app:robustness}.
