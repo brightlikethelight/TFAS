@@ -141,8 +141,8 @@ attributable to training, not architecture.  We make five contributions:
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
   (235 matched conflict/control pairs) across 11 categories spanning
-  four heuristic families (representativeness, loss aversion, certainty
-  weighting, and availability), with novel isomorphs to resist
+  four heuristic families (representativeness, cognitive reflection,
+  decision framing, and loss/availability), with novel isomorphs to resist
   memorization.
 
   \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
@@ -511,7 +511,7 @@ distinct models.
 \subsection{SAE Feature Analysis}
 \label{sec:results_sae}
 
-Sparse autoencoder analysis of Llama's layer 19 residual stream (Goodfire SAE, 65,536 features) identified 41 features with statistically significant differential activation between conflict and control items (BH-FDR $q < 0.05$). All 41 features survived Ma et al.\ falsification testing \citep{ma2026falsification}: injecting top-activating tokens into random text did not reproduce the activation pattern. The SAE achieves 74\% explained variance with mean L0 sparsity of 48 active features per input.
+Sparse autoencoder analysis of Llama's layer 19 residual stream (Goodfire SAE, 65,536 features) identified 41 features with statistically significant differential activation between conflict and control items (BH-FDR $q < 0.05$). All 41 features survived Ma et al.\ falsification testing \citep{ma2026falsification}: injecting top-activating tokens into random text did not reproduce the activation pattern. The SAE achieves 74\% explained variance with mean L0 sparsity of 47.9 active features per input.
 
 \subsection{Attention Head Specialization}
 \label{sec:results_attention}
