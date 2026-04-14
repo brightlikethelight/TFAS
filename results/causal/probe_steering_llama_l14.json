@@ -1,0 +1,302 @@
+{
+  "model": "unsloth/Meta-Llama-3.1-8B-Instruct",
+  "h5_model_key": "unsloth_Meta-Llama-3.1-8B-Instruct",
+  "target_layer": 14,
+  "direction": "probe_coef",
+  "probe_train_auc": 0.9595312500000001,
+  "hidden_dim": 4096,
+  "n_conflict_items": 80,
+  "vulnerable_categories": [
+    "base_rate",
+    "conjunction",
+    "syllogism"
+  ],
+  "alphas": {
+    "-5.0": {
+      "lure_rate": 0.6875,
+      "correct_rate": 0.3125,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 55,
+      "n_correct": 25,
+      "n_other": 0
+    },
+    "-3.0": {
+      "lure_rate": 0.6125,
+      "correct_rate": 0.3875,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 49,
+      "n_correct": 31,
+      "n_other": 0
+    },
+    "-1.0": {
+      "lure_rate": 0.5625,
+      "correct_rate": 0.4375,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 45,
+      "n_correct": 35,
+      "n_other": 0
+    },
+    "-0.5": {
+      "lure_rate": 0.5375,
+      "correct_rate": 0.4625,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 43,
+      "n_correct": 37,
+      "n_other": 0
+    },
+    "0.0": {
+      "lure_rate": 0.525,
+      "correct_rate": 0.475,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 42,
+      "n_correct": 38,
+      "n_other": 0
+    },
+    "0.5": {
+      "lure_rate": 0.4875,
+      "correct_rate": 0.5125,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 39,
+      "n_correct": 41,
+      "n_other": 0
+    },
+    "1.0": {
+      "lure_rate": 0.4875,
+      "correct_rate": 0.5125,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 39,
+      "n_correct": 41,
+      "n_other": 0
+    },
+    "3.0": {
+      "lure_rate": 0.4125,
+      "correct_rate": 0.5875,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 33,
+      "n_correct": 47,
+      "n_other": 0
+    },
+    "5.0": {
+      "lure_rate": 0.3125,
+      "correct_rate": 0.6875,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 25,
+      "n_correct": 55,
+      "n_other": 0
+    }
+  },
+  "random_controls": {
+    "-5.0": {
+      "mean_lure_rate": 0.555,
+      "std": 0.08225341938181051,
+      "mean_correct_rate": 0.44499999999999995,
+      "std_correct_rate": 0.0822534193818105,
+      "lure_rates": [
+        0.4625,
+        0.4875,
+        0.65,
+        0.55,
+        0.625
+      ],
+      "correct_rates": [
+        0.5375,
+        0.5125,
+        0.35,
+        0.45,
+        0.375
+      ],
+      "n_directions": 5
+    },
+    "-3.0": {
+      "mean_lure_rate": 0.5449999999999999,
+      "std": 0.07373940601876315,
+      "mean_correct_rate": 0.45499999999999996,
+      "std_correct_rate": 0.07373940601876312,
+      "lure_rates": [
+        0.5,
+        0.525,
+        0.525,
+        0.675,
+        0.5
+      ],
+      "correct_rates": [
+        0.5,
+        0.475,
+        0.475,
+        0.325,
+        0.5
+      ],
+      "n_directions": 5
+    },
+    "-1.0": {
+      "mean_lure_rate": 0.5199999999999999,
+      "std": 0.025920551691659664,
+      "mean_correct_rate": 0.4800000000000001,
+      "std_correct_rate": 0.025920551691659632,
+      "lure_rates": [
+        0.4875,
+        0.5,
+        0.5375,
+        0.525,
+        0.55
+      ],
+      "correct_rates": [
+        0.5125,
+        0.5,
+        0.4625,
+        0.475,
+        0.45
+      ],
+      "n_directions": 5
+    },
+    "-0.5": {
+      "mean_lure_rate": 0.5149999999999999,
+      "std": 0.01629800601300662,
+      "mean_correct_rate": 0.485,
+      "std_correct_rate": 0.016298006013006617,
+      "lure_rates": [
+        0.5,
+        0.5,
+        0.5375,
+        0.5125,
+        0.525
+      ],
+      "correct_rates": [
+        0.5,
+        0.5,
+        0.4625,
+        0.4875,
+        0.475
+      ],
+      "n_directions": 5
+    },
+    "0.0": {
+      "mean_lure_rate": 0.525,
+      "std": 0.0,
+      "mean_correct_rate": 0.475,
+      "std_correct_rate": 0.0,
+      "lure_rates": [
+        0.525,
+        0.525,
+        0.525,
+        0.525,
+        0.525
+      ],
+      "correct_rates": [
+        0.475,
+        0.475,
+        0.475,
+        0.475,
+        0.475
+      ],
+      "n_directions": 5
+    },
+    "0.5": {
+      "mean_lure_rate": 0.5199999999999999,
+      "std": 0.014252192813739227,
+      "mean_correct_rate": 0.48,
+      "std_correct_rate": 0.01425219281373922,
+      "lure_rates": [
+        0.5375,
+        0.525,
+        0.5,
+        0.525,
+        0.5125
+      ],
+      "correct_rates": [
+        0.4625,
+        0.475,
+        0.5,
+        0.475,
+        0.4875
+      ],
+      "n_directions": 5
+    },
+    "1.0": {
+      "mean_lure_rate": 0.525,
+      "std": 0.029315098498896446,
+      "mean_correct_rate": 0.475,
+      "std_correct_rate": 0.02931509849889643,
+      "lure_rates": [
+        0.5625,
+        0.55,
+        0.5,
+        0.5,
+        0.5125
+      ],
+      "correct_rates": [
+        0.4375,
+        0.45,
+        0.5,
+        0.5,
+        0.4875
+      ],
+      "n_directions": 5
+    },
+    "3.0": {
+      "mean_lure_rate": 0.5425,
+      "std": 0.03913118960624631,
+      "mean_correct_rate": 0.4575,
+      "std_correct_rate": 0.03913118960624631,
+      "lure_rates": [
+        0.6,
+        0.525,
+        0.5,
+        0.525,
+        0.5625
+      ],
+      "correct_rates": [
+        0.4,
+        0.475,
+        0.5,
+        0.475,
+        0.4375
+      ],
+      "n_directions": 5
+    },
+    "5.0": {
+      "mean_lure_rate": 0.5775,
+      "std": 0.07925433742073677,
+      "mean_correct_rate": 0.40750000000000003,
+      "std_correct_rate": 0.1048063690812729,
+      "lure_rates": [
+        0.7,
+        0.6,
+        0.55,
+        0.4875,
+        0.55
+      ],
+      "correct_rates": [
+        0.2375,
+        0.3875,
+        0.45,
+        0.5125,
+        0.45
+      ],
+      "n_directions": 5
+    }
+  },
+  "config": {
+    "max_new_tokens": 128,
+    "n_random_controls": 5,
+    "seed": 0,
+    "dtype": "bfloat16",
+    "smoke_test": false
+  },
+  "figure_path": "/workspace/s1s2/figures/fig_probe_steering_meta_llama_3.1_8b_instruct_l14.pdf",
+  "elapsed_s": {
+    "probe_training": 5.8,
+    "model_loading": 42.4,
+    "steering_sweep": 2027.1,
+    "total": 2075.4
+  }
+}
