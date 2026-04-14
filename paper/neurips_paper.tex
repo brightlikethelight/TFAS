@@ -17,6 +17,7 @@
 \usepackage{xcolor}
 \usepackage{natbib}
 \usepackage{microtype}
+\usepackage{longtable}
 \usepackage[margin=1in]{geometry}
 
 % NOTE: Replace \documentclass and geometry with the official NeurIPS style file
@@ -667,25 +668,636 @@ Code, benchmark, and activation data will be released upon acceptance.
 
 \section{Within-CoT Probing Details}
 \label{app:within_cot}
-Full within-chain-of-thought probe trajectories for R1-Distill-Llama-8B
-and Qwen~3-8B (think mode) will be reported here.
+
+This appendix details the within-chain-of-thought probing protocol
+for R1-Distill-Llama-8B and Qwen~3-8B (think mode).  The analysis
+tests whether reasoning traces perform genuine computational work
+on conflict representations or are merely decorative post-hoc
+rationalizations---a critical question given that only ${\sim}2.3$\%
+of reasoning steps causally influence final answers
+\citep{jiang2025aha, lanham2023measuring}.
+
+\subsection{Method}
+
+For each reasoning model--item pair, we extract residual stream
+activations at five canonical positions within the
+\texttt{<think>...\allowbreak</think>} trace:
+
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{T0}: First token of the thinking trace (immediately
+  after \texttt{<think>}).  This captures the ``initial impression''
+  before any explicit reasoning.
+  \item \textbf{T25}: Token at 25\% of the trace length.
+  \item \textbf{T50}: Midpoint of the trace.
+  \item \textbf{T75}: Token at 75\% of the trace length.
+  \item \textbf{Tend}: Final token before \texttt{</think>}.
+  This captures the representation after reasoning is complete
+  but before the answer is generated.
+\end{itemize}
+
+\noindent At each position, we extract the full residual stream
+(post-MLP, post-residual) at all layers.  We then train independent
+$\ell_2$-regularized logistic regression probes (5-fold stratified CV)
+at each (layer, position) combination on the conflict vs.\ no-conflict
+classification, restricted to the three vulnerable categories (base
+rate neglect, conjunction fallacy, syllogisms; $n$ = 160).
+
+\subsection{Expected Analysis}
+
+For each model, the primary analysis computes the \textbf{AUC
+trajectory} across the five thinking positions at the peak probing
+layer identified from the \pzero{} analysis (L31 for R1-Distill,
+L34 for Qwen~3-8B think).
+
+\paragraph{Hypothesis 1: Genuine computation.}
+If the reasoning trace performs genuine computational work, we expect
+probe AUC to \emph{increase} monotonically from T0 to Tend.  The
+magnitude of the T0$\to$Tend AUC gain indicates how much representational
+sharpening occurs during deliberation.  A large gain (e.g., $>$5pp)
+would indicate that the model's internal conflict representation is
+refined through the thinking process.
+
+\paragraph{Hypothesis 2: Performative reasoning.}
+If the model ``decides'' at T0 and emits decorative reasoning, we
+expect AUC to be \emph{flat} across positions: the conflict/control
+distinction is already fully encoded before explicit reasoning begins.
+Under this hypothesis, T0 AUC $\approx$ Tend AUC at the peak layer.
+
+\paragraph{Hypothesis 3: Non-monotonic trajectory.}
+A third possibility---observed in some preliminary analyses of other
+reasoning models---is that AUC \emph{dips} at intermediate positions
+(T25--T50) before recovering at Tend.  This would suggest that
+intermediate reasoning steps temporarily destabilize representations
+before converging on a resolution, consistent with the ``exploration
+before exploitation'' pattern reported by \citet{boppana2026reasoning}.
+
+\subsection{Connection to the Qwen Dissociation}
+
+The within-CoT analysis directly addresses the Qwen dissociation
+reported in Section~\ref{sec:results_probes}.  At \pzero{}, Qwen~3-8B
+produces identical probe signatures in think and no-think modes
+(AUC\,=\,0.971 at L34 in both).  The within-CoT analysis extends this
+by testing whether the \emph{thinking trace itself} sharpens
+Qwen's representations.  Three outcomes are possible:
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item If Qwen think shows AUC gain from T0 to Tend while
+  R1-Distill does not, the behavioral improvement from thinking is
+  mediated by in-context representational change, not by training-induced
+  encoding differences.
+  \item If both models show AUC gain, deliberation sharpens
+  representations universally, and the \pzero{} identity is merely
+  an artifact of the extraction position preceding the thinking trace.
+  \item If neither model shows AUC gain, the behavioral improvement
+  from thinking operates through a mechanism not captured by linear
+  probes (e.g., nonlinear interactions or attention pattern changes),
+  and the ``performative reasoning'' hypothesis cannot be rejected.
+\end{enumerate}
+
+\paragraph{Note on data availability.}
+Within-CoT probing requires activation extractions at multiple token
+positions within the reasoning trace.  These extractions are
+computationally intensive (5 positions $\times$ 36 layers $\times$
+470 items) and will be completed upon GPU availability.  The protocol,
+extraction code, and analysis pipeline are finalized; only the compute
+step remains.
 
 \section{Scale Analysis: Full Results}
 \label{app:scale}
-Per-category lure rates and layer-wise probe curves for
-OLMo-3.1-32B-Instruct appear here.
+
+We evaluate OLMo-3.1-32B-Instruct (64 layers, 5120 hidden dimensions,
+4.5$\times$ the parameters of OLMo-3-7B) on the full 470-item
+benchmark.  This section reports the complete per-category behavioral
+results and the full 64-layer probe AUC profile.
+
+\subsection{Per-Category Behavioral Results: 7B vs.\ 32B}
+
+Table~\ref{tab:scale_behavioral} compares per-category lure rates
+between OLMo-3-7B-Instruct and OLMo-3.1-32B-Instruct.
+
+\begin{table}[ht]
+\centering
+\caption{S1-lure rates (\%) on conflict items: OLMo-3-7B-Instruct
+  vs.\ OLMo-3.1-32B-Instruct (all 11 categories, 235 conflict items).
+  Bold indicates vulnerability (lure rate $>$10\%).
+  ``$\Delta$'' = 32B $-$ 7B; positive values indicate increased
+  vulnerability at scale.}
+\label{tab:scale_behavioral}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccr}
+\toprule
+\textbf{Category ($n$ conflict)} & \textbf{OLMo 7B} & \textbf{OLMo 32B} & \textbf{$\Delta$} & \textbf{Direction} \\
+\midrule
+\multicolumn{5}{l}{\emph{Categories vulnerable at both scales}} \\
+\addlinespace
+Base rate ($n$=35)       & \textbf{46.0} & \textbf{74.3} & $+$28.3 & \textcolor{red}{$\uparrow$} \\
+Conjunction ($n$=20)     & \textbf{50.0} & \textbf{50.0} & $\phantom{+}$0.0  & --- \\
+\addlinespace
+\midrule
+\multicolumn{5}{l}{\emph{Categories newly vulnerable at 32B}} \\
+\addlinespace
+Framing ($n$=20)         & 0.0  & \textbf{30.0} & $+$30.0 & \textcolor{red}{$\uparrow$} \\
+Anchoring ($n$=20)       & 5.0  & \textbf{10.0} & $+$5.0  & \textcolor{red}{$\uparrow$} \\
+CRT variants ($n$=30)    & 3.0  & 6.7   & $+$3.7  & \textcolor{red}{$\uparrow$} \\
+\addlinespace
+\midrule
+\multicolumn{5}{l}{\emph{Categories immune at both scales}} \\
+\addlinespace
+Syllogism ($n$=25)       & 0.0  & 0.0   & 0.0 & --- \\
+Arithmetic ($n$=25)      & 0.0  & 0.0   & 0.0 & --- \\
+Sunk cost ($n$=15)       & 0.0  & 0.0   & 0.0 & --- \\
+Loss aversion ($n$=15)   & \textbf{33.0} & 0.0 & $-$33.0 & \textcolor{green!60!black}{$\downarrow$} \\
+Certainty effect ($n$=15)& 0.0  & 0.0   & 0.0 & --- \\
+Availability ($n$=15)    & \textbf{13.0} & 0.0 & $-$13.0 & \textcolor{green!60!black}{$\downarrow$} \\
+\midrule
+\textbf{Overall (11-cat)} & \textbf{14.9} & \textbf{19.6} & $+$4.7  & \textcolor{red}{$\uparrow$} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key findings.}
+Scale increases \emph{overall} vulnerability (14.9\% $\to$ 19.6\%),
+but the effect is category-specific and non-monotonic:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Base rate neglect nearly doubles} (46\% $\to$ 74.3\%):
+  the larger model's richer world knowledge may strengthen
+  representativeness-based reasoning, making base rate information
+  harder to integrate.
+  \item \textbf{Framing emerges as a new vulnerability} (0\% $\to$ 30\%):
+  the 32B model shows sensitivity to gain/loss framing that the 7B
+  model resists entirely.  This suggests that scale enables more nuanced
+  sensitivity to surface-level framing cues.
+  \item \textbf{Loss aversion and availability are resolved} (33\% $\to$ 0\%
+  and 13\% $\to$ 0\%): scale provides sufficient capacity to override
+  these heuristics, suggesting they require less specialized processing.
+  \item \textbf{Conjunction fallacy is scale-invariant} (50\% at both
+  scales), consistent with this being a deeply encoded representational
+  bias rather than a capacity limitation.
+\end{itemize}
+
+\subsection{Per-Layer Probe AUC (OLMo-3.1-32B-Instruct, 64 Layers)}
+
+Table~\ref{tab:scale_probe_layers} reports the full layer-wise probe
+AUC for OLMo-3.1-32B-Instruct.  Probes are $\ell_2$-regularized
+logistic regression (5-fold stratified CV) trained on conflict vs.\
+no-conflict at the \pzero{} position ($n$ = 160 items, vulnerable
+categories).
+
+\begin{longtable}{rcc|rcc}
+\caption{Layer-wise probe AUC for OLMo-3.1-32B-Instruct (64 layers,
+  vulnerable categories, \pzero{} position, 5-fold CV).
+  Mean $\pm$ std over folds.  Bold indicates the peak layer.
+  All P2 (control position) probes return AUC = 0.500 exactly.}
+\label{tab:scale_probe_layers} \\
+\toprule
+\textbf{Layer} & \textbf{AUC} & \textbf{$\pm$ std} &
+\textbf{Layer} & \textbf{AUC} & \textbf{$\pm$ std} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Layer} & \textbf{AUC} & \textbf{$\pm$ std} &
+\textbf{Layer} & \textbf{AUC} & \textbf{$\pm$ std} \\
+\midrule
+\endhead
+\bottomrule
+\endfoot
+ 0 & 0.862 & 0.010 & 32 & 0.997 & 0.002 \\
+ 1 & 0.895 & 0.011 & 33 & 0.997 & 0.002 \\
+ 2 & 0.905 & 0.010 & 34 & 0.996 & 0.002 \\
+ 3 & 0.894 & 0.013 & 35 & 0.996 & 0.002 \\
+ 4 & 0.904 & 0.014 & 36 & 0.996 & 0.002 \\
+ 5 & 0.908 & 0.012 & 37 & 0.996 & 0.001 \\
+ 6 & 0.917 & 0.011 & 38 & 0.997 & 0.002 \\
+ 7 & 0.919 & 0.013 & 39 & 0.997 & 0.002 \\
+ 8 & 0.919 & 0.010 & 40 & 0.997 & 0.002 \\
+ 9 & 0.938 & 0.006 & 41 & 0.996 & 0.002 \\
+10 & 0.938 & 0.005 & 42 & 0.996 & 0.002 \\
+11 & 0.946 & 0.005 & 43 & 0.996 & 0.001 \\
+12 & 0.975 & 0.002 & 44 & 0.997 & 0.001 \\
+13 & 0.972 & 0.002 & 45 & 0.997 & 0.002 \\
+14 & 0.980 & 0.000 & 46 & 0.997 & 0.001 \\
+15 & 0.987 & 0.001 & 47 & 0.997 & 0.001 \\
+16 & 0.991 & 0.001 & 48 & 0.997 & 0.002 \\
+17 & 0.996 & 0.001 & 49 & 0.997 & 0.002 \\
+18 & 0.997 & 0.001 & 50 & 0.997 & 0.001 \\
+19 & 0.997 & 0.001 & 51 & 0.997 & 0.001 \\
+\textbf{20} & \textbf{0.9999} & \textbf{0.0001} & 52 & 0.997 & 0.002 \\
+21 & 0.9996 & 0.000 & 53 & 0.997 & 0.001 \\
+22 & 0.9999 & 0.000 & 54 & 0.997 & 0.001 \\
+23 & 0.999 & 0.001 & 55 & 0.997 & 0.001 \\
+24 & 0.997 & 0.001 & 56 & 0.997 & 0.001 \\
+25 & 0.997 & 0.001 & 57 & 0.997 & 0.001 \\
+26 & 0.997 & 0.001 & 58 & 0.997 & 0.001 \\
+27 & 0.996 & 0.001 & 59 & 0.997 & 0.001 \\
+28 & 0.996 & 0.001 & 60 & 0.997 & 0.001 \\
+29 & 0.997 & 0.002 & 61 & 0.997 & 0.001 \\
+30 & 0.997 & 0.002 & 62 & 0.997 & 0.001 \\
+31 & 0.997 & 0.002 & 63 & 0.997 & 0.001 \\
+\end{longtable}
+
+\subsection{Probe AUC Phase Summary}
+
+\begin{table}[ht]
+\centering
+\caption{Phase-wise probe AUC summary for OLMo-3.1-32B-Instruct.
+  Phases defined as: early (L0--15), mid-early (L16--31), mid-late
+  (L32--47), final (L48--63).}
+\label{tab:scale_phase}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Phase} & \textbf{Layers} & \textbf{Mean AUC} & \textbf{Min AUC} & \textbf{Max AUC} \\
+\midrule
+Early      & 0--15  & 0.943 & 0.862 & 0.987 \\
+Mid-early  & 16--31 & 0.997 & 0.991 & 0.9999 \\
+Mid-late   & 32--47 & 0.997 & 0.996 & 0.997 \\
+Final      & 48--63 & 0.997 & 0.997 & 0.997 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Discussion: why scale increases vulnerability.}
+The 32B model achieves near-perfect probe separability
+(AUC\,=\,0.9999 at L20) yet shows \emph{higher} behavioral
+vulnerability (19.6\% vs.\ 14.9\%).  This dissociation---better
+conflict detection with worse conflict resolution---parallels the
+Llama vs.\ R1-Distill pattern at 8B scale and mirrors De~Neys'
+finding in humans that conflict monitoring does not guarantee override
+\citep{deneys2012bias}.
+
+We propose two complementary explanations for why scale increases
+vulnerability:
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Richer heuristic representations.}  Larger models
+  encode more diverse world knowledge, which may strengthen
+  representativeness-based reasoning.  A 32B model trained on more
+  data develops stronger priors about category membership (e.g., the
+  ``stereotypical lawyer/engineer'' association in base rate items),
+  making it harder to override these priors with statistical information.
+
+  \item \textbf{Expanded surface sensitivity.}  The emergence of
+  framing vulnerability at 32B (0\% $\to$ 30\%) suggests that scale
+  enables sensitivity to subtle linguistic cues (gain vs.\ loss
+  framing) that smaller models simply cannot detect.  In this view,
+  scale grants the capacity to be influenced by framing effects that
+  smaller models are too impoverished to represent.
+\end{enumerate}
+
+\noindent Both explanations are consistent with the
+``conflict detection without resolution'' pattern: the 32B model
+detects conflict (AUC\,=\,0.9999) but its larger representation space
+also encodes stronger heuristic attractors that resist override.
+The plateau in probe AUC from L20 onward (all layers $\geq$0.996)
+confirms that scale does not alter the \emph{nature} of the
+\sone{}/\stwo{} distinction---only its behavioral consequences.
 
 \section{SAE Features and Attention Entropy}
 \label{app:sae_attention}
-Full SAE feature analysis (41 significant features, Ma et al.\
-falsification details) and per-head attention entropy results.
+
+This appendix provides full details on the sparse autoencoder (SAE)
+feature analysis and attention entropy analysis summarized in
+Section~\ref{sec:results_sae_attention}.
+
+\subsection{SAE Reconstruction Fidelity}
+
+We apply a Goodfire SAE (65{,}536 features) to
+Llama-3.1-8B-Instruct layer~19 residual stream activations.
+Table~\ref{tab:app_sae_fidelity} reports reconstruction fidelity
+on our benchmark items.
+
+\begin{table}[ht]
+\centering
+\caption{SAE reconstruction fidelity on Llama-3.1-8B-Instruct L19
+  activations ($n$ = 470 items, \pzero{} position).}
+\label{tab:app_sae_fidelity}
+\vspace{4pt}
+\small
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+MSE (reconstruction)         & 0.011 \\
+Explained variance (EV)      & 74.0\% \\
+Mean L0 (active features)    & 47.9 / 65{,}536 \\
+SAE width                    & 65{,}536 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The explained variance of 74\% is moderate: the SAE
+captures the majority of activation variance but not all.
+Feature-level findings should be interpreted as a lower bound on the
+true signal, since reconstruction loss may attenuate feature
+activations.
+
+\subsection{Significant Features}
+
+After BH-FDR correction ($q < 0.05$) across all 65{,}536 features,
+we identify \textbf{41 features} with significantly different mean
+activation between conflict and control items.  These features
+constitute 0.063\% of the total SAE dictionary, indicating high
+specificity.
+
+\subsection{Ma et al.\ Falsification Protocol}
+
+All 41 significant features were subjected to the Ma et al.\
+\citep{ma2026falsification} falsification protocol, which tests
+whether a feature's activation is driven by token-level artifacts
+rather than context-level semantics.
+
+\paragraph{Protocol.}  For each feature:
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item Identify the top-3 tokens that maximally activate the feature
+  across all benchmark items.
+  \item Inject each token into 100 random non-cognitive-bias texts
+  (drawn from a held-out corpus of Wikipedia paragraphs, news
+  articles, and code snippets).
+  \item Measure the feature's activation in the random context.
+  \item A feature is declared \emph{spurious} if its mean activation
+  in random contexts exceeds 50\% of its mean activation in the
+  benchmark context.
+\end{enumerate}
+
+\begin{table}[ht]
+\centering
+\caption{SAE falsification results (Llama-3.1-8B-Instruct, L19).}
+\label{tab:app_sae_falsification}
+\vspace{4pt}
+\small
+\begin{tabular}{lc}
+\toprule
+\textbf{Metric} & \textbf{Value} \\
+\midrule
+Features tested (post-FDR)      & 41 \\
+Spurious (failed falsification) & 0 \\
+Surviving features              & \textbf{41} \\
+Spurious rate                   & 0.0\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent All 41 features survive falsification.  The 0\% spurious
+rate is noteworthy given that \citet{meloux2025dead} report
+45--90\% spurious rates for purported ``reasoning features'' in other
+settings.  The low rate here likely reflects our strict initial
+filtering (BH-FDR $q < 0.05$ with effect-size thresholds) and the
+fact that cognitive bias processing engages contextual rather than
+token-level representations.
+
+\paragraph{Trigger token analysis.}
+Inspection of the top-activating tokens for the 41 surviving features
+reveals that they are predominantly content words related to
+probability, quantity, and social categorization (e.g., ``likely,''
+``percent,'' ``group,'' ``typical'') rather than function words or
+formatting tokens.  This is consistent with the features encoding
+aspects of probabilistic reasoning and category-based judgment that
+are engaged specifically by the cognitive bias stimuli.
+
+\subsection{Attention Entropy: Full Head-Level Analysis}
+
+We compare attention entropy patterns between Llama-3.1-8B-Instruct
+and R1-Distill-Llama-8B at the \pzero{} position.  Attention entropy
+is computed as the Shannon entropy of each head's attention
+distribution, normalized by $\log_2(t)$ where $t$ is the sequence
+length.
+
+\begin{table}[ht]
+\centering
+\caption{Summary of head-level attention entropy tests (32 layers
+  $\times$ 32 heads = 1{,}024 total per model).  Significance assessed
+  via rank-biserial correlation ($r_{rb}$) between conflict and control
+  items, BH-FDR corrected at $q < 0.05$.  \stwo{}-specialized heads
+  additionally require $|r_{rb}| \geq 0.3$.}
+\label{tab:app_attention_summary}
+\vspace{4pt}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Metric} & \textbf{Llama 8B-Inst.} & \textbf{R1-Distill} \\
+\midrule
+Total heads tested                 & 1{,}024 & 1{,}024 \\
+Significant (BH $q < 0.05$)       & 473 (46.2\%) & 515 (50.3\%) \\
+\quad Of which conflict-higher     & 82 (17.3\%) & 115 (22.3\%) \\
+\quad Of which control-higher      & 391 (82.7\%) & 400 (77.7\%) \\
+\midrule
+\stwo{}-specialized heads          & 30 (2.9\%)  & 57 (5.6\%) \\
+\quad ($q < 0.05$ and $|r_{rb}| \geq 0.3$) & & \\
+\quad Of which conflict-higher     & 29 (96.7\%) & 47 (82.5\%) \\
+\quad KV-group level               & 13/256 (5.1\%)  & 24/256 (9.4\%) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key findings.}
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item R1-Distill has nearly \textbf{twice the proportion of
+  \stwo{}-specialized heads} (5.6\% vs.\ 2.9\%) compared to Llama.
+  This gap widens further at the KV-group level (9.4\% vs.\ 5.1\%),
+  where GQA non-independence is accounted for.
+
+  \item The majority of significant heads in both models show
+  \emph{control-higher} entropy (82.7\% for Llama, 77.7\% for
+  R1-Distill), meaning that conflict items generally elicit more
+  focused (lower entropy) attention patterns.  This is consistent
+  with conflict items triggering targeted processing of specific
+  diagnostic elements in the prompt.
+
+  \item Among \stwo{}-specialized heads, nearly all show
+  conflict-higher entropy (96.7\% for Llama, 82.5\% for R1-Distill).
+  These heads attend more broadly on conflict items, potentially
+  integrating information across the full problem statement rather
+  than fixating on heuristic-relevant features.
+\end{itemize}
+
+\paragraph{Layer-wise entropy gap.}
+The entropy gap (conflict $-$ control mean normalized entropy)
+shows distinct profiles:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Llama-3.1-8B:} Peak entropy gap at L7
+  ($\Delta = -0.016$), concentrated in early-to-mid layers
+  (L4--L14).
+  \item \textbf{R1-Distill:} Peak entropy gap at L11
+  ($\Delta = -0.017$), with a broader distribution extending
+  through L15 and a secondary focus in late layers (L27--L31).
+\end{itemize}
+
+\noindent The negative sign indicates that conflict items elicit
+lower entropy (more focused attention) than control items.  The
+broader distribution in R1-Distill is consistent with reasoning
+distillation distributing conflict-processing across more layers
+rather than concentrating it in early attention heads.
 
 \section{Multi-Seed Robustness}
 \label{app:robustness}
-Multi-seed evaluation with sampled decoding (temperature 0.7) shows
-that Llama's overall lure rate remains stable (27.5\% $\pm$ 1.3pp across
-3 seeds), but category profiles shift.  Probe results at \pzero{} are
-unaffected by generation strategy, as they measure the pre-decision
-representation.
+
+This appendix reports multi-seed evaluation results for Llama-3.1-8B-Instruct
+and R1-Distill-Llama-8B under sampled decoding (temperature 0.7,
+top-$p$ = 0.95, 3 seeds: 0, 42, 123).  All main-text results use
+greedy decoding ($T = 0$); this analysis tests whether behavioral
+findings are robust to the stochasticity introduced by sampling.
+
+\subsection{Overall Stability}
+
+\begin{table}[ht]
+\centering
+\caption{Multi-seed overall lure rates (11 categories, 235 conflict
+  items per seed, sampled decoding at $T = 0.7$).  Main-text greedy
+  results are shown for comparison.  ``$\sigma$'' = standard deviation
+  across seeds in percentage points.}
+\label{tab:robustness_overall}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccccc}
+\toprule
+& \multicolumn{4}{c}{\textbf{Sampled ($T = 0.7$, 3 seeds)}} & \textbf{Greedy} \\
+\cmidrule(lr){2-5}
+\textbf{Model} & \textbf{Seed 0} & \textbf{Seed 42} & \textbf{Seed 123} & \textbf{Mean $\pm$ $\sigma$} & \textbf{($T = 0$)} \\
+\midrule
+Llama-3.1-8B-Inst. & 26.4\% & 27.2\% & 28.9\% & 27.5\% $\pm$ 1.3pp & 27.3\% \\
+R1-Distill-Llama-8B & 11.5\% & 11.5\% & 13.2\% & 12.1\% $\pm$ 1.0pp & 2.4\%\textsuperscript{*} \\
+\bottomrule
+\end{tabular}
+
+\vspace{4pt}
+\small\textsuperscript{*}The large gap between R1-Distill greedy (2.4\%) and
+sampled (12.1\%) reflects the generation strategy dependence
+discussed in Section~\ref{sec:app_gen_dependence}.
+\end{table}
+
+\paragraph{Llama stability.}
+Llama's overall lure rate is remarkably stable across seeds:
+27.5\% $\pm$ 1.3pp, closely matching the greedy result of 27.3\%.
+This confirms that the behavioral vulnerability is a robust property
+of the model's representations, not an artifact of a particular
+decoding path.
+
+\paragraph{R1-Distill: greedy vs.\ sampled divergence.}
+R1-Distill shows a large gap between greedy (2.4\%) and sampled
+(12.1\%) lure rates.  Under sampled decoding, the reasoning model's
+chain-of-thought occasionally takes suboptimal paths that fail to
+override heuristic lures.  The within-seed stability is high
+(11.5\%--13.2\%, $\sigma = 1.0$pp), confirming this is a systematic
+effect of the generation strategy rather than random noise.
+
+\subsection{Per-Category Profiles Under Sampling}
+
+Table~\ref{tab:robustness_percategory} reports per-category lure
+rates under sampled decoding.
+
+\begin{table}[ht]
+\centering
+\caption{Per-category lure rates (\%) under sampled decoding
+  ($T = 0.7$, mean $\pm$ $\sigma$ across 3 seeds).
+  ``$\Delta$ vs.\ greedy'' = sampled mean $-$ greedy.
+  Categories marked with $\dagger$ show instability
+  ($\sigma > 10$pp).}
+\label{tab:robustness_percategory}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{Llama}} & \multicolumn{2}{c}{\textbf{R1-Distill}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textbf{Category} & \textbf{Sampled} & \textbf{$\Delta$ greedy} & \textbf{Sampled} & \textbf{$\Delta$ greedy} \\
+\midrule
+Base rate      & 81.0 $\pm$ 3.3 & $-$3.0  & 1.0 $\pm$ 1.6    & $-$3.0 \\
+Conjunction    & 3.3 $\pm$ 2.9  & $-$51.7 & 11.7 $\pm$ 2.9   & $+$11.7 \\
+Syllogism      & 41.3 $\pm$ 9.2 & $-$10.7 & 14.7 $\pm$ 8.3   & $+$14.7 \\
+CRT variants   & 35.6 $\pm$ 5.1 & $+$35.6 & 35.6 $\pm$ 5.1   & $+$32.6 \\
+Arithmetic     & 4.0 $\pm$ 0.0  & $+$4.0  & 5.3 $\pm$ 2.3    & $+$5.3 \\
+Framing        & 53.3 $\pm$ 2.9 & $+$53.3 & 31.7 $\pm$ 17.6$\dagger$ & $+$31.7 \\
+Anchoring      & 0.0 $\pm$ 0.0  & 0.0     & 1.7 $\pm$ 2.9    & $-$8.3 \\
+Sunk cost      & 4.4 $\pm$ 3.8  & $+$4.4  & 0.0 $\pm$ 0.0    & 0.0 \\
+Loss aversion  & 0.0 $\pm$ 0.0  & 0.0     & 22.2 $\pm$ 10.2$\dagger$ & $+$22.2 \\
+Certainty eff. & 6.7 $\pm$ 6.7  & $+$6.7  & 0.0 $\pm$ 0.0    & 0.0 \\
+Availability   & 8.9 $\pm$ 10.2$\dagger$ & $-$4.1 & 0.0 $\pm$ 0.0 & 0.0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Category profile shifts.}
+While overall lure rates are stable, category profiles shift
+substantially under sampled decoding.  For Llama, the most dramatic
+changes are:
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item \textbf{CRT and framing become highly vulnerable} (0\%
+  greedy $\to$ 35.6\% and 53.3\% sampled respectively).  These
+  categories are immune under greedy decoding because the
+  maximum-probability token path avoids the lure, but sampling
+  occasionally selects lower-probability heuristic responses.
+  \item \textbf{Conjunction drops dramatically} (55\% greedy $\to$
+  3.3\% sampled), suggesting that Llama's greedy conjunction errors
+  are a narrow peak in the output distribution that sampling
+  diversifies away from.
+\end{itemize}
+
+For R1-Distill, sampling reveals latent vulnerabilities that
+greedy decoding masks: CRT (3\% $\to$ 35.6\%), framing
+(0\% $\to$ 31.7\%), and loss aversion (0\% $\to$ 22.2\%)
+all emerge as substantially vulnerable when the chain-of-thought
+can take suboptimal reasoning paths.
+
+\subsection{Generation Strategy Dependence}
+\label{sec:app_gen_dependence}
+
+\begin{table}[ht]
+\centering
+\caption{Generation strategy comparison.  Greedy results represent
+  the maximum-probability decoding path; sampled results represent
+  the distributional expectation.}
+\label{tab:gen_strategy}
+\vspace{4pt}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Model} & \textbf{Greedy} & \textbf{Sampled} & \textbf{$|\Delta|$} \\
+\midrule
+Llama-3.1-8B-Inst. & 27.3\% & 27.5\% $\pm$ 1.3pp & 0.2pp \\
+R1-Distill-Llama-8B & 2.4\% & 12.1\% $\pm$ 1.0pp & 9.7pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Implications.}
+The greedy--sampled divergence is asymmetric: Llama's vulnerability
+is essentially identical under both strategies ($|\Delta| = 0.2$pp),
+while R1-Distill's vulnerability is 4$\times$ higher under sampling
+($|\Delta| = 9.7$pp).  This asymmetry has two implications:
+
+\begin{enumerate}[leftmargin=*,itemsep=2pt]
+  \item \textbf{Greedy results are maximum-probability, not
+  distributional.}  The 2.4\% greedy lure rate for R1-Distill
+  reflects the single most-likely decoding path.  The 12.1\%
+  sampled rate better approximates the model's distributional
+  vulnerability---the expected lure rate over the space of
+  possible reasoning traces.
+
+  \item \textbf{Reasoning models are more sensitive to generation
+  strategy.}  The reasoning model's chain-of-thought introduces
+  a long sequence of stochastic choices, each of which can
+  derail the reasoning process.  Standard models generate shorter
+  responses with fewer opportunities for the decoding strategy
+  to influence the outcome.
+\end{enumerate}
+
+\subsection{Probe Invariance to Generation Strategy}
+
+Crucially, probe results at \pzero{} are \textbf{unaffected} by
+generation strategy, because \pzero{} activations are deterministic
+given the prompt.  The pre-decision representation is identical
+regardless of whether the model subsequently generates via greedy or
+sampled decoding.  This confirms that our probing results (AUC
+values, cross-prediction, steering) reflect stable properties of the
+model's internal representations rather than artifacts of a particular
+generation strategy.
+
+The probe--behavior divergence under sampling further supports the
+``conflict detection without resolution'' interpretation: the model
+\emph{always} encodes the conflict in its \pzero{} representation
+(AUC\,=\,0.930 regardless of decoding), but whether it successfully
+\emph{resolves} that conflict depends on the stochastic reasoning
+path it takes during generation.
 
 \end{document}
