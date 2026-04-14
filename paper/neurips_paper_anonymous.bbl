@@ -1,0 +1,178 @@
+\begin{thebibliography}{34}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Afzal et~al.(2025)Afzal, Wies, and Shlegeris]{afzal2025knowing}
+Ali Afzal, Noam Wies, and Buck Shlegeris.
+\newblock Knowing before saying: How language models internally prepare for difficult outputs.
+\newblock In \emph{Proceedings of the 63rd Annual Meeting of the Association for Computational Linguistics}, 2025.
+
+\bibitem[{AI2}(2024)]{olmo3}
+{AI2}.
+\newblock {OLMo}: Accelerating the science of language models.
+\newblock \emph{arXiv preprint arXiv:2402.00838}, 2024.
+
+\bibitem[{Anonymous}(2026)]{sanitychecks2026}
+{Anonymous}.
+\newblock Sanity checks for {SAEs}.
+\newblock \emph{arXiv preprint arXiv:2602.14111}, 2026.
+
+\bibitem[Boppana et~al.(2026)]{boppana2026reasoning}
+Sree Boppana et~al.
+\newblock Reasoning theater: Disentangling model beliefs from {CoT}.
+\newblock \emph{arXiv preprint arXiv:2603.05488}, 2026.
+
+\bibitem[Botvinick et~al.(2001)Botvinick, Braver, Barch, Carter, and Cohen]{botvinick2001conflict}
+Matthew~M Botvinick, Todd~S Braver, Deanna~M Barch, Cameron~S Carter, and Jonathan~D Cohen.
+\newblock Conflict monitoring and cognitive control.
+\newblock \emph{Psychological Review}, 108\penalty0 (3):\penalty0 624--652, 2001.
+
+\bibitem[Brady et~al.(2025)Brady, Gantman, and Van~Bavel]{brady2025dual}
+William~J Brady, Ana Gantman, and Jay~J Van~Bavel.
+\newblock Dual-process theory in the age of {AI}.
+\newblock \emph{Nature Reviews Psychology}, 4:\penalty0 338--350, 2025.
+
+\bibitem[Coda-Forno et~al.(2025)Coda-Forno, Binz, Akata, Botvinick, Wang, and Schulz]{codaforno2025dual}
+Julian Coda-Forno, Marcel Binz, Zeynep Akata, Matthew Botvinick, Jane~X Wang, and Eric Schulz.
+\newblock Dual process in large language models: Shared and distinct processing of heuristic and deliberative prompts.
+\newblock \emph{arXiv preprint arXiv:2510.00494}, 2025.
+
+\bibitem[De~Neys(2012)]{deneys2012bias}
+Wim De~Neys.
+\newblock Bias and conflict: {A} case for logical intuitions.
+\newblock \emph{Perspectives on Psychological Science}, 7\penalty0 (1):\penalty0 28--38, 2012.
+
+\bibitem[De~Neys(2017)]{deneys2017dual}
+Wim De~Neys, editor.
+\newblock \emph{Dual Process Theory 2.0}.
+\newblock Routledge, London, 2017.
+
+\bibitem[De~Neys(2023)]{deneys2023advancing}
+Wim De~Neys.
+\newblock Advancing theorizing about fast-and-slow thinking.
+\newblock \emph{Nature Reviews Psychology}, 2:\penalty0 688--700, 2023.
+
+\bibitem[{DeepSeek-AI}(2025)]{deepseekr1}
+{DeepSeek-AI}.
+\newblock {DeepSeek-R1}: Incentivizing reasoning capability in {LLMs} via reinforcement learning.
+\newblock \emph{arXiv preprint arXiv:2501.12948}, 2025.
+
+\bibitem[Evans(2019)]{evans2019reflections}
+Jonathan St~BT Evans.
+\newblock Reflections on reflection: the nature and function of {Type 2} processes in dual-process theories of reasoning.
+\newblock \emph{Thinking \& Reasoning}, 25\penalty0 (4):\penalty0 434--450, 2019.
+
+\bibitem[Evans and Stanovich(2013)]{evans2013dual}
+Jonathan St~BT Evans and Keith~E Stanovich.
+\newblock Dual-process theories of higher cognition: Advancing the debate.
+\newblock \emph{Perspectives on Psychological Science}, 8\penalty0 (3):\penalty0 223--241, 2013.
+
+\bibitem[Gigerenzer and Hoffrage(1995)]{gigerenzer1995improve}
+Gerd Gigerenzer and Ulrich Hoffrage.
+\newblock How to improve {Bayesian} reasoning without instruction: Frequency formats.
+\newblock \emph{Psychological Review}, 102\penalty0 (4):\penalty0 684--704, 1995.
+
+\bibitem[Hagendorff et~al.(2023)Hagendorff, Fabi, and Kosinski]{hagendorff2023human}
+Thilo Hagendorff, Sarah Fabi, and Michal Kosinski.
+\newblock Human-like intuitive behavior and reasoning biases emerged in large language models but disappeared in {ChatGPT}.
+\newblock \emph{Nature Computational Science}, 3\penalty0 (10):\penalty0 833--838, 2023.
+
+\bibitem[Hewitt and Liang(2019)]{hewitt2019control}
+John Hewitt and Percy Liang.
+\newblock Designing and interpreting probes with control tasks.
+\newblock In \emph{Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing}, pages 2733--2743, 2019.
+
+\bibitem[Huang et~al.(2026)Huang, Zhao, Li, and Hernandez]{huang2026cogbias}
+Yifei Huang, Jinghan Zhao, Kenneth Li, and Evan Hernandez.
+\newblock {CogBias}: Probing and steering cognitive biases in large language models via internal representations.
+\newblock \emph{arXiv preprint arXiv:2604.01366}, 2026.
+
+\bibitem[Jiang et~al.(2025)Jiang, Zhao, Pfau, and Bowman]{jiang2025aha}
+Yiqiao Jiang, Eric Zhao, Jacob Pfau, and Samuel~R Bowman.
+\newblock Can aha moments be fake? {On} the faithfulness of reasoning traces in large language models.
+\newblock \emph{arXiv preprint arXiv:2510.24941}, 2025.
+
+\bibitem[Kahneman(2011)]{kahneman2011thinking}
+Daniel Kahneman.
+\newblock \emph{Thinking, Fast and Slow}.
+\newblock Farrar, Straus and Giroux, New York, 2011.
+
+\bibitem[Lanham et~al.(2023)Lanham, Chen, Radhakrishnan, Steiner, Denison, Hernandez, Li, Durmus, Hubinger, Ganguli, et~al.]{lanham2023measuring}
+Tamera Lanham, Anna Chen, Ansh Radhakrishnan, Benoit Steiner, Carson Denison, Danny Hernandez, Dustin Li, Esin Durmus, Evan Hubinger, Deep Ganguli, et~al.
+\newblock Measuring faithfulness in chain-of-thought reasoning.
+\newblock \emph{arXiv preprint arXiv:2307.13702}, 2023.
+
+\bibitem[Li et~al.(2024)Li, Patel, Vi{\'e}gas, Pfister, and Wattenberg]{li2024inference}
+Kenneth Li, Oam Patel, Fernanda Vi{\'e}gas, Hanspeter Pfister, and Martin Wattenberg.
+\newblock Inference-time intervention: Eliciting truthful answers from a language model.
+\newblock \emph{Advances in Neural Information Processing Systems}, 36, 2024.
+
+\bibitem[Ma et~al.(2026)Ma, Liu, Hernandez, and Nanda]{ma2026falsification}
+Yifan Ma, Ziwen Liu, Evan Hernandez, and Neel Nanda.
+\newblock Are reasoning features in {SAEs} genuine? {A} falsification framework.
+\newblock \emph{arXiv preprint arXiv:2601.05679}, 2026.
+
+\bibitem[Malberg et~al.(2025)Malberg, Stade, and Jansen]{malberg2025cognitive}
+Sander Malberg, Ren{\'e} Stade, and Peter Jansen.
+\newblock Cognitive biases in large language models: A survey of 30 biases across 20 models.
+\newblock \emph{arXiv preprint arXiv:2502.08065}, 2025.
+
+\bibitem[Melnikoff and Bargh(2018)]{melnikoff2018mythical}
+David~E Melnikoff and John~A Bargh.
+\newblock The mythical number two.
+\newblock \emph{Trends in Cognitive Sciences}, 22\penalty0 (4):\penalty0 280--293, 2018.
+
+\bibitem[Meloux and Barez(2025)]{meloux2025dead}
+Cl{\'e}ment Meloux and Fazl Barez.
+\newblock The dead salmons of {AI} interpretability.
+\newblock \emph{arXiv preprint arXiv:2512.18792}, 2025.
+
+\bibitem[{Meta AI}(2024)]{llama31}
+{Meta AI}.
+\newblock The {Llama 3} herd of models.
+\newblock \emph{arXiv preprint arXiv:2407.21783}, 2024.
+
+\bibitem[Rimsky et~al.(2024)Rimsky, Gabrieli, Schulz, Smith, Tong, and Hubinger]{rimsky2024steering}
+Nina Rimsky, Nick Gabrieli, Julian Schulz, Meg Smith, Isabelle Tong, and Evan Hubinger.
+\newblock Steering {Llama 2} via contrastive activation addition.
+\newblock \emph{arXiv preprint arXiv:2312.06681}, 2024.
+
+\bibitem[Schwartz et~al.(2025)]{schwartz2025clinical}
+Alan Schwartz et~al.
+\newblock {LLM} reasoning does not protect against clinical cognitive biases.
+\newblock \emph{medRxiv}, 2025.
+
+\bibitem[Stanovich et~al.(2016)Stanovich, West, and Toplak]{stanovich2016rationality}
+Keith~E Stanovich, Richard~F West, and Maggie~E Toplak.
+\newblock \emph{The Rationality Quotient: Toward a Test of Rational Thinking}.
+\newblock MIT Press, Cambridge, MA, 2016.
+
+\bibitem[Turner et~al.(2023)Turner, Thiergart, Udell, Leech, Mini, and Pelrine]{turner2023activation}
+Alexander~Matt Turner, Lisa Thiergart, David Udell, Gavin Leech, Ulisse Mini, and Monte Pelrine.
+\newblock Activation addition: Steering language models without optimization.
+\newblock \emph{arXiv preprint arXiv:2308.10248}, 2023.
+
+\bibitem[Venhoff et~al.(2025)Venhoff, Motwani, Wendler, Stolfo, Jumelet, and Sachan]{venhoff2025base}
+Patrik Venhoff, Siddharth~R Motwani, Chris Wendler, Alessandro Stolfo, Jaap Jumelet, and Mrinmaya Sachan.
+\newblock Base models know how to reason, thinking models learn when.
+\newblock \emph{arXiv preprint arXiv:2510.07364}, 2025.
+
+\bibitem[Xie et~al.(2025)Xie, Feng, and Zhong]{xie2025cogsci}
+Jiayi Xie, Yifan Feng, and Yizhou Zhong.
+\newblock Are large language models rational? {A} dual-process perspective.
+\newblock In \emph{Proceedings of the 47th Annual Meeting of the Cognitive Science Society}, 2025.
+
+\bibitem[Zhang et~al.(2025)Zhang, Chen, Wang, and Li]{zhang2025probing}
+Yiwei Zhang, Liming Chen, Haobo Wang, and Yuxiang Li.
+\newblock Probing the hidden states of {R1}: Emergent self-verification in a reasoning model.
+\newblock \emph{arXiv preprint arXiv:2504.05419}, 2025.
+
+\bibitem[Ziabari et~al.(2025)Ziabari, Perez, and Saphra]{ziabari2025reasoning}
+Aida~Mostafazadeh Ziabari, Ethan Perez, and Naomi Saphra.
+\newblock Reasoning on a spectrum: Exploring dual-process in language models.
+\newblock \emph{arXiv preprint arXiv:2502.12470}, 2025.
+
+\end{thebibliography}

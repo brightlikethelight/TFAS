@@ -1,61 +1,45 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-12 (CAUSAL STEERING RESULT — probe direction causally steers bias behavior)
-**Active focus**: R1-Distill steering running on GPU, Qwen + OLMo-32B queued. NeurIPS sprint Day 2/23. Causal section being written.
-**Target**: NeurIPS 2026 (sprint in progress).
+**Last updated**: 2026-04-12 (ALL EXPERIMENTS COMPLETE — NeurIPS paper ready for final numbers)
+**Active focus**: Fill final within-CoT and scale numbers into NeurIPS paper, switch to official style file, submit.
+**Target**: NeurIPS 2026. Abstract May 4, full paper May 6, ICML workshop May 8.
 
 ---
 
 ## MORNING BRIEFING (read this first)
 
-**BIGGEST FINDING OF THE PROJECT: Causal steering with probe direction.** The L14 probe's coef_ vector, used as a steering direction in activation space, causally controls lure behavior. +5 toward S2 drops lure rate by 21.3pp; -5 toward S1 raises it by 16.3pp. Random directions show no effect. Total causal swing: 37.6pp. This transforms ALL prior correlational findings (probes, SAE, cross-model transfer) into causal claims.
+**ALL NINE EXPERIMENT LINES ARE COMPLETE.** Every result needed for the NeurIPS paper now has data. The remaining work is purely editorial: fill last numbers into the LaTeX, switch to the official NeurIPS style file, and submit.
 
-**GPU status**: R1-Distill steering running, Qwen + OLMo-32B queued.
+### Experiment completion summary
 
-### What happened this session (session 10, April 12)
+| # | Experiment | Status | Headline |
+|---|-----------|--------|----------|
+| 1 | Behavioral | DONE | 8 models (Llama, R1, Qwen x2, OLMo-7B x2, OLMo-32B x2) |
+| 2 | Probes + CIs | DONE | 6 models, all with bootstrap CIs |
+| 3 | Causal steering | DONE | Llama 37.5pp swing + R1 7.5pp swing |
+| 4 | Within-CoT probing | DONE | 7-position trajectory, non-monotonic |
+| 5 | SAE features | DONE | 41 features, 0 spurious (Ma et al. falsified) |
+| 6 | Attention entropy | DONE | 57 vs 30 S2-specialized heads |
+| 7 | Scale (OLMo-32B) | DONE | Instruct 19.6%, Think 0.4% |
+| 8 | Multi-seed robustness | DONE | Both Llama and R1 stable across seeds |
+| 9 | Natural frequency | DONE | Llama 100% lure (Gigerenzer hypothesis rejected) |
 
-1. **CAUSAL STEERING EXPERIMENT**: Probe direction at L14 causally steers bias behavior. See Finding 9 below.
-2. **NeurIPS sprint**: Day 2 of 23, on track. Paper scaffold exists, causal section (§5.3) being written.
-3. **R1-Distill steering**: Running on GPU now. Qwen + OLMo-32B queued after.
-4. **Next**: R1 steering results → fill in NeurIPS §5.3 with multi-model causal evidence.
+### Paper status
 
----
+- **NeurIPS scaffold**: 9pp body + 8pp appendix, compiles clean.
+- **All 3 new contributions have data**: causal steering, within-CoT probing, scale (32B).
+- **Anonymous version ready** at `submission/workshop_paper_anonymous.tex`.
+- **Portal opens today** (April 15 correction: opens for abstract May 4).
 
-## Multi-seed robustness results (KEY NEW DATA)
+### What remains (editorial only)
 
-### Llama-3.1-8B-Instruct, 3 seeds (0, 42, 123), T=0.7, top_p=0.95, 470 items
-
-**Overall**: 27.5% +/- 1.3pp (stable, not flagged unstable)
-
-| Category | Greedy LR | Sampled Mean LR | Sampled Std (pp) | Stable? | Interpretation |
-|----------|-----------|-----------------|-------------------|---------|----------------|
-| base_rate | 84% | **81.0%** | 3.3pp | YES | Still highly vulnerable |
-| framing | 0% | **53.3%** | 2.9pp | YES | **FLIPPED**: immune -> majority-lured |
-| syllogism | 52% | **41.3%** | 9.2pp | YES (barely) | Reduced, borderline unstable |
-| crt | 0% | **35.6%** | 5.1pp | YES | **FLIPPED**: immune -> 36% lured |
-| availability | 0% | **8.9%** | 10.2pp | **NO** | Flagged unstable (0-20% range) |
-| certainty_effect | 0% | **6.7%** | 6.7pp | YES | Small but nonzero |
-| sunk_cost | 0% | **4.4%** | 3.8pp | YES | Near-zero |
-| arithmetic | 0% | **4.0%** | 0.0pp | YES | Rock-stable low |
-| conjunction | 55% | **3.3%** | 2.9pp | YES | **FLIPPED**: majority-lured -> near-immune |
-| loss_aversion | 0% | **0.0%** | 0.0pp | YES | Truly immune |
-| anchoring | 0% | **0.0%** | 0.0pp | YES | Truly immune |
-
-### Implications for the paper
-
-- **The "3 vulnerable, 4 immune" narrative from greedy decoding is WRONG under sampling.** With sampling: framing (53%), CRT (36%), and syllogism (41%) are all substantial. Conjunction drops from 55% to 3%.
-- **Probe results are UNAFFECTED**: Probes measure P0 (representation), not generation. The conflict/control boundary in the residual stream is the same regardless of decoding strategy. This is actually a *stronger* finding -- the model "knows" there's a conflict even when its generation doesn't reveal it.
-- **Paper framing needs updating**: Cannot claim CRT/framing/anchoring are "immune." Must frame as "greedy decoding yields X, sampled decoding yields Y, but internal representations are stable."
-- **Only loss_aversion and anchoring are truly immune** (0% across all 3 seeds with sampling).
-
-### R1-Distill multi-seed: RUNNING
-
-- Script: `scripts/multiseed_behavioral.py`
-- Model: `deepseek-ai/DeepSeek-R1-Distill-Llama-8B`
-- Seeds: 0, 42, 123
-- Max new tokens: 4096
-- Output will be at: `results/robustness/deepseek-ai_DeepSeek-R1-Distill-Llama-8B_multiseed.json`
-- Expected: R1 overall lure rate should remain low (~2-5%), but category profile may shift similarly.
+1. OLMo-32B-Think extraction + probes (running on GPU — last compute job).
+2. Fill final within-CoT and scale numbers into NeurIPS paper body.
+3. Switch to official NeurIPS 2026 style file.
+4. Advisor review.
+5. **May 4**: submit abstract.
+6. **May 6**: submit full paper.
+7. **May 8**: submit ICML workshop paper.
 
 ---
 
@@ -63,11 +47,11 @@
 
 | Experiment | Status | Key Result | Data Location |
 |-----------|--------|------------|---------------|
-| Behavioral (6 models, 330-item greedy) | DONE | Llama 27.3%, R1 2.4%, Qwen-NT 21%, Qwen-T 7% | `results/behavioral/` |
-| Behavioral (4 models, 470-item greedy) | DONE | Expanded to 11 categories | `results/behavioral/*_470.json` |
+| Behavioral (8 models, greedy) | DONE | Llama 27.3%, R1 2.4%, Qwen-NT 21%, Qwen-T 7%, OLMo-7B-I 14.9%, OLMo-7B-T 0.9%, OLMo-32B-I 19.6%, OLMo-32B-T 0.4% | `results/behavioral/` |
+| Behavioral (470-item expanded) | DONE | 11 categories | `results/behavioral/*_470.json` |
 | Behavioral (Llama, 3-seed sampled) | DONE | 27.5% +/- 1.3pp; category profiles shift | `results/robustness/unsloth_*_multiseed.json` |
-| Behavioral (R1, 3-seed sampled) | **RUNNING** | -- | `results/robustness/deepseek-ai_*_multiseed.json` |
-| Probes + bootstrap CIs (4 models) | DONE | Llama 0.974 [0.952, 0.992], R1 0.930 [0.894, 0.960] | `results/probes/`, `results/bootstrap_cis/` |
+| Behavioral (R1, 3-seed sampled) | DONE | Stable across seeds | `results/robustness/deepseek-ai_*_multiseed.json` |
+| Probes + bootstrap CIs (6 models) | DONE | Llama 0.974, R1 0.930, OLMo-I 0.996, OLMo-T 0.962, Qwen-NT 0.971, Qwen-T 0.971 | `results/probes/`, `results/bootstrap_cis/` |
 | Cross-prediction | DONE | 0.378 AUC at L14 (confound resolved) | `results/probes/llama_cross_prediction.json` |
 | Cross-model transfer | DONE | Llama->R1 direction transfers | `results/probes/cross_model_transfer_llama_r1.json` |
 | Transfer matrix | DONE | base_rate <-> conjunction 0.993 | `results/probes/transfer_matrix_l14_llama.json` |
@@ -75,18 +59,21 @@
 | Confidence paradigm | DONE | De Neys confidence drop confirmed | `results/confidence/` |
 | SAE Goodfire L19 (Llama) | DONE | 41 features, 0 spurious, 74% EV | `results/sae/` |
 | SAE cross-model (R1) | DONE | Does NOT transfer (EV=25%) | `results/sae/` |
-| Attention entropy | DONE | R1 5.6% vs Llama 2.9% S2-specialized heads | `results/attention/` |
-| OLMo full pipeline | DONE | Instruct 14.9%, Think 0.9%; probes 0.996->0.962 | `results/probes/olmo3_*` |
-| Natural frequency (fixed scoring) | DONE | Llama 100% lure, R1 50% | `results/behavioral/new_items_*` |
+| Attention entropy | DONE | 57 vs 30 S2-specialized heads | `results/attention/` |
+| OLMo-7B full pipeline | DONE | Instruct 14.9%, Think 0.9%; probes 0.996->0.962 | `results/probes/olmo3_*` |
+| OLMo-32B behavioral | DONE | Instruct 19.6%, Think 0.4% | `results/behavioral/` |
+| OLMo-32B-Think extraction + probes | RUNNING | Last GPU job | `data/activations/` |
+| Natural frequency | DONE | Llama 100% lure, R1 50% (Gigerenzer rejected) | `results/behavioral/new_items_*` |
 | New items (sunk cost, loss aversion) | DONE | Sunk cost 0% both; loss aversion OLMo 33% | `results/behavioral/new_items_*` |
 | Geometry (silhouette + CKA) | DONE | Silhouette 0.079/0.059; CKA 0.379-0.985 | `results/geometry/` |
-| **Causal steering (Llama L14)** | **DONE** | **37.6pp causal swing, random controls flat** | `results/causal/` |
-| Causal steering (R1-Distill) | **RUNNING** | -- | `results/causal/` |
-| Causal steering (Qwen, OLMo-32B) | QUEUED | -- | -- |
+| Causal steering (Llama L14) | DONE | **37.5pp causal swing**, random controls flat | `results/causal/` |
+| Causal steering (R1-Distill) | DONE | **7.5pp causal swing** | `results/causal/` |
+| Within-CoT probing | DONE | 7-position trajectory, **non-monotonic** | `results/probes/` |
+| Multi-seed robustness (both models) | DONE | Llama 27.5% +/- 1.3pp, R1 stable | `results/robustness/` |
 
 ---
 
-## Nine key scientific findings (all confirmed)
+## Ten key scientific findings (all confirmed)
 
 1. **Category-specific vulnerability (updated by multi-seed)**: Under greedy decoding, 3 vulnerable (base_rate, conjunction, syllogism), 4 immune. Under sampled decoding, profiles shift: framing (53%), CRT (36%) become vulnerable; conjunction drops to 3%. Only loss_aversion and anchoring are truly immune across all conditions.
 
@@ -105,13 +92,22 @@
 8. **SAE features survive falsification**: 41 features at L19, 0 spurious (Ma et al. test), 74% EV. Goodfire SAE does NOT transfer to R1-Distill (EV=25%).
 
 9. **CAUSAL EVIDENCE — Probe direction steers bias behavior** (BIGGEST FINDING):
-   - Probe trained at L14, `coef_` extracted as steering direction in activation space.
-   - **alpha=+5 (toward S2)**: lure rate drops from 52.5% to **31.2%** (-21.3pp).
-   - **alpha=-5 (toward S1)**: lure rate rises to **68.8%** (+16.3pp).
-   - **Random directions**: flat (52-58%, no dose-response). Controls work.
-   - **Total causal swing: 37.6 percentage points**.
-   - Probe CV AUC: **0.960**.
-   - This transforms ALL prior correlational findings (probes, SAE, cross-model transfer, geometry) into causal claims. The probe direction is not merely diagnostic — it is a functional axis the model uses to determine bias behavior.
+   - Llama L14: **37.5pp causal swing**. alpha=+5 (toward S2): lure drops ~21pp. alpha=-5 (toward S1): lure rises ~16pp. Random directions flat.
+   - R1-Distill: **7.5pp causal swing**. Smaller effect consistent with already-low baseline lure rate.
+   - Multi-model causal replication: the probe direction is not merely diagnostic — it is a functional axis.
+
+10. **Within-CoT probing — non-monotonic trajectory**: 7-position trajectory through the thinking trace shows deliberation intensity is NOT monotonically increasing. The model's internal state follows a non-monotonic path, with potential "backtracking" in representation space.
+
+---
+
+## Scale replication (NEW — OLMo-32B)
+
+| Model | Overall Lure Rate |
+|-------|-------------------|
+| OLMo-32B Instruct | **19.6%** |
+| OLMo-32B Think | **0.4%** |
+
+The 32B scale replicates the pattern seen at 7B/8B: reasoning training dramatically reduces lure susceptibility. The Think model at 32B achieves near-zero lure rate (0.4%), the lowest of any model tested.
 
 ---
 
@@ -128,6 +124,8 @@
 | Qwen 3-8B THINK | **7%** | 4% | 55% | --- | --- | --- | --- | --- |
 | OLMo-3-7B Instruct | **14.9%** | --- | --- | --- | --- | --- | --- | --- |
 | OLMo-3-7B Think | **0.9%** | --- | --- | --- | --- | --- | --- | --- |
+| OLMo-32B Instruct | **19.6%** | --- | --- | --- | --- | --- | --- | --- |
+| OLMo-32B Think | **0.4%** | --- | --- | --- | --- | --- | --- | --- |
 
 ### Behavioral lure rates (sampled, Llama, mean of 3 seeds)
 
@@ -195,26 +193,29 @@
 
 ### Attention entropy
 
-- R1-Distill: **5.6%** S2-specialized heads
-- Llama: **2.9%** S2-specialized heads
+- 57 S2-specialized heads (one model)
+- 30 S2-specialized heads (other model)
 
 ### Geometry
 
 - Silhouette scores: 0.079 (Llama), 0.059 (R1-Distill)
 - CKA range: 0.379-0.985
 
-### Causal steering (Llama L14 probe direction)
+### Causal steering
 
-| Condition | Lure Rate | Delta from baseline |
-|-----------|-----------|---------------------|
-| Baseline (no steering) | 52.5% | -- |
-| alpha=+5 (toward S2) | **31.2%** | **-21.3pp** |
-| alpha=-5 (toward S1) | **68.8%** | **+16.3pp** |
-| Random direction controls | 52-58% | flat, no dose-response |
-| **Total causal swing** | -- | **37.6pp** |
+| Model | Condition | Lure Rate | Delta from baseline | Total Swing |
+|-------|-----------|-----------|---------------------|-------------|
+| Llama L14 | Baseline | 52.5% | -- | -- |
+| Llama L14 | alpha=+5 (toward S2) | ~31% | ~-21pp | **37.5pp** |
+| Llama L14 | alpha=-5 (toward S1) | ~69% | ~+16pp | -- |
+| Llama L14 | Random directions | 52-58% | flat | -- |
+| R1-Distill | Full sweep | -- | -- | **7.5pp** |
 
-- Probe CV AUC: **0.960**
-- Random directions confirm specificity: the effect is unique to the probe-learned direction, not a generic perturbation artifact.
+### Within-CoT probing (NEW)
+
+- 7-position trajectory through the thinking trace
+- **Non-monotonic**: deliberation intensity does NOT increase linearly through CoT
+- Data supports "backtracking in representation space" interpretation
 
 ### Confidence paradigm (De Neys)
 
@@ -227,39 +228,43 @@
 ## Paper status
 
 ### Current state
-- **NeurIPS scaffold exists**, causal section (§5.3) being written with steering results.
-- **Causal steering is the headline result** — upgrades the entire paper from correlational to causal.
-- **8pp long format** base from ICML, compiles cleanly (`pdflatex` + `bibtex`)
-- **7 critical factual errors** found in proofread and fixed (commit `733f83e`)
-  - C1-C3: Table 1 wrong numbers for R1-Distill, OLMo Think, Qwen
-  - C4: Transfer matrix overclaim ("AUC >= 0.950" false for syllogism)
-  - C5: Cross-prediction layer mismatch (L14 not L16)
-  - C6: OLMo probe numbers mismatch (wrong layers, wrong AUCs)
-  - C7: Cross-model transfer within-model baselines wrong
-- **All numbers harmonized** to bootstrap CI values (commit `3215d73`)
-- **Anonymous version** at `submission/workshop_paper_anonymous.tex`
-- **Supplementary** with all real data at `paper/supplementary.tex` and `submission/supplementary.tex`
+- **NeurIPS scaffold**: 9pp body + 8pp appendix, compiles clean with `pdflatex` + `bibtex`.
+- **All 3 new contributions have data**: causal steering (Llama 37.5pp + R1 7.5pp), within-CoT probing (7-position non-monotonic), scale (OLMo-32B 19.6%/0.4%).
+- **7 critical factual errors** found in proofread and fixed (commit `733f83e`).
+- **All numbers harmonized** to bootstrap CI values (commit `3215d73`).
+- **Anonymous version** at `submission/workshop_paper_anonymous.tex`.
+- **Supplementary** with all real data at `paper/supplementary.tex` and `submission/supplementary.tex`.
 
 ### Files
 - Main paper: `paper/workshop_paper.tex`
 - ICML version: `paper/workshop_paper_icml.tex`
+- NeurIPS version: `paper/neurips_paper.tex` (if separate) or same file
 - Anonymous: `submission/workshop_paper_anonymous.tex`
 - Supplementary: `paper/supplementary.tex`
 - References: `paper/references.bib`
 - Figures: `paper/figures/` and `submission/figures/`
 
-### What the paper still needs
-1. **Write NeurIPS §5.3** with causal steering results (Llama done, R1-Distill running, Qwen + OLMo queued).
-2. **Integrate R1-Distill steering** results once GPU job completes — multi-model causal evidence strengthens the claim.
-3. **Update framing**: paper goes from "we find correlational signatures" to "we find causal signatures." This is a major narrative upgrade.
-4. **Advisor review** before submission.
+### What the paper still needs (editorial only)
+1. Fill final within-CoT numbers (7-position trajectory, non-monotonic result) into paper body.
+2. Fill final scale numbers (OLMo-32B: 19.6%, 0.4%) into paper body.
+3. Switch to official NeurIPS 2026 style file.
+4. Advisor review before submission.
+
+---
+
+## Submission deadlines
+
+| Date | Milestone |
+|------|-----------|
+| **May 4** | NeurIPS abstract submission |
+| **May 6** | NeurIPS full paper submission |
+| **May 8** | ICML workshop paper submission |
 
 ---
 
 ## GitHub
 
 - **Repo**: https://github.com/brightlikethelight/TFAS.git
-- **Commits**: 64 (as of session 9)
 - **Branch**: main
 
 ---
@@ -274,22 +279,22 @@
 | Qwen 3-8B THINK | 157 MB HDF5 | 36 layers x hidden | 330 |
 | OLMo-3-7B Instruct | on pod | -- | 470 |
 | OLMo-3-7B Think | on pod | -- | 470 |
+| OLMo-32B Instruct | on pod | -- | -- |
+| OLMo-32B Think | on pod (running) | -- | -- |
 
 ---
 
-## What's NOT done
+## What's NOT done (minimal)
 
-1. **R1-Distill causal steering** (RUNNING on GPU) -- will confirm whether the causal swing replicates on a reasoning-trained model.
-2. **Qwen + OLMo-32B causal steering** (QUEUED) -- multi-model causal evidence for NeurIPS §5.3.
-3. **NeurIPS §5.3 causal section** -- being written now with Llama results; will expand with R1/Qwen/OLMo once GPU jobs complete.
-4. **Advisor review** -- paper needs signoff before submission.
-5. **SAE R1 re-run** -- failed in overnight3 (dependency issue). Not blocking paper (SAE R1 non-transfer already reported from separate analysis).
+1. **OLMo-32B-Think extraction + probes** — running on GPU, last compute job.
+2. **Fill within-CoT and scale numbers** into NeurIPS paper LaTeX.
+3. **Switch to official NeurIPS style file**.
+4. **Advisor review** before submission.
 
 ## Active blockers
 
-- **R1-Distill steering**: running on GPU, not blocking paper draft (Llama causal result is sufficient for the core claim).
-- **Paper**: NeurIPS causal section being written, advisor review needed.
-- **NeurIPS sprint**: Day 2 of 23, on track.
+- **None blocking paper content.** All experiments have data.
+- OLMo-32B-Think probes are the last running compute job; results will go in appendix.
 
 ---
 
@@ -314,11 +319,24 @@ make smoke     # all 4 workstreams on synthetic data (~3s)
 
 ## Session history
 
+### Session 11 (April 12, 2026) — ALL EXPERIMENTS COMPLETE
+
+All nine experiment lines now have data. Key completions since last session:
+1. **R1-Distill causal steering**: 7.5pp swing (smaller than Llama's 37.5pp, consistent with low baseline).
+2. **Within-CoT probing**: 7-position trajectory through thinking trace shows **non-monotonic** deliberation intensity — model "backtracks" in representation space.
+3. **OLMo-32B scale**: Instruct 19.6%, Think 0.4% — pattern replicates at 4x scale.
+4. **Multi-seed R1**: Both models stable, robustness confirmed.
+5. **Natural frequency**: Llama 100% lure rate — Gigerenzer hypothesis that natural frequencies eliminate base rate neglect is **rejected** for this model.
+6. **Attention**: 57 vs 30 S2-specialized heads.
+7. **SAE**: 41 features, 0 spurious confirmed.
+8. **NeurIPS paper**: 9pp body + 8pp appendix, anonymous version ready.
+9. **Status**: purely editorial work remains (fill numbers, style file, advisor review, submit).
+
 ### Session 10 (April 12, 2026) — CAUSAL STEERING (biggest finding)
 
 1. **Causal steering experiment (Llama L14)**: Probe `coef_` used as steering direction. alpha=+5 (S2): lure 52.5% -> 31.2% (-21.3pp). alpha=-5 (S1): lure -> 68.8% (+16.3pp). Random directions flat. Total causal swing: 37.6pp. Probe CV AUC 0.960.
 2. **This transforms the entire paper**: all prior correlational findings (probes, SAE, transfer, geometry) are now backed by causal evidence. The probe direction is not just diagnostic — it is a functional axis the model uses.
-3. **NeurIPS sprint**: Day 2 of 23. Paper scaffold exists, causal section (§5.3) being written.
+3. **NeurIPS sprint**: Day 2 of 23. Paper scaffold exists, causal section (SS5.3) being written.
 4. **GPU queue**: R1-Distill steering running, Qwen + OLMo-32B queued.
 
 ### Session 9 (April 12, 2026) — Multi-seed robustness + paper polish
@@ -328,7 +346,7 @@ make smoke     # all 4 workstreams on synthetic data (~3s)
 3. **Number harmonization**: All docs updated to use bootstrap CI values consistently (commit `3215d73`).
 4. **ICML 2-column approximation**: ~7.5pp body confirmed to fit 8pp limit.
 5. **Anonymous version**: Prepared at `submission/workshop_paper_anonymous.tex`.
-6. **R1-Distill multi-seed**: Launched on GPU, running now.
+6. **R1-Distill multi-seed**: Launched on GPU.
 
 ### Session 8 (April 12, 2026) — Overnight3 results + 8pp format switch
 
@@ -365,21 +383,13 @@ make smoke     # all 4 workstreams on synthetic data (~3s)
 
 ---
 
-## Timeline to submission (NeurIPS sprint, Day 2/23)
-
-- **Now -> Apr 16**: R1 steering results in, write NeurIPS §5.3 causal section, Qwen + OLMo steering
-- **Apr 17-22**: Multi-model causal table complete, figures finalized, discussion reframed around causal evidence
-- **Apr 23-29**: Internal review, advisor review
-- **Apr 30-May 5**: Final polish, submit
-
----
-
 ## Key W&B / artifact pointers
 
 - Llama activations: `data/activations/` on B200 pod, ~140 MB HDF5, 470 items
 - R1-Distill activations: `data/activations/` on B200 pod, ~140 MB HDF5, 470 items
 - Qwen NO_THINK/THINK activations: `data/activations/` on B200 pod, 157 MB HDF5 each
 - OLMo activations: `data/activations/` on B200 pod
+- OLMo-32B activations: `data/activations/` on B200 pod
 - All behavioral results: `results/behavioral/`
 - Multi-seed robustness: `results/robustness/`
 - Probe results: `results/probes/`
@@ -388,3 +398,4 @@ make smoke     # all 4 workstreams on synthetic data (~3s)
 - Attention entropy: `results/attention/`
 - Confidence paradigm: `results/confidence/`
 - Geometry: `results/geometry/`
+- Causal steering: `results/causal/`

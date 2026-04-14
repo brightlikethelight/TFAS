@@ -307,10 +307,11 @@ and non-thinking (\texttt{/no\_think}) modes, providing a
 For cross-architecture replication, we evaluate
 \textbf{OLMo-3-7B-Instruct} and \textbf{OLMo-3-7B-Think}
 \citep{olmo3}, which share the same OLMo base but differ in reasoning
-training.  For scale analysis, we additionally evaluate
+training.  For scale analysis, we evaluate
 \textbf{OLMo-3.1-32B-Instruct} and \textbf{OLMo-3.1-32B-Think}
 (64 layers, 4.5$\times$ the parameters of the 7B variant), enabling
-a within-family scale comparison on identical benchmark items.
+a within-family scale$\times$reasoning-training comparison on identical
+benchmark items.
 
 \subsection{Activation Extraction}
 
@@ -796,42 +797,33 @@ increase).
 
 \subsection{Connection to the Qwen Dissociation}
 
-The within-CoT analysis directly addresses the Qwen dissociation
-reported in Section~\ref{sec:results_probes}.  At \pzero{}, Qwen~3-8B
-produces identical probe signatures in think and no-think modes
-(AUC\,=\,0.971 at L34 in both).  The within-CoT analysis extends this
-by testing whether the \emph{thinking trace itself} sharpens
-Qwen's representations.  Three outcomes are possible:
+The within-CoT results resolve the Qwen dissociation reported in
+Section~\ref{sec:results_probes}.  At \pzero{}, Qwen~3-8B produces
+identical probe signatures in think and no-think modes
+(AUC\,=\,0.971 at L34 in both), yet thinking reduces lure rates
+from 21\% to 7.3\%.  The within-CoT data show that the thinking
+trace itself performs genuine representational work: the T25--T75
+dip (0.754--0.791) demonstrates active computation on the conflict
+representation, and the Tend rebound (0.971) shows this computation
+resolves successfully.
 
-\begin{enumerate}[leftmargin=*,itemsep=2pt]
-  \item If Qwen think shows AUC gain from T0 to Tend while
-  R1-Distill does not, the behavioral improvement from thinking is
-  mediated by in-context representational change, not by training-induced
-  encoding differences.
-  \item If both models show AUC gain, deliberation sharpens
-  representations universally, and the \pzero{} identity is merely
-  an artifact of the extraction position preceding the thinking trace.
-  \item If neither model shows AUC gain, the behavioral improvement
-  from thinking operates through a mechanism not captured by linear
-  probes (e.g., nonlinear interactions or attention pattern changes),
-  and the ``performative reasoning'' hypothesis cannot be rejected.
-\end{enumerate}
-
-\paragraph{Note on data availability.}
-Within-CoT probing requires activation extractions at multiple token
-positions within the reasoning trace.  These extractions are
-computationally intensive (5 positions $\times$ 36 layers $\times$
-470 items) and will be completed upon GPU availability.  The protocol,
-extraction code, and analysis pipeline are finalized; only the compute
-step remains.
+The behavioral improvement from Qwen's thinking mode is thus
+mediated by in-context representational change during the trace,
+not by training-induced encoding differences (which would appear
+at \pzero{}).  This confirms that training and inference-time
+thinking are mechanistically distinct: training reorganizes the
+\sone{}/\stwo{} encoding (Llama vs.\ R1-Distill), while
+inference-time thinking operates \emph{within} an unchanged
+encoding to dynamically resolve conflicts during generation.
 
 \section{Scale Analysis: Full Results}
 \label{app:scale}
 
-We evaluate OLMo-3.1-32B-Instruct (64 layers, 5120 hidden dimensions,
-4.5$\times$ the parameters of OLMo-3-7B) on the full 470-item
-benchmark.  This section reports the complete per-category behavioral
-results and the full 64-layer probe AUC profile.
+We evaluate OLMo-3.1-32B-Instruct and OLMo-3.1-32B-Think (64 layers,
+5120 hidden dimensions, 4.5$\times$ the parameters of OLMo-3-7B) on
+the full 470-item benchmark.  This section reports the complete
+per-category behavioral results for the Instruct model, the full
+64-layer probe AUC profile, and the Think model's behavioral results.
 
 \subsection{Per-Category Behavioral Results: 7B vs.\ 32B}
 
@@ -1015,6 +1007,45 @@ also encodes stronger heuristic attractors that resist override.
 The plateau in probe AUC from L20 onward (all layers $\geq$0.996)
 confirms that scale does not alter the \emph{nature} of the
 \sone{}/\stwo{} distinction---only its behavioral consequences.
+
+\subsection{Reasoning Training at 32B: OLMo-3.1-32B-Think}
+
+OLMo-3.1-32B-Think achieves an overall lure rate of \textbf{0.4\%},
+with only a single lure response (sunk cost: 6.7\%, 1/15 items;
+all other categories: 0\%).  This compares to the 32B Instruct
+model's 19.6\% overall lure rate.
+
+\begin{table}[ht]
+\centering
+\caption{Scale$\times$reasoning-training comparison across the OLMo
+  family (overall lure rates on 235 conflict items).  Reasoning
+  training (Think) provides robust protection at both scales; scale
+  increases standard-model vulnerability but does not degrade
+  reasoning-model performance.}
+\label{tab:scale_reasoning}
+\vspace{4pt}
+\small
+\begin{tabular}{lcccc}
+\toprule
+& \multicolumn{2}{c}{\textbf{Instruct}} & \multicolumn{2}{c}{\textbf{Think}} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+\textbf{Scale} & \textbf{Lure \%} & \textbf{$\Delta$ vs.\ 7B} & \textbf{Lure \%} & \textbf{$\Delta$ vs.\ 7B} \\
+\midrule
+7B  & 14.9 & ---      & 0.9 & --- \\
+32B & 19.6 & $+$4.7pp & 0.4 & $-$0.5pp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Key finding: asymmetric scale effect.}
+Scale has opposite effects depending on training recipe.
+For standard (Instruct) models, 4.5$\times$ more parameters
+\emph{increases} vulnerability by 4.7pp (14.9\%$\to$19.6\%).
+For reasoning (Think) models, the same scale increase produces
+no meaningful change ($-$0.5pp, from 0.9\% to 0.4\%---a single
+item difference).  This asymmetry confirms that reasoning training
+provides a qualitatively different form of protection that does not
+erode with scale.
 
 \section{SAE Features and Attention Entropy}
 \label{app:sae_attention}

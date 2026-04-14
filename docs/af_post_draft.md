@@ -28,7 +28,7 @@ Five workstreams of mechanistic analysis across eight models (7B to 32B), three 
 | Loss aversion | 0% | 0.0% | 0% |
 | **Overall** | **27.3%** | **27.5% +/- 1.3pp** | **2.4%** |
 
-The overall lure rate is stable across decoding strategies (27.3% greedy vs. 27.5% +/- 1.3pp sampled), but the *category profiles shift dramatically*. Framing: 0% greedy to 53% sampled. CRT: 0% to 36%. Conjunction: 55% to 3%. Only anchoring and loss aversion are truly immune across all conditions. Greedy-only benchmarking can dramatically mischaracterize which failure modes a model has.
+Overall lure rate is stable across decoding strategies (27.3% greedy vs. 27.5% sampled), but *category profiles shift dramatically*: framing 0% to 53%, CRT 0% to 36%, conjunction 55% to 3%. Greedy-only benchmarking mischaracterizes which failure modes a model has.
 
 The Llama-to-R1-Distill comparison is the cleanest test: identical architecture, identical base weights, differing only in reasoning distillation. Base rate: `84% -> 4%`. Conjunction: `55% -> 0%`. Syllogism: `52% -> 0%`.
 
@@ -58,19 +58,19 @@ L2-regularized logistic regression probes (5-fold stratified CV, Hewitt & Liang 
 | Qwen-3-8B (no think) | L34 | **0.971** | -- |
 | Qwen-3-8B (think) | L34 | **0.971** | -- |
 
-We pre-registered the prediction that reasoning models would show *stronger* internal separation -- a sharper boundary between "this needs deliberation" and "this is routine." The data say the opposite.
+We pre-registered the prediction that reasoning models would show *stronger* internal separation. The data say the opposite.
 
-Llama achieves near-perfect internal separation (AUC 0.974, CI [0.952, 0.992]) while falling for biases 27% of the time. R1-Distill achieves *reduced* separation (AUC 0.930, CI [0.894, 0.960]) while resisting them. The CIs do not overlap. Peak layer shifts from L16 to L31 -- reasoning training relocates peak processing-mode encoding deeper. The OLMo pair shows the same pattern: 0.996 [0.988, 1.000] to 0.962 [0.934, 0.982], again with non-overlapping CIs.
+Llama achieves near-perfect separation (AUC 0.974, CI [0.952, 0.992]) while falling for biases 27% of the time. R1-Distill achieves *reduced* separation (0.930, CI [0.894, 0.960]) while resisting them. CIs do not overlap. Peak layer shifts from L16 to L31 -- reasoning training relocates encoding deeper. The OLMo pair replicates: 0.996 to 0.962, non-overlapping CIs.
 
-The interpretation: **"S2-by-default" processing.** The standard model maintains a crisp internal flag -- "this input is dangerous, engage deliberation" -- but often fails to act on it. The reasoning-trained model has partially lost this flag because it applies deliberation-like computation to *everything*. It does not need to distinguish dangerous inputs from safe ones because its default processing already incorporates the extra effort.
+The interpretation: **"S2-by-default" processing.** The standard model maintains a crisp internal flag -- "this input is dangerous, engage deliberation" -- but fails to act on it. The reasoning-trained model has partially lost this flag because it applies deliberation-like computation to *everything*. It does not need to detect conflict because its default processing already incorporates the extra effort.
 
-In short: Llama *knows* it should think harder. It just does not.
+Llama *knows* it should think harder. It just does not.
 
 ### Finding 3: The probe captures processing mode, not surface features
 
-The obvious confound: maybe probes just detect surface features of lure text. We applied a probe trained on Llama's vulnerable-category activations to its *immune*-category activations (0% lure rate, but lure text still present). **Transfer AUC: 0.378** -- below chance. If the probe had learned "lure text is present," transfer would be positive. The negative transfer confirms it captures a processing-mode signal, not an input artifact.
+The obvious confound: maybe probes just detect surface features of lure text. A probe trained on Llama's vulnerable-category activations, applied to *immune*-category activations (0% lure rate, lure text still present): **transfer AUC 0.378** -- below chance. The probe captures a processing-mode signal, not an input artifact.
 
-Pairwise cross-category transfer sharpens this. **Base rate and conjunction transfer at AUC 0.993** (bidirectional) -- a probe trained on base rate neglect near-perfectly classifies conjunction fallacy items. Both require calibrated probabilistic reasoning competing with salient narrative content, suggesting a single underlying vulnerability circuit. Transfer to syllogism is weaker (0.594-0.627 inbound), consistent with a distinct reasoning failure (belief-logic conflict rather than probability estimation). Transfer to immune categories is near zero.
+Cross-category transfer sharpens this. **Base rate and conjunction transfer at AUC 0.993** (bidirectional), suggesting a single underlying vulnerability circuit. Transfer to syllogism is weaker (0.594-0.627 inbound), consistent with a distinct reasoning failure (belief-logic conflict rather than probability estimation). Transfer to immune categories is near zero.
 
 ### Finding 4: Training and inference change different things
 
@@ -85,7 +85,7 @@ Now compare with the Llama/R1-Distill pair, where different training produces bo
 | **Training** (Llama vs. R1-Distill) | 0.044 | 24.9 pp |
 | **Inference** (Qwen think vs. no-think) | 0.000 | 14.0 pp |
 
-Training changes the residual stream representation. Inference-time chain-of-thought changes the output without touching the representation. CoT operates downstream -- in the generation/decoding process -- while leaving the residual stream geometry untouched. The model's initial "read" of the problem is set by the weights, full stop.
+Training changes the residual stream representation. Inference-time CoT changes the output without touching the representation. The model's initial "read" of the problem is set by the weights, full stop.
 
 We extracted continuous lure susceptibility scores measuring how much each model's internal state favors the lure vs. the correct answer at the initial prompt representation:
 
