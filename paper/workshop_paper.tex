@@ -82,7 +82,12 @@ dissociation using Qwen~3-8B's thinking toggle
 sharpens the picture: inference-time thinking reduces lure rates (21\%
 to 7.3\%) without changing pre-generation probe signatures (both
 AUC\,=\,0.971).  Training changes \sone{}/\stwo{} encoding;
-inference-time thinking does not.  Finally, natural frequency
+inference-time thinking does not.
+Within-chain-of-thought probing reveals a non-monotonic trajectory:
+AUC peaks at thinking onset (0.973), dips during deliberation
+(0.754 at T75), and rebounds at the answer (0.971), suggesting
+genuine computation rather than decorative reasoning.
+Finally, natural frequency
 framing---which reduces base rate neglect in humans---paradoxically
 \emph{increases} it in both models, demonstrating that ecological
 rationality does not transfer to LLMs.

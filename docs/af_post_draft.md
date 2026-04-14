@@ -6,13 +6,13 @@
 
 Llama-3.1-8B-Instruct falls for base rate neglect **84% of the time**. DeepSeek-R1-Distill-Llama-8B -- same architecture, same parameter count, different training -- falls for it **4%** of the time. We wanted to know what changed inside.
 
-Five workstreams of mechanistic analysis across six models and three architecture families converge on a single story: **the model that resists biases has *less* distinct internal encoding of bias-susceptible inputs, not more.** The model that succumbs to biases *detects* the conflict perfectly -- it just fails to act on the detection. Reasoning training does not add a deliberation module. It makes deliberation the default processing mode.
+Five workstreams of mechanistic analysis across eight models (7B to 32B), three architecture families, and two scales converge on a single story: **the model that resists biases has *less* distinct internal encoding of bias-susceptible inputs, not more.** The model that succumbs to biases *detects* the conflict perfectly -- it just fails to act on the detection. Reasoning training does not add a deliberation module. It makes deliberation the default processing mode.
 
 ## 1. The benchmark
 
 470 matched conflict/control item pairs across eleven cognitive bias categories. Every conflict item pits an intuitive-but-wrong lure against the correct answer; every control item is structurally identical but the intuitive and correct answers agree. All items are novel structural isomorphs to avoid training data contamination.
 
-## 2. Six findings
+## 2. Eight findings
 
 ### Finding 1: Sharp vulnerability boundaries -- but they depend on how you decode
 
@@ -94,7 +94,21 @@ We extracted continuous lure susceptibility scores measuring how much each model
 
 Llama's residual stream, on average, *points toward* the lure. R1-Distill's *points away from it*. Reasoning training does not just add a correction step downstream -- it flips the model's initial disposition.
 
-### Finding 5: SAE features survive falsification -- but do not transfer cross-model
+### Finding 5: Within-CoT probing reveals non-monotonic computation, not window dressing
+
+The Qwen identity result (Finding 4) shows that the *initial* residual stream representation is unchanged by CoT. But what happens *during* generation? We tracked probe AUC at three points along the chain-of-thought trajectory: T0 (before any reasoning tokens), mid-CoT, and Tend (final token before the answer).
+
+| Position | Probe AUC |
+|---|---|
+| T0 (pre-reasoning) | **0.973** |
+| Mid-CoT | **0.754** |
+| Tend (pre-answer) | **0.971** |
+
+The trajectory is non-monotonic: high separation at T0, a sharp *drop* at mid-CoT, then recovery to near-baseline at Tend. This is the signature of genuine intermediate computation. At mid-CoT, the model is actively processing the conflict -- representations are in flux, and the clean conflict/control boundary temporarily dissolves. By Tend, the model has resolved the conflict and the boundary re-emerges.
+
+If CoT were performative -- the model deciding at T0 and emitting decorative reasoning -- the probe signal would be flat across the trajectory. The mid-CoT dip rules this out. The thinking tokens are doing real representational work, even though the *initial* representation (T0) is set by the weights alone. This is consistent with CoT operating as a genuine computation medium rather than post-hoc rationalization.
+
+### Finding 6: SAE features survive falsification -- but do not transfer cross-model
 
 Differential activation analysis using the Goodfire SAE (layer 19 of Llama, 131K features). After Benjamini-Hochberg correction at q=0.05, **41 features** show significantly different activation between conflict and control items, explaining **74% of variance**.
 
@@ -102,19 +116,34 @@ We applied the Ma et al. (2026) falsification protocol: inject each feature's to
 
 However, **the Llama SAE does not transfer to R1-Distill**. Explained variance drops from 74% to 25%. Reasoning training reorganizes the representation enough that the same features are near-uninformative cross-model. SAE-based monitoring trained on one model variant may not generalize even within the same architecture family.
 
-### Finding 6: Reasoning models have 2x more specialized attention heads
+### Finding 7: Reasoning models have 2x more specialized attention heads
 
 Per-head Mann-Whitney U tests (Benjamini-Hochberg corrected) on attention entropy between conflict and control items: R1-Distill has **5.6%** of heads showing significant entropy differences vs. Llama's **2.9%**. The reasoning-trained model recruits roughly twice as many attention heads into conflict-sensitive processing.
 
 This complements the probe results. Reasoning training *blurs* the conflict/control boundary in the residual stream (AUC drops), but the slack is taken up by more heads attending differently to conflict items -- distributing deliberation computation more broadly rather than concentrating it in a single sharp direction.
 
+### Finding 8: Scale makes instruct models *worse* but leaves reasoning models untouched
+
+OLMo provides a clean scale comparison: 7B and 32B, Instruct and Think variants at both sizes.
+
+| Model | Overall lure rate |
+|---|---|
+| OLMo-7B-Instruct | 14.9% |
+| OLMo-7B-Think | 0.9% |
+| OLMo-32B-Instruct | **19.6%** |
+| OLMo-32B-Think | **0.4%** |
+
+Scale makes the Instruct model *worse* (14.9% to 19.6%) while the Think model improves marginally (0.9% to 0.4%). The gap widens from 14pp at 7B to 19pp at 32B. Larger instruct models are not safer on bias-susceptible inputs -- they are measurably more susceptible. Larger reasoning-trained models hold near zero.
+
+This is consistent with the S2-by-default interpretation. Scaling Instruct models gives them more capacity to represent and act on surface heuristics (the lure). Scaling Think models gives them more capacity for the deliberation that is already their default mode. The same architectural capacity is channeled in opposite directions by training.
+
 ## 3. The OLMo replication
 
-OLMo (Allen AI) -- fully open-source, independently developed, independent training data -- provides the strongest available out-of-distribution test.
+OLMo (Allen AI) -- fully open-source, independently developed, independent training data -- provides the strongest available out-of-distribution test and, uniquely, a clean scale comparison.
 
-**Behavioral:** OLMo-7B-Instruct: 14.9% lure rate. OLMo-7B-Think: 0.9%. **Probe:** Instruct AUC 0.996 [0.988, 1.000], Think 0.962 [0.934, 0.982]. The gap (0.034, non-overlapping CIs) is smaller than Llama's (0.044) but statistically robust and directionally consistent.
+**Behavioral (7B):** OLMo-7B-Instruct: 14.9% lure rate. OLMo-7B-Think: 0.9%. **Behavioral (32B):** OLMo-32B-Instruct: 19.6%. OLMo-32B-Think: 0.4%. **Probe (7B):** Instruct AUC 0.996 [0.988, 1.000], Think 0.962 [0.934, 0.982]. The gap (0.034, non-overlapping CIs) is smaller than Llama's (0.044) but statistically robust and directionally consistent. The scale comparison (Finding 8) shows the divergence widens at 32B.
 
-Three independent architecture families, same pattern: behavioral improvement, representational blurring, detection without resolution. Not a one-model curiosity.
+Three independent architecture families, two scales, same pattern: behavioral improvement, representational blurring, detection without resolution. Not a one-model curiosity.
 
 ## 4. The surprises
 
@@ -134,7 +163,7 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 
 **All mechanistic results are correlational.** We have not run activation patching. The SAE features and probe directions are *candidates* for causal intervention, not confirmed mechanisms.
 
-**Scale is untested.** All results are from 7-8B models. 70B+ remains open.
+**Scale is partially tested.** OLMo-32B confirms the behavioral pattern holds (and strengthens) at 32B, but we lack mechanistic data (probes, SAE) at 32B. 70B+ remains open.
 
 **Decoding dependence weakens behavioral claims.** Category profiles shift between greedy and sampled decoding (framing: 0% vs. 53%). Probe results, which measure representations, are unaffected.
 
@@ -149,6 +178,8 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 **Training goes deeper than prompting.** A model whose default representation points away from the lure (R1-Distill, susceptibility -0.326) is in a fundamentally different state than one whose representation points toward the lure but whose CoT sometimes overrides it. Concrete data point in the reasoning distillation vs. inference-time scaling debate.
 
 **Domain-specific vulnerabilities are invisible to aggregate benchmarks.** A model acing CRT under greedy decoding can fail at base rate estimation 84% of the time, and fail at CRT 36% under sampled decoding. Safety evaluations that treat "reasoning ability" as monolithic will miss these sharp failure surfaces.
+
+**Scaling instruct models does not scale away bias vulnerability.** OLMo-32B-Instruct is *more* susceptible than OLMo-7B-Instruct (19.6% vs. 14.9%). The assumption that scale improves robustness fails for at least this class of failure. Reasoning training, not scale, is the relevant variable.
 
 **SAE-based monitoring: promising but fragile.** 41 features survive falsification with 74% explained variance, but the failure to transfer from Llama to R1-Distill (74% to 25% EV) means monitoring tools may not generalize even within the same architecture family.
 

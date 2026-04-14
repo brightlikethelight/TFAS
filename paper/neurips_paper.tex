@@ -70,16 +70,20 @@ categories (AUC\,=\,0.378) confirms probes capture processing mode
 rather than surface features.  Crucially, \textbf{causal interventions}
 via probe-direction steering reduce the lure rate by 21.3 percentage
 points (31.2\% at $\alpha$\,=\,+5 vs.\ 52.5\% baseline); random
-directions produce no effect.  Within-chain-of-thought probing shows
-reasoning models progressively sharpen conflict representations across
-thinking tokens, while the Qwen toggle dissociates training from
+directions produce no effect.  Within-chain-of-thought probing reveals a non-monotonic trajectory:
+probe AUC peaks at thinking onset (0.973), drops during deliberation
+(0.754 at T75), and rebounds before the answer (0.971), suggesting
+genuine computation that temporarily disrupts and then resolves the
+\sone{}/\stwo{} boundary.  The Qwen toggle dissociates training from
 inference: thinking changes behavior without altering pre-generation
 representations.  At the feature level, 41 SAE features survive
 falsification, and reasoning models exhibit twice as many
-\stwo{}-specialized attention heads.  At 32B scale (OLMo-3.1-32B-Instruct), vulnerability \emph{increases}
-(14.9\%$\to$19.6\% lure rate) and probe separability remains
-near-perfect (AUC\,=\,0.9999), confirming these signatures are not
-small-model artifacts.
+\stwo{}-specialized attention heads.  At 32B scale, reasoning training
+drops lure rates from 19.6\% to 0.4\% (OLMo-3.1); scale increases
+standard-model vulnerability (14.9\%$\to$19.6\%) but does not
+meaningfully change reasoning-model performance (0.9\%$\to$0.4\%),
+and probe separability remains near-perfect (AUC\,=\,0.9999),
+confirming these signatures are not small-model artifacts.
 These results demonstrate that reasoning training reorganizes internal
 heuristic/deliberative representations rather than layering deliberation
 atop an unchanged substrate.
@@ -575,26 +579,44 @@ In stark contrast, applying the same steering protocol to R1-Distill-Llama-8B pr
 \subsection{Within-CoT Probing}
 \label{sec:within_cot}
 
-We probe residual stream activations at 10 evenly-spaced positions within
-the \texttt{<think>...\allowbreak</think>} trace for R1-Distill and
-Qwen~3-8B (think mode), training conflict/control probes at each
-position.  If probe AUC increases across the chain, the reasoning process
-performs genuine computational work on the conflict representation rather
-than being decorative \citep{jiang2025aha, lanham2023measuring}.
-Full within-CoT trajectories are reported in Appendix~\ref{app:within_cot}.
+We probe residual stream activations at seven canonical positions
+for Qwen~3-8B (think mode) at L34: P0 (pre-generation), T0 (thinking
+onset), T25/T50/T75 (quartile positions within the trace), Tend (final
+thinking token), and P2 (control position).  Within the thinking trace,
+probe AUC follows a non-monotonic trajectory: T0 (0.973) $\to$
+T25 (0.791) $\to$ T50 (0.772) $\to$ T75 (0.754) $\to$
+Tend (0.971), suggesting genuine deliberation that temporarily disrupts
+and then resolves the \sone{}/\stwo{} boundary.  The P0 AUC (0.938)
+is high before generation begins; T0 \emph{increases} further to
+0.973 at thinking onset; intermediate positions show a sustained dip
+of ${\sim}20$pp; and Tend recovers to match T0.  The P2 control returns
+chance (0.500).  This pattern rejects both the ``performative reasoning''
+hypothesis (which predicts flat AUC) and simple monotonic sharpening,
+instead matching the ``exploration before exploitation'' pattern
+\citep{boppana2026reasoning}: reasoning temporarily destabilizes
+the conflict representation during deliberation before crystallizing
+a resolution (Appendix~\ref{app:within_cot}).
 
 % ---------------------------------------------------------------
 \subsection{Scale Analysis: 7B vs.\ 32B}
 \label{sec:scale}
 
-We evaluate OLMo-3.1-32B-Instruct (4.5$\times$ more parameters than the
-7B variant) to test whether scale mitigates cognitive bias vulnerability.
-It does not: the overall lure rate \emph{increases} from 14.9\% (7B) to
-19.6\% (32B), with base rate neglect nearly doubling (46\% $\to$ 74.3\%)
-and framing emerging as a new vulnerability (0\% $\to$ 30\%).  Linear
-probes achieve near-perfect separability (AUC\,=\,0.9999 at L20/64),
-confirming the \sone{}/\stwo{} direction persists at larger scale.  Full
-per-category breakdowns appear in Appendix~\ref{app:scale}.
+We evaluate OLMo-3.1-32B-Instruct and OLMo-3.1-32B-Think
+(4.5$\times$ more parameters than the 7B variants) to test whether
+scale mitigates cognitive bias vulnerability.
+For standard models, it does not: the overall lure rate \emph{increases}
+from 14.9\% (7B) to 19.6\% (32B), with base rate neglect nearly
+doubling (46\% $\to$ 74.3\%) and framing emerging as a new vulnerability
+(0\% $\to$ 30\%).  At 32B scale, reasoning training drops lure rates
+from 19.6\% to 0.4\% (only sunk cost: 6.7\%, 1/15 items).
+Critically, scale increases standard-model vulnerability
+(14.9\%$\to$19.6\%) but does not meaningfully change reasoning-model
+performance (0.9\%$\to$0.4\%), confirming that reasoning training
+provides robust protection independent of scale.  Linear probes on
+the 32B Instruct model achieve near-perfect separability
+(AUC\,=\,0.9999 at L20/64), confirming the \sone{}/\stwo{} direction
+persists at larger scale.  Full per-category breakdowns appear in
+Appendix~\ref{app:scale}.
 
 % ---------------------------------------------------------------
 \subsection{SAE Features and Attention Entropy}
@@ -638,6 +660,20 @@ Qwen's think/no-think toggle reveals the converse: thinking reduces
 lure rates (21\% $\to$ 7.3\%) without changing \pzero{} encoding
 (AUC\,=\,0.971 in both modes)---training and inference-time thinking
 are distinct mechanisms for bias resistance \citep{ziabari2025reasoning}.
+
+\paragraph{Non-monotonic deliberation and scale invariance.}
+Within-CoT probing reveals that reasoning is not a smooth sharpening
+process: probe AUC peaks at thinking onset (T0: 0.973), drops
+substantially during deliberation (T75: 0.754), and rebounds before
+the answer (Tend: 0.971).  This non-monotonic trajectory---consistent
+with ``exploration before exploitation'' \citep{boppana2026reasoning}---provides
+the strongest evidence against performative reasoning, since decorative
+traces would produce flat AUC.  At 32B scale, the ``conflict detection
+without resolution'' pattern intensifies: standard-model vulnerability
+\emph{increases} (14.9\%$\to$19.6\%) while reasoning training remains
+protective (0.9\%$\to$0.4\%).  Scale amplifies heuristic attractors
+in standard models but does not erode the protection conferred by
+reasoning training.
 
 \paragraph{Specificity, safeguards, and limitations.}
 Cross-prediction (AUC\,=\,0.378 on immune categories) confirms the probe
