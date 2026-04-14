@@ -67,7 +67,7 @@ standard models achieve higher conflict/control separability
 blurred, not sharpened, by training.  Cross-prediction on immune
 categories (AUC\,=\,0.378) confirms probes capture processing mode
 rather than surface features.  Crucially, \textbf{causal interventions}
-via probe-direction steering reduce the lure rate by 21 percentage
+via probe-direction steering reduce the lure rate by 21.3 percentage
 points (31.2\% at $\alpha$\,=\,+5 vs.\ 52.5\% baseline); random
 directions produce no effect.  Within-chain-of-thought probing shows
 reasoning models progressively sharpen conflict representations across
@@ -211,7 +211,7 @@ training shifts the balance between fast and slow processing modes.
 Reviews Psychology}, arguing that dual-process theory offers a productive
 (if imperfect) lens for AI cognition research.
 Our work moves beyond behavioral characterization: we test whether the
-System~1/System~2 distinction has a \emph{mechanistic} counterpart in
+\sone{}/\stwo{} distinction has a \emph{mechanistic} counterpart in
 model internals.
 
 \paragraph{Cognitive bias benchmarks and probing.}
@@ -632,7 +632,7 @@ writable (37.6pp causal swing); in R1-Distill, it is readable
 (AUC\,=\,0.930) but not writable (7.5pp, comparable to random controls).
 This dissociation---reasoning training decouples the representational
 axis from the behavioral pathway---is direct evidence for the
-S2-by-default hypothesis \citep{hewitt2019control}.
+S2-by-default hypothesis \citep{evans2019reflections}.
 Qwen's think/no-think toggle reveals the converse: thinking reduces
 lure rates (21\% $\to$ 7.3\%) without changing \pzero{} encoding
 (AUC\,=\,0.971 in both modes)---training and inference-time thinking
