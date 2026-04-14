@@ -176,9 +176,11 @@ attributable to training, not architecture.  We make six contributions:
   that the probe direction is \emph{causally} linked to bias
   susceptibility, not merely correlational.
 
-  \item \textbf{Within-chain-of-thought probing}: we probe residual
-  stream activations at successive token positions within the reasoning
-  trace, revealing how representations evolve during deliberation.
+  \item \textbf{Within-chain-of-thought probing}: probe AUC follows a
+  non-monotonic trajectory across thinking tokens---peaking at onset
+  (0.973), dropping during deliberation (0.754), and rebounding before
+  the answer (0.971)---demonstrating genuine computation rather than
+  decorative reasoning.
 
   \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
   thinking toggle changes behavior ($21\% \to 7.3\%$ lure rate) but produces
@@ -188,9 +190,10 @@ attributable to training, not architecture.  We make six contributions:
 \end{enumerate}
 
 \noindent Additionally, we analyze \textbf{scale effects} at 32B
-(OLMo-3.1-32B-Instruct), finding that 4.5$\times$ more parameters
-\emph{increases} vulnerability (19.6\% vs.\ 14.9\% at 7B) while
-preserving near-perfect probe separability (AUC\,=\,0.9999).  We also
+(OLMo-3.1), finding that 4.5$\times$ more parameters
+\emph{increases} standard-model vulnerability (19.6\% vs.\ 14.9\% at 7B)
+while reasoning training remains protective (0.4\% at 32B vs.\ 0.9\% at
+7B), with near-perfect probe separability (AUC\,=\,0.9999).  We also
 report \textbf{sparse autoencoder features} surviving falsification and
 \textbf{attention entropy} patterns---providing converging evidence
 across correlational, causal, and feature-level analyses.
