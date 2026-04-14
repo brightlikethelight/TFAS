@@ -36,7 +36,7 @@ import numpy as np
 import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
-MODEL_ID = "Qwen/Qwen3-8B"
+DEFAULT_MODEL_ID = "Qwen/Qwen3-8B"
 
 # Qwen3-8B architecture constants for reference
 # n_layers=36, hidden_dim=4096, n_heads=32, n_kv_heads=8
@@ -164,6 +164,7 @@ def run_extraction(
     output_path: str,
     args: argparse.Namespace,
     within_cot: bool = False,
+    model_id: str = DEFAULT_MODEL_ID,
 ) -> None:
     """Run extraction for one mode (thinking ON or OFF) and write HDF5."""
     mode_label = "THINK" if enable_thinking else "NO_THINK"
@@ -523,9 +524,19 @@ def main() -> None:
         help="Path to benchmark JSONL",
     )
     parser.add_argument(
+        "--model",
+        default=DEFAULT_MODEL_ID,
+        help="HuggingFace model ID (default: %(default)s)",
+    )
+    parser.add_argument(
         "--output-dir",
         default="data/activations",
         help="Output directory for HDF5 files",
+    )
+    parser.add_argument(
+        "--output",
+        default=None,
+        help="Override: write a single HDF5 to this path (ignores --output-dir, implies --mode think)",
     )
     parser.add_argument(
         "--cache-dir",
@@ -563,16 +574,22 @@ def main() -> None:
     )
     args = parser.parse_args()
 
+    model_id = args.model
+
+    # --output implies single-mode think extraction
+    if args.output is not None and args.mode == "both":
+        args.mode = "think"
+
     # Load model once, use for both modes
-    print(f"Loading {MODEL_ID}...")
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_ID, cache_dir=args.cache_dir)
+    print(f"Loading {model_id}...")
+    tokenizer = AutoTokenizer.from_pretrained(model_id, cache_dir=args.cache_dir)
 
     # Suppress pad_token_id warning
     if tokenizer.pad_token_id is None:
         tokenizer.pad_token_id = tokenizer.eos_token_id
 
     model = AutoModelForCausalLM.from_pretrained(
-        MODEL_ID,
+        model_id,
         cache_dir=args.cache_dir,
         torch_dtype=torch.bfloat16,
         device_map="cuda",
@@ -612,8 +629,16 @@ def main() -> None:
     if args.mode in ("think", "both"):
         modes_to_run.append(("think", True, args.think_max_tokens))
 
+    # Derive a short model key for default filenames (e.g. "qwen3_8b")
+    model_short = model_id.split("/")[-1].lower().replace("-", "_")
+
     for mode_name, enable_thinking, max_new_tokens in modes_to_run:
-        output_path = str(Path(args.output_dir) / f"qwen3_8b_{mode_name}.h5")
+        if args.output is not None:
+            output_path = args.output
+        else:
+            # Append _within_cot suffix so we don't clobber the base think extraction
+            suffix = "_within_cot" if (args.within_cot and enable_thinking) else ""
+            output_path = str(Path(args.output_dir) / f"{model_short}_{mode_name}{suffix}.h5")
         run_extraction(
             model=model,
             tokenizer=tokenizer,

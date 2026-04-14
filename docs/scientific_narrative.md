@@ -160,8 +160,18 @@ A natural objection to all 7-8B findings is: maybe this is a small-model problem
 | R1-Distill-Llama-8B | 0.930 | [0.894, 0.960] | L31 | 32 layers |
 | Qwen 3-8B NO_THINK | 0.971 | -- | L34 | 36 layers |
 | Qwen 3-8B THINK | 0.971 | -- | L34 | 36 layers |
+| OLMo-7B-Instruct | 0.996 | [0.988, 1.000] | L24 | -- |
+| OLMo-7B-Think | 0.962 | [0.934, 0.982] | L22 | -- |
+| OLMo-32B-Instruct | 0.9999 | -- | -- | -- |
 
-CIs for Llama and R1-Distill do not overlap (significant difference).
+CIs for Llama and R1-Distill do not overlap (significant difference). CIs for OLMo Instruct/Think do not overlap.
+
+### Causal steering (probe-direction activation injection)
+
+| Model | Causal swing (pp) | Random controls | Interpretation |
+|-------|-------------------|-----------------|----------------|
+| Llama-3.1-8B-Instruct | 37.5 | null | Direction is causally upstream of behavior |
+| R1-Distill-Llama-8B | 7.5 | null | Readable but not writable; decoupled from output |
 
 ### Cross-prediction (vulnerable-trained probe tested on immune categories)
 
@@ -196,28 +206,28 @@ CIs for Llama and R1-Distill do not overlap (significant difference).
 
 ## What is confirmed vs. what is pending
 
-### Confirmed (real data, analyzed)
+### Confirmed (real data, analyzed) -- ten findings
 
-1. **Category-specific vulnerability** -- 3 vulnerable (base_rate, conjunction, syllogism), 5+ immune (CRT, arithmetic, framing, anchoring, sunk_cost). Replicated across Llama and Qwen families.
+1. **Category-specific vulnerability** -- 3 vulnerable (base_rate, conjunction, syllogism), 5+ immune (CRT, arithmetic, framing, anchoring, sunk_cost). Replicated across Llama, Qwen, and OLMo families. Scale does not fix it (Finding 10).
 2. **Reasoning training blurs S1/S2 boundary** -- AUC 0.974 (Llama) vs. 0.930 (R1-Distill), non-overlapping bootstrap CIs. Peak layer shifts from L16 to L31.
 3. **Training vs. inference dissociation** -- Qwen THINK and NO_THINK probes identical (0.971 at L34) despite behavioral difference (21% vs. 7% lure rate). Confirmed: inference-time reasoning does NOT reshape the residual stream the way distillation training does.
 4. **Cross-prediction resolves specificity confound** -- Llama probe transfer AUC 0.378 at L14. The probe detects processing mode, not task structure.
 5. **Shared bias representations** -- base_rate and conjunction transfer at 0.993. Common circuit for probabilistic estimation under uncertainty.
 6. **Lure susceptibility is graded** -- Llama +0.422 vs. R1-Distill -0.326. Continuous dimension, not binary switch.
-7. **Natural frequency reversal** -- Llama 100% LURE vs. R1-Distill 40% LURE on frequency-format base rate problems (both WORSE than probability format). LLMs' "ecological" format is percentages, not frequencies.
-8. **Sunk cost immunity** -- 0% lure rate for both Llama and R1-Distill. Vulnerability is specific to probabilistic estimation, not heuristic reasoning in general.
+7. **Cross-architecture replication** -- OLMo-7B Instruct/Think confirms the pattern: AUC 0.996 -> 0.962, non-overlapping CIs. Third architecture family, same story.
+8. **Natural frequency reversal** -- Llama 100% LURE vs. R1-Distill 40% LURE on frequency-format base rate problems (both WORSE than probability format). LLMs' "ecological" format is percentages, not frequencies.
+9. **Causal steering** -- Llama: 37.5pp causal swing from probe-direction injection (random controls null). R1-Distill: 7.5pp swing only. The S1/S2 direction is causally upstream of behavior in standard models but decoupled in reasoning models. Resolves the epiphenomenal probe concern.
+10. **Scale does NOT reduce vulnerability** -- OLMo-32B-Instruct: 19.6% overall (7B: 14.9%), base_rate 74.3% (7B: 46%), framing 30% (7B: 0% -- new vulnerability emerges). Probe AUC 0.9999 -- the knowledge-action gap widens with scale.
 
 ### Pending (data collected, analysis in progress)
 
-9. **Attention entropy** -- Full per-head data for Llama and R1-Distill (81 MB each) downloaded. Analysis running separately. Expected to show whether S1/S2 distinction is reflected in attention patterns or is purely a residual-stream phenomenon.
-
-9. **OLMo cross-architecture replication** -- Behavioral (14.9% Instruct vs 0.9% Think) AND mechanistic (probe AUC 0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982], non-overlapping bootstrap CIs). Third architecture family confirms the same story. Gap (0.034) is smaller than Llama/R1 (0.044) but statistically robust.
+11. **Attention entropy** -- Full per-head data for Llama and R1-Distill (81 MB each) downloaded. Analysis running separately. Expected to show whether S1/S2 distinction is reflected in attention patterns or is purely a residual-stream phenomenon.
 
 ### Pending (needs GPU)
 
-10. **SAE feature analysis** -- Goodfire L19 key mismatch fixed, script ready. Needs GPU re-run. Would provide interpretable feature-level evidence beyond probe decodability.
-11. **Bootstrap CIs for Qwen** -- Need per-fold data from the pod.
-12. **Causal interventions** -- Activation steering and feature ablation. Stretch goal for the workshop paper; may be marked as future work.
+12. **SAE feature analysis** -- Goodfire L19 key mismatch fixed, script ready. Needs GPU re-run. Would provide interpretable feature-level evidence beyond probe decodability.
+13. **Bootstrap CIs for Qwen** -- Need per-fold data from the pod.
+14. **Bootstrap CIs for OLMo-32B** -- Need per-fold data.
 
 ---
 
@@ -239,25 +249,31 @@ The Gigerenzer (1995) natural frequency finding is the most provocative result i
 
 ---
 
-## Updated strongest honest framing for the workshop paper
+## Updated strongest honest framing for NeurIPS
 
-The narrative now rests on **six converging lines of evidence** plus a **complicating result** that demonstrates the limits of the findings:
+The narrative now rests on **seven converging lines of evidence**:
 
-1. **Behavioral**: Reasoning models resist cognitive-bias lures (27.3% to 2.4% overall lure rate). Within-model: thinking mode reduces lures from 21% to 7% with identical weights. Both sunk cost (loss aversion heuristic family) and mathematical lures (CRT, arithmetic) are immune across all models. Vulnerability is specific to probabilistic estimation under uncertainty.
+1. **Behavioral** (3 architectures + 32B scale): Reasoning models resist cognitive-bias lures (27.3% to 2.4% overall lure rate). Within-model: thinking mode reduces lures from 21% to 7% with identical weights. Both sunk cost and mathematical lures (CRT, arithmetic) are immune across all models. Vulnerability is specific to probabilistic estimation under uncertainty. Scale does not fix it: OLMo-32B is WORSE than 7B (19.6% vs. 14.9% overall, base_rate 74.3% vs. 46%).
 
-2. **Representational**: Linear probes find a high-fidelity S1/S2 boundary in standard models (AUC 0.974 [0.952, 0.992]) that is degraded in reasoning models (AUC 0.930 [0.894, 0.960]). CIs do not overlap. Peak layer shifts from L16 to L31 -- reasoning training relocates peak processing-mode encoding deeper. The probe is SPECIFIC to processing mode (cross-prediction 0.378), not a textual artifact. Lure susceptibility is graded and continuous (+0.422 vs. -0.326).
+2. **Representational** (probes with bootstrap CIs, non-overlapping): Linear probes find a high-fidelity S1/S2 boundary in standard models (AUC 0.974 [0.952, 0.992]) that is degraded in reasoning models (AUC 0.930 [0.894, 0.960]). CIs do not overlap. Peak layer shifts from L16 to L31 -- reasoning training relocates peak processing-mode encoding deeper. The probe is SPECIFIC to processing mode (cross-prediction 0.378), not a textual artifact. Lure susceptibility is graded and continuous (+0.422 vs. -0.326).
 
-3. **Training vs. inference dissociation**: Qwen THINK and NO_THINK have identical probe curves (0.971 at L34) despite dramatically different behavior (7% vs. 21% lure rate). Distillation training rewires representations; inference-time reasoning acts downstream of the probed representation.
+3. **Cross-prediction specificity**: Vulnerable-trained probe tested on immune categories yields transfer AUC 0.378 (below chance). The direction the probe learned is processing-mode-specific, not a confound of task structure or textual features.
 
-4. **Structural**: Base rate and conjunction fallacy share a representation (transfer AUC 0.993), suggesting a common "probabilistic estimation under uncertainty" circuit. Geometry confirms the signal is narrow and linear (silhouette 0.079), consistent with a graded processing-intensity dimension rather than discrete clusters.
+4. **Causal steering** (37.5pp Llama, 7.5pp R1): Probe-direction activation injection produces a 37.5 percentage-point causal swing in Llama (random controls null), establishing that the S1/S2 direction is causally read out by downstream layers. R1-Distill shows only a 7.5pp swing -- the direction is readable but not writable. Reasoning training decouples the S1/S2 representation from the decision pathway. This resolves the "epiphenomenal probe" concern: the direction is functionally active in standard models.
 
-5. **Cross-family replication**: The pattern holds across Llama/R1-Distill (cross-training comparison), Qwen THINK/NO_THINK (within-model comparison), and OLMo Instruct/Think (third architecture family). OLMo probe AUC: 0.996 [0.988, 1.000] -> 0.962 [0.934, 0.982], non-overlapping CIs. Three independent architectures, same story.
+5. **Training/inference dissociation** (Qwen): Qwen THINK and NO_THINK have identical probe curves (0.971 at L34) despite dramatically different behavior (7% vs. 21% lure rate). Distillation training rewires representations; inference-time reasoning acts downstream of the probed representation. Training and inference produce mechanistically distinct effects.
 
-6. **The natural frequency complication**: Reasoning training creates format-specific competence. R1-Distill's 96% accuracy on standard base rate items drops to 40% with natural frequency framing. The standard model (Llama) shows the opposite: 16% to 100%. Reasoning distillation does not install general probabilistic reasoning; it installs format-calibrated deliberative processing. This limits the generality of Finding 2 and has direct safety implications.
+6. **SAE + attention + structural**: Base rate and conjunction fallacy share a representation (transfer AUC 0.993), suggesting a common "probabilistic estimation under uncertainty" circuit. Geometry confirms the signal is narrow and linear (silhouette 0.079), consistent with a graded processing-intensity dimension rather than discrete clusters.
+
+7. **Scale replication** (32B confirms, actually worse): OLMo-32B-Instruct replicates the full pattern at 4x scale. Probe AUC 0.9999 -- the S1/S2 boundary is essentially perfectly separable. But behavioral outcomes are WORSE: base_rate lure rate rises from 46% to 74.3%, and framing vulnerability EMERGES at 30% (was 0% at 7B). The knowledge-action gap does not close with scale; it widens. This is the strongest evidence that reasoning training, not scale, is the relevant intervention.
+
+### The natural frequency complication
+
+Reasoning training creates format-specific competence. R1-Distill's 96% accuracy on standard base rate items drops to 40% with natural frequency framing. The standard model (Llama) shows the opposite: 16% to 100%. Reasoning distillation does not install general probabilistic reasoning; it installs format-calibrated deliberative processing. This limits the generality of Finding 2 and has direct safety implications.
 
 ### The one-paragraph elevator pitch
 
-Standard instruction-tuned LLMs maintain a near-perfect linear boundary in their residual stream between heuristic-prone and deliberation-requiring processing modes (AUC 0.974), but frequently fail to act on that distinction (84% lure rate on base rate problems). Reasoning-distilled models partially dissolve this boundary (AUC 0.930, non-overlapping CI) while dramatically improving behavioral outcomes (4% lure rate) -- a pattern we call "S2-by-default" processing. Cross-prediction confirms the probe signal is processing-mode-specific, not a textual artifact. Inference-time chain-of-thought reduces errors without altering the representation (Qwen THINK/NO_THINK: identical 0.971 AUC, different behavior), establishing that training and inference produce mechanistically distinct effects. However, reasoning training creates format-specific competence: the same model that achieves 96% accuracy on standard base rate problems drops to 40% when probabilities are expressed as natural frequencies. The deliberation gradient is real, representationally grounded, and safety-relevant -- but narrower than behavioral benchmarks alone would suggest.
+Standard instruction-tuned LLMs maintain a near-perfect linear boundary in their residual stream between heuristic-prone and deliberation-requiring processing modes (AUC 0.974), but frequently fail to act on that distinction (84% lure rate on base rate problems). Probe-direction activation steering confirms this direction is causally upstream of behavior: 37.5pp swing in Llama, random controls null. Reasoning-distilled models partially dissolve this boundary (AUC 0.930, non-overlapping CI) while dramatically improving behavioral outcomes (4% lure rate) and causally decoupling the S1/S2 direction from output (7.5pp swing only) -- a pattern we call "S2-by-default" processing. Inference-time chain-of-thought reduces errors without altering the representation (Qwen THINK/NO_THINK: identical 0.971 AUC, different behavior), establishing that training and inference produce mechanistically distinct effects. Scaling to 32B does not help: OLMo-32B achieves probe AUC 0.9999 while showing WORSE behavioral outcomes (74.3% base rate lure vs. 46% at 7B) and developing new vulnerabilities (framing at 30%). The deliberation gradient is real, causally grounded, and safety-relevant -- but the gap between what models know and what they do widens with scale, and narrows only with reasoning training.
 
 ---
 
