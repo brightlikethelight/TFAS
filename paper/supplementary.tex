@@ -269,7 +269,7 @@ Sunk cost ($n$=15) &
   \textbf{27.3} &
   \textbf{2.4} &
   \textbf{21.0} &
-  \textbf{7.0} \\
+  \textbf{7.3} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -302,7 +302,7 @@ Arithmetic   & 0  & 100 & 0  & 0  & 96 & 4  \\
 Framing      & 0  & 100 & 0  & 0  & 100 & 0  \\
 Anchoring    & 0  & 80 & 20 & 0  & 75 & 25 \\
 \midrule
-\textbf{Overall} & \textbf{21.0} & \textbf{65} & \textbf{14} & \textbf{7.0} & \textbf{85} & \textbf{8} \\
+\textbf{Overall} & \textbf{21.0} & \textbf{65} & \textbf{14} & \textbf{7.3} & \textbf{85} & \textbf{8} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -959,16 +959,20 @@ vs.\ standard instruction-tuned).
 
 \subsection*{H.1 OLMo-3 Behavioral Results}
 
-Both OLMo-3 variants show \textbf{0\% S1-lure rates across all
-categories}, including the three categories where Llama-3.1-8B is
-highly vulnerable.  This makes OLMo-3 an important control: it
-demonstrates that S1-lure vulnerability is model-specific and not an
-inherent property of the benchmark items.
+OLMo-3-Instruct shows a 14.9\% overall lure rate across 11 categories
+(235 conflict items), with vulnerability concentrated in base rate neglect
+(46\%), conjunction fallacy (50\%), and loss aversion (33\%).
+OLMo-3-Think reduces this to 0.9\%, with only sporadic errors in
+syllogisms (4\%) and CRT (3\%).  This replicates the Llama-family
+pattern---reasoning training dramatically reduces lure susceptibility---while
+revealing a model-specific vulnerability profile (e.g., loss aversion
+vulnerability in OLMo but not Llama).
 
 \begin{table}[ht]
 \centering
 \caption{OLMo-3 S1-lure rates (\%) on conflict items.
-  Binomial exact 95\% CIs in brackets.}
+  Binomial exact 95\% CIs in brackets.  Bold indicates vulnerability
+  (lure rate $>$10\%).}
 \label{tab:olmo_behavioral}
 \vspace{4pt}
 \small
@@ -976,26 +980,29 @@ inherent property of the benchmark items.
 \toprule
 \textbf{Category ($n$ conflict)} & \textbf{OLMo-3 Instruct} & \textbf{OLMo-3 Think} \\
 \midrule
-Base rate ($n$=35)    & 0 {\scriptsize [0, 8]}  & 0 {\scriptsize [0, 8]}  \\
-Conjunction ($n$=20)  & 0 {\scriptsize [0, 14]} & 0 {\scriptsize [0, 14]} \\
-Syllogism ($n$=25)    & 0 {\scriptsize [0, 11]} & 0 {\scriptsize [0, 11]} \\
-CRT ($n$=30)          & 0 {\scriptsize [0, 10]} & 0 {\scriptsize [0, 10]} \\
-Arithmetic ($n$=25)   & 0 {\scriptsize [0, 11]} & 0 {\scriptsize [0, 11]} \\
-Framing ($n$=20)      & 0 {\scriptsize [0, 14]} & 0 {\scriptsize [0, 14]} \\
-Anchoring ($n$=20)    & 0 {\scriptsize [0, 14]} & 0 {\scriptsize [0, 14]} \\
-Sunk cost ($n$=15)    & 0 {\scriptsize [0, 18]} & 0 {\scriptsize [0, 18]} \\
+Base rate ($n$=35)       & \textbf{46} {\scriptsize [29, 63]} & 0 {\scriptsize [0, 8]}  \\
+Conjunction ($n$=20)     & \textbf{50} {\scriptsize [27, 73]} & 0 {\scriptsize [0, 14]} \\
+Syllogism ($n$=25)       & 0 {\scriptsize [0, 11]}            & 4 {\scriptsize [0, 20]} \\
+CRT ($n$=30)             & 3 {\scriptsize [0, 17]}            & 3 {\scriptsize [0, 17]} \\
+Arithmetic ($n$=25)      & 0 {\scriptsize [0, 11]}            & 0 {\scriptsize [0, 11]} \\
+Framing ($n$=20)         & 0 {\scriptsize [0, 14]}            & 0 {\scriptsize [0, 14]} \\
+Anchoring ($n$=20)       & 5 {\scriptsize [0, 25]}            & 0 {\scriptsize [0, 14]} \\
+Sunk cost ($n$=15)       & 0 {\scriptsize [0, 18]}            & 0 {\scriptsize [0, 18]} \\
+Loss aversion ($n$=15)   & \textbf{33} {\scriptsize [12, 62]} & 0 {\scriptsize [0, 18]} \\
+Certainty effect ($n$=15)& 0 {\scriptsize [0, 18]}            & 0 {\scriptsize [0, 18]} \\
+Availability ($n$=15)    & \textbf{13} {\scriptsize [2, 40]}  & 0 {\scriptsize [0, 18]} \\
 \midrule
-\textbf{Overall (7-cat)} & \textbf{0.0} & \textbf{0.0} \\
+\textbf{Overall (11-cat)} & \textbf{14.9} & \textbf{0.9} \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection*{H.2 OLMo-3 Probe Results}
 
-Despite both models achieving 0\% lure rates, probes still
-discriminate conflict from control items at high AUC, confirming that
-conflict-detection representations exist even in behaviourally immune
-models.
+Despite OLMo-3-Think achieving near-zero lure rates (0.9\%), probes
+still discriminate conflict from control items at high AUC in both
+models, confirming that conflict-detection representations exist
+regardless of behavioral vulnerability.
 
 \begin{table}[ht]
 \centering
@@ -1024,8 +1031,8 @@ OLMo-3-Think    & 22 & 0.962 [0.934, 0.982] & 0.946 & 0.841 \\
   with bootstrap CIs non-overlapping with Instruct, confirming the gap
   is statistically robust (0.034 AUC).
   \item The Instruct model has higher probe AUC at 30 of 32 layers,
-  mirroring the Llama $>$ R1 pattern despite both OLMo models being
-  behaviourally immune.
+  mirroring the Llama $>$ R1 pattern, consistent with higher Instruct
+  vulnerability (14.9\% vs.\ 0.9\%).
   \item All P2 (control position) probes return AUC = 0.500 exactly,
   confirming that the signal is position-specific.
 \end{itemize}
