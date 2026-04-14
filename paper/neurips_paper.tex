@@ -3,7 +3,12 @@
 % Self-contained file — does not use \input
 % ==============================================================================
 
-\documentclass[11pt]{article}
+\documentclass{article}
+
+% For anonymous submission (default): \usepackage{neurips_2026}
+% For preprint (non-anonymous):       \usepackage[preprint]{neurips_2026}
+% For camera-ready:                   \usepackage[main, final]{neurips_2026}
+\usepackage[preprint]{neurips_2026}
 
 % ---------- Packages ----------
 \usepackage[utf8]{inputenc}
@@ -15,15 +20,9 @@
 \usepackage{hyperref}
 \usepackage{url}
 \usepackage{xcolor}
-\usepackage{natbib}
+% natbib loaded by neurips_2026.sty — do not reload
 \usepackage{microtype}
 \usepackage{longtable}
-\usepackage[margin=1in]{geometry}
-
-% NOTE: Replace \documentclass and geometry with the official NeurIPS style file
-% when available. For submission, switch to:
-%   \usepackage{neurips_2026}
-% and remove the geometry package.
 
 % ---------- Custom commands ----------
 \newcommand{\sone}{S1-like}
