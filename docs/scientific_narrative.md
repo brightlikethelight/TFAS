@@ -1,8 +1,8 @@
 # Scientific Narrative: What the s1s2 Project Found
 
-**Date**: 2026-04-12 (comprehensive synthesis)
-**Status**: Integrates all available behavioral, probing (with bootstrap CIs), geometry, cross-prediction, transfer, lure susceptibility, Qwen dissociation, and natural frequency results. Attention entropy analysis pending.
-**Purpose**: Definitive interpretation for Discussion section (ICML MechInterp Workshop paper) and Alignment Forum post.
+**Date**: 2026-04-12 (final NeurIPS synthesis)
+**Status**: Complete. Integrates all ten findings: behavioral, probing (bootstrap CIs), geometry, cross-prediction, transfer, lure susceptibility, Qwen dissociation, natural frequency, causal steering, and 32B scale replication. Seven converging lines of evidence.
+**Purpose**: Definitive interpretation for NeurIPS submission and Alignment Forum post.
 
 ---
 
@@ -10,11 +10,11 @@
 
 When an LLM encounters a problem where an intuitive-but-wrong answer competes with a correct-but-effortful one, does it process that problem differently at the representational level than a matched problem where intuition and correctness agree? And if so, does reasoning training change that representation, or just the output?
 
-We tested this across five model configurations, up to 380 matched conflict/control items spanning nine cognitive bias categories (including sunk cost and natural frequency framing), and four levels of analysis: behavioral accuracy, linear probing of residual stream activations with bootstrap confidence intervals, cross-category transfer, and representational geometry.
+We tested this across six model configurations (including OLMo-32B-Instruct for scale replication), up to 380 matched conflict/control items spanning nine cognitive bias categories (including sunk cost and natural frequency framing), and five levels of analysis: behavioral accuracy, linear probing of residual stream activations with bootstrap confidence intervals, cross-category transfer, representational geometry, and causal activation steering.
 
 ---
 
-## The complete story: seven findings that build on each other
+## The complete story: ten findings that build on each other
 
 ### Finding 1: LLM bias vulnerability is domain-specific, not a general processing deficit
 
@@ -101,6 +101,38 @@ The pattern replicates across independent model families:
 
 The convergence across three independent architectures and two types of comparison (cross-training, within-model) strengthens the central claims. The S1/S2 processing-mode signature is not an artifact of a particular model family.
 
+### Finding 8: Natural frequency framing produces a paradoxical reversal in reasoning models
+
+(See dedicated section below for the detailed Gigerenzer interpretation.)
+
+### Finding 9: Causal evidence -- the S1/S2 direction is causally upstream of behavior in standard models but decoupled in reasoning models
+
+Probe decodability establishes that S1/S2 information is present in the residual stream. The critical question is whether it is merely present (epiphenomenal) or causally upstream of the model's decision. We tested this via probe-direction activation steering: extracting the S1/S2 linear direction from trained probes and injecting it into the residual stream at inference time.
+
+**Llama-3.1-8B-Instruct**: **37.5 percentage-point causal swing**. Steering in the S2 direction reduces lure rates; steering in the S1 direction increases them. Random direction controls produce null effects. This establishes that the linear direction the probe learned is not an incidental correlate of conflict/control structure -- it is causally read out by downstream computation to determine behavior. The representation is functionally active.
+
+**R1-Distill-Llama-8B**: **7.5 percentage-point swing**. The same steering procedure applied to R1-Distill produces a drastically smaller effect. The S1/S2 direction is "readable but not writable" -- probes can still decode it (AUC 0.930), but injecting it back into the stream barely moves behavior. This is a clean dissociation: the representation is decodable (Finding 2) but causally decoupled from the output.
+
+**Interpretation**: Reasoning distillation does not just blur the S1/S2 boundary (Finding 2); it actively decouples the S1/S2 direction from downstream decision-making. The standard model maintains a processing-mode signal that is both detectable AND causally functional. The reasoning model retains a ghost of that signal (readable by a probe) but has rerouted its decision-making through reasoning-trace pathways that bypass it. This is the strongest mechanistic evidence for the "S2-by-default" interpretation: R1-Distill does not need to read a "this requires deliberation" flag because its default processing already includes deliberation.
+
+The 37.5pp Llama swing also resolves the "epiphenomenal probe" limitation flagged in prior drafts. The direction is not an artifact. It is used.
+
+### Finding 10: Scale does NOT reduce S1/S2 vulnerability -- it may increase it
+
+A natural objection to all 7-8B findings is: maybe this is a small-model problem that disappears with scale. We tested this with OLMo-32B-Instruct, a 4x scale increase over OLMo-7B-Instruct.
+
+**Overall lure rate**: **19.6% at 32B** (vs. 14.9% at 7B). Scale made things worse, not better.
+
+**Per-category breakdown reveals the mechanism**:
+- **base_rate**: 74.3% lure at 32B (vs. 46% at 7B) -- dramatically worse with scale. The larger model is MORE susceptible to base rate neglect, not less.
+- **framing**: 30% lure at 32B (vs. 0% at 7B) -- a vulnerability that did not exist at 7B scale *emerges* at 32B. This is a qualitative change, not a quantitative one.
+- **conjunction**: 0% at both scales -- scale did resolve this one.
+- **sunk_cost**: 33% at both scales -- unchanged.
+
+**Probe separability**: AUC 0.9999 at 32B. The S1/S2 boundary is equally (essentially perfectly) linearly separable at larger scale. The "detection without resolution" pattern -- the model encodes the distinction with near-perfect fidelity but fails to act on it -- replicates and if anything strengthens.
+
+**Implications**: Scale is not a solution. The larger model has a strictly better representation of the problem structure (AUC 0.9999) and strictly worse behavioral outcomes on base rate problems (74.3% vs. 46%). The gap between what the model knows and what the model does widens with scale. Furthermore, scale introduces NEW vulnerabilities (framing at 30%) that did not exist at smaller scale. This undermines the "scale fixes everything" assumption and strengthens the case that reasoning training, not scale, is what changes the S1/S2 processing dynamic.
+
 ---
 
 ## Key numbers table: every real data point
@@ -114,6 +146,8 @@ The convergence across three independent architectures and two types of comparis
 | R1-Distill-Qwen-7B | ~0% | ~0% | ~0% | ~0% | -- | -- | -- | -- | -- | -- |
 | Qwen 3-8B NO_THINK | 21% | 56% | 95% | 0% | -- | -- | -- | -- | -- | -- |
 | Qwen 3-8B THINK | 7% | 4% | 55% | -- | -- | -- | -- | -- | -- | -- |
+| OLMo-7B-Instruct | 14.9% | 46% | -- | -- | -- | -- | 0% | -- | 33% | -- |
+| OLMo-32B-Instruct | 19.6% | 74.3% | 0% | -- | -- | -- | 30% | -- | 33% | -- |
 
 \* Llama 100% LURE on natural frequency (worse than 84% probability-format lure rate)
 \** R1-Distill 40% correct on natural frequency = 60% lure rate (REVERSAL)

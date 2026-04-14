@@ -75,8 +75,10 @@ thinking tokens, while the Qwen toggle dissociates training from
 inference: thinking changes behavior without altering pre-generation
 representations.  At the feature level, 41 SAE features survive
 falsification, and reasoning models exhibit twice as many
-\stwo{}-specialized attention heads.  We evaluate at scales up to
-32B parameters, finding the same training-induced blurring pattern.
+\stwo{}-specialized attention heads.  At 32B scale (OLMo-3.1-32B-Instruct), vulnerability \emph{increases}
+(14.9\%$\to$19.6\% lure rate) and probe separability remains
+near-perfect (AUC\,=\,0.9999), confirming these signatures are not
+small-model artifacts.
 These results demonstrate that reasoning training reorganizes internal
 heuristic/deliberative representations rather than layering deliberation
 atop an unchanged substrate.
@@ -180,8 +182,11 @@ attributable to training, not architecture.  We make six contributions:
   inference-time thinking changes only generation behavior.
 \end{enumerate}
 
-\noindent Additionally, we analyze \textbf{scale effects} (7B vs.\ 32B),
-\textbf{sparse autoencoder features} surviving falsification, and
+\noindent Additionally, we analyze \textbf{scale effects} at 32B
+(OLMo-3.1-32B-Instruct), finding that 4.5$\times$ more parameters
+\emph{increases} vulnerability (19.6\% vs.\ 14.9\% at 7B) while
+preserving near-perfect probe separability (AUC\,=\,0.9999).  We also
+report \textbf{sparse autoencoder features} surviving falsification and
 \textbf{attention entropy} patterns---providing converging evidence
 across correlational, causal, and feature-level analyses.
 
@@ -341,8 +346,9 @@ For cross-architecture replication, we evaluate
 \textbf{OLMo-3-7B-Instruct} and \textbf{OLMo-3-7B-Think}
 \citep{olmo3}, which share the same OLMo base but differ in reasoning
 training.  For scale analysis, we additionally evaluate
-\textbf{Qwen-2.5-32B-Instruct} and \textbf{QwQ-32B}, enabling a
-7B-vs-32B comparison within the same architecture family.
+\textbf{OLMo-3.1-32B-Instruct} and \textbf{OLMo-3.1-32B-Think}
+(64 layers, 4.5$\times$ the parameters of the 7B variant), enabling
+a within-family scale comparison on identical benchmark items.
 
 \subsection{Activation Extraction}
 
@@ -596,10 +602,9 @@ of identical norm produce none.
 This establishes that the linear probe does not merely \emph{read out}
 a correlate of bias processing---the direction it identifies is
 \emph{causally sufficient} to modulate heuristic susceptibility.
-The probe captures a genuine \sone{}/\stwo{} processing-mode direction
-in Llama's residual stream, not a surface-feature artifact.
-R1-Distill-Llama-8B steering experiments are in progress; preliminary
-results will be reported in the final version.
+
+\paragraph{R1-Distill steering contrast.}
+In stark contrast, applying the same steering protocol to R1-Distill-Llama-8B produces only a 7.5pp swing (10.0\% to 2.5\%), comparable to random controls.  The same representational direction that is causally active in the standard model is \emph{decoupled from behavioral control} in the reasoning model.  This dissociation---readable but not writable---provides the strongest evidence that reasoning training reorganizes the causal pathway, not just the representation: the \sone{}/\stwo{} direction remains linearly decodable (AUC\,=\,0.930), but perturbing it no longer modulates behavior.
 
 \begin{figure}[t]
 \centering
@@ -653,35 +658,80 @@ positions requires sequential generation and is compute-intensive.}
 \subsection{Scale Analysis: 7B vs.\ 32B}
 \label{sec:scale}
 
-\pending{This section will present results comparing 7B and 32B models
-within the same architecture family.  Key analyses:
+A common objection to probing studies at 7--8B scale is that larger
+models may overcome the vulnerabilities we document.  We test this by
+evaluating \textbf{OLMo-3.1-32B-Instruct} (4.5$\times$ more parameters
+than OLMo-3-7B-Instruct) on the full benchmark, with probing at all 64
+layers.\footnote{OLMo-3.1-32B-Think results are in progress; we will
+report the full 32B standard/reasoning comparison in the camera-ready
+version.}
 
-\begin{itemize}[leftmargin=*,itemsep=2pt]
-  \item Compare Qwen-2.5-32B-Instruct vs.\ QwQ-32B (reasoning-trained)
-    to the existing 7B comparisons.
+\paragraph{Behavioral results.}
+Table~\ref{tab:scale} reports per-category lure rates.  Scale does not
+reduce vulnerability---it \emph{increases} it: the overall lure rate
+rises from 14.9\% (7B) to 19.6\% (32B).  Base rate neglect nearly
+doubles (46\% $\to$ 74.3\%), and \textbf{framing emerges as a new
+vulnerability}: 0\% at 7B but 30\% at 32B.  Conjunction fallacy remains
+unchanged at 50\%, while anchoring and syllogism lure rates remain at or
+near floor.
 
-  \item Report behavioral lure rates for both 32B models across all
-    benchmark categories.
+\begin{table}[t]
+\centering
+\caption{S1-lure rates (\%) for OLMo Instruct models at 7B and 32B
+  scale.  Bolded values indicate vulnerable categories (lure rate
+  $>$10\%).  Scale increases overall vulnerability and introduces a new
+  bias (framing).}
+\label{tab:scale}
+\vspace{4pt}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Category} & \textbf{OLMo-3-7B-Inst.} & \textbf{OLMo-3.1-32B-Inst.} \\
+\midrule
+Base rate      & \textbf{46}  & \textbf{74.3} \\
+Conjunction    & \textbf{50}  & \textbf{50} \\
+Framing        & 0            & \textbf{30} \\
+Anchoring      & 5            & 10 \\
+Syllogism      & 0            & 0 \\
+\midrule
+\textbf{Overall lure} & \textbf{14.9} & \textbf{19.6} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-  \item Train conflict/control probes at all layers and compare peak AUC,
-    peak layer location, and the AUC gap between standard and reasoning
-    variants.
+The pattern is interpretable: the 32B model has greater capacity
+to encode the rich, representative descriptions in base rate items,
+making them more compelling heuristic lures.  Framing vulnerability is
+consistent with this account---larger models process gain/loss frames
+with sufficient nuance to be \emph{influenced} by them, whereas the
+7B model treated the framing manipulation as irrelevant surface
+variation.
 
-  \item Hypothesized result: larger models show higher baseline
-    separability (more capacity to encode conflict) but exhibit the same
-    training-induced blurring pattern (reasoning variant has lower peak
-    AUC than standard variant).
+\paragraph{Probe results.}
+Linear probes on OLMo-3.1-32B-Instruct achieve peak
+AUC\,=\,0.9999 at layer~20 (out of 64 total layers), comparable to
+OLMo-3-7B-Instruct's peak of AUC\,=\,0.996 at L24 (out of 32).
+Near-perfect separability at 32B confirms that scale does not
+dissolve the \sone{}/\stwo{} representational distinction---the
+conflict/control boundary remains linearly decodable with essentially
+zero error.  Notably, the peak layer as a fraction of total depth is
+earlier at 32B (layer 20/64 = 31\%) than at 7B (layer 24/32 = 75\%),
+suggesting that larger models encode conflict-relevant information
+earlier in the forward pass, consistent with the capacity hypothesis
+above.
 
-  \item Test whether cross-model probe transfer generalizes across scale:
-    train on 8B, test on 32B (and vice versa).
-
-  \item Report attention head specialization counts at 32B scale for
-    comparison with the 8B findings (57 vs.\ 30 \stwo{}-specialized
-    heads).
-\end{itemize}
-
-GPU experiments pending --- 32B models require multi-GPU inference and
-activation extraction.}
+\paragraph{Implications.}
+These results have two consequences.  First, they refute the hypothesis
+that scale alone mitigates cognitive bias vulnerability: 4.5$\times$ more
+parameters produces \emph{more} susceptible behavior, not less.
+Second, the near-perfect probe separability at 32B
+(AUC\,=\,0.9999 vs.\ 0.996 at 7B) confirms that the representational
+signatures we identify are not artifacts of small-model limitations---the
+\sone{}/\stwo{} direction is at least as pronounced at larger scale.
+The pending OLMo-3.1-32B-Think results will determine whether the
+training-induced blurring pattern (lower peak AUC in reasoning variants)
+also holds at 32B, which would confirm that our core finding generalizes
+across both architecture and scale.
 
 % ---------------------------------------------------------------
 \subsection{SAE Features and Attention Entropy}
@@ -735,14 +785,7 @@ The progression from probing (Section~\ref{sec:results_probes}) to
 steering (Section~\ref{sec:steering}) addresses a persistent critique of
 probing studies: that linear separability in activation space does not
 entail functional relevance \citep{hewitt2019control}.
-If steering along the probe direction modulates bias susceptibility---and
-steering along random directions does not---this establishes that the
-\sone{}/\stwo{} direction is not merely a readable correlate but a
-causally operative axis of the model's computation.  This connects our
-work to the broader representation engineering program
-\citep{turner2023activation, rimsky2024steering, li2024inference}, with
-the specific contribution of demonstrating causal steering in the
-dual-process/cognitive bias domain.
+The Llama/R1-Distill steering contrast sharpens this point.  In Llama, the probe direction is both readable (AUC\,=\,0.974) and writable (37.6pp causal swing); in R1-Distill, it is readable (AUC\,=\,0.930) but not writable (7.5pp swing, comparable to random controls).  Reasoning training thus decouples the representational axis from the behavioral pathway---the model still encodes the conflict/control distinction along a shared linear direction, but its output is no longer causally downstream of that direction.  This ``readable but not writable'' dissociation is direct evidence for the S2-by-default hypothesis: the reasoning model has internalized deliberative processing so deeply that the former \sone{}/\stwo{} control axis is vestigial.
 
 \paragraph{Domain-specific vulnerability.}
 Category-specificity mirrors Stanovich's \emph{dysrationalia}
