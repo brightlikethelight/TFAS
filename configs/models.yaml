@@ -110,3 +110,36 @@ models:
     sae_release: null
     matched_pair_with: olmo-3-7b-instruct
     thinking_format: "<|think_start|>...<|think_end|>"
+
+  # --- OLMo-3-32B matched pair (Allen AI, 32B scale) ---
+  # Same family as 7B pair but 4.5x larger. Tests whether S1/S2 signatures
+  # scale with model size. 64 layers, 5120 hidden, GQA (40Q/8KV).
+  # ~34.4B params, ~69GB BF16 — fits on B200 (180GB) with room for KV cache.
+  # NOTE: HF repos use inconsistent naming (Olmo-3.1 vs Olmo-3).
+  # Instruct is 3.1 lineage, Think is 3.0 lineage — same base architecture.
+  olmo-3-32b-instruct:
+    hf_id: allenai/Olmo-3.1-32B-Instruct
+    hdf5_key: allenai_Olmo-3.1-32B-Instruct
+    family: olmo
+    n_layers: 64
+    n_heads: 40
+    n_kv_heads: 8
+    hidden_dim: 5120
+    head_dim: 128
+    is_reasoning: false
+    sae_release: null
+    matched_pair_with: olmo-3-32b-think
+
+  olmo-3-32b-think:
+    hf_id: allenai/Olmo-3-32B-Think
+    hdf5_key: allenai_Olmo-3-32B-Think
+    family: olmo
+    n_layers: 64
+    n_heads: 40
+    n_kv_heads: 8
+    hidden_dim: 5120
+    head_dim: 128
+    is_reasoning: true
+    sae_release: null
+    matched_pair_with: olmo-3-32b-instruct
+    thinking_format: "<|think_start|>...<|think_end|>"

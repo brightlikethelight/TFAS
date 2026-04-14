@@ -7,16 +7,19 @@ no architecture confound, no weight difference. Pure mode toggle.
 
 For each mode we extract residual stream at P0 (last prompt token) for all layers.
 For thinking ON, we additionally extract at T0 (first token after <think>) and
-Tend (last token before </think>).
+Tend (last token before </think>). With --within-cot, we also extract T25, T50,
+T75 at 25%, 50%, 75% through the thinking trace.
 
 Outputs:
     data/activations/qwen3_8b_nothink.h5  (positions: P0, P2)
     data/activations/qwen3_8b_think.h5    (positions: P0, P2, T0, Tend)
+        with --within-cot:                (positions: P0, P2, T0, T25, T50, T75, Tend)
 
 Usage (B200 pod):
     python scripts/extract_qwen_toggle.py --mode nothink
     python scripts/extract_qwen_toggle.py --mode think
-    python scripts/extract_qwen_toggle.py --mode both
+    python scripts/extract_qwen_toggle.py --mode think --within-cot
+    python scripts/extract_qwen_toggle.py --mode both --within-cot
 """
 from __future__ import annotations
 
@@ -160,6 +163,7 @@ def run_extraction(
     extract_layers: list[int],
     output_path: str,
     args: argparse.Namespace,
+    within_cot: bool = False,
 ) -> None:
     """Run extraction for one mode (thinking ON or OFF) and write HDF5."""
     mode_label = "THINK" if enable_thinking else "NO_THINK"
@@ -169,7 +173,13 @@ def run_extraction(
     n_heads = model.config.num_attention_heads
     n_kv_heads = getattr(model.config, "num_key_value_heads", n_heads)
 
-    position_labels = ["P0", "P2", "T0", "Tend"] if enable_thinking else ["P0", "P2"]
+    if enable_thinking:
+        if within_cot:
+            position_labels = ["P0", "P2", "T0", "T25", "T50", "T75", "Tend"]
+        else:
+            position_labels = ["P0", "P2", "T0", "Tend"]
+    else:
+        position_labels = ["P0", "P2"]
     n_positions = len(position_labels)
 
     print(f"\n{'='*60}")
@@ -253,31 +263,50 @@ def run_extraction(
                 if vec is not None:
                     residuals[layer_idx][i, 1, :] = vec
 
-        # --- For thinking mode: extract T0 and Tend ---
+        # --- For thinking mode: extract T0, [T25, T50, T75], Tend ---
         if enable_thinking:
             t0_pos, tend_pos = find_think_token_positions(gen_ids, tokenizer, prompt_len)
 
-            # T0
+            # Build mapping: position label -> (slot index, absolute token position)
+            # Only include positions that are valid and non-duplicate.
+            t_positions: dict[str, int] = {}  # label -> absolute position
             if t0_pos is not None and t0_pos < gen_ids.shape[0]:
-                position_token_indices[i, 2] = t0_pos
-                position_valid[i, 2] = True
-                for layer_idx in extract_layers:
-                    vec = extract_hidden_state_at_position(
-                        outputs.hidden_states, t0_pos, prompt_len, layer_idx
-                    )
-                    if vec is not None:
-                        residuals[layer_idx][i, 2, :] = vec
-
-            # Tend
+                t_positions["T0"] = t0_pos
             if tend_pos is not None and tend_pos < gen_ids.shape[0]:
-                position_token_indices[i, 3] = tend_pos
-                position_valid[i, 3] = True
+                t_positions["Tend"] = tend_pos
+
+            # Within-CoT interpolation positions
+            if (
+                within_cot
+                and t0_pos is not None
+                and tend_pos is not None
+                and t0_pos < gen_ids.shape[0]
+                and tend_pos < gen_ids.shape[0]
+            ):
+                trace_len = tend_pos - t0_pos
+                if trace_len >= 4:
+                    # Enough room for distinct positions
+                    for frac_label, frac in [("T25", 0.25), ("T50", 0.50), ("T75", 0.75)]:
+                        interp_pos = t0_pos + round(frac * trace_len)
+                        # Clamp to valid range and skip if it duplicates T0 or Tend
+                        interp_pos = max(t0_pos, min(interp_pos, tend_pos))
+                        if interp_pos != t0_pos and interp_pos != tend_pos:
+                            t_positions[frac_label] = interp_pos
+                        # If it overlaps T0 or Tend, we leave it out (valid stays False)
+
+            # Extract all T-positions that are in position_labels
+            for label, abs_pos in t_positions.items():
+                if label not in position_labels:
+                    continue
+                slot = position_labels.index(label)
+                position_token_indices[i, slot] = abs_pos
+                position_valid[i, slot] = True
                 for layer_idx in extract_layers:
                     vec = extract_hidden_state_at_position(
-                        outputs.hidden_states, tend_pos, prompt_len, layer_idx
+                        outputs.hidden_states, abs_pos, prompt_len, layer_idx
                     )
                     if vec is not None:
-                        residuals[layer_idx][i, 3, :] = vec
+                        residuals[layer_idx][i, slot, :] = vec
 
         # Parse behavior
         thinking, answer = split_thinking(response)
@@ -294,11 +323,19 @@ def run_extraction(
         if (i + 1) % 10 == 0 or i == 0:
             elapsed = time.time() - t_total
             eta = elapsed / (i + 1) * (n_problems - i - 1)
-            t0_ok = "Y" if (enable_thinking and position_valid[i, 2]) else "-"
-            tend_ok = "Y" if (enable_thinking and position_valid[i, 3]) else "-"
+            # Show validity of all T-positions in this row
+            t_status_parts = []
+            for t_label in ["T0", "Tend"] + (["T25", "T50", "T75"] if within_cot else []):
+                if t_label in position_labels:
+                    slot = position_labels.index(t_label)
+                    ok = "Y" if position_valid[i, slot] else "N"
+                else:
+                    ok = "-"
+                t_status_parts.append(f"{t_label}={ok}")
+            t_status = " ".join(t_status_parts) if enable_thinking else "-"
             print(
                 f"  [{i+1}/{n_problems}] {verdict:8s} {n_gen:4d} tok  "
-                f"T0={t0_ok} Tend={tend_ok}  "
+                f"{t_status}  "
                 f"({elapsed:.0f}s elapsed, ~{eta:.0f}s remaining)"
             )
 
@@ -324,6 +361,7 @@ def run_extraction(
                 "mode": mode_label,
                 "n_items": n_problems,
                 "extract_layers": extract_layers,
+                "within_cot": within_cot,
             }
         )
 
@@ -447,9 +485,13 @@ def run_extraction(
     file_size_mb = Path(output_path).stat().st_size / 1e6
 
     if enable_thinking:
-        n_t0_valid = int(position_valid[:, 2].sum())
-        n_tend_valid = int(position_valid[:, 3].sum())
-        think_stats = f"T0 valid: {n_t0_valid}/{n_problems}, Tend valid: {n_tend_valid}/{n_problems}"
+        think_stat_parts = []
+        for t_label in position_labels:
+            if t_label.startswith("T"):
+                slot = position_labels.index(t_label)
+                n_valid = int(position_valid[:, slot].sum())
+                think_stat_parts.append(f"{t_label}: {n_valid}/{n_problems}")
+        think_stats = ", ".join(think_stat_parts)
     else:
         think_stats = "N/A (no-think mode)"
 
@@ -513,6 +555,12 @@ def main() -> None:
         default=2048,
         help="max_new_tokens for think mode",
     )
+    parser.add_argument(
+        "--within-cot",
+        action="store_true",
+        default=False,
+        help="Extract T25/T50/T75 positions within the thinking trace",
+    )
     args = parser.parse_args()
 
     # Load model once, use for both modes
@@ -575,6 +623,7 @@ def main() -> None:
             extract_layers=extract_layers,
             output_path=output_path,
             args=args,
+            within_cot=args.within_cot,
         )
 
     print("\nDone. All requested modes extracted.")
