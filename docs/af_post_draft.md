@@ -36,6 +36,8 @@ The Llama-to-R1-Distill comparison is the cleanest test: identical architecture,
 |---|---|---|---|---|
 | OLMo-7B-Instruct | 14.9% | 14.9% | -- | -- |
 | OLMo-7B-Think | 0.9% | 0.9% | -- | -- |
+| OLMo-32B-Instruct | 19.6% | -- | -- | -- |
+| OLMo-32B-Think | 0.4% | -- | -- | -- |
 | Qwen-3-8B (no think) | 21% | 56% | 95% | 0% |
 | Qwen-3-8B (think) | 7% | 4% | 55% | -- |
 
@@ -173,7 +175,7 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 
 ## 6. Safety implications
 
-**Monitoring inference-time reasoning from internals is harder than it looks.** If thinking tokens do not change residual stream representations, a probe-based monitor cannot distinguish a model that genuinely conditions on its CoT from one that ignores it. This is directly relevant to detecting performative reasoning. Our result does not prove performative reasoning occurs, but the tool people would reach for to detect it (residual stream probes) would not catch it.
+**Monitoring inference-time reasoning from internals is harder than it looks.** Thinking tokens do not change the *initial* residual stream representation (Finding 4), so a probe at T0 cannot distinguish a model that genuinely conditions on its CoT from one that ignores it. However, within-CoT probing (Finding 5) shows a non-monotonic trajectory (AUC 0.973 -> 0.754 -> 0.971) -- genuine intermediate computation that a mid-trajectory probe *can* detect. This is directly relevant to detecting performative reasoning: a flat trajectory would be a red flag, while a mid-CoT dip indicates real work. Monitoring CoT faithfulness requires probing *during* generation, not just before or after.
 
 **Training goes deeper than prompting.** A model whose default representation points away from the lure (R1-Distill, susceptibility -0.326) is in a fundamentally different state than one whose representation points toward the lure but whose CoT sometimes overrides it. Concrete data point in the reasoning distillation vs. inference-time scaling debate.
 
@@ -187,11 +189,11 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 
 **Causal interventions** are the single most important remaining experiment. If clamping the 41 SAE features or the probe-identified direction changes the model's answer on conflict items, we move from correlation to mechanism. This is the gap we are most eager to close.
 
-Beyond that: **scale** (does S2-by-default hold at 70B+?), **cross-architecture SAE** (custom SAEs for OLMo and Qwen to test whether the same interpretable features recur), and a **clean training ablation** using OLMo's open pipeline to isolate reasoning training from other fine-tuning differences.
+Beyond that: **scale mechanistics** (behavioral results hold at 32B, but we need probes and SAEs at scale to test whether representational blurring persists), **cross-architecture SAE** (custom SAEs for OLMo and Qwen to test whether the same interpretable features recur), and a **clean training ablation** using OLMo's open pipeline to isolate reasoning training from other fine-tuning differences.
 
 ## The punchline
 
-Six models. Three architecture families. Five workstreams of evidence. The same story each time.
+Eight models. Three architecture families. Two scales. Five workstreams of evidence. The same story each time.
 
 Standard instruct-tuned models maintain a near-perfect internal alarm for inputs that require careful reasoning. That alarm does not reliably trigger careful reasoning. Reasoning-trained models blur this alarm -- not because they have become worse at detecting conflict, but because they no longer need to detect it. Their default processing mode already incorporates the deliberation that the alarm was supposed to trigger.
 

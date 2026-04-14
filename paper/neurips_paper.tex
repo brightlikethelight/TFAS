@@ -740,34 +740,59 @@ at each (layer, position) combination on the conflict vs.\ no-conflict
 classification, restricted to the three vulnerable categories (base
 rate neglect, conjunction fallacy, syllogisms; $n$ = 160).
 
-\subsection{Expected Analysis}
+\subsection{Results: Qwen~3-8B Think, L34}
 
-For each model, the primary analysis computes the \textbf{AUC
-trajectory} across the five thinking positions at the peak probing
-layer identified from the \pzero{} analysis (L31 for R1-Distill,
-L34 for Qwen~3-8B think).
+Table~\ref{tab:within_cot_qwen} reports the AUC trajectory at the
+peak probing layer (L34) across seven positions for Qwen~3-8B in
+thinking mode.
 
-\paragraph{Hypothesis 1: Genuine computation.}
-If the reasoning trace performs genuine computational work, we expect
-probe AUC to \emph{increase} monotonically from T0 to Tend.  The
-magnitude of the T0$\to$Tend AUC gain indicates how much representational
-sharpening occurs during deliberation.  A large gain (e.g., $>$5pp)
-would indicate that the model's internal conflict representation is
-refined through the thinking process.
+\begin{table}[ht]
+\centering
+\caption{Within-CoT probe AUC trajectory for Qwen~3-8B (think mode)
+  at L34, 7 positions.  P0 = pre-generation (\pzero{}); T0--Tend =
+  positions within the \texttt{<think>} trace; P2 = control position
+  (chance baseline).}
+\label{tab:within_cot_qwen}
+\vspace{4pt}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Position} & \textbf{Description} & \textbf{Probe AUC} \\
+\midrule
+P0   & Pre-generation          & 0.938 \\
+T0   & Thinking onset          & \textbf{0.973} \\
+T25  & 25\% of trace           & 0.791 \\
+T50  & Midpoint                & 0.772 \\
+T75  & 75\% of trace           & 0.754 \\
+Tend & Final thinking token    & 0.971 \\
+P2   & Control (chance)        & 0.500 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\paragraph{Hypothesis 2: Performative reasoning.}
-If the model ``decides'' at T0 and emits decorative reasoning, we
-expect AUC to be \emph{flat} across positions: the conflict/control
-distinction is already fully encoded before explicit reasoning begins.
-Under this hypothesis, T0 AUC $\approx$ Tend AUC at the peak layer.
+\paragraph{Non-monotonic trajectory.}
+The data decisively support Hypothesis~3 (non-monotonic trajectory):
+\begin{itemize}[leftmargin=*,itemsep=2pt]
+  \item AUC \emph{increases} from P0 (0.938) to T0 (0.973): the
+  onset of thinking immediately sharpens the conflict representation.
+  \item AUC then \emph{drops} by ${\sim}20$pp across T25--T75
+  (0.791$\to$0.754): deliberation temporarily disrupts the linear
+  separability of conflict and control representations.
+  \item AUC \emph{rebounds} to 0.971 at Tend: the final thinking
+  token recovers near-peak separability before the answer is generated.
+  \item P2 returns exactly 0.500 (chance), confirming that the probe
+  captures position-specific content rather than global signal.
+\end{itemize}
 
-\paragraph{Hypothesis 3: Non-monotonic trajectory.}
-A third possibility---observed in some preliminary analyses of other
-reasoning models---is that AUC \emph{dips} at intermediate positions
-(T25--T50) before recovering at Tend.  This would suggest that
-intermediate reasoning steps temporarily destabilize representations
-before converging on a resolution, consistent with the ``exploration
-before exploitation'' pattern reported by \citet{boppana2026reasoning}.
+\noindent This pattern is consistent with ``exploration before
+exploitation'' \citep{boppana2026reasoning}: intermediate reasoning
+steps explore alternative framings or consider conflicting evidence,
+temporarily destabilizing the conflict/control boundary, before
+converging on a resolution that re-crystallizes the distinction.
+The T0$\to$Tend near-identity (0.973 vs.\ 0.971) combined with the
+mid-trace dip rules out both performative reasoning (which predicts
+flat AUC) and simple monotonic sharpening (which predicts a steady
+increase).
 
 \subsection{Connection to the Qwen Dissociation}
 

@@ -563,6 +563,12 @@ both modes).  Training rewires the structural substrate
 on an unchanged substrate \citep{ziabari2025reasoning,
 codaforno2025dual}---two distinct mechanisms for bias resistance.
 
+\paragraph{Within-CoT dynamics.}
+Within-CoT probing reveals a non-monotonic trajectory: AUC peaks at T0 (0.973), dips during deliberation (0.754 at T75), and rebounds at Tend (0.971), suggesting genuine computation rather than decorative reasoning.  The mid-chain dip indicates that deliberation temporarily disrupts the \sone{}/\stwo{} boundary before resolving it---consistent with the ``exploration before exploitation'' pattern reported by \citet{boppana2026reasoning}.
+
+\paragraph{Scale effects.}
+At 32B scale (OLMo-3.1), vulnerability \emph{increases} (19.6\% vs.\ 14.9\% at 7B) while reasoning training remains effective (0.4\% Think vs.\ 0.9\% at 7B).  Probe separability at 32B is near-perfect (AUC\,=\,0.9999 at L20/64), confirming these signatures are not small-model artifacts.
+
 \paragraph{Specificity and relation to CogBias.}
 Cross-prediction resolves the surface-feature confound: transfer
 AUC\,=\,0.378 on immune categories confirms the probe captures
@@ -604,10 +610,7 @@ transfer (AUC\,$>$\,0.92), and Ma et al.\ falsification of all 41 SAE
 features (zero spurious).
 
 \paragraph{Limitations and future work.}
-All models are 7--8B parameters; scale effects are untested.  Linear
-probes may miss nonlinear structure.  The Qwen \pzero{} position is
-pre-think; probing \emph{within} the thinking trace would reveal
-intra-chain dynamics.  Probe-direction steering confirms causal relevance of the \sone{}/\stwo{} direction in Llama (37.6pp swing) and its decoupling in R1-Distill (7.5pp); SAE-feature-level interventions are future work.
+Linear probes may miss nonlinear structure.  Scale analysis covers up to 32B but not frontier-scale models ($>$100B).  Probe-direction steering confirms causal relevance of the \sone{}/\stwo{} direction in Llama (37.6pp swing) and its decoupling in R1-Distill (7.5pp); SAE-feature-level interventions are future work.
 
 % ============================================================
 % Acknowledgments
