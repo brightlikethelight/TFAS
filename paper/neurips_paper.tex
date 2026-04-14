@@ -190,19 +190,6 @@ report \textbf{sparse autoencoder features} surviving falsification and
 \textbf{attention entropy} patterns---providing converging evidence
 across correlational, causal, and feature-level analyses.
 
-\paragraph{Framing: Same Architecture, Different Minds.}
-The Llama pair shares every architectural parameter, yet reasoning
-training drops cognitive bias susceptibility from 27\% to 2\% and
-simultaneously reduces internal \sone{}/\stwo{} separability from
-AUC 0.974 to 0.930 (non-overlapping 95\% CIs).  The OLMo-3-7B family
-independently replicates this pattern (14.9\% $\to$ 0.9\%), confirming
-generality across architectures.  Qwen~3-8B reveals the converse: thinking mode
-changes behavior ($21\% \to 7.3\%$) without changing the pre-generation
-representation (AUC\,=\,0.971 in both modes).  The model that resists
-biases is, paradoxically, the one where the internal
-heuristic/deliberative boundary is \emph{less} distinct---and that
-distinction is set by training, not inference strategy.
-
 % ============================================================
 % 2. Related Work (~0.75 pages)
 % ============================================================
@@ -243,35 +230,16 @@ steering on a contrastive benchmark with matched conflict/no-conflict
 items.
 
 \paragraph{Activation steering and representation engineering.}
-\citet{turner2023activation} introduced activation addition, showing that
-steering vectors computed as the difference between contrastive prompt
-activations can modulate model behavior when added to residual stream
-activations at inference time.  \citet{rimsky2024steering} scaled this
-to contrastive activation addition, demonstrating layer-specific steering
-of refusal behavior in Llama~2.  \citet{li2024inference} formalized
-inference-time intervention, reading and writing linear directions in
-internal representations for truthfulness control.
-CogBias applied these methods to cognitive bias with promising results
-(26--32\% reduction), but relied on mean-difference steering vectors.
-Our probe-direction steering uses the linear probe's optimized weight
-vector---trained to separate conflict from no-conflict
-activations---as the steering direction, providing a tighter link between
-the representational axis identified by correlational probing and the
-causal mechanism.
-
-\paragraph{SAE interpretability and falsification.}
-\citet{goodfire2025r1} applied sparse autoencoders to DeepSeek-R1,
-identifying features interpretable as ``uncertainty,'' ``backtracking,''
-and ``verification''---seemingly direct evidence of metacognitive
-representations.  However, \citet{ma2026falsification} introduced a
-falsification framework showing that 45--90\% of purported ``reasoning
-features'' in SAEs are spurious, activating on token-level artifacts
-rather than semantic content.  \citet{meloux2025dead} reinforced this
-concern, demonstrating dead-salmon-style false positives in SAE
-feature attribution.  We adopt Ma et al.'s falsification protocol as a
-mandatory filter: for every candidate S1/S2 feature, we inject
-top-activating tokens into random contexts and discard features that
-survive, reporting falsification rates alongside all SAE results.
+Activation addition \citep{turner2023activation} and its variants
+\citep{rimsky2024steering, li2024inference} demonstrate that linear
+steering vectors can modulate model behavior at inference time.
+CogBias \citep{huang2026cogbias} applied this to cognitive bias (26--32\%
+reduction), but used mean-difference vectors.  Our probe-direction
+steering uses the probe's optimized weight vector, providing a tighter
+causal link.  For SAE analysis, we adopt Ma et al.'s falsification
+protocol \citep{ma2026falsification} as a mandatory filter, since
+45--90\% of purported ``reasoning features'' are spurious token-level
+artifacts \citep{meloux2025dead}.
 
 \paragraph{Conflict detection in cognitive science.}
 Our theoretical framework draws on De~Neys' conflict detection paradigm
@@ -301,35 +269,17 @@ enables specificity analysis.
 
 The benchmark comprises \textbf{470 items} organized as \textbf{235
 matched pairs} across 11 categories spanning four heuristic families:
-
-\begin{itemize}[leftmargin=*,itemsep=1pt]
-  \item \textbf{Base rate neglect} (35 pairs): Bayesian reasoning with
-  diagnostic descriptions pitted against base rates.  Includes 10 pairs
-  in Gigerenzer's natural frequency format (``10 out of 1000'' instead
-  of ``1\%'') to test robustness to the ecological rationality critique
-  \citep{gigerenzer1995improve}.
-  \item \textbf{Conjunction fallacy} (20 pairs): probability judgments
-  where detailed descriptions make conjunctions seem more likely.
-  \item \textbf{Belief-bias syllogisms} (25 pairs): logical validity
-  crossed with conclusion believability.
-  \item \textbf{CRT variants} (30 pairs): structural isomorphs of
-  Cognitive Reflection Test items with novel surface features.
-  \item \textbf{Arithmetic} (25 pairs): multi-step computation with
-  and without carrying traps.
-  \item \textbf{Framing effects} (20 pairs): gain/loss-framed logically
-  equivalent decisions.
-  \item \textbf{Anchoring} (20 pairs): numerical estimation with
-  extreme vs.\ neutral anchors.
-  \item \textbf{Sunk cost, loss aversion, certainty effect, availability}
-  (60 pairs total): four additional categories spanning loss aversion,
-  certainty weighting, and availability heuristic families.
-\end{itemize}
-
-\noindent Each item is scored on a four-way classification: \emph{correct},
-\emph{S1-lure} (the specific heuristic-predicted wrong answer),
-\emph{other-wrong}, or \emph{refusal}.  Classic problems (e.g., the
-original bat-and-ball) are included only as contamination baselines and
-excluded from all primary analyses.
+\emph{representativeness} (base rate neglect, 35 pairs; conjunction
+fallacy, 20; belief-bias syllogisms, 25),
+\emph{cognitive reflection} (CRT variants, 30; arithmetic, 25),
+\emph{decision framing} (framing effects, 20; anchoring, 20), and
+\emph{loss/availability} (sunk cost, loss aversion, certainty effect,
+availability; 60 pairs total).  Base rate items include 10 pairs in
+Gigerenzer's natural frequency format \citep{gigerenzer1995improve}.
+Each item is scored as \emph{correct}, \emph{S1-lure} (the specific
+heuristic-predicted wrong answer), \emph{other-wrong}, or \emph{refusal}.
+Classic problems (e.g., the original bat-and-ball) serve only as
+contamination baselines.
 
 % ============================================================
 % 4. Methods (~1 page)
@@ -480,16 +430,13 @@ conflict/control classification on the three vulnerable categories.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{../figures/fig1_probe_auc_curves.pdf}
-\caption{Layer-wise probe ROC-AUC for classifying conflict vs.\
-  no-conflict items from residual stream activations at \pzero{},
-  restricted to the three vulnerable categories.  Llama-3.1-8B-Instruct
-  (blue) peaks at AUC\,=\,0.974 [0.952, 0.992] at L16;
-  R1-Distill-Llama-8B (red) peaks at AUC\,=\,0.930 [0.894, 0.960] at
-  L31---non-overlapping CIs confirm statistical significance.  Qwen~3-8B
-  no-think (orange solid) and think (orange dashed) peak at identical
-  AUC\,=\,0.971 at L34.
-  Dashed gray line: Hewitt--Liang control task ceiling.}
+\includegraphics[width=0.85\linewidth]{../figures/fig1_probe_auc_curves.pdf}
+\vspace{-4pt}
+\caption{Layer-wise probe ROC-AUC (conflict vs.\ no-conflict, three
+  vulnerable categories).  Llama peaks at 0.974 [0.952, 0.992] (L16);
+  R1-Distill at 0.930 [0.894, 0.960] (L31)---non-overlapping CIs.
+  Qwen~3-8B peaks at 0.971 (L34) in both think/no-think modes.
+  Gray dashed: Hewitt--Liang control ceiling.}
 \label{fig:probe_curves}
 \end{figure}
 
@@ -508,14 +455,11 @@ changes both encoding and behavior; \textbf{inference-time thinking}
 \paragraph{Selectivity.}  Hewitt--Liang control probes achieve
 AUC\,$\leq$\,0.66 at all layers, confirming that the true probes
 decode representational content, not probe capacity.  Selectivity
-exceeds 34 percentage points at peak layers for both models.\footnote{We report two complementary probe analyses:
-  (i)~5-fold CV on all 330 items across 7 categories, which peaks at L14
-  with AUC\,=\,0.999 (Llama) and is used for cross-prediction;
-  (ii)~bootstrap CI analysis restricted to 160 vulnerable-category items
-  (3 categories, 1000 resamples), which peaks at L16 with
-  AUC\,=\,0.974 [0.952, 0.992].  The bootstrap analysis provides
-  statistical rigor; the all-category analysis provides the direction
-  used for cross-prediction and steering.}
+exceeds 34 percentage points at peak layers for both models.\footnote{We
+  train probes in two settings: 5-fold CV on all 330 items (7 categories,
+  peak L14, AUC\,=\,0.999), used for cross-prediction and steering; and
+  bootstrap CI analysis on 160 vulnerable-category items (3 categories,
+  peak L16, AUC\,=\,0.974 [0.952, 0.992]).}
 
 \paragraph{Probe summary.}
 Table~\ref{tab:probe_summary} summarizes the key probing metrics.
@@ -617,14 +561,12 @@ In stark contrast, applying the same steering protocol to R1-Distill-Llama-8B pr
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\linewidth]{../figures/fig_causal_steering.pdf}
+\includegraphics[width=0.75\linewidth]{../figures/fig_causal_steering.pdf}
+\vspace{-4pt}
 \caption{Probe-direction steering on Llama-3.1-8B-Instruct (L14, 80
-  vulnerable-category conflict items).  Blue line: lure rate as a
-  function of steering strength $\alpha$ along the probe direction.
-  Gray band: mean $\pm$ 1\,SD of five random-direction controls.  The
-  probe direction produces a monotonic 37.6pp dose-response
-  ($\alpha = -5$: 68.8\%; $\alpha = +5$: 31.2\%); random directions
-  show no systematic effect.}
+  vulnerable-category conflict items).  The probe direction produces a
+  37.6pp dose-response ($\alpha\!=\!-5$: 68.8\%; $\alpha\!=\!+5$: 31.2\%);
+  random directions (gray band) show no systematic effect.}
 \label{fig:steering}
 \end{figure}
 
@@ -673,86 +615,47 @@ Appendix~\ref{app:sae_attention}.
 \label{sec:discussion}
 
 \paragraph{Conflict detection without resolution.}
-The standard model \emph{detects} heuristic--normative conflict
-(AUC\,=\,0.974) yet fails to resolve it (27.3\% lure rate), paralleling
-De~Neys' finding \citep{deneys2012bias, deneys2017dual} that human
-conflict monitoring (ACC activation; \citealp{botvinick2001conflict})
-often occurs even when the heuristic prevails.
+The standard model \emph{detects} conflict (AUC\,=\,0.974) yet fails
+to resolve it (27.3\% lure rate), paralleling De~Neys' finding
+\citep{deneys2012bias} that human conflict monitoring often occurs even
+when the heuristic prevails.
 The reasoning model shows \emph{less} distinct encoding (AUC\,=\,0.930)
 yet dramatically better resolution (2.4\%), replicated in OLMo
-(AUC 0.996 $\to$ 0.962; lure 14.9\% $\to$ 0.9\%).  Rather than adding
-a ``System~2 module,'' reasoning distillation appears to make Type~2
-processing \emph{autonomous} \citep{evans2019reflections}---the
-deliberative pathway is internalized so thoroughly that a sharp conflict
-signal is no longer needed \citep{venhoff2025base}.  Lure susceptibility
-scores confirm this: Llama favors the lure at \pzero{} ($+0.422$);
-R1-Distill favors the correct answer ($-0.326$).
+(AUC 0.996 $\to$ 0.962; lure 14.9\% $\to$ 0.9\%).
+Reasoning distillation makes Type~2 processing \emph{autonomous}
+\citep{evans2019reflections}---internalized so thoroughly that a sharp
+conflict signal is no longer needed \citep{venhoff2025base}.
 
-\paragraph{From correlation to causation.}
-The progression from probing (Section~\ref{sec:results_probes}) to
-steering (Section~\ref{sec:steering}) addresses a persistent critique of
-probing studies: that linear separability in activation space does not
-entail functional relevance \citep{hewitt2019control}.
-The Llama/R1-Distill steering contrast sharpens this point.  In Llama, the probe direction is both readable (AUC\,=\,0.974) and writable (37.6pp causal swing); in R1-Distill, it is readable (AUC\,=\,0.930) but not writable (7.5pp swing, comparable to random controls).  Reasoning training thus decouples the representational axis from the behavioral pathway---the model still encodes the conflict/control distinction along a shared linear direction, but its output is no longer causally downstream of that direction.  This ``readable but not writable'' dissociation is direct evidence for the S2-by-default hypothesis: the reasoning model has internalized deliberative processing so deeply that the former \sone{}/\stwo{} control axis is vestigial.
+\paragraph{Readable but not writable.}
+In Llama, the probe direction is both readable (AUC\,=\,0.974) and
+writable (37.6pp causal swing); in R1-Distill, it is readable
+(AUC\,=\,0.930) but not writable (7.5pp, comparable to random controls).
+This dissociation---reasoning training decouples the representational
+axis from the behavioral pathway---is direct evidence for the
+S2-by-default hypothesis \citep{hewitt2019control}.
+Qwen's think/no-think toggle reveals the converse: thinking reduces
+lure rates (21\% $\to$ 7.3\%) without changing \pzero{} encoding
+(AUC\,=\,0.971 in both modes)---training and inference-time thinking
+are distinct mechanisms for bias resistance \citep{ziabari2025reasoning}.
 
-\paragraph{Domain-specific vulnerability.}
-Category-specificity mirrors Stanovich's \emph{dysrationalia}
-\citep{stanovich2016rationality}: vulnerability is domain- and
-model-specific (e.g., OLMo shows loss aversion vulnerability where Llama
-does not), and different reasoning models overcome different subsets of
-biases.  This means single-model audits are insufficient for assessing
-bias resistance.
+\paragraph{Specificity, safeguards, and limitations.}
+Cross-prediction (AUC\,=\,0.378 on immune categories) confirms the probe
+captures processing mode, not stimulus features; vulnerability is domain-
+and model-specific \citep{stanovich2016rationality}.
+We apply five controls \citep{meloux2025dead, sanitychecks2026}:
+Hewitt--Liang selectivity $>$34pp, cross-prediction falsification,
+cross-model transfer (AUC\,$>$\,0.92), and Ma et al.\ SAE falsification.
+Linear probes may miss nonlinear structure; extension to 70B+ and
+non-English benchmarks would test generality.  Multi-seed robustness
+analysis appears in Appendix~\ref{app:robustness}.
 
-\paragraph{Ecological rationality.}
-Natural frequency framing \emph{increased} lure susceptibility in both
-models (Llama: $84\% \to 100\%$; R1-Distill: $4\% \to 40\%$), reversing
-the human pattern \citep{gigerenzer1995improve}.
-
-\paragraph{Training vs.\ inference: a clean dissociation.}
-Qwen's think/no-think dissociation is clean: thinking reduces lure rates
-(21\% $\to$ 7.3\%) without changing \pzero{} encoding (AUC\,=\,0.971 in
-both modes).  Training rewires the structural substrate
-\citep{kolb2013brain}; inference-time thinking adapts activation dynamics
-on an unchanged substrate \citep{ziabari2025reasoning,
-codaforno2025dual}---two distinct mechanisms for bias resistance.
-The within-CoT probing results (Section~\ref{sec:within_cot}) will
-further illuminate how the reasoning trace transforms representations
-dynamically during generation.
-
-\paragraph{Specificity.}
-Cross-prediction (transfer AUC\,=\,0.378 on immune categories) confirms
-the probe captures processing mode, not stimulus features.  Cross-model
-transfer (Llama$\to$R1: 0.920; R1$\to$Llama: 0.954) shows the
-\sone{}/\stwo{} direction is shared when architecture is held
-constant---contrasting with \citet{huang2026cogbias}'s near-orthogonal
-finding across distinct architectures.  Multi-seed robustness analysis
-appears in Appendix~\ref{app:robustness}.
-
-\paragraph{Safeguards and limitations.}
-We mitigate probing pitfalls \citep{meloux2025dead, sanitychecks2026}
-via five controls: Hewitt--Liang selectivity $>$34pp, cross-prediction
-falsification, inter-model comparison, cross-model transfer
-(AUC\,$>$\,0.92), and Ma et al.\ SAE falsification (zero spurious).
-Linear probes may miss nonlinear structure; multi-dimensional steering
-may reveal richer causal geometry.  Extension to 70B+ models and
-non-English benchmarks would further test generality.
-
-% ============================================================
-% Acknowledgments
-% ============================================================
-
-\section*{Acknowledgments}
-\label{sec:ack_marker}
-
+\paragraph{Acknowledgments.}
 [Redacted for anonymous review.]
 Code, benchmark, and activation data will be released upon acceptance.
 
 % ============================================================
 % References
 % ============================================================
-% DEBUG: force page break to check body page count
-\clearpage
-
 \bibliographystyle{plainnat}
 \bibliography{references}
 
