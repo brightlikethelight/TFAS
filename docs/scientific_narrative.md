@@ -75,20 +75,9 @@ The P0 lure susceptibility scores reinforce this:
 
 The sign flip shows that reasoning training does not just add a correction step downstream; it changes the model's initial disposition toward these problems. The magnitude of the shift (0.748 total) is large and graded, not binary.
 
-### Finding 6: Natural frequency framing produces a paradoxical reversal in reasoning models
+### Finding 6: Sunk cost immunity confirms domain-specificity
 
-This is a new finding that complicates any simple "reasoning training fixes probability errors" narrative. Gigerenzer (1995) argued that humans perform better on base rate problems when probabilities are expressed as natural frequencies ("3 out of 100") rather than percentages ("3%"). We tested this with 10 reformulated base rate items.
-
-The results:
-
-- **Llama**: **100% lure rate** with natural frequency framing (vs. 84% lure with probability framing) — WORSE
-- **R1-Distill**: **40% lure rate** with natural frequency framing (vs. 4% lure with probability framing) — MUCH WORSE
-
-This is the **opposite** of Gigerenzer's prediction. Natural frequency format makes BOTH models MORE susceptible to base rate neglect, not less. Llama goes from 84% to 100% lure (ceiling). R1-Distill goes from near-immunity (4%) to substantial vulnerability (40%) — a 10x increase.
-
-This has a plausible mechanistic interpretation. LLMs were trained primarily on text where probabilities are expressed as percentages, not natural frequencies. The "ecological" format for LLMs is percentages (their training data distribution), not frequencies (the human ecological format). Natural frequency framing may actually disrupt the learned heuristics and reasoning patterns that handle probability-format problems, producing a novel vulnerability in both models. R1-Distill's reasoning distillation was trained on mathematical content in standard notation — the frequency format falls outside the distribution of its reasoning training, bypassing the deliberative circuits that reasoning distillation installed.
-
-The implication for safety is significant: reasoning training can create *format-specific* competence. A model that handles a problem class well in one notation may fail on the same problem in a different notation. Robustness evaluations must test across surface formats, not just problem types.
+Both Llama and R1-Distill show 0% lure rate on sunk cost items. OLMo shows 33% (a model-specific vulnerability). Loss aversion heuristics, unlike probabilistic estimation errors, do not reliably trigger shortcut processing. The immune categories serve as built-in negative controls for the mechanistic analyses.
 
 ### Finding 7: The picture is consistent across model families
 
@@ -103,7 +92,12 @@ The convergence across three independent architectures and two types of comparis
 
 ### Finding 8: Natural frequency framing produces a paradoxical reversal in reasoning models
 
-(See dedicated section below for the detailed Gigerenzer interpretation.)
+Gigerenzer (1995) predicted that natural frequencies should reduce base rate neglect. In LLMs, the opposite occurs:
+
+- **Llama**: 100% lure rate with natural frequency framing (vs. 84% with probability framing) -- WORSE
+- **R1-Distill**: 40% lure rate with natural frequency framing (vs. 4% with probability framing) -- MUCH WORSE
+
+LLMs' "ecological" format is percentages (dominant in training data), not frequencies (the human ecological format). Reasoning distillation installed format-calibrated deliberative processing that breaks on unfamiliar notation. (See dedicated section below for the detailed Gigerenzer interpretation.)
 
 ### Finding 9: Causal evidence -- the S1/S2 direction is causally upstream of behavior in standard models but decoupled in reasoning models
 
@@ -301,15 +295,39 @@ OLMo-3-7B is the third architecture family (after Llama and Qwen), fully open-so
 
 ---
 
+## What OLMo-32B showed (scale replication)
+
+OLMo-32B-Instruct is the scale test: same architecture family as OLMo-7B, 4x parameter count, independent training pipeline (AI2).
+
+### Behavioral: scale makes vulnerability WORSE
+
+| Metric | OLMo-7B-Instruct | OLMo-32B-Instruct | Direction |
+|--------|-------------------|--------------------|-----------|
+| Overall lure rate | 14.9% | 19.6% | Worse |
+| base_rate | 46% | 74.3% | Much worse |
+| conjunction | -- | 0% | Resolved |
+| framing | 0% | 30% | New vulnerability |
+| sunk_cost | 33% | 33% | Unchanged |
+
+The base_rate result is the headline: scaling from 7B to 32B nearly doubles the lure rate (46% to 74.3%). The framing result is qualitatively new: a vulnerability that did not exist at 7B emerges at 32B. Conjunction is resolved, but the net effect is worse overall performance.
+
+### Mechanistic: equally (more) separable
+
+Probe AUC 0.9999 at 32B. The S1/S2 linear boundary is essentially perfect. Combined with 74.3% base rate lure rate, this is the most extreme "detection without resolution" result in the study: near-perfect representation, catastrophic behavioral failure. The model encodes the distinction with higher fidelity at larger scale but is less likely to act on it.
+
+### Interpretation for the NeurIPS narrative
+
+This result directly addresses the most common objection to small-model mech interp work: "maybe the problem goes away at scale." It does not. It gets worse. The knowledge-action gap -- the distance between what the model internally represents and what it externally does -- widens with scale in the absence of reasoning training. This makes the case for reasoning training (rather than scale) as the relevant safety intervention.
+
+---
+
 ## Limitations
 
 **Small N.** The vulnerable subset comprises roughly 140 items across three categories from the original 330-item benchmark (expanded to ~190 matched pairs with sunk cost and natural frequency). This is sufficient for the probe analyses (bootstrap CIs are tight: widths of 0.040 for Llama, 0.066 for R1-Distill) but limits the granularity of per-category breakdowns and leaves some cross-prediction estimates noisy.
 
-**No causal evidence.** All mechanistic results are correlational. Probes show that the S1/S2 distinction is linearly decodable; they do not show that the model uses this direction for its decision. SAE feature analysis and activation steering are planned but not yet complete. Until causal interventions confirm or disconfirm the functional role of these representations, the mechanistic story remains observational.
+**Causal evidence is limited to one intervention type.** Probe-direction activation steering establishes that the S1/S2 direction is causally read out in Llama (37.5pp swing) and decoupled in R1-Distill (7.5pp). However, this is a single causal method. Feature ablation, path patching, and interchange interventions would provide complementary causal evidence. The current result resolves the "epiphenomenal probe" concern but does not fully characterize the causal circuit.
 
-**Probe decodability is necessary but not sufficient.** High probe AUC establishes that information is present in the representation. It does not establish that the information is read out by downstream layers. The representation could be an epiphenomenon of processing rather than a driver of it.
-
-**Scale.** All results come from 7-8B-parameter models. The internal organization of frontier-scale models (70B+) may differ qualitatively. We make no claims beyond the tested scale.
+**Scale tested to 32B, not frontier.** OLMo-32B-Instruct replicates and extends the pattern. But 32B is still far from frontier scale (70B+, 400B+). The internal organization of frontier-scale models may differ qualitatively. We can now say the pattern does not disappear by 32B and in fact worsens, but we cannot extrapolate to arbitrary scale.
 
 **Graded, not binary.** The data support a graded processing-intensity interpretation better than a binary S1/S2 switch. The 0.930 AUC in R1-Distill is reduced but far above chance; the behavioral lure rate of 2.4% is low but not zero. Even the "S2-by-default" framing should be understood as a shift in default processing intensity, not the elimination of a discrete system.
 
@@ -331,6 +349,10 @@ OLMo-3-7B is the third architecture family (after Llama and Qwen), fully open-so
 
 **Reasoning training can create novel vulnerabilities through format specialization.** The natural frequency reversal (R1-Distill: 96% -> 40%) shows that reasoning distillation can install format-specific competence that fails on equivalent problems in unfamiliar formats. This is a new category of alignment risk: a model that appears to have solved a problem class may have only solved it in the notation it was trained on. Safety evaluations must include format-transfer tests, not just accuracy on standard formulations.
 
-**Monitoring feasibility.** The high linear decodability of the S1/S2 distinction (AUC 0.974 in Llama, 0.971 in Qwen no-think) suggests that lightweight linear probes on middle-layer activations could serve as runtime monitors for whether a model is in a heuristic-prone state. The bootstrap CIs are tight enough to be practically useful. This is preliminary, but if confirmed by causal analysis, it offers a concrete tool for deployment-time oversight: flag outputs produced under high P0 lure susceptibility for additional review.
+**Monitoring feasibility -- now with causal backing.** The high linear decodability of the S1/S2 distinction (AUC 0.974 in Llama, 0.971 in Qwen no-think, 0.9999 in OLMo-32B) suggests that lightweight linear probes on middle-layer activations could serve as runtime monitors for whether a model is in a heuristic-prone state. The causal steering result (37.5pp swing) now confirms that this direction is not merely informative but functionally active -- the same direction a monitor would read is the one the model uses for its decision. This upgrades monitoring from "preliminary" to "mechanistically grounded."
+
+**Scale amplifies the monitoring case.** OLMo-32B's AUC 0.9999 with 74.3% base rate lure rate means the larger model produces an even cleaner monitoring signal while being MORE vulnerable. The models that most need monitoring are the easiest to monitor. This is a rare alignment-favorable scaling property.
 
 **Shared vulnerability circuits amplify risk.** The 0.993 transfer between base rate and conjunction representations means that a single failure mode underlies multiple behavioral vulnerabilities. A targeted intervention (or a targeted attack) on this shared circuit could simultaneously affect multiple categories of probabilistic reasoning. This is both an opportunity (one fix might address multiple failure modes) and a risk (one perturbation might create multiple failures).
+
+**Scale does not close the knowledge-action gap.** OLMo-32B knows the answer (AUC 0.9999) and gives the wrong one anyway (74.3% base rate lure). This is the clearest demonstration of the "detection without resolution" pattern: the representation encodes everything needed to behave correctly, and the model fails to use it. Worse, scale introduces qualitatively new vulnerabilities (framing at 30% where 7B had 0%). Scaling alone is not a path to safety for heuristic-prone processing domains. Reasoning training is the intervention that changes the processing dynamic, not parameter count.

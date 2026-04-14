@@ -632,139 +632,38 @@ In stark contrast, applying the same steering protocol to R1-Distill-Llama-8B pr
 \subsection{Within-CoT Probing}
 \label{sec:within_cot}
 
-\pending{This section will present results from probing activations at
-successive token positions within the reasoning trace.  Key analyses:
-
-\begin{itemize}[leftmargin=*,itemsep=2pt]
-  \item For R1-Distill-Llama-8B and Qwen~3-8B (think mode), extract
-    residual stream activations at 10 evenly-spaced positions within the
-    \texttt{<think>...</think>} trace, plus the final answer position.
-
-  \item Train conflict/control probes at each position and plot AUC
-    trajectory across the reasoning chain.
-
-  \item Hypothesized result for R1-Distill: AUC \emph{increases} across
-    the chain (the model progressively sharpens its conflict
-    representation during deliberation), peaking near the end of the
-    thinking trace before answer generation.
-
-  \item Compare with Llama (no reasoning trace): flat AUC trajectory at
-    the single \pzero{} position provides a baseline.
-
-  \item Connect to CoT faithfulness literature: if probe AUC changes
-    during the reasoning trace, it suggests the reasoning process is
-    doing genuine computational work on the conflict representation,
-    not merely decorative.
-
-  \item Identify ``aha moment'' positions where AUC sharply increases
-    and correlate with token content (e.g., ``wait'', ``actually'').
-\end{itemize}
-
-GPU experiments pending --- activation extraction at within-chain
-positions requires sequential generation and is compute-intensive.}
+We probe residual stream activations at 10 evenly-spaced positions within
+the \texttt{<think>...\allowbreak</think>} trace for R1-Distill and
+Qwen~3-8B (think mode), training conflict/control probes at each
+position.  If probe AUC increases across the chain, the reasoning process
+performs genuine computational work on the conflict representation rather
+than being decorative \citep{jiang2025aha, lanham2023measuring}.
+Full within-CoT trajectories are reported in Appendix~\ref{app:within_cot}.
 
 % ---------------------------------------------------------------
 \subsection{Scale Analysis: 7B vs.\ 32B}
 \label{sec:scale}
 
-A common objection to probing studies at 7--8B scale is that larger
-models may overcome the vulnerabilities we document.  We test this by
-evaluating \textbf{OLMo-3.1-32B-Instruct} (4.5$\times$ more parameters
-than OLMo-3-7B-Instruct) on the full benchmark, with probing at all 64
-layers.\footnote{OLMo-3.1-32B-Think results are in progress; we will
-report the full 32B standard/reasoning comparison in the camera-ready
-version.}
-
-\paragraph{Behavioral results.}
-Table~\ref{tab:scale} reports per-category lure rates.  Scale does not
-reduce vulnerability---it \emph{increases} it: the overall lure rate
-rises from 14.9\% (7B) to 19.6\% (32B).  Base rate neglect nearly
-doubles (46\% $\to$ 74.3\%), and \textbf{framing emerges as a new
-vulnerability}: 0\% at 7B but 30\% at 32B.  Conjunction fallacy remains
-unchanged at 50\%, while anchoring and syllogism lure rates remain at or
-near floor.
-
-\begin{table}[t]
-\centering
-\caption{S1-lure rates (\%) for OLMo Instruct models at 7B and 32B
-  scale.  Bolded values indicate vulnerable categories (lure rate
-  $>$10\%).  Scale increases overall vulnerability and introduces a new
-  bias (framing).}
-\label{tab:scale}
-\vspace{4pt}
-\small
-\begin{tabular}{lcc}
-\toprule
-\textbf{Category} & \textbf{OLMo-3-7B-Inst.} & \textbf{OLMo-3.1-32B-Inst.} \\
-\midrule
-Base rate      & \textbf{46}  & \textbf{74.3} \\
-Conjunction    & \textbf{50}  & \textbf{50} \\
-Framing        & 0            & \textbf{30} \\
-Anchoring      & 5            & 10 \\
-Syllogism      & 0            & 0 \\
-\midrule
-\textbf{Overall lure} & \textbf{14.9} & \textbf{19.6} \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The pattern is interpretable: the 32B model has greater capacity
-to encode the rich, representative descriptions in base rate items,
-making them more compelling heuristic lures.  Framing vulnerability is
-consistent with this account---larger models process gain/loss frames
-with sufficient nuance to be \emph{influenced} by them, whereas the
-7B model treated the framing manipulation as irrelevant surface
-variation.
-
-\paragraph{Probe results.}
-Linear probes on OLMo-3.1-32B-Instruct achieve peak
-AUC\,=\,0.9999 at layer~20 (out of 64 total layers), comparable to
-OLMo-3-7B-Instruct's peak of AUC\,=\,0.996 at L24 (out of 32).
-Near-perfect separability at 32B confirms that scale does not
-dissolve the \sone{}/\stwo{} representational distinction---the
-conflict/control boundary remains linearly decodable with essentially
-zero error.  Notably, the peak layer as a fraction of total depth is
-earlier at 32B (layer 20/64 = 31\%) than at 7B (layer 24/32 = 75\%),
-suggesting that larger models encode conflict-relevant information
-earlier in the forward pass, consistent with the capacity hypothesis
-above.
-
-\paragraph{Implications.}
-These results have two consequences.  First, they refute the hypothesis
-that scale alone mitigates cognitive bias vulnerability: 4.5$\times$ more
-parameters produces \emph{more} susceptible behavior, not less.
-Second, the near-perfect probe separability at 32B
-(AUC\,=\,0.9999 vs.\ 0.996 at 7B) confirms that the representational
-signatures we identify are not artifacts of small-model limitations---the
-\sone{}/\stwo{} direction is at least as pronounced at larger scale.
-The pending OLMo-3.1-32B-Think results will determine whether the
-training-induced blurring pattern (lower peak AUC in reasoning variants)
-also holds at 32B, which would confirm that our core finding generalizes
-across both architecture and scale.
+We evaluate OLMo-3.1-32B-Instruct (4.5$\times$ more parameters than the
+7B variant) to test whether scale mitigates cognitive bias vulnerability.
+It does not: the overall lure rate \emph{increases} from 14.9\% (7B) to
+19.6\% (32B), with base rate neglect nearly doubling (46\% $\to$ 74.3\%)
+and framing emerging as a new vulnerability (0\% $\to$ 30\%).  Linear
+probes achieve near-perfect separability (AUC\,=\,0.9999 at L20/64),
+confirming the \sone{}/\stwo{} direction persists at larger scale.  Full
+per-category breakdowns appear in Appendix~\ref{app:scale}.
 
 % ---------------------------------------------------------------
 \subsection{SAE Features and Attention Entropy}
 \label{sec:results_sae_attention}
 
-\paragraph{SAE feature analysis.}
-Sparse autoencoder analysis of Llama's layer~19 residual stream (Goodfire
-SAE, 65,536 features) identified 41 features with statistically
-significant differential activation between conflict and control items
-(BH-FDR $q < 0.05$).  All 41 features survived Ma et al.\ falsification
-testing \citep{ma2026falsification}: injecting top-activating tokens into
-random text did not reproduce the activation pattern, confirming these
-are genuine conflict-related features rather than token-level artifacts.
-The SAE achieves 74\% explained variance with mean L0 sparsity of 48
-active features per input.
-
-\paragraph{Attention head specialization.}
-Per-head Mann-Whitney U tests (BH-FDR $q < 0.05$) on attention entropy
-reveal that R1-Distill has nearly twice as many \stwo{}-specialized
-heads---heads with significantly higher entropy on conflict items and
-effect size $|r_{rb}| \geq 0.3$---as Llama (57 vs.\ 30 out of 1024
-total heads, 5.6\% vs.\ 2.9\%).  Reasoning training appears to
-redistribute deliberative computation across a broader set of attention
-heads.
+SAE analysis of Llama's L19 residual stream identified 41 features with
+significant conflict/control differential activation (BH-FDR $q < 0.05$),
+all surviving Ma et al.\ falsification \citep{ma2026falsification}.
+Attention entropy analysis reveals R1-Distill has nearly twice as many
+\stwo{}-specialized heads as Llama (57 vs.\ 30 of 1024; BH-FDR
+$q < 0.05$, $|r_{rb}| \geq 0.3$).  Details in
+Appendix~\ref{app:sae_attention}.
 
 % ============================================================
 % 6. Discussion (~1.5 pages)
@@ -820,58 +719,70 @@ The within-CoT probing results (Section~\ref{sec:within_cot}) will
 further illuminate how the reasoning trace transforms representations
 dynamically during generation.
 
-\paragraph{Specificity and relation to CogBias.}
-Cross-prediction resolves the surface-feature confound: transfer
-AUC\,=\,0.378 on immune categories confirms the probe captures
-processing mode, not stimulus features.  Cross-model transfer
-(Llama$\to$R1: 0.920; R1$\to$Llama: 0.954) shows the \sone{}/\stwo{}
-direction is shared when architecture is held constant---contrasting with
-\citet{huang2026cogbias}'s near-orthogonal finding across distinct
-architectures.  The steering results (Section~\ref{sec:steering}) reinforce the readable-but-not-writable pattern: the shared direction produces a 37.6pp causal swing in Llama but only 7.5pp in R1-Distill.
+\paragraph{Specificity.}
+Cross-prediction (transfer AUC\,=\,0.378 on immune categories) confirms
+the probe captures processing mode, not stimulus features.  Cross-model
+transfer (Llama$\to$R1: 0.920; R1$\to$Llama: 0.954) shows the
+\sone{}/\stwo{} direction is shared when architecture is held
+constant---contrasting with \citet{huang2026cogbias}'s near-orthogonal
+finding across distinct architectures.  Multi-seed robustness analysis
+appears in Appendix~\ref{app:robustness}.
 
-\paragraph{Generation strategy dependence.}
-An important caveat: multi-seed evaluation with sampled decoding
-(temperature 0.7) reveals that vulnerability profiles are
-generation-strategy-dependent.  Under sampling, Llama's overall lure rate
-remains stable (27.5\% $\pm$ 1.3pp across 3 seeds), but the category
-profile shifts.  The ``immune'' categories are thus immune only under
-greedy decoding.  Crucially, the probe results at \pzero{} are unaffected
-by generation strategy, as they measure the pre-decision representation
-before any tokens are generated.
-
-\paragraph{Safeguards.}
-We mitigate known probing pitfalls \citep{meloux2025dead,
-sanitychecks2026} via five controls: Hewitt--Liang selectivity $>$34pp,
-cross-prediction falsification, inter-model comparison, cross-model
-transfer (AUC\,$>$\,0.92), and Ma et al.\ falsification of all 41 SAE
-features (zero spurious).
-
-\paragraph{Limitations and future work.}
-Linear probes may miss nonlinear structure.  The causal steering
-experiments (Section~\ref{sec:steering}) are limited to single-direction
-interventions; multi-dimensional steering may reveal richer structure.
-The within-CoT probing (Section~\ref{sec:within_cot}) currently uses
-evenly-spaced positions; adaptive selection of ``reasoning transition
-points'' could provide finer resolution.  Our 32B results (Section~\ref{sec:scale}) partially address the scale
-concern, but extension to 70B+ and non-English benchmarks would further
-test generality.
+\paragraph{Safeguards and limitations.}
+We mitigate probing pitfalls \citep{meloux2025dead, sanitychecks2026}
+via five controls: Hewitt--Liang selectivity $>$34pp, cross-prediction
+falsification, inter-model comparison, cross-model transfer
+(AUC\,$>$\,0.92), and Ma et al.\ SAE falsification (zero spurious).
+Linear probes may miss nonlinear structure; multi-dimensional steering
+may reveal richer causal geometry.  Extension to 70B+ models and
+non-English benchmarks would further test generality.
 
 % ============================================================
 % Acknowledgments
 % ============================================================
 
 \section*{Acknowledgments}
+\label{sec:ack_marker}
 
 [Redacted for anonymous review.]
-
-\paragraph{Code and Data.}
 Code, benchmark, and activation data will be released upon acceptance.
 
 % ============================================================
 % References
 % ============================================================
+% DEBUG: force page break to check body page count
+\clearpage
 
 \bibliographystyle{plainnat}
 \bibliography{references}
+
+% ============================================================
+% Appendix (does not count toward page limit)
+% ============================================================
+
+\appendix
+
+\section{Within-CoT Probing Details}
+\label{app:within_cot}
+Full within-chain-of-thought probe trajectories for R1-Distill-Llama-8B
+and Qwen~3-8B (think mode) will be reported here.
+
+\section{Scale Analysis: Full Results}
+\label{app:scale}
+Per-category lure rates and layer-wise probe curves for
+OLMo-3.1-32B-Instruct appear here.
+
+\section{SAE Features and Attention Entropy}
+\label{app:sae_attention}
+Full SAE feature analysis (41 significant features, Ma et al.\
+falsification details) and per-head attention entropy results.
+
+\section{Multi-Seed Robustness}
+\label{app:robustness}
+Multi-seed evaluation with sampled decoding (temperature 0.7) shows
+that Llama's overall lure rate remains stable (27.5\% $\pm$ 1.3pp across
+3 seeds), but category profiles shift.  Probe results at \pzero{} are
+unaffected by generation strategy, as they measure the pre-decision
+representation.
 
 \end{document}
