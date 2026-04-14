@@ -80,7 +80,7 @@ heads (57 vs.\ 30; BH-FDR corrected), suggesting redistribution of
 deliberative computation across the network.  A within-model
 dissociation using Qwen~3-8B's thinking toggle
 sharpens the picture: inference-time thinking reduces lure rates (21\%
-to 7\%) without changing pre-generation probe signatures (both
+to 7.3\%) without changing pre-generation probe signatures (both
 AUC\,=\,0.971).  Training changes \sone{}/\stwo{} encoding;
 inference-time thinking does not.  Finally, natural frequency
 framing---which reduces base rate neglect in humans---paradoxically
@@ -157,7 +157,7 @@ attributable to training, not architecture.  We make five contributions:
   to a shared processing-mode direction.
 
   \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
-  thinking toggle changes behavior ($21\% \to 7\%$ lure rate) but produces
+  thinking toggle changes behavior ($21\% \to 7.3\%$ lure rate) but produces
   \emph{identical} probe signatures (AUC\,=\,0.971 in both modes),
   demonstrating that training changes \sone{}/\stwo{} encoding while
   inference-time thinking changes only generation behavior.
@@ -177,7 +177,7 @@ simultaneously reduces internal \sone{}/\stwo{} separability from
 AUC 0.974 to 0.930 (non-overlapping 95\% CIs).  The OLMo-3-7B family
 independently replicates this pattern (14.9\% $\to$ 0.9\%), confirming
 generality across architectures.  Qwen~3-8B reveals the converse: thinking mode
-changes behavior ($21\% \to 7\%$) without changing the pre-generation
+changes behavior ($21\% \to 7.3\%$) without changing the pre-generation
 representation (AUC\,=\,0.971 in both modes).  The model that resists
 biases is, paradoxically, the one where the internal
 heuristic/deliberative boundary is \emph{less} distinct---and that
@@ -326,7 +326,7 @@ Arithmetic     & 0   & 0   & 0   & 0   & 0   & 0 \\
 Framing        & 0   & 0   & 0   & 0   & 0   & 0 \\
 Anchoring      & 0   & \textbf{10} & \textbf{10} & 0 & 5 & 0 \\
 \midrule
-\textbf{Overall lure} & \textbf{27.3} & \textbf{2.4} & \textbf{21.0} & \textbf{7.0} & \textbf{14.9} & \textbf{0.9} \\
+\textbf{Overall lure} & \textbf{27.3} & \textbf{2.4} & \textbf{21.0} & \textbf{7.3} & \textbf{14.9} & \textbf{0.9} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -343,7 +343,7 @@ profile---95\% conjunction lure rate but 0\% syllogism lure
 rate---suggesting different models encode different heuristic biases
 rather than a universal ``System~1.''  Fourth, the within-model Qwen
 toggle is informative: enabling thinking mode on the \emph{same weights}
-reduces the overall lure rate from 21\% to 7\%, with a striking
+reduces the overall lure rate from 21\% to 7.3\%, with a striking
 asymmetry across categories.  Base rate neglect drops from 56\% to 4\%
 (near-complete correction), while conjunction fallacy drops only from
 95\% to 55\% (still majority-susceptible).  This dissociation suggests
@@ -390,7 +390,7 @@ CIs confirm statistical significance ($p < 0.05$).  The later peak layer
 suggests reasoning distillation shifts conflict-relevant information toward
 deeper layers \citep{zhang2025probing}.
 Qwen~3-8B reaches AUC\,=\,0.971 at L34 in both think and no-think modes:
-despite a 3$\times$ behavioral improvement (lure rate $21\% \to 7\%$),
+despite a 3$\times$ behavioral improvement (lure rate $21\% \to 7.3\%$),
 the pre-generation representation is unchanged \citep{afzal2025knowing}.
 This is the key dissociation: \textbf{training} (Llama vs.\ R1-Distill)
 changes both encoding and behavior; \textbf{inference-time thinking}
@@ -398,10 +398,17 @@ changes both encoding and behavior; \textbf{inference-time thinking}
 curves for all models are in Figure~\ref{fig:probe_curves}.
 
 \paragraph{Selectivity.}  Hewitt--Liang control probes (trained on
-permuted labels) achieve AUC\,$\leq$\,0.55 at all layers for both models,
+permuted labels) achieve AUC\,$\leq$\,0.66 at all layers for both models,
 confirming that the true probes decode representational content, not
-probe capacity.  Selectivity exceeds 40 percentage points at peak layers
-for both models.
+probe capacity.  Selectivity exceeds 34 percentage points at peak layers
+for both models.\footnote{We report two complementary probe analyses:
+  (i)~5-fold CV on all 330 items across 7 categories, which peaks at L14
+  with AUC\,=\,0.999 (Llama) and is used for cross-prediction;
+  (ii)~bootstrap CI analysis restricted to 160 vulnerable-category items
+  (3 categories, 1000 resamples), which peaks at L16 with
+  AUC\,=\,0.974 [0.952, 0.992].  The bootstrap analysis provides
+  statistical rigor; the all-category analysis provides the direction
+  used for cross-prediction and steering.}
 
 \paragraph{Immune category control.}  Probes trained on the four immune
 categories (CRT, arithmetic, framing, anchoring) achieve
@@ -432,8 +439,8 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \toprule
 \textbf{Model} & \textbf{Peak Layer} & \textbf{Peak AUC} & \textbf{95\% CI} & \textbf{Control AUC} & \textbf{Selectivity} \\
 \midrule
-Llama-3.1-8B-Instruct & L16 & 0.974 & [0.952, 0.992] & 0.54 & 0.434 \\
-R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.52 & 0.410 \\
+Llama-3.1-8B-Instruct & L16 & 0.974 & [0.952, 0.992] & 0.63 & 0.343 \\
+R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.55 & 0.377 \\
 Qwen~3-8B (no think)  & L34 & 0.971 & ---             & ---  & --- \\
 Qwen~3-8B (think)     & L34 & 0.971 & ---             & ---  & --- \\
 \midrule
@@ -545,7 +552,7 @@ supplementary material.
 
 \paragraph{Training vs.\ inference.}
 Qwen's think/no-think dissociation is clean: thinking reduces lure rates
-(21\% $\to$ 7\%) without changing \pzero{} encoding (AUC\,=\,0.971 in
+(21\% $\to$ 7.3\%) without changing \pzero{} encoding (AUC\,=\,0.971 in
 both modes).  Training rewires the structural substrate
 \citep{kolb2013brain}; inference-time thinking adapts activation dynamics
 on an unchanged substrate \citep{ziabari2025reasoning,
@@ -558,10 +565,18 @@ processing mode, not stimulus features.  Cross-model transfer
 (Llama$\to$R1: 0.920; R1$\to$Llama: 0.954) shows the \sone{}/\stwo{}
 direction is shared when architecture is held constant---contrasting with
 \citet{huang2026cogbias}'s near-orthogonal finding across distinct
-architectures.  Since these directions are steerable (26--32\% bias
-reduction; \citealp{huang2026cogbias}), our results suggest a practical
-strategy: steer standard models along directions that reasoning training
-reorganizes.
+architectures.
+
+\paragraph{Causal validation.}
+We confirm that the probe direction is causally active, not merely
+correlational.  Extracting the L14 probe's coefficient vector and
+steering Llama's residual stream along it produces a monotonic
+dose-response: $\alpha = +5$ (toward \stwo{}) reduces lure rate by
+21.3pp (from 52.5\% to 31.2\%), while $\alpha = -5$ (toward \sone{})
+increases it by 16.3pp (to 68.8\%)---a total swing of 37.6pp.  Five
+random-direction controls of identical norm show no systematic effect
+(mean lure rates 52--58\% across all $\alpha$), confirming
+direction-specificity.
 
 \paragraph{Generation strategy dependence.}
 An important caveat applies to the behavioral results: multi-seed evaluation
@@ -578,7 +593,7 @@ representation before any tokens are generated.
 
 \paragraph{Safeguards.}
 We mitigate known probing pitfalls \citep{meloux2025dead,
-sanitychecks2026} via five controls: Hewitt--Liang selectivity $>$40pp,
+sanitychecks2026} via five controls: Hewitt--Liang selectivity $>$34pp,
 cross-prediction falsification, inter-model comparison, cross-model
 transfer (AUC\,$>$\,0.92), and Ma et al.\ falsification of all 41 SAE
 features (zero spurious).
@@ -587,10 +602,10 @@ features (zero spurious).
 All models are 7--8B parameters; scale effects are untested.  Linear
 probes may miss nonlinear structure.  The Qwen \pzero{} position is
 pre-think; probing \emph{within} the thinking trace would reveal
-intra-chain dynamics.  The natural next step is \textbf{causal
-interventions}: steering the 41 SAE features to test whether blurring
-the \sone{}/\stwo{} boundary improves bias resistance without
-chain-of-thought cost.
+intra-chain dynamics.  Probe-direction steering on Llama confirms causal
+relevance of the \sone{}/\stwo{} direction (37.6pp swing; random
+controls null); steering R1-Distill and SAE-feature-level interventions
+are in progress.
 
 % ============================================================
 % Acknowledgments

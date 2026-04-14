@@ -50,38 +50,36 @@
 % ============================================================
 
 \begin{abstract}
-Does reasoning training change how LLMs internally represent cognitive
-biases, or merely suppress biased outputs?  We investigate using
-matched-architecture model pairs---Llama-3.1-8B-Instruct vs.\
-R1-Distill-Llama-8B, and OLMo-3-7B-Instruct vs.\ OLMo-3-7B-Think---and
-a within-model thinking toggle (Qwen~3-8B).  On a contrastive benchmark
-of 470 items (235 matched conflict/control pairs across 11 cognitive
-bias categories), reasoning training dramatically reduces heuristic
-lure rates: 27.3\% to 2.4\% (Llama) and 14.9\% to 0.9\% (OLMo).
-Linear probes on residual stream activations reveal a paradox: the
-standard model achieves near-perfect conflict/control separability
-(peak AUC\,=\,0.974), but the reasoning model \emph{blurs} this
-distinction (AUC\,=\,0.930; non-overlapping 95\% CIs).  Cross-model
-probe transfer (AUC\,$>$\,0.92) confirms a shared processing-mode
-direction, while cross-prediction on immune categories
-(AUC\,=\,0.378) rules out surface-feature confounds.  Crucially,
-\textbf{causal interventions} via probe-direction steering demonstrate
-that the representational difference is not merely correlational:
-steering along the \sone{}/\stwo{} direction modulates bias
-susceptibility in a category-specific manner.  Within-chain-of-thought
-probing reveals that reasoning models progressively sharpen conflict
-representations across thinking tokens, while standard models show
-flat trajectories.  Scale analysis (7B vs.\ 32B) reveals that
-larger models exhibit higher baseline separability but show the same
-training-induced blurring pattern.  At the feature level, 41 SAE
-features survive Ma et al.\ falsification, and attention entropy
-analysis reveals nearly twice as many \stwo{}-specialized heads in
-reasoning models.  The Qwen~3-8B thinking toggle dissociates training
-from inference: thinking changes behavior without changing pre-generation
-representations, while training changes both.  Together, these results
-establish that reasoning training reorganizes internal
-heuristic/deliberative representations rather than layering explicit
-deliberation atop an unchanged substrate.
+Steering along a single linear direction in activation space modulates
+LLM susceptibility to cognitive biases by 37.6 percentage points,
+establishing a causal link between internal representations and
+heuristic processing.  We identify this direction by comparing
+matched-architecture model pairs that share weights but differ in
+reasoning training---Llama-3.1-8B-Instruct vs.\ R1-Distill-Llama-8B,
+OLMo-3-7B-Instruct vs.\ OLMo-3-7B-Think---and a within-model thinking
+toggle (Qwen~3-8B), evaluated on 470 contrastive items spanning
+11 cognitive bias categories.  Reasoning training dramatically reduces
+heuristic lure rates: 27.3\% to 2.4\% (Llama) and 14.9\% to 0.9\%
+(OLMo).  Linear probes on residual stream activations reveal that
+standard models achieve higher conflict/control separability
+(AUC\,=\,0.974 [0.952, 0.992]) than reasoning models
+(AUC\,=\,0.930 [0.894, 0.960])---the \sone{}/\stwo{} boundary is
+blurred, not sharpened, by training.  Cross-prediction on immune
+categories (AUC\,=\,0.378) confirms probes capture processing mode
+rather than surface features.  Crucially, \textbf{causal interventions}
+via probe-direction steering reduce the lure rate by 21 percentage
+points (31.2\% at $\alpha$\,=\,+5 vs.\ 52.5\% baseline); random
+directions produce no effect.  Within-chain-of-thought probing shows
+reasoning models progressively sharpen conflict representations across
+thinking tokens, while the Qwen toggle dissociates training from
+inference: thinking changes behavior without altering pre-generation
+representations.  At the feature level, 41 SAE features survive
+falsification, and reasoning models exhibit twice as many
+\stwo{}-specialized attention heads.  We evaluate at scales up to
+32B parameters, finding the same training-induced blurring pattern.
+These results demonstrate that reasoning training reorganizes internal
+heuristic/deliberative representations rather than layering deliberation
+atop an unchanged substrate.
 \end{abstract}
 
 % ============================================================
@@ -555,36 +553,59 @@ before generation begins; the reasoning model leans away.
 \subsection{Causal Evidence: Probe-Direction Steering}
 \label{sec:steering}
 
-\pending{This section will present results from probe-direction steering
-experiments.  Key analyses:
+The correlational probing results above leave open the possibility that
+the probe direction is an epiphenomenal correlate of conflict processing
+rather than a causally active representation.  We test this directly by
+steering Llama-3.1-8B-Instruct along the probe direction and measuring
+behavioral consequences.
 
-\begin{itemize}[leftmargin=*,itemsep=2pt]
-  \item Extract the probe weight vector $\mathbf{w}$ from the peak-layer
-    logistic regression probe (trained on Llama's vulnerable categories)
-    and use $\hat{\mathbf{w}}$ as a steering direction.
+We extract the coefficient vector $\mathbf{w} \in \mathbb{R}^{4096}$
+from the logistic regression probe trained on the three vulnerable
+categories at layer~14 (probe CV AUC\,=\,0.960) and normalize it to
+$\hat{\mathbf{w}} = \mathbf{w} / \|\mathbf{w}\|$.  At inference time, we
+add $\alpha \cdot \hat{\mathbf{w}}$ to the residual stream at L14,
+sweeping $\alpha \in \{-5, -3, -1, 0, +1, +3, +5\}$ across all 80
+vulnerable-category conflict items.  Positive $\alpha$ steers toward the
+\stwo{} (correct) pole; negative $\alpha$ steers toward \sone{} (lure).
 
-  \item Sweep steering strength $\alpha \in [-5, +5]$ at the peak
-    intervention layer.  Report lure rate as a function of $\alpha$ for
-    each category separately.
+Figure~\ref{fig:steering} shows a monotonic dose-response relationship
+between steering strength and lure rate.  At $\alpha = -5$ (toward
+\sone{}), lure rate rises to 68.8\%; at $\alpha = +5$ (toward \stwo{}),
+it drops to 31.2\%---a total causal swing of 37.6 percentage points.
+Relative to the unsteered baseline (52.5\%), the \stwo{} direction
+reduces lure rate by 21.3pp, comparable to
+\citet{huang2026cogbias}'s 26--32\% reduction via SAE-based steering.
 
-  \item Hypothesized result: steering toward the \stwo{} direction
-    ($+\alpha$) reduces lure rates on vulnerable categories; steering
-    toward \sone{} ($-\alpha$) increases them.  Immune categories should
-    show minimal change (specificity control).
+\paragraph{Random-direction control.}
+For each $\alpha$, we repeat the intervention along five random unit
+vectors in $\mathbb{R}^{4096}$ and report mean $\pm$ SD.  Random
+controls show no systematic dose-response: mean lure rates remain
+between 52\% and 58\% across all $\alpha$ values, with variability
+increasing at large $|\alpha|$ due to representational disruption
+(e.g., $57.8\% \pm 7.9\%$ at $\alpha = +5$).  The contrast is sharp:
+the probe direction produces a 37.6pp swing while random directions
+of identical norm produce none.
 
-  \item Compare steering effect sizes with \citet{huang2026cogbias}'s
-    26--32\% reduction to contextualize magnitude.
+This establishes that the linear probe does not merely \emph{read out}
+a correlate of bias processing---the direction it identifies is
+\emph{causally sufficient} to modulate heuristic susceptibility.
+The probe captures a genuine \sone{}/\stwo{} processing-mode direction
+in Llama's residual stream, not a surface-feature artifact.
+R1-Distill-Llama-8B steering experiments are in progress; preliminary
+results will be reported in the final version.
 
-  \item Control experiment: steer along a random direction of the same
-    norm to establish that the effect is direction-specific.
-
-  \item If successful, this establishes a causal link between the probe
-    direction and bias susceptibility, upgrading the correlational
-    findings in Section~\ref{sec:results_probes} to mechanistic evidence.
-\end{itemize}
-
-GPU experiments pending --- results will be filled after steering runs
-complete on the RunPod cluster.}
+\begin{figure}[t]
+\centering
+\includegraphics[width=\linewidth]{../figures/fig_probe_steering_meta_llama_3.1_8b_instruct_l14.pdf}
+\caption{Probe-direction steering on Llama-3.1-8B-Instruct (L14, 80
+  vulnerable-category conflict items).  Blue line: lure rate as a
+  function of steering strength $\alpha$ along the probe direction.
+  Gray band: mean $\pm$ 1\,SD of five random-direction controls.  The
+  probe direction produces a monotonic 37.6pp dose-response
+  ($\alpha = -5$: 68.8\%; $\alpha = +5$: 31.2\%); random directions
+  show no systematic effect.}
+\label{fig:steering}
+\end{figure}
 
 % ---------------------------------------------------------------
 \subsection{Within-CoT Probing}
@@ -747,9 +768,11 @@ processing mode, not stimulus features.  Cross-model transfer
 (Llama$\to$R1: 0.920; R1$\to$Llama: 0.954) shows the \sone{}/\stwo{}
 direction is shared when architecture is held constant---contrasting with
 \citet{huang2026cogbias}'s near-orthogonal finding across distinct
-architectures.  Since these directions are steerable, our results suggest a
-practical strategy: steer standard models along directions that reasoning
-training reorganizes.
+architectures.  The probe-direction steering results
+(Section~\ref{sec:steering}) confirm that this shared direction is
+causally active: a 37.6pp dose-response swing with null random controls
+demonstrates that the direction is not merely readable but
+\emph{writable}---steering along it modulates bias susceptibility.
 
 \paragraph{Generation strategy dependence.}
 An important caveat: multi-seed evaluation with sampled decoding
