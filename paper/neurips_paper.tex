@@ -724,24 +724,48 @@ Appendix~\ref{app:within_cot}.
 \label{sec:scale}
 
 We evaluate OLMo-3.1-32B-Instruct and OLMo-3.1-32B-Think
-(4.5$\times$ more parameters than the 7B variants) to test whether
-scale mitigates cognitive bias vulnerability.
-For standard models, it does not: the overall lure rate \emph{increases}
-from 14.9\% (7B) to 19.6\% (32B), with base rate neglect nearly
-doubling (46\% $\to$ 74.3\%) and framing emerging as a new vulnerability
-(0\% $\to$ 30\%).  At 32B scale, reasoning training drops lure rates
-from 19.6\% to 0.4\% (only sunk cost: 6.7\%, 1/15 items).
-Critically, scale increases standard-model vulnerability
-(14.9\%$\to$19.6\%) but does not meaningfully change reasoning-model
-performance (0.9\%$\to$0.4\%), confirming that reasoning training
-provides robust protection independent of scale.  Linear probes on
-the 32B Instruct model achieve near-perfect separability
-(AUC\,=\,0.9999 at L20/64), confirming the \sone{}/\stwo{} direction
-persists at larger scale.  OLMo-3.1-32B-Think's peak probe AUC is
-0.9978 at layer~20---only 0.0021 below Instruct (0.9999).  The behavioral
-gap widens with scale (19.2pp at 32B vs.\ 14.0pp at 7B), but the
-representational gap \emph{shrinks} (0.0021 vs.\ 0.0055), suggesting the
-vulnerability encoding becomes \emph{more} persistent at larger scale.
+(64 layers, 5120 hidden dimensions; 4.5$\times$ the parameters of the
+7B variants) on the full 470-item benchmark to test whether scale
+mitigates cognitive bias vulnerability.
+
+\paragraph{Behavioral results.}
+For standard models, scale \emph{increases} vulnerability: the overall
+lure rate rises from 14.9\% (7B) to 19.6\% (32B).  The effect is
+category-specific: base rate neglect nearly doubles
+(46\%$\to$74.3\%), framing emerges as an entirely new vulnerability
+(0\%$\to$30\%), and anchoring doubles (5\%$\to$10\%).  Meanwhile,
+loss aversion (33\%$\to$0\%) and availability (13\%$\to$0\%) are
+resolved---scale provides sufficient capacity to override these
+heuristics.  Conjunction fallacy is scale-invariant (50\% at both
+7B and 32B), consistent with a deeply encoded representational bias
+rather than a capacity limitation.
+
+At 32B, reasoning training drops lure rates from 19.6\% to 0.4\%
+(a single lure response: sunk cost, 6.7\%, 1/15 items; all other
+categories: 0\%).  The OLMo family thus exhibits an \emph{asymmetric
+scale effect}: 4.5$\times$ more parameters increases standard-model
+vulnerability by +4.7pp while producing no meaningful change in
+reasoning-model performance ($-$0.5pp, from 0.9\% to 0.4\%---a
+single-item difference).  Reasoning training provides qualitatively
+different protection that does not erode with scale.
+
+\paragraph{Probe results at 32B.}
+Linear probes on OLMo-3.1-32B-Instruct achieve near-perfect
+separability (AUC\,=\,0.9999 at L20/64), with a sharp onset:
+AUC rises from 0.862 (L0) to 0.9999 (L20) and plateaus above 0.996
+for all subsequent layers (L20--L63).  OLMo-3.1-32B-Think peaks at
+0.9978 at the same layer (L20)---only 0.0021 below Instruct.
+
+\paragraph{Diverging behavioral and representational gaps.}
+The behavioral gap between Instruct and Think \emph{widens} with
+scale (14.0pp at 7B $\to$ 19.2pp at 32B), yet the representational
+gap \emph{shrinks} (0.034 $\to$ 0.0021).  At 32B, both models
+encode conflict/control distinctions with near-identical fidelity,
+but only Think translates this encoding into correct responses.
+This reinforces the central ``readable but not writable'' finding:
+scale amplifies the encoding of vulnerability-relevant representations
+in standard models without improving resolution, while reasoning
+training makes the existing encoding actionable.
 Full per-category breakdowns appear in Appendix~\ref{app:scale}.
 
 % ---------------------------------------------------------------
@@ -777,15 +801,19 @@ conflict signal is no longer needed \citep{venhoff2025base}.
 
 \paragraph{Readable but not writable.}
 In Llama, the probe direction is both readable (AUC\,=\,0.974) and
-writable (37.6pp causal swing); in R1-Distill, it is readable
-(AUC\,=\,0.930) but not writable (7.5pp, comparable to random controls).
+writable (37.5pp causal swing, with 100\% of lure reduction converting to
+correct answers); in R1-Distill, it is readable (AUC\,=\,0.930) but not
+writable (7.5pp, comparable to random controls).
 This dissociation---reasoning training decouples the representational
 axis from the behavioral pathway---is direct evidence for the
 S2-by-default hypothesis \citep{evans2019reflections}.
-Qwen's think/no-think toggle reveals the converse: thinking reduces
-lure rates (21\% $\to$ 7.3\%) without changing \pzero{} encoding
-(AUC\,=\,0.971 in both modes)---training and inference-time thinking
-are distinct mechanisms for bias resistance \citep{ziabari2025reasoning}.
+Qwen~3-8B's think/no-think toggle adds a further dimension: both modes
+achieve high conflict separability (AUC\,=\,0.954 and 0.970), but
+cross-mode prediction is at chance (0.496, cosine $= -0.005$).  The
+two modes encode conflict along \emph{orthogonal directions}---training
+and inference-time thinking produce mechanistically distinct conflict
+representations, not scaled versions of the same signal
+\citep{ziabari2025reasoning}.
 
 \paragraph{Non-monotonic deliberation and scale invariance.}
 Within-CoT probing reveals that reasoning is not a smooth sharpening
@@ -802,14 +830,20 @@ in standard models but does not erode the protection conferred by
 reasoning training.
 
 \paragraph{Specificity, safeguards, and limitations.}
-Cross-prediction (AUC\,=\,0.378 on immune categories) confirms the probe
-captures processing mode, not stimulus features; vulnerability is domain-
-and model-specific \citep{stanovich2016rationality}.
-We apply five controls \citep{meloux2025dead, sanitychecks2026}:
+Cross-prediction (AUC\,=\,0.378 on immune categories) and logit
+histograms (immune-item spread $0.03\times$ vulnerable categories)
+confirm the probe captures processing mode, not stimulus features;
+vulnerability is domain- and model-specific
+\citep{stanovich2016rationality}.  A text-only baseline
+(AUC\,=\,0.840) falls far short of the activation probe (0.999),
+with the widest gap on syllogism (0.086 vs.\ 0.999), confirming the
+probe extracts processing-relevant information beyond surface
+features.
+We apply six controls \citep{meloux2025dead, sanitychecks2026}:
 Hewitt--Liang selectivity $>$34pp, cross-prediction falsification,
 cross-model transfer (AUC\,$>$\,0.92), random-direction steering baselines
-(null effect vs.\ 37.6pp for the probe direction), and Ma et al.\ SAE
-falsification (0/41 spurious).
+(null effect vs.\ 37.5pp for the probe direction), text-only baseline,
+and Ma et al.\ SAE falsification (0/41 spurious).
 Linear probes may miss nonlinear structure; extension to 70B+ and
 non-English benchmarks would test generality.  Multi-seed robustness
 analysis appears in Appendix~\ref{app:robustness}.
@@ -923,9 +957,10 @@ increase).
 \subsection{Connection to the Qwen Dissociation}
 
 The within-CoT results resolve the Qwen dissociation reported in
-Section~\ref{sec:results_probes}.  At \pzero{}, Qwen~3-8B produces
-identical probe signatures in think and no-think modes
-(AUC\,=\,0.971 at L34 in both), yet thinking reduces lure rates
+Section~\ref{sec:results_probes}.  At \pzero{}, Qwen~3-8B's two modes
+achieve high conflict separability (AUC\,=\,0.954 no-think; 0.970 think
+at L34), but their probe directions are orthogonal (cross-mode
+AUC\,=\,0.496, cosine $= -0.005$).  Yet thinking reduces lure rates
 from 21\% to 7.3\%.  The within-CoT data show that the thinking
 trace itself performs genuine representational work: the T25--T75
 dip (0.754--0.791) demonstrates active computation on the conflict
@@ -934,11 +969,13 @@ resolves successfully.
 
 The behavioral improvement from Qwen's thinking mode is thus
 mediated by in-context representational change during the trace,
-not by training-induced encoding differences (which would appear
-at \pzero{}).  This confirms that training and inference-time
+not by training-induced encoding differences.  The orthogonal P0
+directions mean the two modes start from different representational
+vantage points, and the thinking trace navigates from one to a
+resolution.  This confirms that training and inference-time
 thinking are mechanistically distinct: training reorganizes the
 \sone{}/\stwo{} encoding (Llama vs.\ R1-Distill), while
-inference-time thinking operates \emph{within} an unchanged
+inference-time thinking operates \emph{within} an orthogonal
 encoding to dynamically resolve conflicts during generation.
 
 \section{Scale Analysis: Full Results}
