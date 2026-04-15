@@ -732,6 +732,55 @@ that Llama's overall lure rate remains stable (27.5\% $\pm$ 1.3pp across
 unaffected by generation strategy, as they measure the pre-decision
 representation.
 
+\subsection{Exact Generation Parameters}
+
+Table~\ref{tab:gen_kwargs} reports the exact generation keyword arguments
+used for each model family.
+
+\begin{table}[ht]
+\centering
+\caption{Generation keyword arguments for all models.  ``Greedy'' denotes
+  the main-text configuration; ``Sampled'' denotes the robustness
+  configuration used in this appendix.}
+\label{tab:gen_kwargs}
+\vspace{4pt}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Parameter} & \textbf{Greedy (main text)} & \textbf{Sampled (this appendix)} \\
+\midrule
+\texttt{do\_sample}       & \texttt{False} & \texttt{True} \\
+\texttt{temperature}      & 1.0            & 0.7 \\
+\texttt{top\_p}           & ---            & 0.95 \\
+\texttt{max\_new\_tokens} & 128 (standard) / 2048 (reasoning) & same \\
+System prompt             & none           & none \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Vendor-recommended settings.}
+Our greedy configuration departs from several vendor recommendations:
+DeepSeek recommends \texttt{temperature=0.5--0.7} for R1 models;
+Qwen recommends \texttt{temperature=0.6} with \texttt{top\_p=0.95}
+for Qwen~3.  We use deterministic greedy decoding throughout the main
+text to (a)~ensure exact reproducibility without seed dependence,
+(b)~isolate representational differences from generation-strategy
+effects, and (c)~simplify the probing analysis, since \pzero{}
+activations are deterministic given the prompt regardless of downstream
+sampling.  This appendix demonstrates that the qualitative findings---
+in particular the S1/S2 lure-rate gap and the stability of probe AUC
+at \pzero{}---are preserved under vendor-recommended sampled decoding
+(\texttt{temperature=0.7}).
+
+\paragraph{Robustness argument.}
+The key robustness claim is twofold: (1)~probe results at \pzero{}
+are \emph{invariant} to generation strategy because \pzero{} activations
+depend only on the prompt, not on downstream sampling; and
+(2)~behavioral lure-rate gaps between S1 and S2 models are qualitatively
+preserved under sampled decoding, though the magnitudes shift for
+reasoning models whose chain-of-thought is sensitive to stochastic
+token selection.
+
 % ============================================================
 % NeurIPS Paper Checklist (required for submission)
 % ============================================================

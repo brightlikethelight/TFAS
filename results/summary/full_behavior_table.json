@@ -1,0 +1,2470 @@
+{
+  "generated": "2026-04-15T05:22:48.780616+00:00",
+  "script": "scripts/compute_full_behavior_table.py",
+  "description": "Full behavioral results: correct/lure/other rates on conflict items, control accuracy, gap, and McNemar tests.",
+  "categories_original": [
+    "crt",
+    "base_rate",
+    "conjunction",
+    "syllogism",
+    "arithmetic",
+    "framing",
+    "anchoring"
+  ],
+  "categories_new": [
+    "sunk_cost",
+    "availability",
+    "certainty_effect",
+    "loss_aversion"
+  ],
+  "models": {
+    "llama": {
+      "display_name": "Llama-3.1-8B",
+      "overall": {
+        "n_conflict": 165,
+        "n_correct": 108,
+        "n_lure": 45,
+        "n_other": 12,
+        "conflict_accuracy": 0.6545,
+        "conflict_accuracy_ci": [
+          0.5792,
+          0.7228
+        ],
+        "lure_rate": 0.2727,
+        "lure_rate_ci": [
+          0.2105,
+          0.3453
+        ],
+        "other_rate": 0.0727,
+        "other_rate_ci": [
+          0.0421,
+          0.1228
+        ],
+        "n_control": 165,
+        "n_control_correct": 146,
+        "control_accuracy": 0.8848,
+        "control_accuracy_ci": [
+          0.8272,
+          0.925
+        ],
+        "gap_pp": 23.03
+      },
+      "mcnemar": {
+        "n_matched_pairs": 165,
+        "b_conflict_correct_control_wrong": 15,
+        "c_conflict_wrong_control_correct": 53,
+        "n_discordant": 68,
+        "chi2_continuity": 20.1324,
+        "p_asymptotic": 7e-06,
+        "p_exact_midp": 3e-06
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_correct": 28,
+          "n_lure": 0,
+          "n_other": 2,
+          "conflict_accuracy": 0.9333,
+          "conflict_accuracy_ci": [
+            0.7868,
+            0.9815
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1135
+          ],
+          "other_rate": 0.0667,
+          "other_rate_ci": [
+            0.0185,
+            0.2132
+          ],
+          "n_control": 30,
+          "n_control_correct": 27,
+          "control_accuracy": 0.9,
+          "control_accuracy_ci": [
+            0.7438,
+            0.9654
+          ],
+          "gap_pp": -3.33
+        },
+        "base_rate": {
+          "n_conflict": 25,
+          "n_correct": 4,
+          "n_lure": 21,
+          "n_other": 0,
+          "conflict_accuracy": 0.16,
+          "conflict_accuracy_ci": [
+            0.064,
+            0.3465
+          ],
+          "lure_rate": 0.84,
+          "lure_rate_ci": [
+            0.6535,
+            0.936
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 84.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_correct": 9,
+          "n_lure": 11,
+          "n_other": 0,
+          "conflict_accuracy": 0.45,
+          "conflict_accuracy_ci": [
+            0.2582,
+            0.6579
+          ],
+          "lure_rate": 0.55,
+          "lure_rate_ci": [
+            0.3421,
+            0.7418
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 55.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_correct": 12,
+          "n_lure": 13,
+          "n_other": 0,
+          "conflict_accuracy": 0.48,
+          "conflict_accuracy_ci": [
+            0.3003,
+            0.665
+          ],
+          "lure_rate": 0.52,
+          "lure_rate_ci": [
+            0.335,
+            0.6997
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 13,
+          "control_accuracy": 0.52,
+          "control_accuracy_ci": [
+            0.335,
+            0.6997
+          ],
+          "gap_pp": 4.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_correct": 25,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_correct": 10,
+          "n_lure": 0,
+          "n_other": 10,
+          "conflict_accuracy": 0.5,
+          "conflict_accuracy_ci": [
+            0.2993,
+            0.7007
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.5,
+          "other_rate_ci": [
+            0.2993,
+            0.7007
+          ],
+          "n_control": 20,
+          "n_control_correct": 16,
+          "control_accuracy": 0.8,
+          "control_accuracy_ci": [
+            0.584,
+            0.9193
+          ],
+          "gap_pp": 30.0
+        },
+        "sunk_cost": null,
+        "availability": null,
+        "certainty_effect": null,
+        "loss_aversion": null
+      }
+    },
+    "r1_distill": {
+      "display_name": "R1-Distill-8B",
+      "overall": {
+        "n_conflict": 165,
+        "n_correct": 131,
+        "n_lure": 4,
+        "n_other": 30,
+        "conflict_accuracy": 0.7939,
+        "conflict_accuracy_ci": [
+          0.7259,
+          0.8486
+        ],
+        "lure_rate": 0.0242,
+        "lure_rate_ci": [
+          0.0095,
+          0.0607
+        ],
+        "other_rate": 0.1818,
+        "other_rate_ci": [
+          0.1304,
+          0.2477
+        ],
+        "n_control": 165,
+        "n_control_correct": 136,
+        "control_accuracy": 0.8242,
+        "control_accuracy_ci": [
+          0.759,
+          0.8747
+        ],
+        "gap_pp": 3.03
+      },
+      "mcnemar": {
+        "n_matched_pairs": 165,
+        "b_conflict_correct_control_wrong": 3,
+        "c_conflict_wrong_control_correct": 8,
+        "n_discordant": 11,
+        "chi2_continuity": 1.4545,
+        "p_asymptotic": 0.2278,
+        "p_exact_midp": 0.145996
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_correct": 25,
+          "n_lure": 1,
+          "n_other": 4,
+          "conflict_accuracy": 0.8333,
+          "conflict_accuracy_ci": [
+            0.6644,
+            0.9266
+          ],
+          "lure_rate": 0.0333,
+          "lure_rate_ci": [
+            0.0059,
+            0.1667
+          ],
+          "other_rate": 0.1333,
+          "other_rate_ci": [
+            0.0531,
+            0.2968
+          ],
+          "n_control": 30,
+          "n_control_correct": 30,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8865,
+            1.0
+          ],
+          "gap_pp": 16.67
+        },
+        "base_rate": {
+          "n_conflict": 25,
+          "n_correct": 4,
+          "n_lure": 1,
+          "n_other": 20,
+          "conflict_accuracy": 0.16,
+          "conflict_accuracy_ci": [
+            0.064,
+            0.3465
+          ],
+          "lure_rate": 0.04,
+          "lure_rate_ci": [
+            0.0071,
+            0.1954
+          ],
+          "other_rate": 0.8,
+          "other_rate_ci": [
+            0.6087,
+            0.9114
+          ],
+          "n_control": 25,
+          "n_control_correct": 4,
+          "control_accuracy": 0.16,
+          "control_accuracy_ci": [
+            0.064,
+            0.3465
+          ],
+          "gap_pp": 0.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_correct": 25,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 24,
+          "control_accuracy": 0.96,
+          "control_accuracy_ci": [
+            0.8046,
+            0.9929
+          ],
+          "gap_pp": -4.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_correct": 24,
+          "n_lure": 0,
+          "n_other": 1,
+          "conflict_accuracy": 0.96,
+          "conflict_accuracy_ci": [
+            0.8046,
+            0.9929
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.04,
+          "other_rate_ci": [
+            0.0071,
+            0.1954
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 4.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_correct": 13,
+          "n_lure": 2,
+          "n_other": 5,
+          "conflict_accuracy": 0.65,
+          "conflict_accuracy_ci": [
+            0.4329,
+            0.8188
+          ],
+          "lure_rate": 0.1,
+          "lure_rate_ci": [
+            0.0279,
+            0.301
+          ],
+          "other_rate": 0.25,
+          "other_rate_ci": [
+            0.1119,
+            0.4687
+          ],
+          "n_control": 20,
+          "n_control_correct": 13,
+          "control_accuracy": 0.65,
+          "control_accuracy_ci": [
+            0.4329,
+            0.8188
+          ],
+          "gap_pp": 0.0
+        },
+        "sunk_cost": null,
+        "availability": null,
+        "certainty_effect": null,
+        "loss_aversion": null
+      }
+    },
+    "qwen_nothink": {
+      "display_name": "Qwen3-8B (no think)",
+      "overall": {
+        "n_conflict": 165,
+        "n_correct": 107,
+        "n_lure": 35,
+        "n_other": 23,
+        "conflict_accuracy": 0.6485,
+        "conflict_accuracy_ci": [
+          0.573,
+          0.7172
+        ],
+        "lure_rate": 0.2121,
+        "lure_rate_ci": [
+          0.1567,
+          0.2807
+        ],
+        "other_rate": 0.1394,
+        "other_rate_ci": [
+          0.0947,
+          0.2005
+        ],
+        "n_control": 165,
+        "n_control_correct": 146,
+        "control_accuracy": 0.8848,
+        "control_accuracy_ci": [
+          0.8272,
+          0.925
+        ],
+        "gap_pp": 23.64
+      },
+      "mcnemar": {
+        "n_matched_pairs": 165,
+        "b_conflict_correct_control_wrong": 12,
+        "c_conflict_wrong_control_correct": 51,
+        "n_discordant": 63,
+        "chi2_continuity": 22.9206,
+        "p_asymptotic": 2e-06,
+        "p_exact_midp": 0.0
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_correct": 22,
+          "n_lure": 0,
+          "n_other": 8,
+          "conflict_accuracy": 0.7333,
+          "conflict_accuracy_ci": [
+            0.5555,
+            0.8582
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1135
+          ],
+          "other_rate": 0.2667,
+          "other_rate_ci": [
+            0.1418,
+            0.4445
+          ],
+          "n_control": 30,
+          "n_control_correct": 30,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8865,
+            1.0
+          ],
+          "gap_pp": 26.67
+        },
+        "base_rate": {
+          "n_conflict": 25,
+          "n_correct": 11,
+          "n_lure": 14,
+          "n_other": 0,
+          "conflict_accuracy": 0.44,
+          "conflict_accuracy_ci": [
+            0.2667,
+            0.6293
+          ],
+          "lure_rate": 0.56,
+          "lure_rate_ci": [
+            0.3707,
+            0.7333
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 56.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_correct": 1,
+          "n_lure": 19,
+          "n_other": 0,
+          "conflict_accuracy": 0.05,
+          "conflict_accuracy_ci": [
+            0.0089,
+            0.2361
+          ],
+          "lure_rate": 0.95,
+          "lure_rate_ci": [
+            0.7639,
+            0.9911
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 95.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_correct": 12,
+          "n_lure": 0,
+          "n_other": 13,
+          "conflict_accuracy": 0.48,
+          "conflict_accuracy_ci": [
+            0.3003,
+            0.665
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.52,
+          "other_rate_ci": [
+            0.335,
+            0.6997
+          ],
+          "n_control": 25,
+          "n_control_correct": 13,
+          "control_accuracy": 0.52,
+          "control_accuracy_ci": [
+            0.335,
+            0.6997
+          ],
+          "gap_pp": 4.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_correct": 25,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_correct": 16,
+          "n_lure": 2,
+          "n_other": 2,
+          "conflict_accuracy": 0.8,
+          "conflict_accuracy_ci": [
+            0.584,
+            0.9193
+          ],
+          "lure_rate": 0.1,
+          "lure_rate_ci": [
+            0.0279,
+            0.301
+          ],
+          "other_rate": 0.1,
+          "other_rate_ci": [
+            0.0279,
+            0.301
+          ],
+          "n_control": 20,
+          "n_control_correct": 13,
+          "control_accuracy": 0.65,
+          "control_accuracy_ci": [
+            0.4329,
+            0.8188
+          ],
+          "gap_pp": -15.0
+        },
+        "sunk_cost": null,
+        "availability": null,
+        "certainty_effect": null,
+        "loss_aversion": null
+      }
+    },
+    "qwen_think": {
+      "display_name": "Qwen3-8B (think)",
+      "overall": {
+        "n_conflict": 165,
+        "n_correct": 140,
+        "n_lure": 12,
+        "n_other": 13,
+        "conflict_accuracy": 0.8485,
+        "conflict_accuracy_ci": [
+          0.7859,
+          0.8952
+        ],
+        "lure_rate": 0.0727,
+        "lure_rate_ci": [
+          0.0421,
+          0.1228
+        ],
+        "other_rate": 0.0788,
+        "other_rate_ci": [
+          0.0466,
+          0.1301
+        ],
+        "n_control": 165,
+        "n_control_correct": 161,
+        "control_accuracy": 0.9758,
+        "control_accuracy_ci": [
+          0.9393,
+          0.9905
+        ],
+        "gap_pp": 12.73
+      },
+      "mcnemar": {
+        "n_matched_pairs": 165,
+        "b_conflict_correct_control_wrong": 1,
+        "c_conflict_wrong_control_correct": 22,
+        "n_discordant": 23,
+        "chi2_continuity": 17.3913,
+        "p_asymptotic": 3e-05,
+        "p_exact_midp": 3e-06
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_correct": 23,
+          "n_lure": 0,
+          "n_other": 7,
+          "conflict_accuracy": 0.7667,
+          "conflict_accuracy_ci": [
+            0.5907,
+            0.8821
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1135
+          ],
+          "other_rate": 0.2333,
+          "other_rate_ci": [
+            0.1179,
+            0.4093
+          ],
+          "n_control": 30,
+          "n_control_correct": 28,
+          "control_accuracy": 0.9333,
+          "control_accuracy_ci": [
+            0.7868,
+            0.9815
+          ],
+          "gap_pp": 16.67
+        },
+        "base_rate": {
+          "n_conflict": 25,
+          "n_correct": 24,
+          "n_lure": 1,
+          "n_other": 0,
+          "conflict_accuracy": 0.96,
+          "conflict_accuracy_ci": [
+            0.8046,
+            0.9929
+          ],
+          "lure_rate": 0.04,
+          "lure_rate_ci": [
+            0.0071,
+            0.1954
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 4.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_correct": 9,
+          "n_lure": 11,
+          "n_other": 0,
+          "conflict_accuracy": 0.45,
+          "conflict_accuracy_ci": [
+            0.2582,
+            0.6579
+          ],
+          "lure_rate": 0.55,
+          "lure_rate_ci": [
+            0.3421,
+            0.7418
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 55.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_correct": 25,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_correct": 24,
+          "n_lure": 0,
+          "n_other": 1,
+          "conflict_accuracy": 0.96,
+          "conflict_accuracy_ci": [
+            0.8046,
+            0.9929
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.04,
+          "other_rate_ci": [
+            0.0071,
+            0.1954
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 4.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 5,
+          "conflict_accuracy": 0.75,
+          "conflict_accuracy_ci": [
+            0.5313,
+            0.8881
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.25,
+          "other_rate_ci": [
+            0.1119,
+            0.4687
+          ],
+          "n_control": 20,
+          "n_control_correct": 18,
+          "control_accuracy": 0.9,
+          "control_accuracy_ci": [
+            0.699,
+            0.9721
+          ],
+          "gap_pp": 15.0
+        },
+        "sunk_cost": null,
+        "availability": null,
+        "certainty_effect": null,
+        "loss_aversion": null
+      }
+    },
+    "olmo_instruct": {
+      "display_name": "OLMo-3-7B-Instruct",
+      "overall": {
+        "n_conflict": 235,
+        "n_correct": 176,
+        "n_lure": 35,
+        "n_other": 24,
+        "conflict_accuracy": 0.7489,
+        "conflict_accuracy_ci": [
+          0.6898,
+          0.8001
+        ],
+        "lure_rate": 0.1489,
+        "lure_rate_ci": [
+          0.1091,
+          0.2001
+        ],
+        "other_rate": 0.1021,
+        "other_rate_ci": [
+          0.0696,
+          0.1475
+        ],
+        "n_control": 235,
+        "n_control_correct": 197,
+        "control_accuracy": 0.8383,
+        "control_accuracy_ci": [
+          0.7858,
+          0.8799
+        ],
+        "gap_pp": 8.94
+      },
+      "mcnemar": {
+        "n_matched_pairs": 235,
+        "b_conflict_correct_control_wrong": 26,
+        "c_conflict_wrong_control_correct": 47,
+        "n_discordant": 73,
+        "chi2_continuity": 5.4795,
+        "p_asymptotic": 0.019241,
+        "p_exact_midp": 0.01408
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_correct": 22,
+          "n_lure": 1,
+          "n_other": 7,
+          "conflict_accuracy": 0.7333,
+          "conflict_accuracy_ci": [
+            0.5555,
+            0.8582
+          ],
+          "lure_rate": 0.0333,
+          "lure_rate_ci": [
+            0.0059,
+            0.1667
+          ],
+          "other_rate": 0.2333,
+          "other_rate_ci": [
+            0.1179,
+            0.4093
+          ],
+          "n_control": 30,
+          "n_control_correct": 27,
+          "control_accuracy": 0.9,
+          "control_accuracy_ci": [
+            0.7438,
+            0.9654
+          ],
+          "gap_pp": 16.67
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_correct": 19,
+          "n_lure": 16,
+          "n_other": 0,
+          "conflict_accuracy": 0.5429,
+          "conflict_accuracy_ci": [
+            0.3819,
+            0.6953
+          ],
+          "lure_rate": 0.4571,
+          "lure_rate_ci": [
+            0.3047,
+            0.6181
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.0989
+          ],
+          "n_control": 35,
+          "n_control_correct": 35,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.9011,
+            1.0
+          ],
+          "gap_pp": 45.71
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_correct": 10,
+          "n_lure": 10,
+          "n_other": 0,
+          "conflict_accuracy": 0.5,
+          "conflict_accuracy_ci": [
+            0.2993,
+            0.7007
+          ],
+          "lure_rate": 0.5,
+          "lure_rate_ci": [
+            0.2993,
+            0.7007
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 50.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_correct": 25,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 5,
+          "conflict_accuracy": 0.8,
+          "conflict_accuracy_ci": [
+            0.6087,
+            0.9114
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.2,
+          "other_rate_ci": [
+            0.0886,
+            0.3913
+          ],
+          "n_control": 25,
+          "n_control_correct": 24,
+          "control_accuracy": 0.96,
+          "control_accuracy_ci": [
+            0.8046,
+            0.9929
+          ],
+          "gap_pp": 16.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_correct": 7,
+          "n_lure": 1,
+          "n_other": 12,
+          "conflict_accuracy": 0.35,
+          "conflict_accuracy_ci": [
+            0.1812,
+            0.5671
+          ],
+          "lure_rate": 0.05,
+          "lure_rate_ci": [
+            0.0089,
+            0.2361
+          ],
+          "other_rate": 0.6,
+          "other_rate_ci": [
+            0.3866,
+            0.7812
+          ],
+          "n_control": 20,
+          "n_control_correct": 10,
+          "control_accuracy": 0.5,
+          "control_accuracy_ci": [
+            0.2993,
+            0.7007
+          ],
+          "gap_pp": 15.0
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 0,
+          "control_accuracy": 0.0,
+          "control_accuracy_ci": [
+            0.0,
+            0.2039
+          ],
+          "gap_pp": -100.0
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_correct": 13,
+          "n_lure": 2,
+          "n_other": 0,
+          "conflict_accuracy": 0.8667,
+          "conflict_accuracy_ci": [
+            0.6212,
+            0.9626
+          ],
+          "lure_rate": 0.1333,
+          "lure_rate_ci": [
+            0.0374,
+            0.3788
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 6,
+          "control_accuracy": 0.4,
+          "control_accuracy_ci": [
+            0.1982,
+            0.6425
+          ],
+          "gap_pp": -46.67
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 15,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_correct": 10,
+          "n_lure": 5,
+          "n_other": 0,
+          "conflict_accuracy": 0.6667,
+          "conflict_accuracy_ci": [
+            0.4171,
+            0.8482
+          ],
+          "lure_rate": 0.3333,
+          "lure_rate_ci": [
+            0.1518,
+            0.5829
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 15,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "gap_pp": 33.33
+        }
+      }
+    },
+    "olmo_think": {
+      "display_name": "OLMo-3-7B-Think",
+      "overall": {
+        "n_conflict": 235,
+        "n_correct": 207,
+        "n_lure": 2,
+        "n_other": 26,
+        "conflict_accuracy": 0.8809,
+        "conflict_accuracy_ci": [
+          0.8332,
+          0.9163
+        ],
+        "lure_rate": 0.0085,
+        "lure_rate_ci": [
+          0.0023,
+          0.0305
+        ],
+        "other_rate": 0.1106,
+        "other_rate_ci": [
+          0.0766,
+          0.1572
+        ],
+        "n_control": 235,
+        "n_control_correct": 191,
+        "control_accuracy": 0.8128,
+        "control_accuracy_ci": [
+          0.758,
+          0.8575
+        ],
+        "gap_pp": -6.81
+      },
+      "mcnemar": {
+        "n_matched_pairs": 235,
+        "b_conflict_correct_control_wrong": 25,
+        "c_conflict_wrong_control_correct": 9,
+        "n_discordant": 34,
+        "chi2_continuity": 6.6176,
+        "p_asymptotic": 0.010097,
+        "p_exact_midp": 0.005988
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_correct": 29,
+          "n_lure": 1,
+          "n_other": 0,
+          "conflict_accuracy": 0.9667,
+          "conflict_accuracy_ci": [
+            0.8333,
+            0.9941
+          ],
+          "lure_rate": 0.0333,
+          "lure_rate_ci": [
+            0.0059,
+            0.1667
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1135
+          ],
+          "n_control": 30,
+          "n_control_correct": 28,
+          "control_accuracy": 0.9333,
+          "control_accuracy_ci": [
+            0.7868,
+            0.9815
+          ],
+          "gap_pp": -3.33
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_correct": 35,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.9011,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.0989
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.0989
+          ],
+          "n_control": 35,
+          "n_control_correct": 35,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.9011,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_correct": 18,
+          "n_lure": 1,
+          "n_other": 6,
+          "conflict_accuracy": 0.72,
+          "conflict_accuracy_ci": [
+            0.5242,
+            0.8572
+          ],
+          "lure_rate": 0.04,
+          "lure_rate_ci": [
+            0.0071,
+            0.1954
+          ],
+          "other_rate": 0.24,
+          "other_rate_ci": [
+            0.115,
+            0.4343
+          ],
+          "n_control": 25,
+          "n_control_correct": 17,
+          "control_accuracy": 0.68,
+          "control_accuracy_ci": [
+            0.4841,
+            0.828
+          ],
+          "gap_pp": -4.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_correct": 22,
+          "n_lure": 0,
+          "n_other": 3,
+          "conflict_accuracy": 0.88,
+          "conflict_accuracy_ci": [
+            0.7004,
+            0.9583
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.12,
+          "other_rate_ci": [
+            0.0417,
+            0.2996
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 12.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_correct": 16,
+          "n_lure": 0,
+          "n_other": 4,
+          "conflict_accuracy": 0.8,
+          "conflict_accuracy_ci": [
+            0.584,
+            0.9193
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.2,
+          "other_rate_ci": [
+            0.0807,
+            0.416
+          ],
+          "n_control": 20,
+          "n_control_correct": 14,
+          "control_accuracy": 0.7,
+          "control_accuracy_ci": [
+            0.481,
+            0.8545
+          ],
+          "gap_pp": -10.0
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_correct": 7,
+          "n_lure": 0,
+          "n_other": 8,
+          "conflict_accuracy": 0.4667,
+          "conflict_accuracy_ci": [
+            0.2481,
+            0.6988
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.5333,
+          "other_rate_ci": [
+            0.3012,
+            0.7519
+          ],
+          "n_control": 15,
+          "n_control_correct": 0,
+          "control_accuracy": 0.0,
+          "control_accuracy_ci": [
+            0.0,
+            0.2039
+          ],
+          "gap_pp": -46.67
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 15,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 15,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_correct": 10,
+          "n_lure": 0,
+          "n_other": 5,
+          "conflict_accuracy": 0.6667,
+          "conflict_accuracy_ci": [
+            0.4171,
+            0.8482
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.3333,
+          "other_rate_ci": [
+            0.1518,
+            0.5829
+          ],
+          "n_control": 15,
+          "n_control_correct": 2,
+          "control_accuracy": 0.1333,
+          "control_accuracy_ci": [
+            0.0374,
+            0.3788
+          ],
+          "gap_pp": -53.33
+        }
+      }
+    },
+    "olmo32b_instruct": {
+      "display_name": "OLMo-2-32B-Instruct",
+      "overall": {
+        "n_conflict": 235,
+        "n_correct": 181,
+        "n_lure": 46,
+        "n_other": 8,
+        "conflict_accuracy": 0.7702,
+        "conflict_accuracy_ci": [
+          0.7123,
+          0.8194
+        ],
+        "lure_rate": 0.1957,
+        "lure_rate_ci": [
+          0.1501,
+          0.2512
+        ],
+        "other_rate": 0.034,
+        "other_rate_ci": [
+          0.0173,
+          0.0657
+        ],
+        "n_control": 235,
+        "n_control_correct": 192,
+        "control_accuracy": 0.817,
+        "control_accuracy_ci": [
+          0.7626,
+          0.8612
+        ],
+        "gap_pp": 4.68
+      },
+      "mcnemar": {
+        "n_matched_pairs": 235,
+        "b_conflict_correct_control_wrong": 40,
+        "c_conflict_wrong_control_correct": 51,
+        "n_discordant": 91,
+        "chi2_continuity": 1.0989,
+        "p_asymptotic": 0.294507,
+        "p_exact_midp": 0.251322
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_correct": 26,
+          "n_lure": 2,
+          "n_other": 2,
+          "conflict_accuracy": 0.8667,
+          "conflict_accuracy_ci": [
+            0.7032,
+            0.9469
+          ],
+          "lure_rate": 0.0667,
+          "lure_rate_ci": [
+            0.0185,
+            0.2132
+          ],
+          "other_rate": 0.0667,
+          "other_rate_ci": [
+            0.0185,
+            0.2132
+          ],
+          "n_control": 30,
+          "n_control_correct": 28,
+          "control_accuracy": 0.9333,
+          "control_accuracy_ci": [
+            0.7868,
+            0.9815
+          ],
+          "gap_pp": 6.67
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_correct": 9,
+          "n_lure": 26,
+          "n_other": 0,
+          "conflict_accuracy": 0.2571,
+          "conflict_accuracy_ci": [
+            0.1416,
+            0.4207
+          ],
+          "lure_rate": 0.7429,
+          "lure_rate_ci": [
+            0.5793,
+            0.8584
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.0989
+          ],
+          "n_control": 35,
+          "n_control_correct": 35,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.9011,
+            1.0
+          ],
+          "gap_pp": 74.29
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_correct": 10,
+          "n_lure": 10,
+          "n_other": 0,
+          "conflict_accuracy": 0.5,
+          "conflict_accuracy_ci": [
+            0.2993,
+            0.7007
+          ],
+          "lure_rate": 0.5,
+          "lure_rate_ci": [
+            0.2993,
+            0.7007
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 19,
+          "control_accuracy": 0.95,
+          "control_accuracy_ci": [
+            0.7639,
+            0.9911
+          ],
+          "gap_pp": 45.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_correct": 24,
+          "n_lure": 0,
+          "n_other": 1,
+          "conflict_accuracy": 0.96,
+          "conflict_accuracy_ci": [
+            0.8046,
+            0.9929
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.04,
+          "other_rate_ci": [
+            0.0071,
+            0.1954
+          ],
+          "n_control": 25,
+          "n_control_correct": 22,
+          "control_accuracy": 0.88,
+          "control_accuracy_ci": [
+            0.7004,
+            0.9583
+          ],
+          "gap_pp": -8.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_correct": 24,
+          "n_lure": 0,
+          "n_other": 1,
+          "conflict_accuracy": 0.96,
+          "conflict_accuracy_ci": [
+            0.8046,
+            0.9929
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.04,
+          "other_rate_ci": [
+            0.0071,
+            0.1954
+          ],
+          "n_control": 25,
+          "n_control_correct": 18,
+          "control_accuracy": 0.72,
+          "control_accuracy_ci": [
+            0.5242,
+            0.8572
+          ],
+          "gap_pp": -24.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_correct": 14,
+          "n_lure": 6,
+          "n_other": 0,
+          "conflict_accuracy": 0.7,
+          "conflict_accuracy_ci": [
+            0.481,
+            0.8545
+          ],
+          "lure_rate": 0.3,
+          "lure_rate_ci": [
+            0.1455,
+            0.519
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 18,
+          "control_accuracy": 0.9,
+          "control_accuracy_ci": [
+            0.699,
+            0.9721
+          ],
+          "gap_pp": 20.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_correct": 14,
+          "n_lure": 2,
+          "n_other": 4,
+          "conflict_accuracy": 0.7,
+          "conflict_accuracy_ci": [
+            0.481,
+            0.8545
+          ],
+          "lure_rate": 0.1,
+          "lure_rate_ci": [
+            0.0279,
+            0.301
+          ],
+          "other_rate": 0.2,
+          "other_rate_ci": [
+            0.0807,
+            0.416
+          ],
+          "n_control": 20,
+          "n_control_correct": 17,
+          "control_accuracy": 0.85,
+          "control_accuracy_ci": [
+            0.6396,
+            0.9476
+          ],
+          "gap_pp": 15.0
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 0,
+          "control_accuracy": 0.0,
+          "control_accuracy_ci": [
+            0.0,
+            0.2039
+          ],
+          "gap_pp": -100.0
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 5,
+          "control_accuracy": 0.3333,
+          "control_accuracy_ci": [
+            0.1518,
+            0.5829
+          ],
+          "gap_pp": -66.67
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 15,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 15,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "gap_pp": 0.0
+        }
+      }
+    },
+    "olmo32b_think": {
+      "display_name": "OLMo-2-32B-Think",
+      "overall": {
+        "n_conflict": 235,
+        "n_correct": 228,
+        "n_lure": 1,
+        "n_other": 6,
+        "conflict_accuracy": 0.9702,
+        "conflict_accuracy_ci": [
+          0.9398,
+          0.9855
+        ],
+        "lure_rate": 0.0043,
+        "lure_rate_ci": [
+          0.0008,
+          0.0237
+        ],
+        "other_rate": 0.0255,
+        "other_rate_ci": [
+          0.0118,
+          0.0546
+        ],
+        "n_control": 235,
+        "n_control_correct": 214,
+        "control_accuracy": 0.9106,
+        "control_accuracy_ci": [
+          0.8673,
+          0.9408
+        ],
+        "gap_pp": -5.96
+      },
+      "mcnemar": {
+        "n_matched_pairs": 235,
+        "b_conflict_correct_control_wrong": 15,
+        "c_conflict_wrong_control_correct": 1,
+        "n_discordant": 16,
+        "chi2_continuity": 10.5625,
+        "p_asymptotic": 0.001154,
+        "p_exact_midp": 0.000275
+      },
+      "categories": {
+        "crt": {
+          "n_conflict": 30,
+          "n_correct": 30,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8865,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1135
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1135
+          ],
+          "n_control": 30,
+          "n_control_correct": 30,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8865,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "base_rate": {
+          "n_conflict": 35,
+          "n_correct": 35,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.9011,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.0989
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.0989
+          ],
+          "n_control": 35,
+          "n_control_correct": 35,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.9011,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "conjunction": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "syllogism": {
+          "n_conflict": 25,
+          "n_correct": 25,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "arithmetic": {
+          "n_conflict": 25,
+          "n_correct": 25,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1332
+          ],
+          "n_control": 25,
+          "n_control_correct": 25,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8668,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "framing": {
+          "n_conflict": 20,
+          "n_correct": 20,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "n_control": 20,
+          "n_control_correct": 20,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.8389,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "anchoring": {
+          "n_conflict": 20,
+          "n_correct": 16,
+          "n_lure": 0,
+          "n_other": 4,
+          "conflict_accuracy": 0.8,
+          "conflict_accuracy_ci": [
+            0.584,
+            0.9193
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.1611
+          ],
+          "other_rate": 0.2,
+          "other_rate_ci": [
+            0.0807,
+            0.416
+          ],
+          "n_control": 20,
+          "n_control_correct": 17,
+          "control_accuracy": 0.85,
+          "control_accuracy_ci": [
+            0.6396,
+            0.9476
+          ],
+          "gap_pp": 5.0
+        },
+        "sunk_cost": {
+          "n_conflict": 15,
+          "n_correct": 12,
+          "n_lure": 1,
+          "n_other": 2,
+          "conflict_accuracy": 0.8,
+          "conflict_accuracy_ci": [
+            0.5481,
+            0.9295
+          ],
+          "lure_rate": 0.0667,
+          "lure_rate_ci": [
+            0.0119,
+            0.2982
+          ],
+          "other_rate": 0.1333,
+          "other_rate_ci": [
+            0.0374,
+            0.3788
+          ],
+          "n_control": 15,
+          "n_control_correct": 0,
+          "control_accuracy": 0.0,
+          "control_accuracy_ci": [
+            0.0,
+            0.2039
+          ],
+          "gap_pp": -80.0
+        },
+        "availability": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 15,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "certainty_effect": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 15,
+          "control_accuracy": 1.0,
+          "control_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "gap_pp": 0.0
+        },
+        "loss_aversion": {
+          "n_conflict": 15,
+          "n_correct": 15,
+          "n_lure": 0,
+          "n_other": 0,
+          "conflict_accuracy": 1.0,
+          "conflict_accuracy_ci": [
+            0.7961,
+            1.0
+          ],
+          "lure_rate": 0.0,
+          "lure_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "other_rate": 0.0,
+          "other_rate_ci": [
+            0.0,
+            0.2039
+          ],
+          "n_control": 15,
+          "n_control_correct": 12,
+          "control_accuracy": 0.8,
+          "control_accuracy_ci": [
+            0.5481,
+            0.9295
+          ],
+          "gap_pp": -20.0
+        }
+      }
+    }
+  }
+}

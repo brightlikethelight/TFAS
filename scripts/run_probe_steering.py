@@ -13,6 +13,16 @@ actually mediates the behavior.
 
 Standalone script, no Hydra. Deployable directly to a GPU pod.
 
+Supports two steering positions via --steer-position:
+  - "continuous" (default): hook stays active during generation, so the
+    steering perturbation is applied at EVERY token position (prompt +
+    all generated tokens). This is the right choice for reasoning models
+    (R1-Distill) where the model generates 500+ thinking tokens before
+    the answer -- a prompt-only signal would wash out.
+  - "prompt": steering is applied only during the prompt forward pass.
+    The hook is removed before model.generate() produces new tokens.
+    This isolates the effect to the initial representation.
+
 Usage:
     python scripts/run_probe_steering.py \
         --model unsloth/Meta-Llama-3.1-8B-Instruct \
@@ -23,6 +33,15 @@ Usage:
         --n-random-controls 5 \
         --max-new-tokens 128 \
         --output results/causal/probe_steering_llama_l14.json \
+        --cache-dir /workspace/hf_cache
+
+    # For reasoning models (temporal washout experiment):
+    python scripts/run_probe_steering.py \
+        --model deepseek-ai/DeepSeek-R1-Distill-Llama-8B \
+        --h5-path data/activations/r1_distill_llama.h5 \
+        --target-layer 14 --max-new-tokens 2048 \
+        --steer-position continuous \
+        --output results/causal/probe_steering_r1_continuous_l14.json \
         --cache-dir /workspace/hf_cache
 """
 from __future__ import annotations
@@ -271,8 +290,17 @@ def run_behavioral_eval(
     *,
     max_new_tokens: int = 128,
     hook_ctx: Any = None,
+    steer_position: str = "continuous",
 ) -> dict[str, Any]:
     """Run behavioral eval on items, optionally under a steering hook context.
+
+    Args:
+        steer_position: "continuous" keeps the hook active during the entire
+            model.generate() call (prompt encoding + all generated tokens).
+            "prompt" applies the hook only during a manual prompt forward pass,
+            removes it, then runs generation without steering. This matters for
+            reasoning models where 500+ thinking tokens can wash out a
+            prompt-only signal.
 
     Returns dict with lure_rate, correct_rate, other_rate, n, and per-item details.
     """
@@ -280,9 +308,46 @@ def run_behavioral_eval(
 
     verdicts: list[str] = []
 
-    ctx = hook_ctx if hook_ctx is not None else _NullContext()
+    if steer_position == "continuous":
+        # Original behavior: hook wraps the whole generation loop.
+        ctx = hook_ctx if hook_ctx is not None else _NullContext()
 
-    with ctx:
+        with ctx:
+            for item in items:
+                messages = [{"role": "user", "content": item["prompt"]}]
+                if item.get("system_prompt"):
+                    messages.insert(0, {"role": "system", "content": item["system_prompt"]})
+
+                input_text = tokenizer.apply_chat_template(
+                    messages, tokenize=False, add_generation_prompt=True
+                )
+                inputs = tokenizer(input_text, return_tensors="pt").to(model.device)
+
+                with torch.no_grad():
+                    out = model.generate(
+                        inputs.input_ids,
+                        attention_mask=inputs.attention_mask,
+                        max_new_tokens=max_new_tokens,
+                        do_sample=False,
+                    )
+
+                n_gen = out.shape[1] - inputs.input_ids.shape[1]
+                response = tokenizer.decode(
+                    out[0][inputs.input_ids.shape[1]:], skip_special_tokens=False
+                )
+
+                verdict = classify_response(
+                    response,
+                    item["correct_answer"],
+                    item["lure_answer"],
+                    item.get("answer_pattern", ""),
+                    item.get("lure_pattern", ""),
+                )
+                verdicts.append(verdict)
+
+    elif steer_position == "prompt":
+        # Prompt-only: steer during a prefill forward pass, then generate
+        # without the hook so generated tokens are unperturbed.
         for item in items:
             messages = [{"role": "user", "content": item["prompt"]}]
             if item.get("system_prompt"):
@@ -293,18 +358,41 @@ def run_behavioral_eval(
             )
             inputs = tokenizer(input_text, return_tensors="pt").to(model.device)
 
+            # Step 1: Run a steered prefill pass to produce perturbed KV cache.
+            ctx = hook_ctx if hook_ctx is not None else _NullContext()
+            with ctx:
+                with torch.no_grad():
+                    prefill_out = model(
+                        input_ids=inputs.input_ids,
+                        attention_mask=inputs.attention_mask,
+                        use_cache=True,
+                    )
+            # Hook is now removed (exited context manager).
+
+            # Step 2: Generate from the perturbed KV cache, no steering.
+            past_kv = prefill_out.past_key_values
+            # The last token's logits determine the first generated token.
+            last_token_logits = prefill_out.logits[:, -1:, :]
+            first_token_id = last_token_logits.argmax(dim=-1)  # greedy
+
             with torch.no_grad():
                 out = model.generate(
-                    inputs.input_ids,
-                    attention_mask=inputs.attention_mask,
-                    max_new_tokens=max_new_tokens,
+                    input_ids=first_token_id,
+                    attention_mask=torch.cat(
+                        [inputs.attention_mask,
+                         torch.ones(1, 1, device=model.device, dtype=inputs.attention_mask.dtype)],
+                        dim=1,
+                    ),
+                    past_key_values=past_kv,
+                    max_new_tokens=max_new_tokens - 1,  # already generated 1 token
                     do_sample=False,
                 )
 
-            n_gen = out.shape[1] - inputs.input_ids.shape[1]
-            response = tokenizer.decode(
-                out[0][inputs.input_ids.shape[1]:], skip_special_tokens=False
+            # Reconstruct full generated sequence for decoding.
+            full_gen_ids = torch.cat(
+                [first_token_id, out[:, 1:]], dim=1
             )
+            response = tokenizer.decode(full_gen_ids[0], skip_special_tokens=False)
 
             verdict = classify_response(
                 response,
@@ -314,6 +402,11 @@ def run_behavioral_eval(
                 item.get("lure_pattern", ""),
             )
             verdicts.append(verdict)
+
+    else:
+        raise ValueError(
+            f"Unknown steer_position={steer_position!r}. Expected 'continuous' or 'prompt'."
+        )
 
     n = len(verdicts)
     n_lure = sum(1 for v in verdicts if v == "lure")
@@ -357,8 +450,13 @@ def run_dose_response(
     max_new_tokens: int = 128,
     n_random_controls: int = 5,
     random_seed: int = 42,
+    steer_position: str = "continuous",
 ) -> tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
     """Sweep alphas for both the probe direction and random controls.
+
+    Args:
+        steer_position: "continuous" or "prompt". Passed through to
+            run_behavioral_eval. See that function's docstring for details.
 
     Returns:
         probe_results: {alpha_str: {lure_rate, correct_rate, ...}}
@@ -380,6 +478,7 @@ def run_dose_response(
     print(f"  PROBE-DIRECTION STEERING SWEEP")
     print(f"  Layer {target_layer}, {len(items)} conflict items, "
           f"{len(alphas)} alphas, {n_random_controls} random controls")
+    print(f"  Steer position: {steer_position}")
     print(f"{'='*70}")
 
     # --- Probe direction sweep ---
@@ -392,6 +491,7 @@ def run_dose_response(
                 model, tokenizer, items,
                 max_new_tokens=max_new_tokens,
                 hook_ctx=None,
+                steer_position=steer_position,
             )
         else:
             hook = SteeringHook(
@@ -401,6 +501,7 @@ def run_dose_response(
                 model, tokenizer, items,
                 max_new_tokens=max_new_tokens,
                 hook_ctx=hook,
+                steer_position=steer_position,
             )
         elapsed = time.time() - t0
         probe_results[str(float(alpha))] = res
@@ -434,6 +535,7 @@ def run_dose_response(
                     model, tokenizer, items,
                     max_new_tokens=max_new_tokens,
                     hook_ctx=hook,
+                    steer_position=steer_position,
                 )
             lure_rates.append(res["lure_rate"])
             correct_rates.append(res["correct_rate"])
@@ -467,6 +569,7 @@ def make_figure(
     model_name: str,
     target_layer: int,
     figure_path: str,
+    steer_position: str = "continuous",
 ) -> None:
     """Dose-response figure: probe direction vs random controls."""
     sorted_alphas = sorted(alphas)
@@ -525,8 +628,9 @@ def make_figure(
     ax2.grid(True, alpha=0.15)
 
     short_model = model_name.split("/")[-1]
+    pos_label = "continuous" if steer_position == "continuous" else "prompt-only"
     fig.suptitle(
-        f"Probe-direction steering: {short_model}, layer {target_layer}\n"
+        f"Probe-direction steering: {short_model}, layer {target_layer} ({pos_label})\n"
         f"(+alpha = toward S2 / away from conflict-typical representation)",
         fontsize=13, y=1.02,
     )
@@ -570,6 +674,13 @@ def main() -> None:
                         help="Number of random-direction control baselines.")
     parser.add_argument("--max-new-tokens", type=int, default=128,
                         help="Max tokens to generate per item.")
+    parser.add_argument("--steer-position", type=str, default="continuous",
+                        choices=["continuous", "prompt"],
+                        help="Where to apply steering. 'continuous' (default): hook "
+                             "stays active during generation, steering every token. "
+                             "'prompt': hook fires only during prompt prefill, then "
+                             "is removed before generation. Use 'continuous' for "
+                             "reasoning models to avoid temporal washout.")
     parser.add_argument("--output", type=str, required=True,
                         help="Path for output JSON.")
     parser.add_argument("--figure-dir", type=str, default=None,
@@ -606,6 +717,7 @@ def main() -> None:
     print(f"  Alphas:       {alphas}")
     print(f"  Random dirs:  {args.n_random_controls}")
     print(f"  Max tokens:   {args.max_new_tokens}")
+    print(f"  Steer pos:    {args.steer_position}")
     print(f"  Seed:         {args.seed}")
     print(f"  Smoke test:   {args.smoke_test}")
     print()
@@ -681,6 +793,7 @@ def main() -> None:
         max_new_tokens=args.max_new_tokens,
         n_random_controls=args.n_random_controls,
         random_seed=args.seed + 7777,
+        steer_position=args.steer_position,
     )
     t_sweep = time.time() - t_sweep
     print(f"\n  Sweep completed in {t_sweep:.1f}s")
@@ -715,6 +828,7 @@ def main() -> None:
         "config": {
             "max_new_tokens": args.max_new_tokens,
             "n_random_controls": args.n_random_controls,
+            "steer_position": args.steer_position,
             "seed": args.seed,
             "dtype": args.dtype,
             "smoke_test": args.smoke_test,
@@ -742,6 +856,7 @@ def main() -> None:
         model_name=args.model,
         target_layer=args.target_layer,
         figure_path=figure_path,
+        steer_position=args.steer_position,
     )
 
     # ── Summary ───────────────────────────────────────────────────────
