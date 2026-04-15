@@ -124,20 +124,13 @@ boppana2026reasoning}.  The critical question is whether fast/slow modes
 have \emph{mechanistic correlates} in internal representations, and how
 those correlates change when a model is trained to reason.
 
-Recent work on activation steering \citep{turner2023activation,
-rimsky2024steering} has demonstrated that targeted interventions on
-internal representations can modulate model behavior in a causally
-specific manner---adding or subtracting ``steering vectors'' from
-residual stream activations shifts outputs along interpretable
-dimensions (e.g., truthfulness, sycophancy, refusal).  This raises a
-natural question for the dual-process setting: if linear probes identify
-a direction in activation space that separates \sone{}-like from
-\stwo{}-like processing, can steering along that direction
-\emph{causally} modulate bias susceptibility?  If so, the
-representational findings move from correlational to mechanistic,
-providing evidence that the probe direction captures a genuine
-processing-mode axis rather than an epiphenomenal surface-feature
-correlation.
+Activation steering \citep{turner2023activation, rimsky2024steering}
+shows that adding steering vectors to residual stream activations can
+modulate behavior along interpretable dimensions.  This raises a natural
+question: if linear probes identify a direction separating \sone{}-like
+from \stwo{}-like processing, can steering along it \emph{causally}
+modulate bias susceptibility---moving findings from correlational to
+mechanistic?
 
 We address this question with a natural experiment: Llama-3.1-8B-Instruct
 and DeepSeek-R1-Distill-Llama-8B share identical architectures (32
@@ -165,37 +158,17 @@ attributable to training, not architecture.  We make six contributions:
   transfer (AUC\,$>$\,0.92) confirming specificity to a shared
   processing-mode direction.
 
-  \item \textbf{Causal evidence via probe-direction steering}: we extract
-  the linear probe's weight vector as a steering direction and apply
-  activation patching at inference time.  Steering along the \stwo{}
-  direction reduces lure rates on vulnerable categories, establishing
-  that the probe direction is \emph{causally} linked to bias
-  susceptibility, not merely correlational.
+  \item \textbf{Causal evidence via probe-direction steering}: steering along the probe's weight vector reduces lure rates on vulnerable categories, establishing a \emph{causal} link between the probe direction and bias susceptibility.
 
-  \item \textbf{Within-chain-of-thought probing}: probe AUC follows a
-  non-monotonic trajectory across thinking tokens---peaking at onset
-  (0.973), dropping during deliberation (0.754), and rebounding before
-  the answer (0.971)---demonstrating genuine computation rather than
-  decorative reasoning.
+  \item \textbf{Within-CoT probing}: probe AUC follows a non-monotonic trajectory---peaking at onset (0.973), dropping during deliberation (0.754), rebounding before the answer (0.971)---ruling out decorative reasoning.
 
-  \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
-  thinking toggle changes behavior ($21\% \to 7.3\%$ lure rate), and both
-  modes achieve high conflict separability (AUC\,=\,0.954 and 0.970), but
-  cross-mode prediction is at chance (AUC\,=\,0.496, cosine $= -0.005$):
-  the two modes encode conflict along \emph{orthogonal} directions---a
-  deeper dissociation than identical encoding, demonstrating that
-  inference-time thinking reorganizes the conflict representation rather
-  than simply amplifying it.
+  \item \textbf{A training--inference dissociation}: Qwen~3-8B's think/no-think modes achieve similar conflict separability (AUC\,=\,0.954 and 0.970) but cross-mode prediction is at chance (0.496, cosine $= -0.005$)---the two modes encode conflict along \emph{orthogonal} directions.
 \end{enumerate}
 
 \noindent Additionally, we analyze \textbf{scale effects} at 32B
-(OLMo-3.1), finding that 4.5$\times$ more parameters
-\emph{increases} standard-model vulnerability (19.6\% vs.\ 14.9\% at 7B)
-while reasoning training remains protective (0.4\% at 32B vs.\ 0.9\% at
-7B), with near-perfect probe separability (AUC\,=\,0.9999).  We also
-report \textbf{sparse autoencoder features} surviving falsification and
-\textbf{attention entropy} patterns---providing converging evidence
-across correlational, causal, and feature-level analyses.
+(OLMo-3.1), finding that scale \emph{increases} standard-model
+vulnerability while reasoning training remains protective, and report
+converging SAE and attention entropy evidence.
 
 % ============================================================
 % 2. Related Work (~0.75 pages)
@@ -249,17 +222,14 @@ protocol \citep{ma2026falsification} as a mandatory filter, since
 artifacts \citep{meloux2025dead}.
 
 \paragraph{Conflict detection in cognitive science.}
-Our theoretical framework draws on De~Neys' conflict detection paradigm
-\citep{deneys2012bias, deneys2017dual}, which demonstrates that humans
-detect heuristic--normative conflicts even when they fail to override the
-heuristic response.  \citet{evans2013dual} refined the Type~1/Type~2
-taxonomy, emphasizing that the distinction is graded rather than binary---a
-framing we adopt for LLMs.  \citet{botvinick2001conflict}'s conflict
-monitoring theory provides the computational account: the anterior
-cingulate cortex signals response conflict, triggering increased cognitive
-control.  We test the LLM analogue of this account: do models show
-internal signatures of conflict detection (elevated attention entropy,
-reduced probe confidence) even when producing heuristic-driven responses?
+Our framework draws on De~Neys' conflict detection paradigm
+\citep{deneys2012bias, deneys2017dual}: humans detect heuristic--normative
+conflicts even when they fail to override the heuristic.
+\citet{evans2013dual} refined the Type~1/Type~2 taxonomy as graded rather
+than binary.  \citet{botvinick2001conflict}'s conflict monitoring theory
+provides the computational account.  We test the LLM analogue: do models
+show internal conflict-detection signatures even when producing
+heuristic-driven responses?
 
 % ============================================================
 % 3. Benchmark (~0.5 pages)
@@ -457,33 +427,8 @@ Anchoring      & 90 / 70   & 75  & 0   & 25  & 35 / 80  & 5 / 0  & 60 / 20 \\
 \end{tabular}
 \end{table}
 
-Four findings emerge.  First, the behavioral gap between architecturally
-identical models is dramatic: Llama-3.1-8B-Instruct produces heuristic
-lures at a 27.3\% rate; R1-Distill-Llama-8B reduces this to 2.4\%.
-Second, vulnerability is \emph{category-specific}: base rate neglect,
-conjunction fallacy, and syllogisms are the primary susceptible categories,
-while CRT, arithmetic, framing, and anchoring are largely immune
-(sporadic lure rates $\leq$10\% in individual models).  Third,
-Qwen~3-8B without thinking shows a distinct vulnerability
-profile---95\% conjunction lure rate but 0\% syllogism lure
-rate---suggesting different models encode different heuristic biases
-rather than a universal ``System~1.''  Fourth, the within-model Qwen
-toggle is informative: enabling thinking mode on the \emph{same weights}
-reduces the overall lure rate from 21\% to 7.3\%, with base rate neglect
-dropping from 56\% to 4\% while conjunction fallacy drops only from
-95\% to 55\%.
-
-\paragraph{Cross-architecture replication.}
-OLMo-3-7B-Instruct/Think \citep{olmo3} independently replicate the
-pattern: 14.9\% $\to$ 0.9\% lure rate.  Probing confirms the mechanistic
-direction: OLMo Instruct AUC\,=\,0.996 at L24, OLMo Think
-AUC\,=\,0.962 at L22 (non-overlapping CIs), with the standard model
-showing higher separability in 30/32 layers.
-
-\paragraph{Implicit conflict detection.}
-Llama's first-token probability is 4.2pp lower on conflict items (0.751
-vs.\ 0.793), and entropy is 16\% higher (0.948 vs.\ 0.817), paralleling
-De~Neys' conflict-detection signatures \citep{deneys2012bias}.
+Four findings emerge.  First, the behavioral gap is dramatic: Llama produces heuristic lures at 27.3\%; R1-Distill reduces this to 2.4\%.  Second, vulnerability is \emph{category-specific}: base rate neglect, conjunction fallacy, and syllogisms are susceptible, while CRT, arithmetic, framing, and anchoring are largely immune.  Third, different models show distinct vulnerability profiles (Qwen: 95\% conjunction but 0\% syllogism lure), suggesting model-specific rather than universal biases.  Fourth, Qwen's within-model thinking toggle reduces lure rate from 21\% to 7.3\%.
+OLMo-3-7B \citep{olmo3} independently replicates the pattern (14.9\% $\to$ 0.9\% lure rate).  Llama's first-token probability is 4.2pp lower on conflict items (0.751 vs.\ 0.793), paralleling De~Neys' conflict-detection signatures \citep{deneys2012bias}.
 
 \subsection{Linear Probes and Cross-Prediction}
 \label{sec:results_probes}
@@ -504,23 +449,9 @@ conflict/control classification on the three vulnerable categories.
 \label{fig:probe_curves}
 \end{figure}
 
-Llama peaks at AUC\,=\,0.974 (95\% CI [0.952, 0.992]) at L16;
-R1-Distill peaks lower at AUC\,=\,0.930 [0.894, 0.960] at L31---non-overlapping
-CIs confirm statistical significance ($p < 0.05$).  The later peak layer
-suggests reasoning distillation shifts conflict-relevant information toward
-deeper layers \citep{zhang2025probing}.
-Qwen~3-8B achieves high conflict separability in both modes
-(no-think: AUC\,=\,0.954 at L34; think: AUC\,=\,0.970 at L34), but
-cross-mode prediction reveals a striking dissociation: a probe trained
-on no-think activations and tested on think activations yields
-AUC\,=\,0.496 (chance), and the two probe weight vectors are nearly
-orthogonal (cosine similarity $= -0.005$).  The two modes encode
-conflict along \emph{orthogonal directions}---a deeper dissociation
-than identical encoding.  This is the key result: \textbf{training}
-(Llama vs.\ R1-Distill) changes both encoding and behavior;
-\textbf{inference-time thinking} (Qwen toggle) reorganizes the
-conflict representation into an orthogonal subspace while changing
-behavior.
+Llama peaks at AUC\,=\,0.974 [0.952, 0.992] at L16;
+R1-Distill peaks at 0.930 [0.894, 0.960] at L31---non-overlapping CIs.  The later peak layer suggests reasoning distillation shifts conflict-relevant information deeper \citep{zhang2025probing}.
+Qwen~3-8B achieves high separability in both modes (no-think: 0.954; think: 0.970; both at L34), but cross-mode prediction is at chance (AUC\,=\,0.496, cosine $= -0.005$): the two modes encode conflict along \emph{orthogonal directions}.  This is the key result: \textbf{training} changes both encoding and behavior; \textbf{inference-time thinking} reorganizes the conflict representation into an orthogonal subspace.
 
 \paragraph{Selectivity and text-only baseline.}  Hewitt--Liang control probes achieve
 AUC\,$\leq$\,0.66 at all layers, confirming that the true probes
@@ -573,88 +504,24 @@ OLMo-3.1-32B-Think    & L20 & 0.9978 & ---             & ---  & --- & --- \\
 \end{table}
 
 \paragraph{Cross-prediction and immune-category specificity.}
-Training a probe on Llama's \emph{vulnerable} categories (base rate,
-conjunction, syllogism) and testing on \emph{immune} categories (CRT,
-arithmetic, framing, anchoring) yields transfer AUC\,=\,0.378 at the
-peak layer---far below the within-category AUC of 0.987.  Logit
-histograms reveal the mechanism behind this low transfer: immune items
-compress into a tight cluster (logit spread $0.03\times$ that of
-vulnerable categories) with negligible conflict/control separation,
-confirming that the probe direction is specific to vulnerable-category
-processing rather than a universal conflict signal.  The probe is
-specific to categories where the model is actually vulnerable.  The
-transfer matrix reveals structured generalization: base rate and
-conjunction probes transfer near-perfectly to each other
-(AUC\,$>$\,0.99), while transfer to syllogism is weaker (0.59--0.63).
+Training on \emph{vulnerable} categories and testing on \emph{immune} categories yields transfer AUC\,=\,0.378---far below within-category AUC of 0.987.  Immune items compress into a tight logit cluster (spread $0.03\times$ vulnerable categories), confirming probe specificity to categories where the model is actually vulnerable.  Base rate and conjunction probes transfer near-perfectly to each other (AUC\,$>$\,0.99), while transfer to syllogism is weaker (0.59--0.63).
 
 \paragraph{Cross-model probe transfer.}
-A probe trained on Llama's vulnerable categories achieves AUC\,=\,0.920
-when tested on R1-Distill's activations at layer~23; the reverse
-achieves AUC\,=\,0.954 at layer~15.  The \sone{}/\stwo{}
-processing-mode direction is substantially shared across models that
-differ in reasoning training but share architecture, contrasting with
-\citet{huang2026cogbias}'s near-orthogonal finding on architecturally
-distinct models.
+A Llama-trained probe achieves AUC\,=\,0.920 on R1-Distill (layer~23); the reverse achieves 0.954 at layer~15.  The processing-mode direction is substantially shared across models differing only in reasoning training, contrasting with \citet{huang2026cogbias}'s near-orthogonal finding across architectures.
 
 \paragraph{Lure susceptibility scores.}
-Llama's mean \pzero{} logit score for the S1-lure answer is $+0.422$
-(the lure answer is favored in the pre-generation representation),
-while R1-Distill's mean is $-0.326$ (the correct answer is favored).
-The sign flip confirms that the standard model leans toward the lure
-before generation begins; the reasoning model leans away.
+Llama's mean \pzero{} logit score for the S1-lure answer is $+0.422$ (lure favored pre-generation); R1-Distill's is $-0.326$ (correct favored).  The sign flip confirms the reasoning model leans away from the lure before generation begins.
 
 % ---------------------------------------------------------------
 \subsection{Causal Evidence: Probe-Direction Steering}
 \label{sec:steering}
 
-The correlational probing results above leave open the possibility that
-the probe direction is an epiphenomenal correlate of conflict processing
-rather than a causally active representation.  We test this directly by
-steering Llama-3.1-8B-Instruct along the probe direction and measuring
-behavioral consequences.
+We extract the probe weight vector $\mathbf{w} \in \mathbb{R}^{4096}$ at layer~14 (CV AUC\,=\,0.960), normalize to $\hat{\mathbf{w}}$, and add $\alpha \cdot \hat{\mathbf{w}}$ to the residual stream at inference time, sweeping $\alpha \in \{-5, \ldots, +5\}$ across 80 vulnerable-category conflict items.
 
-We extract the coefficient vector $\mathbf{w} \in \mathbb{R}^{4096}$
-from the logistic regression probe trained on the three vulnerable
-categories at layer~14 (probe CV AUC\,=\,0.960) and normalize it to
-$\hat{\mathbf{w}} = \mathbf{w} / \|\mathbf{w}\|$.  At inference time, we
-add $\alpha \cdot \hat{\mathbf{w}}$ to the residual stream at L14,
-sweeping $\alpha \in \{-5, -3, -1, 0, +1, +3, +5\}$ across all 80
-vulnerable-category conflict items.  Positive $\alpha$ steers toward the
-\stwo{} (correct) pole; negative $\alpha$ steers toward \sone{} (lure).
-
-Figure~\ref{fig:steering} shows a monotonic dose-response relationship
-between steering strength and lure rate.  At $\alpha = -5$ (toward
-\sone{}), lure rate rises to 68.8\%; at $\alpha = +5$ (toward \stwo{}),
-it drops to 31.2\%---a total causal swing of 37.5 percentage points.
-Relative to the unsteered baseline (52.5\%), the \stwo{} direction
-reduces lure rate by 21.2pp, comparable to
-\citet{huang2026cogbias}'s 26--32\% reduction via contrastive activation addition.
-
-\paragraph{Steering recovers correct answers, not garbage.}
-The entire 21.2pp reduction in lure rate converts to correct answers:
-the correct-answer rate rises from 31.2\% (baseline) to 52.4\%
-($\alpha = +5$), with zero increase in ``other'' (non-lure, non-correct)
-responses.  This rules out the possibility that steering merely
-disrupts the model's output distribution; the intervention
-specifically recovers normative reasoning on items where the unsteered
-model defaults to the heuristic lure.
-
-\paragraph{Random-direction control.}
-For each $\alpha$, we repeat the intervention along five random unit
-vectors in $\mathbb{R}^{4096}$ and report mean $\pm$ SD.  Random
-controls show no systematic dose-response: mean lure rates remain
-between 52\% and 58\% across all $\alpha$ values, with variability
-increasing at large $|\alpha|$ due to representational disruption
-(e.g., $57.8\% \pm 7.9\%$ at $\alpha = +5$).  The contrast is sharp:
-the probe direction produces a 37.5pp swing while random directions
-of identical norm produce none.
-
-This establishes that the linear probe does not merely \emph{read out}
-a correlate of bias processing---the direction it identifies is
-\emph{causally sufficient} to modulate heuristic susceptibility.
+Figure~\ref{fig:steering} shows a monotonic dose-response: at $\alpha = -5$ (toward \sone{}), lure rate rises to 68.8\%; at $\alpha = +5$ (toward \stwo{}), it drops to 31.2\%---a 37.5pp causal swing, comparable to \citet{huang2026cogbias}'s 26--32\% reduction.  The entire lure reduction converts to correct answers (zero increase in ``other'' responses), ruling out distributional disruption.  Random-direction controls ($5$ unit vectors per $\alpha$) show no systematic effect (52--58\% lure across all $\alpha$), confirming the probe direction is \emph{causally sufficient} to modulate bias susceptibility.
 
 \paragraph{R1-Distill steering contrast.}
-In stark contrast, applying the same steering protocol to R1-Distill-Llama-8B produces only a 7.5pp swing (10.0\% to 2.5\%), comparable to random controls.  The same representational direction that is causally active in the standard model is \emph{decoupled from behavioral control} in the reasoning model.  This dissociation---readable but not writable---provides the strongest evidence that reasoning training reorganizes the causal pathway, not just the representation: the \sone{}/\stwo{} direction remains linearly decodable (AUC\,=\,0.930), but perturbing it no longer modulates behavior.
+The same protocol on R1-Distill produces only a 7.5pp swing, comparable to random controls.  The direction that is causally active in the standard model is \emph{decoupled from behavioral control} in the reasoning model---readable but not writable.  The \sone{}/\stwo{} direction remains decodable (AUC\,=\,0.930) but perturbing it no longer modulates behavior.
 
 \begin{figure}[t]
 \centering
@@ -678,46 +545,13 @@ onset), T25/T50/T75 (quartile positions within the trace), Tend (final
 thinking token), and P2 (control position).
 
 \paragraph{Non-monotonic trajectory.}
-Within the thinking trace, probe AUC follows a non-monotonic trajectory:
+Probe AUC follows a non-monotonic trajectory:
 P0 (0.938) $\to$ T0 (0.973) $\to$ T25 (0.791) $\to$ T50 (0.772)
 $\to$ T75 (0.754) $\to$ Tend (0.971); P2 returns exactly 0.500 (chance).
-Three phases are clearly delineated.  First, the \emph{crystallization
-phase} (P0$\to$T0): thinking onset immediately sharpens the
-conflict/control boundary by +3.5pp.  The model commits to a processing
-mode before any substantive reasoning tokens are generated, consistent
-with the ``fast initial commitment'' observed in human dual-process
-paradigms \citep{deneys2017dual}.  Second, the \emph{exploration phase}
-(T0$\to$T75): probe AUC drops by ${\sim}22$pp as the model traverses
-intermediate reasoning steps.  The sustained dip across T25--T75
-indicates that the mid-trace representations genuinely explore
-alternative framings---conflict and control items become less linearly
-separable as the model considers multiple hypotheses.  Third, the
-\emph{resolution phase} (T75$\to$Tend): AUC rebounds to 0.971,
-matching T0 within 0.002.  The representation re-crystallizes into a
-conflict/control boundary that is almost identical to the initial
-commitment, but now backed by the reasoning trace.
+Three phases emerge: (i) \emph{crystallization} (P0$\to$T0): thinking onset sharpens the boundary by +3.5pp before any substantive reasoning tokens, consistent with ``fast initial commitment'' \citep{deneys2017dual}; (ii) \emph{exploration} (T0$\to$T75): AUC drops ${\sim}22$pp as mid-trace representations explore alternative framings; (iii) \emph{resolution} (T75$\to$Tend): AUC rebounds to 0.971, re-crystallizing the boundary.
 
-\paragraph{Discriminating hypotheses.}
-This trajectory discriminates three competing hypotheses about
-chain-of-thought reasoning.  The \emph{performative reasoning}
-hypothesis (the model ``decides'' at T0 and emits decorative tokens)
-predicts flat AUC---rejected by the 22pp mid-trace dip.  The
-\emph{monotonic sharpening} hypothesis (reasoning progressively
-refines the representation) predicts steadily increasing AUC---rejected
-by the T0$>$T50 inversion.  Only the \emph{exploration-before-exploitation}
-hypothesis \citep{boppana2026reasoning} is consistent with the observed
-non-monotonicity: the model explores alternative solutions
-(destabilizing the boundary) before converging on a resolution.
-
-\paragraph{Connection to the Qwen dissociation.}
-This trajectory resolves the puzzle of how Qwen's thinking mode
-improves behavior (21\%$\to$7.3\% lure) despite encoding conflict
-along an orthogonal direction at P0 (cross-mode AUC = 0.496).  The
-behavioral improvement is mediated by the within-trace representational
-dynamics: the exploration and resolution phases perform genuine
-computational work that the no-think mode never gets to execute.
-Full position$\times$layer results appear in
-Appendix~\ref{app:within_cot}.
+This trajectory discriminates three hypotheses.  \emph{Performative reasoning} (deciding at T0, emitting decorative tokens) predicts flat AUC---rejected by the 22pp dip.  \emph{Monotonic sharpening} predicts steadily increasing AUC---rejected by the T0$>$T50 inversion.  Only \emph{exploration-before-exploitation} \citep{boppana2026reasoning} is consistent.  The trajectory also resolves how Qwen's thinking mode improves behavior despite orthogonal P0 encoding: the exploration and resolution phases perform genuine computational work that the no-think mode never executes.
+Full position$\times$layer results appear in Appendix~\ref{app:within_cot}.
 
 % ---------------------------------------------------------------
 \subsection{Scale Analysis: 7B vs.\ 32B}
@@ -729,44 +563,11 @@ We evaluate OLMo-3.1-32B-Instruct and OLMo-3.1-32B-Think
 mitigates cognitive bias vulnerability.
 
 \paragraph{Behavioral results.}
-For standard models, scale \emph{increases} vulnerability: the overall
-lure rate rises from 14.9\% (7B) to 19.6\% (32B).  The effect is
-category-specific: base rate neglect nearly doubles
-(46\%$\to$74.3\%), framing emerges as an entirely new vulnerability
-(0\%$\to$30\%), and anchoring doubles (5\%$\to$10\%).  Meanwhile,
-loss aversion (33\%$\to$0\%) and availability (13\%$\to$0\%) are
-resolved---scale provides sufficient capacity to override these
-heuristics.  Conjunction fallacy is scale-invariant (50\% at both
-7B and 32B), consistent with a deeply encoded representational bias
-rather than a capacity limitation.
-
-At 32B, reasoning training drops lure rates from 19.6\% to 0.4\%
-(a single lure response: sunk cost, 6.7\%, 1/15 items; all other
-categories: 0\%).  The OLMo family thus exhibits an \emph{asymmetric
-scale effect}: 4.5$\times$ more parameters increases standard-model
-vulnerability by +4.7pp while producing no meaningful change in
-reasoning-model performance ($-$0.5pp, from 0.9\% to 0.4\%---a
-single-item difference).  Reasoning training provides qualitatively
-different protection that does not erode with scale.
+Scale \emph{increases} standard-model vulnerability: overall lure rate rises from 14.9\% (7B) to 19.6\% (32B), with base rate neglect nearly doubling (46\%$\to$74.3\%) and framing emerging as an entirely new vulnerability (0\%$\to$30\%).  Meanwhile, some biases are resolved at scale (loss aversion: 33\%$\to$0\%), and conjunction fallacy is scale-invariant (50\% at both sizes).
+At 32B, reasoning training drops lure rates from 19.6\% to 0.4\%.  The OLMo family exhibits an \emph{asymmetric scale effect}: 4.5$\times$ more parameters increases standard-model vulnerability by +4.7pp while leaving reasoning-model performance essentially unchanged ($-$0.5pp).
 
 \paragraph{Probe results at 32B.}
-Linear probes on OLMo-3.1-32B-Instruct achieve near-perfect
-separability (AUC\,=\,0.9999 at L20/64), with a sharp onset:
-AUC rises from 0.862 (L0) to 0.9999 (L20) and plateaus above 0.996
-for all subsequent layers (L20--L63).  OLMo-3.1-32B-Think peaks at
-0.9978 at the same layer (L20)---only 0.0021 below Instruct.
-
-\paragraph{Diverging behavioral and representational gaps.}
-The behavioral gap between Instruct and Think \emph{widens} with
-scale (14.0pp at 7B $\to$ 19.2pp at 32B), yet the representational
-gap \emph{shrinks} (0.034 $\to$ 0.0021).  At 32B, both models
-encode conflict/control distinctions with near-identical fidelity,
-but only Think translates this encoding into correct responses.
-This reinforces the central ``readable but not writable'' finding:
-scale amplifies the encoding of vulnerability-relevant representations
-in standard models without improving resolution, while reasoning
-training makes the existing encoding actionable.
-Full per-category breakdowns appear in Appendix~\ref{app:scale}.
+Probes on OLMo-3.1-32B-Instruct achieve AUC\,=\,0.9999 at L20/64; Think peaks at 0.9978 at the same layer.  The behavioral gap \emph{widens} with scale (14.0pp at 7B $\to$ 19.2pp at 32B), yet the representational gap \emph{shrinks} (0.034 $\to$ 0.0021)---both models encode conflict with near-identical fidelity at 32B, but only Think translates this into correct responses.  This reinforces the ``readable but not writable'' finding.  Full breakdowns appear in Appendix~\ref{app:scale}.
 
 % ---------------------------------------------------------------
 \subsection{SAE Features and Attention Entropy}
