@@ -1,0 +1,38 @@
+{
+  "instruct_model": "instruct",
+  "think_model": "think",
+  "per_position": {
+    "P0": {
+      "instruct_peak_layer": 20,
+      "instruct_peak_auc": 0.9999,
+      "think_peak_layer": 20,
+      "think_peak_auc": 0.9978,
+      "instruct_mean_auc": 0.9797421875,
+      "think_mean_auc": 0.9736328125,
+      "mean_delta": 0.006109375000000005,
+      "max_delta": 0.044399999999999995,
+      "max_delta_layer": 2,
+      "min_delta": -0.017199999999999993,
+      "all_positive": false,
+      "n_layers_instruct_higher": 33,
+      "n_layers_think_higher": 28,
+      "n_layers_total": 64
+    },
+    "P2": {
+      "instruct_peak_layer": 0,
+      "instruct_peak_auc": 0.5,
+      "think_peak_layer": 0,
+      "think_peak_auc": 0.5,
+      "instruct_mean_auc": 0.5,
+      "think_mean_auc": 0.5,
+      "mean_delta": 0.0,
+      "max_delta": 0.0,
+      "max_delta_layer": 0,
+      "min_delta": 0.0,
+      "all_positive": false,
+      "n_layers_instruct_higher": 0,
+      "n_layers_think_higher": 0,
+      "n_layers_total": 64
+    }
+  }
+}
