@@ -567,7 +567,7 @@ codaforno2025dual}---two distinct mechanisms for bias resistance.
 Within-CoT probing reveals a non-monotonic trajectory: AUC peaks at T0 (0.973), dips during deliberation (0.754 at T75), and rebounds at Tend (0.971), suggesting genuine computation rather than decorative reasoning.  The mid-chain dip indicates that deliberation temporarily disrupts the \sone{}/\stwo{} boundary before resolving it---consistent with the ``exploration before exploitation'' pattern reported by \citet{boppana2026reasoning}.
 
 \paragraph{Scale effects.}
-At 32B scale (OLMo-3.1), vulnerability \emph{increases} (19.6\% vs.\ 14.9\% at 7B) while reasoning training remains effective (0.4\% Think vs.\ 0.9\% at 7B).  Probe separability at 32B is near-perfect (AUC\,=\,0.9999 at L20/64), confirming these signatures are not small-model artifacts.
+At 32B scale (OLMo-3.1), vulnerability \emph{increases} (19.6\% vs.\ 14.9\% at 7B) while reasoning training remains effective (0.4\% Think vs.\ 0.9\% at 7B).  Probe separability at 32B is near-perfect (AUC\,=\,0.9999 at L20/64), confirming these signatures are not small-model artifacts.  OLMo-32B-Think probes reach AUC\,=\,0.9978 ($\Delta$\,0.0021 from Instruct), suggesting vulnerability encoding persists at larger scale.
 
 \paragraph{Specificity and relation to CogBias.}
 Cross-prediction resolves the surface-feature confound: transfer

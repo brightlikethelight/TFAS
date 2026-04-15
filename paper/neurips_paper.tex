@@ -81,7 +81,8 @@ falsification, and reasoning models exhibit twice as many
 drops lure rates from 19.6\% to 0.4\% (OLMo-3.1); scale increases
 standard-model vulnerability (14.9\%$\to$19.6\%) but does not
 meaningfully change reasoning-model performance (0.9\%$\to$0.4\%),
-and probe separability remains near-perfect (AUC\,=\,0.9999),
+and probe separability remains near-perfect for both Instruct
+(AUC\,=\,0.9999) and Think (0.9978) variants,
 confirming these signatures are not small-model artifacts.
 These results demonstrate that reasoning training reorganizes internal
 heuristic/deliberative representations rather than layering deliberation
@@ -493,6 +494,7 @@ OLMo-3-7B-Instruct    & L24 & 0.996 & [0.988, 1.000]  & ---  & --- \\
 OLMo-3-7B-Think       & L22 & 0.962 & [0.934, 0.982]  & ---  & --- \\
 \midrule
 OLMo-3.1-32B-Instruct & L20 & 0.9999 & ---             & ---  & --- \\
+OLMo-3.1-32B-Think    & L20 & 0.9978 & ---             & ---  & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -618,8 +620,12 @@ performance (0.9\%$\to$0.4\%), confirming that reasoning training
 provides robust protection independent of scale.  Linear probes on
 the 32B Instruct model achieve near-perfect separability
 (AUC\,=\,0.9999 at L20/64), confirming the \sone{}/\stwo{} direction
-persists at larger scale.  Full per-category breakdowns appear in
-Appendix~\ref{app:scale}.
+persists at larger scale.  OLMo-3.1-32B-Think's peak probe AUC is
+0.9978 at layer~20---only 0.0021 below Instruct (0.9999).  The behavioral
+gap widens with scale (19.2pp at 32B vs.\ 14.0pp at 7B), but the
+representational gap \emph{shrinks} (0.0021 vs.\ 0.0055), suggesting the
+vulnerability encoding becomes \emph{more} persistent at larger scale.
+Full per-category breakdowns appear in Appendix~\ref{app:scale}.
 
 % ---------------------------------------------------------------
 \subsection{SAE Features and Attention Entropy}
@@ -1039,6 +1045,30 @@ model's 19.6\% overall lure rate.
 \end{tabular}
 \end{table}
 
+\paragraph{Probe results at 32B.}
+OLMo-3.1-32B-Think achieves a peak probe AUC of 0.9978 at L20,
+only 0.0021 below the 32B Instruct model's 0.9999.
+Table~\ref{tab:scale_probe_comparison} summarizes the 2$\times$2
+probe comparison across scale and training recipe.
+
+\begin{table}[ht]
+\centering
+\caption{Peak probe AUC across scale$\times$training recipe (OLMo family).
+  The representational gap (Instruct $-$ Think) \emph{shrinks} from
+  0.034 at 7B to 0.0021 at 32B, even as the behavioral gap widens.}
+\label{tab:scale_probe_comparison}
+\vspace{4pt}
+\small
+\begin{tabular}{lccc}
+\toprule
+\textbf{Scale} & \textbf{Instruct AUC} & \textbf{Think AUC} & \textbf{$\Delta$ (Inst.$-$Think)} \\
+\midrule
+7B  & 0.996 (L24) & 0.962 (L22) & 0.034  \\
+32B & 0.9999 (L20) & 0.9978 (L20) & 0.0021 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \paragraph{Key finding: asymmetric scale effect.}
 Scale has opposite effects depending on training recipe.
 For standard (Instruct) models, 4.5$\times$ more parameters
@@ -1048,6 +1078,17 @@ no meaningful change ($-$0.5pp, from 0.9\% to 0.4\%---a single
 item difference).  This asymmetry confirms that reasoning training
 provides a qualitatively different form of protection that does not
 erode with scale.
+
+\paragraph{Diverging behavioral and representational gaps.}
+The behavioral gap between Instruct and Think \emph{widens} with
+scale (14.0pp at 7B $\to$ 19.2pp at 32B), yet the representational
+gap \emph{shrinks} (0.034 $\to$ 0.0021).  At 32B, both models encode
+conflict/control distinctions with near-identical fidelity, but only
+Think translates this encoding into correct responses.  This
+dissociation reinforces the ``readable but not writable'' pattern:
+scale amplifies the encoding of vulnerability-relevant representations
+in standard models without improving resolution, while reasoning
+training makes the existing encoding actionable.
 
 \section{SAE Features and Attention Entropy}
 \label{app:sae_attention}

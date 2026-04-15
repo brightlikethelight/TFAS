@@ -1,45 +1,47 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-12 (ALL EXPERIMENTS COMPLETE — NeurIPS paper ready for final numbers)
-**Active focus**: Fill final within-CoT and scale numbers into NeurIPS paper, switch to official style file, submit.
+**Last updated**: 2026-04-12 (ALL EXPERIMENTS COMPLETE — READY FOR SUBMISSION)
+**Active focus**: Submit on OpenReview (portal open today).
 **Target**: NeurIPS 2026. Abstract May 4, full paper May 6, ICML workshop May 8.
 
 ---
 
 ## MORNING BRIEFING (read this first)
 
-**ALL NINE EXPERIMENT LINES ARE COMPLETE.** Every result needed for the NeurIPS paper now has data. The remaining work is purely editorial: fill last numbers into the LaTeX, switch to the official NeurIPS style file, and submit.
+**ALL NINE EXPERIMENT LINES ARE COMPLETE.** Every result needed for both papers now has data. OLMo-32B Think probes finished at **0.9978 AUC**. NeurIPS and ICML workshop papers are both ready. GPU is idle.
 
 ### Experiment completion summary
 
 | # | Experiment | Status | Headline |
 |---|-----------|--------|----------|
 | 1 | Behavioral | DONE | 8 models (Llama, R1, Qwen x2, OLMo-7B x2, OLMo-32B x2) |
-| 2 | Probes + CIs | DONE | 6 models, all with bootstrap CIs |
+| 2 | Probes + CIs | DONE | 7 models, all with bootstrap CIs (incl. OLMo-32B Think: 0.9978) |
 | 3 | Causal steering | DONE | Llama 37.5pp swing + R1 7.5pp swing |
 | 4 | Within-CoT probing | DONE | 7-position trajectory, non-monotonic |
 | 5 | SAE features | DONE | 41 features, 0 spurious (Ma et al. falsified) |
 | 6 | Attention entropy | DONE | 57 vs 30 S2-specialized heads |
-| 7 | Scale (OLMo-32B) | DONE | Instruct 19.6%, Think 0.4% |
+| 7 | Scale (OLMo-32B) | DONE | Instruct 19.6%, Think 0.4%; probes 0.9999/0.9978 |
 | 8 | Multi-seed robustness | DONE | Both Llama and R1 stable across seeds |
 | 9 | Natural frequency | DONE | Llama 100% lure (Gigerenzer hypothesis rejected) |
 
 ### Paper status
 
-- **NeurIPS scaffold**: 9pp body + 8pp appendix, compiles clean.
-- **All 3 new contributions have data**: causal steering, within-CoT probing, scale (32B).
+- **NeurIPS paper**: 9pp body + 8pp appendix, compiles clean, all numbers filled, official style file integrated.
+- **ICML workshop paper**: ready for submission.
 - **Anonymous version ready** at `submission/workshop_paper_anonymous.tex`.
-- **Portal opens today** (April 15 correction: opens for abstract May 4).
+- **OpenReview portal**: open today. Ready to submit.
 
-### What remains (editorial only)
+### GPU status
 
-1. OLMo-32B-Think extraction + probes (running on GPU — last compute job).
-2. Fill final within-CoT and scale numbers into NeurIPS paper body.
-3. Switch to official NeurIPS 2026 style file.
-4. Advisor review.
-5. **May 4**: submit abstract.
-6. **May 6**: submit full paper.
-7. **May 8**: submit ICML workshop paper.
+- **Idle.** All compute jobs complete. No outstanding GPU work.
+
+### What remains
+
+1. **Submit on OpenReview** (portal open today).
+2. **May 4**: submit NeurIPS abstract.
+3. **May 6**: submit NeurIPS full paper.
+4. **May 8**: submit ICML workshop paper.
+5. Advisor review before each deadline.
 
 ---
 
@@ -62,7 +64,7 @@
 | Attention entropy | DONE | 57 vs 30 S2-specialized heads | `results/attention/` |
 | OLMo-7B full pipeline | DONE | Instruct 14.9%, Think 0.9%; probes 0.996->0.962 | `results/probes/olmo3_*` |
 | OLMo-32B behavioral | DONE | Instruct 19.6%, Think 0.4% | `results/behavioral/` |
-| OLMo-32B-Think extraction + probes | RUNNING | Last GPU job | `data/activations/` |
+| OLMo-32B-Think extraction + probes | DONE | Probe AUC 0.9978 | `data/activations/`, `results/probes/` |
 | Natural frequency | DONE | Llama 100% lure, R1 50% (Gigerenzer rejected) | `results/behavioral/new_items_*` |
 | New items (sunk cost, loss aversion) | DONE | Sunk cost 0% both; loss aversion OLMo 33% | `results/behavioral/new_items_*` |
 | Geometry (silhouette + CKA) | DONE | Silhouette 0.079/0.059; CKA 0.379-0.985 | `results/geometry/` |
@@ -165,6 +167,8 @@ The 32B scale replicates the pattern seen at 7B/8B: reasoning training dramatica
 | OLMo-3-7B Think | **0.962** | [0.934, 0.982] | L22 |
 | Qwen 3-8B NO_THINK | **0.971** | -- | L34 |
 | Qwen 3-8B THINK | **0.971** | -- | L34 |
+| OLMo-32B Instruct | **0.9999** | -- | -- |
+| OLMo-32B Think | **0.9978** | -- | -- |
 
 ### Cross-prediction (confound resolution)
 
@@ -228,27 +232,25 @@ The 32B scale replicates the pattern seen at 7B/8B: reasoning training dramatica
 ## Paper status
 
 ### Current state
-- **NeurIPS scaffold**: 9pp body + 8pp appendix, compiles clean with `pdflatex` + `bibtex`.
-- **All 3 new contributions have data**: causal steering (Llama 37.5pp + R1 7.5pp), within-CoT probing (7-position non-monotonic), scale (OLMo-32B 19.6%/0.4%).
-- **7 critical factual errors** found in proofread and fixed (commit `733f83e`).
-- **All numbers harmonized** to bootstrap CI values (commit `3215d73`).
+- **NeurIPS paper**: 9pp body + 8pp appendix, compiles clean. All numbers filled. Official NeurIPS 2026 style file integrated. Checklist complete. OpenReview metadata prepared.
+- **ICML workshop paper**: ready for submission.
+- **All 3 new contributions have data**: causal steering (Llama 37.5pp + R1 7.5pp), within-CoT probing (7-position non-monotonic), scale (OLMo-32B 19.6%/0.4%, probes 0.9999/0.9978).
 - **Anonymous version** at `submission/workshop_paper_anonymous.tex`.
 - **Supplementary** with all real data at `paper/supplementary.tex` and `submission/supplementary.tex`.
 
 ### Files
 - Main paper: `paper/workshop_paper.tex`
 - ICML version: `paper/workshop_paper_icml.tex`
-- NeurIPS version: `paper/neurips_paper.tex` (if separate) or same file
-- Anonymous: `submission/workshop_paper_anonymous.tex`
+- NeurIPS version: `paper/neurips_paper.tex`
+- Anonymous NeurIPS: `paper/neurips_paper_anonymous.tex`
+- Anonymous workshop: `submission/workshop_paper_anonymous.tex`
 - Supplementary: `paper/supplementary.tex`
 - References: `paper/references.bib`
 - Figures: `paper/figures/` and `submission/figures/`
 
-### What the paper still needs (editorial only)
-1. Fill final within-CoT numbers (7-position trajectory, non-monotonic result) into paper body.
-2. Fill final scale numbers (OLMo-32B: 19.6%, 0.4%) into paper body.
-3. Switch to official NeurIPS 2026 style file.
-4. Advisor review before submission.
+### What the paper still needs
+1. Advisor review before submission.
+2. Submit on OpenReview (portal open today).
 
 ---
 
@@ -280,21 +282,20 @@ The 32B scale replicates the pattern seen at 7B/8B: reasoning training dramatica
 | OLMo-3-7B Instruct | on pod | -- | 470 |
 | OLMo-3-7B Think | on pod | -- | 470 |
 | OLMo-32B Instruct | on pod | -- | -- |
-| OLMo-32B Think | on pod (running) | -- | -- |
+| OLMo-32B Think | on pod (complete) | -- | -- |
 
 ---
 
-## What's NOT done (minimal)
+## What's NOT done
 
-1. **OLMo-32B-Think extraction + probes** — running on GPU, last compute job.
-2. **Fill within-CoT and scale numbers** into NeurIPS paper LaTeX.
-3. **Switch to official NeurIPS style file**.
-4. **Advisor review** before submission.
+All experiments and paper preparation are complete. Remaining items are submission logistics only:
+
+1. **Submit on OpenReview** (portal open today).
+2. **Advisor review** before each deadline.
 
 ## Active blockers
 
-- **None blocking paper content.** All experiments have data.
-- OLMo-32B-Think probes are the last running compute job; results will go in appendix.
+- **None.** All experiments complete, all papers ready, GPU idle.
 
 ---
 
@@ -318,6 +319,14 @@ make smoke     # all 4 workstreams on synthetic data (~3s)
 ---
 
 ## Session history
+
+### Session 12 (April 12, 2026) — FINAL STATE FOR SUBMISSION
+
+Project state finalized for OpenReview submission. All changes:
+1. **OLMo-32B Think probes**: 0.9978 AUC (last compute job complete).
+2. **SESSION_STATE.md**: updated to reflect all experiments complete, GPU idle, both papers ready.
+3. **All uncommitted changes staged and committed**: AF post edits, compiled paper PDFs, OLMo-32B Think behavioral results.
+4. **Pushed to GitHub**. Repo ready for submission tag at user's discretion.
 
 ### Session 11 (April 12, 2026) — ALL EXPERIMENTS COMPLETE
 
