@@ -1,0 +1,115 @@
+{
+  "layer": 14,
+  "position": "P0",
+  "model": "llama31_8b_instruct",
+  "model_key_hdf5": "unsloth_Meta-Llama-3.1-8B-Instruct",
+  "probe": "logistic_regression_cv",
+  "best_C": 0.0001,
+  "vulnerable_categories": [
+    "base_rate",
+    "conjunction",
+    "syllogism"
+  ],
+  "immune_categories": [
+    "anchoring",
+    "arithmetic",
+    "crt",
+    "framing"
+  ],
+  "group_statistics": {
+    "vulnerable_conflict": {
+      "n": 80,
+      "mean": 0.941488075469843,
+      "std": 0.6847492768849455,
+      "median": 1.0357897922734587,
+      "min": -0.1550324375264076,
+      "max": 2.10723366765519,
+      "q25": 0.1746475005429155,
+      "q75": 1.5006365780533326,
+      "fraction_positive": 0.875
+    },
+    "vulnerable_control": {
+      "n": 80,
+      "mean": -0.9246532585736228,
+      "std": 0.6259596806403719,
+      "median": -1.1174760761987035,
+      "min": -1.8201596593621896,
+      "max": 0.0932218859702075,
+      "q25": -1.4286607285061355,
+      "q75": -0.12095063841673503,
+      "fraction_positive": 0.05
+    },
+    "immune_conflict": {
+      "n": 95,
+      "mean": -0.7133817826865272,
+      "std": 0.16167462317019457,
+      "median": -0.7643124274662072,
+      "min": -1.0297514556885305,
+      "max": -0.3381699775382892,
+      "q25": -0.8061504253958078,
+      "q75": -0.6089576200347155,
+      "fraction_positive": 0.0
+    },
+    "immune_control": {
+      "n": 95,
+      "mean": -0.6496650974729258,
+      "std": 0.12526634365120862,
+      "median": -0.6266819760717579,
+      "min": -0.8724212906843897,
+      "max": -0.3860641246447957,
+      "q25": -0.7923691075366112,
+      "q75": -0.5710619907660108,
+      "fraction_positive": 0.0
+    },
+    "vulnerable_separation": {
+      "cohens_d": 2.84466964811373,
+      "auc": 0.97515625,
+      "overlap_fraction": 0.16250000000000006
+    },
+    "immune_separation": {
+      "cohens_d": -0.4405776593548216,
+      "auc": 0.3885872576177285,
+      "overlap_fraction": 0.3684210526315789
+    },
+    "immune_vs_vulnerable_polarity": {
+      "immune_all_mean": -0.6815234400797264,
+      "immune_all_std": 0.14808823149776573,
+      "vulnerable_all_mean": 0.008417408448110137,
+      "vulnerable_all_std": 1.140602655023785,
+      "immune_conflict_mean_vs_vuln_conflict_mean": -1.65486985815637,
+      "immune_control_mean_vs_vuln_control_mean": 0.274988161100697
+    }
+  },
+  "per_category_immune_auc": {
+    "anchoring": {
+      "auc": 0.48000000000000004,
+      "cohens_d": -0.25127772900751477,
+      "n": 40,
+      "conflict_mean_logit": -0.5529698307554162,
+      "control_mean_logit": -0.5212692860645209
+    },
+    "arithmetic": {
+      "auc": 0.7456,
+      "cohens_d": 0.7765178511760539,
+      "n": 50,
+      "conflict_mean_logit": -0.8008797855958085,
+      "control_mean_logit": -0.8299012480975773
+    },
+    "crt": {
+      "auc": 0.4022222222222222,
+      "cohens_d": -0.7374690528920574,
+      "n": 60,
+      "conflict_mean_logit": -0.7028626991902895,
+      "control_mean_logit": -0.5990273820529064
+    },
+    "framing": {
+      "auc": 0.0,
+      "cohens_d": -4.210969800250359,
+      "n": 40,
+      "conflict_mean_logit": -0.7801998562253931,
+      "control_mean_logit": -0.6287222937305448
+    }
+  },
+  "interpretation": "VULNERABLE categories: strong conflict/control separation (AUC=0.975, Cohen's d=2.84). Conflict items: mean logit = 0.941 (std=0.685). Control items: mean logit = -0.925 (std=0.626).\n\nIMMUNE categories: ALL items cluster tightly in a narrow band (conflict mean=-0.713, std=0.162; control mean=-0.650, std=0.125).\n\nKey metrics:\n  Immune logit range: [-1.030, -0.338]\n  Vulnerable logit range: [-1.820, 2.107]\n  Immune spread (max std): 0.162 vs vulnerable spread (mean std): 0.655 (ratio: 0.25x)\n  Immune internal separation: 0.064 vs vulnerable internal separation: 1.866\n  Immune center: -0.682 vs vulnerable center: 0.008\n\nDIAGNOSIS: The probe direction compresses immune items into a tight cluster (separation ratio = 0.03x of vulnerable). The conflict/control distinction that the probe learned on vulnerable categories does not project meaningfully onto immune items. This is PARTIAL SUPPORT for specificity: the probe captures a category-specific processing signal, not a universal one.\n\nCORRECTED INTERPRETATION of AUC=0.389:\nThe below-chance AUC does NOT indicate the probe 'detects the opposite.' The histogram reveals that all 190 immune items cluster in a tight logit band [-1.03, -0.34] entirely on the control side of the decision boundary. The AUC < 0.5 arises because immune conflict items are pushed slightly MORE negative than immune control items (small reversed effect, d=-0.44), but the dominant phenomenon is the location shift, not the ordering. Reporting only 'AUC=0.378' masks both the tight clustering AND the location shift.",
+  "corrected_claim": "The cross-prediction AUC of 0.378 does NOT confirm specificity. An AUC < 0.5 indicates the probe direction encodes a feature whose polarity REVERSES across category groups. A truly specific probe would yield AUC \u2248 0.5 with overlapping logit distributions on immune categories. The logit histogram analysis shows the actual distributional picture."
+}
