@@ -53,7 +53,7 @@
 | Behavioral (470-item expanded) | DONE | 11 categories | `results/behavioral/*_470.json` |
 | Behavioral (Llama, 3-seed sampled) | DONE | 27.5% +/- 1.3pp; category profiles shift | `results/robustness/unsloth_*_multiseed.json` |
 | Behavioral (R1, 3-seed sampled) | DONE | Stable across seeds | `results/robustness/deepseek-ai_*_multiseed.json` |
-| Probes + bootstrap CIs (6 models) | DONE | Llama 0.974, R1 0.930, OLMo-I 0.996, OLMo-T 0.962, Qwen-NT 0.971, Qwen-T 0.971 | `results/probes/`, `results/bootstrap_cis/` |
+| Probes + bootstrap CIs (8 models) | DONE | Llama 0.974, R1 0.930, OLMo-7B-I 0.996, OLMo-7B-T 0.962, Qwen-NT 0.971, Qwen-T 0.971, OLMo-32B-I 0.9999, OLMo-32B-T 0.9978 | `results/probes/`, `results/bootstrap_cis/` |
 | Cross-prediction | DONE | 0.378 AUC at L14 (confound resolved) | `results/probes/llama_cross_prediction.json` |
 | Cross-model transfer | DONE | Llama->R1 direction transfers | `results/probes/cross_model_transfer_llama_r1.json` |
 | Transfer matrix | DONE | base_rate <-> conjunction 0.993 | `results/probes/transfer_matrix_l14_llama.json` |

@@ -106,17 +106,17 @@ The Qwen identity result (Finding 4) shows that the *initial* residual stream re
 | Mid-CoT | **0.754** |
 | Tend (pre-answer) | **0.971** |
 
-The trajectory is non-monotonic: high separation at T0, a sharp *drop* at mid-CoT, then recovery to near-baseline at Tend. This is the signature of genuine intermediate computation. At mid-CoT, the model is actively processing the conflict -- representations are in flux, and the clean conflict/control boundary temporarily dissolves. By Tend, the model has resolved the conflict and the boundary re-emerges.
+The trajectory is non-monotonic: high separation at T0, a sharp *drop* at mid-CoT, then recovery at Tend. At mid-CoT, the model is actively processing the conflict -- representations are in flux and the clean boundary temporarily dissolves. By Tend, the conflict is resolved and the boundary re-emerges.
 
-If CoT were performative -- the model deciding at T0 and emitting decorative reasoning -- the probe signal would be flat across the trajectory. The mid-CoT dip rules this out. The thinking tokens are doing real representational work, even though the *initial* representation (T0) is set by the weights alone. This is consistent with CoT operating as a genuine computation medium rather than post-hoc rationalization.
+If CoT were performative -- the model deciding at T0 and emitting decorative reasoning -- the probe signal would be flat. The mid-CoT dip rules this out. The thinking tokens do real representational work, even though the *initial* representation is set by the weights alone.
 
 ### Finding 6: SAE features survive falsification -- but do not transfer cross-model
 
-Differential activation analysis using the Goodfire SAE (layer 19 of Llama, 131K features). After Benjamini-Hochberg correction at q=0.05, **41 features** show significantly different activation between conflict and control items, explaining **74% of variance**.
+Goodfire SAE (layer 19 of Llama, 131K features). After Benjamini-Hochberg correction at q=0.05, **41 features** show significantly different activation between conflict and control items, explaining **74% of variance**.
 
-We applied the Ma et al. (2026) falsification protocol: inject each feature's top-activating tokens into 100 random non-cognitive-bias texts. If the feature still activates, it is a token-level artifact. Ma et al. found 45-90% of claimed "reasoning features" in prior work were spurious by this test. **All 41 of our features survived. Zero were spurious.** The matched-pair design does significant work here -- features that discriminate between conditions cannot be explained by surface text because that has been controlled away.
+Ma et al. (2026) falsification: inject each feature's top-activating tokens into 100 random non-cognitive-bias texts. Ma et al. found 45-90% of claimed "reasoning features" in prior work were spurious by this test. **All 41 of our features survived. Zero spurious.** The matched-pair design does the work -- features discriminating between conditions cannot be explained by surface text.
 
-However, **the Llama SAE does not transfer to R1-Distill**. Explained variance drops from 74% to 25%. Reasoning training reorganizes the representation enough that the same features are near-uninformative cross-model. SAE-based monitoring trained on one model variant may not generalize even within the same architecture family.
+However, **the Llama SAE does not transfer to R1-Distill**. Explained variance drops from 74% to 25%. SAE-based monitoring trained on one model variant may not generalize even within the same architecture family.
 
 ### Finding 7: Reasoning models have 2x more specialized attention heads
 
@@ -135,27 +135,21 @@ OLMo provides a clean scale comparison: 7B and 32B, Instruct and Think variants 
 | OLMo-32B-Instruct | **19.6%** |
 | OLMo-32B-Think | **0.4%** |
 
-Scale makes the Instruct model *worse* (14.9% to 19.6%) while the Think model improves marginally (0.9% to 0.4%). The gap widens from 14pp at 7B to 19pp at 32B. Larger instruct models are not safer on bias-susceptible inputs -- they are measurably more susceptible. Larger reasoning-trained models hold near zero.
-
-This is consistent with the S2-by-default interpretation. Scaling Instruct models gives them more capacity to represent and act on surface heuristics (the lure). Scaling Think models gives them more capacity for the deliberation that is already their default mode. The same architectural capacity is channeled in opposite directions by training.
+Scale makes Instruct *worse* (14.9% to 19.6%) while Think improves marginally (0.9% to 0.4%). The gap widens from 14pp at 7B to 19pp at 32B. More parameters give Instruct models more capacity to act on surface heuristics; more parameters give Think models more capacity for the deliberation that is already their default. Same capacity, opposite directions.
 
 ## 3. The OLMo replication
 
-OLMo (Allen AI) -- fully open-source, independently developed, independent training data -- provides the strongest available out-of-distribution test and, uniquely, a clean scale comparison.
+OLMo (Allen AI) -- fully open-source, independently developed -- provides the strongest out-of-distribution test. **Probe (7B):** Instruct AUC 0.996 [0.988, 1.000], Think 0.962 [0.934, 0.982]. Non-overlapping CIs, directionally consistent with Llama (gap 0.034 vs. 0.044). At 32B the behavioral divergence widens further (Finding 8).
 
-**Behavioral (7B):** OLMo-7B-Instruct: 14.9% lure rate. OLMo-7B-Think: 0.9%. **Behavioral (32B):** OLMo-32B-Instruct: 19.6%. OLMo-32B-Think: 0.4%. **Probe (7B):** Instruct AUC 0.996 [0.988, 1.000], Think 0.962 [0.934, 0.982]. The gap (0.034, non-overlapping CIs) is smaller than Llama's (0.044) but statistically robust and directionally consistent. The scale comparison (Finding 8) shows the divergence widens at 32B.
-
-Three independent architecture families, two scales, same pattern: behavioral improvement, representational blurring, detection without resolution. Not a one-model curiosity.
+Three architecture families, two scales, same pattern. Not a one-model curiosity.
 
 ## 4. The surprises
 
 ### Natural frequency reversal
 
-Gigerenzer's (1995) ecological rationality thesis predicts that natural frequency formats ("3 out of 100") should reduce base rate neglect compared to probability formats ("3%"). Robust finding in human experiments. We reformulated our base rate items in natural frequency format.
+Gigerenzer's (1995) ecological rationality thesis predicts natural frequency formats ("3 out of 100") should reduce base rate neglect vs. probability formats ("3%"). Robust in human experiments. We reformulated our base rate items accordingly.
 
-**Llama: 100% lure rate** -- every item wrong, vs. 84% for probability format. Natural frequencies made Llama *worse*. **R1-Distill: 50% lure rate** (corrected from 40% after a scoring bug fix), up from 4% on the standard format. Reasoning distillation's resistance partially collapses when the problem is reframed in the format designed to *help* human reasoners.
-
-The natural frequency format appears to strengthen narrative framing rather than activating frequency-based reasoning. The ecological rationality thesis does not transfer to systems without the relevant evolutionary history.
+**Llama: 100% lure rate** (vs. 84% for probability format). **R1-Distill: 50%** (vs. 4%). Natural frequencies made *both* models worse -- the format designed to help human reasoners strengthens narrative framing in LLMs. The ecological rationality thesis does not transfer to systems without the relevant evolutionary history.
 
 ### OLMo loss aversion vulnerability
 
@@ -208,7 +202,7 @@ Code and benchmark: [github.com/brightliu/s1s2](https://github.com/brightliu/s1s
 This post accompanies a paper submission; we are actively looking for ways to strengthen the work before the full version. In particular:
 
 1. **Are we overclaiming anywhere?** The correlational-to-causal gap is the one we are most aware of. Are there others we are missing?
-2. **What experiments would strengthen the weak points?** We have identified causal interventions, scale, and cross-architecture SAE as priorities. Are there others that would be more decisive?
+2. **What experiments would strengthen the weak points?** We have identified causal interventions, scale mechanistics (probes/SAE at 32B+), and cross-architecture SAE as priorities. Are there others that would be more decisive?
 3. **Alternative explanations.** Why might inference-time thinking fail to change residual stream representations? Is there a more parsimonious account of the probe AUC drop than "S2-by-default"?
 4. **The SAE falsification result (0/41 spurious) is unusually clean.** Is the Ma et al. protocol less stringent when applied to matched-pair designs, and if so, what additional falsification test would we need?
 5. **Interested in collaboration?** We are planning a full-length paper with causal interventions, scale experiments, and cross-architecture SAE analysis. If you have relevant expertise or compute, we would welcome the conversation.
