@@ -31,8 +31,8 @@
 % \newcommand{\pending}[1]{...} % removed before submission
 
 % ---------- Title ----------
-\title{What Changes When LLMs Learn to Reason?\\
-  Mechanistic Signatures of Cognitive Bias Processing}
+\title{Readable but Not Writable: Reasoning Training Decouples\\
+  Bias Directions from Behavior in LLMs}
 
 \author{%
   \textbf{Anonymous Authors}\\
@@ -54,8 +54,8 @@ Steering along a single linear direction in activation space modulates
 LLM susceptibility to cognitive biases by 37.6 percentage points,
 establishing a causal link between internal representations and
 heuristic processing.  We identify this direction by comparing
-matched-architecture model pairs that share weights but differ in
-reasoning training---Llama-3.1-8B-Instruct vs.\ R1-Distill-Llama-8B,
+matched-architecture model pairs that share architecture and
+base-model lineage but differ in post-training---Llama-3.1-8B-Instruct vs.\ R1-Distill-Llama-8B,
 OLMo-3-7B-Instruct vs.\ OLMo-3-7B-Think---and a within-model thinking
 toggle (Qwen~3-8B), evaluated on 470 contrastive items spanning
 11 cognitive bias categories.  Reasoning training dramatically reduces
@@ -119,6 +119,10 @@ rather than universal \citep{schwartz2025clinical}.  A growing literature
 documents these parallels \citep{xie2025cogsci, codaforno2025dual,
 ziabari2025reasoning}, and \citet{huang2026cogbias} showed that linear
 probes can detect and steer cognitive biases via internal representations.
+Prior work showed that bias-relevant directions are probeable and
+steerable \citep{huang2026cogbias}.  We ask a different question: what
+does reasoning post-training change about the \emph{decodability}, layer
+location, and \emph{behavioral writability} of those directions?
 
 Yet behavior alone cannot distinguish genuine processing-mode differences
 from surface mimicry---chain-of-thought traces are often unfaithful,
@@ -289,6 +293,12 @@ heuristic-predicted wrong answer), \emph{other-wrong}, or \emph{refusal}.
 Classic problems (e.g., the original bat-and-ball) serve only as
 contamination baselines.
 
+\paragraph{Item counts and analysis subsets.}
+Our benchmark contains 470 items across 11 categories.  Primary probe
+analyses use the 3 vulnerable categories (160 items).  Cross-prediction
+uses all 7 original categories (330 items).  The full 11-category set
+includes 4 additional categories added to test domain generality.
+
 % ============================================================
 % 4. Methods (~1 page)
 % ============================================================
@@ -315,6 +325,25 @@ training.  For scale analysis, we evaluate
 (64 layers, 4.5$\times$ the parameters of the 7B variant), enabling
 a within-family scale$\times$reasoning-training comparison on identical
 benchmark items.
+
+\paragraph{Prompting and decoding.}
+All models use greedy decoding (\texttt{do\_sample=False}, \texttt{temperature=1.0})
+with no system prompt. For Qwen~3-8B, we use the hard mode switch
+(\texttt{enable\_thinking=True/False} in \texttt{apply\_chat\_template}),
+which toggles the model's internal thinking mode without modifying the
+input text—the prompt seen by the model is identical in both modes up to
+$P_0$, ensuring that any representational differences reflect the mode
+toggle rather than input variation. This is distinct from Qwen's soft
+switch (\texttt{/think}, \texttt{/no\_think} tokens), which modifies
+the input text. For R1-Distill, the model naturally generates
+\texttt{<think>...\allowbreak</think>} blocks without prompting;
+we parse these to extract thinking-trace positions.
+We use \texttt{max\_new\_tokens=128} for standard models and
+\texttt{max\_new\_tokens=2048} for reasoning models to accommodate
+chain-of-thought traces. We acknowledge this departs from vendor-recommended
+settings (e.g., DeepSeek recommends \texttt{temperature=0.5--0.7});
+Appendix~\ref{app:robustness} reports multi-seed robustness analysis with sampled decoding
+(\texttt{temperature=0.7}) showing qualitatively consistent results.
 
 \subsection{Activation Extraction}
 
@@ -344,10 +373,11 @@ not representational structure.  We report ROC-AUC as the primary metric
 with bootstrap 95\% confidence intervals (1000 resamples).
 
 \paragraph{Immune categories.}  We separately probe the four categories
-where all models score 0\% lure rate (CRT, arithmetic, framing,
-anchoring) as a \emph{negative control}: if probes achieve high AUC on
-categories where there is no behavioral difference, the signal is
-confounded by surface features rather than processing mode.
+where models are largely immune (lure rates $\leq$10\% in most models;
+CRT, arithmetic, framing, anchoring) as a \emph{negative control}: if
+probes achieve high AUC on categories where there is minimal behavioral
+difference, the signal is confounded by surface features rather than
+processing mode.
 
 \subsection{Probe-Direction Steering}
 \label{sec:methods_steering}
@@ -1274,6 +1304,55 @@ and R1-Distill-Llama-8B under sampled decoding (temperature 0.7,
 top-$p$ = 0.95, 3 seeds: 0, 42, 123).  All main-text results use
 greedy decoding ($T = 0$); this analysis tests whether behavioral
 findings are robust to the stochasticity introduced by sampling.
+
+\subsection{Exact Generation Parameters}
+
+Table~\ref{tab:gen_kwargs} reports the exact generation keyword arguments
+used for each model family.
+
+\begin{table}[ht]
+\centering
+\caption{Generation keyword arguments for all models.  ``Greedy'' denotes
+  the main-text configuration; ``Sampled'' denotes the robustness
+  configuration used in this appendix.}
+\label{tab:gen_kwargs}
+\vspace{4pt}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Parameter} & \textbf{Greedy (main text)} & \textbf{Sampled (this appendix)} \\
+\midrule
+\texttt{do\_sample}       & \texttt{False} & \texttt{True} \\
+\texttt{temperature}      & 1.0            & 0.7 \\
+\texttt{top\_p}           & ---            & 0.95 \\
+\texttt{max\_new\_tokens} & 128 (standard) / 2048 (reasoning) & same \\
+System prompt             & none           & none \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Vendor-recommended settings.}
+Our greedy configuration departs from several vendor recommendations:
+DeepSeek recommends \texttt{temperature=0.5--0.7} for R1 models;
+Qwen recommends \texttt{temperature=0.6} with \texttt{top\_p=0.95}
+for Qwen~3.  We use deterministic greedy decoding throughout the main
+text to (a)~ensure exact reproducibility without seed dependence,
+(b)~isolate representational differences from generation-strategy
+effects, and (c)~simplify the probing analysis, since \pzero{}
+activations are deterministic given the prompt regardless of downstream
+sampling.  This appendix demonstrates that the qualitative findings---
+in particular the S1/S2 lure-rate gap and the stability of probe AUC
+at \pzero{}---are preserved under vendor-recommended sampled decoding
+(\texttt{temperature=0.7}).
+
+\paragraph{Robustness argument.}
+The key robustness claim is twofold: (1)~probe results at \pzero{}
+are \emph{invariant} to generation strategy because \pzero{} activations
+depend only on the prompt, not on downstream sampling; and
+(2)~behavioral lure-rate gaps between S1 and S2 models are qualitatively
+preserved under sampled decoding, though the magnitudes shift for
+reasoning models whose chain-of-thought is sensitive to stochastic
+token selection (Section~\ref{sec:app_gen_dependence}).
 
 \subsection{Overall Stability}
 
