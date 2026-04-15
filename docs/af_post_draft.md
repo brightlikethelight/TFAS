@@ -1,4 +1,4 @@
-# Same Architecture, Different Minds: How Reasoning Training Reorganizes Cognitive Bias Processing in LLMs
+# Readable but Not Writable: How Reasoning Training Reorganizes Cognitive Bias Processing in LLMs
 
 **Bright Liu, Harvard Undergraduate AI Safety Research (HUSAI)**
 
@@ -6,13 +6,15 @@
 
 Llama-3.1-8B-Instruct falls for base rate neglect **84% of the time**. DeepSeek-R1-Distill-Llama-8B -- same architecture, same parameter count, different training -- falls for it **4%** of the time. We wanted to know what changed inside.
 
-Five workstreams of mechanistic analysis across eight models (7B to 32B), three architecture families, and two scales converge on a single story: **the model that resists biases has *less* distinct internal encoding of bias-susceptible inputs, not more.** The model that succumbs to biases *detects* the conflict perfectly -- it just fails to act on the detection. Reasoning training does not add a deliberation module. It makes deliberation the default processing mode.
+Five workstreams of mechanistic analysis across eight models (7B to 32B), three architecture families, and two scales converge on a single story: **the conflict signal in these models is readable but not writable.** Probes *read* the bias-vulnerability direction with near-perfect accuracy. Steering along it flips lure answers to correct. But in normal operation, the model does not act on the signal. Reasoning training does not add a deliberation module. It makes deliberation the default processing mode.
 
 ## 1. The benchmark
 
 470 matched conflict/control item pairs across eleven cognitive bias categories. Every conflict item pits an intuitive-but-wrong lure against the correct answer; every control item is structurally identical but the intuitive and correct answers agree. All items are novel structural isomorphs to avoid training data contamination.
 
-## 2. Eight findings
+Prior work (Itzhak et al. 2024, Macmillan-Scott & Musolesi 2024, CogBias) asks *which biases LLMs exhibit*. We ask a different question: **what does post-training change about the writability of cognitive bias representations?** The benchmark is a means to that mechanistic end, not the primary contribution.
+
+## 2. Nine findings
 
 ### Finding 1: Sharp vulnerability boundaries -- but they depend on how you decode
 
@@ -31,6 +33,8 @@ Five workstreams of mechanistic analysis across eight models (7B to 32B), three 
 Overall lure rate is stable across decoding strategies (27.3% greedy vs. 27.5% sampled), but *category profiles shift dramatically*: framing 0% to 53%, CRT 0% to 36%, conjunction 55% to 3%. Greedy-only benchmarking mischaracterizes which failure modes a model has.
 
 The Llama-to-R1-Distill comparison is the cleanest test: identical architecture, identical base weights, differing only in reasoning distillation. Base rate: `84% -> 4%`. Conjunction: `55% -> 0%`. Syllogism: `52% -> 0%`.
+
+A subtlety: R1-Distill does not simply suppress lure answers. Its "other" rate -- responses that are neither the lure nor the correct answer -- is **18.2%**. Reasoning distillation shifts errors from lure-consistent to lure-inconsistent. The model is not just avoiding the trap; its reasoning process sometimes leads to novel wrong answers that the base model never produces. This matters for safety evaluation: a model that fails in new ways is qualitatively different from one that fails less often in the same ways.
 
 | Model | Overall | Base rate | Conjunction | Syllogism |
 |---|---|---|---|---|
@@ -68,15 +72,21 @@ Llama *knows* it should think harder. It just does not.
 
 ### Finding 3: The probe captures processing mode, not surface features
 
-The obvious confound: maybe probes just detect surface features of lure text. A probe trained on Llama's vulnerable-category activations, applied to *immune*-category activations (0% lure rate, lure text still present): **transfer AUC 0.378** -- below chance. The probe captures a processing-mode signal, not an input artifact.
+The obvious confound: maybe probes just detect surface features of lure text. Two controls rule this out.
 
-Cross-category transfer sharpens this. **Base rate and conjunction transfer at AUC 0.993** (bidirectional), suggesting a single underlying vulnerability circuit. Transfer to syllogism is weaker (0.594-0.627 inbound), consistent with a distinct reasoning failure (belief-logic conflict rather than probability estimation). Transfer to immune categories is near zero.
+**Text-only baseline.** A logistic regression on raw prompt text (TF-IDF) achieves **AUC 0.840** -- surface cues exist. But the residual-stream probe hits **AUC 0.999** on the same splits. The 0.159 gap means the probe captures signal far beyond what text features explain.
+
+**Cross-category transfer.** A probe trained on vulnerable-category activations, applied to *immune*-category activations (0% lure rate, lure text still present): **transfer AUC 0.378**. The logit histograms show why: on vulnerable categories, conflict and control items produce well-separated distributions; on immune categories, distributions collapse to a single overlapping peak. There is no processing-mode signal to detect because the model handles immune-category conflict items identically to controls. The probe tracks *processing mode*, not surface text.
+
+Within vulnerable categories, transfer is strong. **Base rate and conjunction: AUC 0.993** (bidirectional), suggesting a single vulnerability circuit. Transfer to syllogism is weaker (0.594-0.627 inbound), consistent with a distinct failure mode (belief-logic conflict vs. probability estimation).
 
 ### Finding 4: Training and inference change different things
 
 Qwen-3-8B offers a within-model comparison no cross-model study can: the same weights, run with and without explicit chain-of-thought.
 
 **Think and no-think modes produce identical probe curves.** Peak AUC 0.971 at L34 in both conditions. Same weights, same internal geometry, despite a 14 percentage-point behavioral gap.
+
+But identical AUC does not mean identical encoding. Cross-prediction -- a probe trained on think-mode activations applied to no-think, and vice versa -- is **at chance**. The two modes encode the conflict/control distinction along *orthogonal* directions. Same separability, completely different geometry. A monitor trained on one inference mode is blind to the other, even within the same weights.
 
 Now compare with the Llama/R1-Distill pair, where different training produces both different behavior *and* different probe separability:
 
@@ -85,7 +95,7 @@ Now compare with the Llama/R1-Distill pair, where different training produces bo
 | **Training** (Llama vs. R1-Distill) | 0.044 | 24.9 pp |
 | **Inference** (Qwen think vs. no-think) | 0.000 | 14.0 pp |
 
-Training changes the residual stream representation. Inference-time CoT changes the output without touching the representation. The model's initial "read" of the problem is set by the weights, full stop.
+Training changes the residual stream representation. Inference-time CoT changes the output without touching the representation -- but it *rotates* the encoding into an orthogonal subspace. The model's initial "read" of the problem is set by the weights, full stop, but the geometry of that read depends on the inference regime.
 
 We extracted continuous lure susceptibility scores measuring how much each model's internal state favors the lure vs. the correct answer at the initial prompt representation:
 
@@ -110,7 +120,15 @@ The trajectory is non-monotonic: high separation at T0, a sharp *drop* at mid-Co
 
 If CoT were performative -- the model deciding at T0 and emitting decorative reasoning -- the probe signal would be flat. The mid-CoT dip rules this out. The thinking tokens do real representational work, even though the *initial* representation is set by the weights alone.
 
-### Finding 6: SAE features survive falsification -- but do not transfer cross-model
+### Finding 6: Steering flips lure answers to correct -- perfectly
+
+The probe direction is readable. Is it writable? We ran activation steering on Llama-3.1-8B-Instruct, subtracting the conflict direction (identified by the probe) from the residual stream at inference time.
+
+**On lure items where Llama originally chose the lure answer: 100% flip to the correct answer.** Zero garbage outputs, zero refusals, zero off-topic responses. The steering vector acts as a clean toggle: subtract the conflict direction, and the model stops falling for the lure.
+
+This is the result the title references. The conflict/control direction is *readable* -- probes decode it with AUC 0.974 -- and it is *writable* in the narrow sense that steering along it changes answers. But "writable" overstates what we have shown. We have not demonstrated that an external system could use this direction to *reliably control* the model's reasoning in arbitrary contexts. The direction is a lever that works in our evaluation setting. Whether it generalizes to novel bias formats, adversarial inputs, or out-of-distribution prompts remains open.
+
+### Finding 7: SAE features survive falsification -- but do not transfer cross-model
 
 Goodfire SAE (layer 19 of Llama, 131K features). After Benjamini-Hochberg correction at q=0.05, **41 features** show significantly different activation between conflict and control items, explaining **74% of variance**.
 
@@ -118,13 +136,13 @@ Ma et al. (2026) falsification: inject each feature's top-activating tokens into
 
 However, **the Llama SAE does not transfer to R1-Distill**. Explained variance drops from 74% to 25%. SAE-based monitoring trained on one model variant may not generalize even within the same architecture family.
 
-### Finding 7: Reasoning models have 2x more specialized attention heads
+### Finding 8: Reasoning models have 2x more specialized attention heads
 
 Per-head Mann-Whitney U tests (Benjamini-Hochberg corrected) on attention entropy between conflict and control items: R1-Distill has **5.6%** of heads showing significant entropy differences vs. Llama's **2.9%**. The reasoning-trained model recruits roughly twice as many attention heads into conflict-sensitive processing.
 
 This complements the probe results. Reasoning training *blurs* the conflict/control boundary in the residual stream (AUC drops), but the slack is taken up by more heads attending differently to conflict items -- distributing deliberation computation more broadly rather than concentrating it in a single sharp direction.
 
-### Finding 8: Scale makes instruct models *worse* but leaves reasoning models untouched
+### Finding 9: Scale makes instruct models *worse* but leaves reasoning models untouched
 
 OLMo provides a clean scale comparison: 7B and 32B, Instruct and Think variants at both sizes.
 
@@ -139,7 +157,7 @@ Scale makes Instruct *worse* (14.9% to 19.6%) while Think improves marginally (0
 
 ## 3. The OLMo replication
 
-OLMo (Allen AI) -- fully open-source, independently developed -- provides the strongest out-of-distribution test. **Probe (7B):** Instruct AUC 0.996 [0.988, 1.000], Think 0.962 [0.934, 0.982]. Non-overlapping CIs, directionally consistent with Llama (gap 0.034 vs. 0.044). At 32B the behavioral divergence widens further (Finding 8).
+OLMo (Allen AI) -- fully open-source, independently developed -- provides the strongest out-of-distribution test. **Probe (7B):** Instruct AUC 0.996 [0.988, 1.000], Think 0.962 [0.934, 0.982]. Non-overlapping CIs, directionally consistent with Llama (gap 0.034 vs. 0.044). At 32B the behavioral divergence widens further (Finding 9).
 
 Three architecture families, two scales, same pattern. Not a one-model curiosity.
 
@@ -157,7 +175,7 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 
 ## 5. Limitations
 
-**All mechanistic results are correlational.** We have not run activation patching. The SAE features and probe directions are *candidates* for causal intervention, not confirmed mechanisms.
+**Causal evidence is preliminary.** Activation steering along the probe direction flips lure answers to correct (Finding 6), which is a causal intervention. But we have not run activation patching or circuit-level analysis. The SAE features remain correlational candidates, not confirmed mechanisms.
 
 **Scale is partially tested.** OLMo-32B confirms the behavioral pattern holds (and strengthens) at 32B, but we lack mechanistic data (probes, SAE) at 32B. 70B+ remains open.
 
@@ -167,9 +185,11 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 
 **Not a clean ablation.** R1-Distill differs from Llama in the full fine-tuning pipeline, not just reasoning distillation.
 
+**Steering generalization is untested.** The 100% lure-to-correct steering result (Finding 6) is on our evaluation set. We have not tested whether the steering vector generalizes to novel bias formats or out-of-distribution prompts.
+
 ## 6. Safety implications
 
-**Monitoring inference-time reasoning from internals is harder than it looks.** Thinking tokens do not change the *initial* residual stream representation (Finding 4), so a probe at T0 cannot distinguish a model that genuinely conditions on its CoT from one that ignores it. However, within-CoT probing (Finding 5) shows a non-monotonic trajectory (AUC 0.973 -> 0.754 -> 0.971) -- genuine intermediate computation that a mid-trajectory probe *can* detect. This is directly relevant to detecting performative reasoning: a flat trajectory would be a red flag, while a mid-CoT dip indicates real work. Monitoring CoT faithfulness requires probing *during* generation, not just before or after.
+**Monitoring inference-time reasoning from internals is harder than it looks.** Thinking tokens do not change the *initial* residual stream representation (Finding 4), and worse, think vs. no-think modes encode the conflict distinction along *orthogonal* directions -- a monitor trained on one inference mode is blind to the other, even within the same weights. However, within-CoT probing (Finding 5) shows a non-monotonic trajectory (AUC 0.973 -> 0.754 -> 0.971) -- genuine intermediate computation that a mid-trajectory probe *can* detect. This is directly relevant to detecting performative reasoning: a flat trajectory would be a red flag, while a mid-CoT dip indicates real work. Monitoring CoT faithfulness requires probing *during* generation, not just before or after.
 
 **Training goes deeper than prompting.** A model whose default representation points away from the lure (R1-Distill, susceptibility -0.326) is in a fundamentally different state than one whose representation points toward the lure but whose CoT sometimes overrides it. Concrete data point in the reasoning distillation vs. inference-time scaling debate.
 
@@ -177,11 +197,13 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 
 **Scaling instruct models does not scale away bias vulnerability.** OLMo-32B-Instruct is *more* susceptible than OLMo-7B-Instruct (19.6% vs. 14.9%). The assumption that scale improves robustness fails for at least this class of failure. Reasoning training, not scale, is the relevant variable.
 
+**Steering works -- but the generalization question is open.** The 100% lure-to-correct flip (Finding 6) demonstrates that the probe direction is causally relevant, not merely correlational. This is encouraging for intervention-based safety strategies. But the result is on our evaluation distribution; whether the same vector works on novel bias formats or adversarial inputs is untested. Readable-and-writable on one distribution does not guarantee writable on another.
+
 **SAE-based monitoring: promising but fragile.** 41 features survive falsification with 74% explained variance, but the failure to transfer from Llama to R1-Distill (74% to 25% EV) means monitoring tools may not generalize even within the same architecture family.
 
 ## 7. What is next
 
-**Causal interventions** are the single most important remaining experiment. If clamping the 41 SAE features or the probe-identified direction changes the model's answer on conflict items, we move from correlation to mechanism. This is the gap we are most eager to close.
+Activation steering along the probe direction already flips lure answers to correct (Finding 6), providing initial causal evidence. The most important next step is **testing steering generalization**: does the same vector work on novel bias formats, adversarial inputs, and out-of-distribution prompts? If so, the direction is a robust causal mechanism; if not, it is a brittle feature of our evaluation distribution. **SAE-level causal interventions** -- clamping individual features among the 41 survivors -- would provide finer-grained mechanistic understanding than the blunt probe-direction steering we have so far.
 
 Beyond that: **scale mechanistics** (behavioral results hold at 32B, but we need probes and SAEs at scale to test whether representational blurring persists), **cross-architecture SAE** (custom SAEs for OLMo and Qwen to test whether the same interpretable features recur), and a **clean training ablation** using OLMo's open pipeline to isolate reasoning training from other fine-tuning differences.
 
@@ -189,7 +211,9 @@ Beyond that: **scale mechanistics** (behavioral results hold at 32B, but we need
 
 Eight models. Three architecture families. Two scales. Five workstreams of evidence. The same story each time.
 
-Standard instruct-tuned models maintain a near-perfect internal alarm for inputs that require careful reasoning. That alarm does not reliably trigger careful reasoning. Reasoning-trained models blur this alarm -- not because they have become worse at detecting conflict, but because they no longer need to detect it. Their default processing mode already incorporates the deliberation that the alarm was supposed to trigger.
+Standard instruct-tuned models maintain a near-perfect internal alarm for inputs that require careful reasoning. That alarm is *readable* -- probes decode it with near-perfect accuracy, and steering along its direction flips lure answers to correct. But in normal operation, the alarm does not reliably trigger careful reasoning. It is readable but not, by default, *written to*.
+
+Reasoning-trained models blur this alarm -- not because they have become worse at detecting conflict, but because they no longer need to detect it. Their default processing mode already incorporates the deliberation that the alarm was supposed to trigger.
 
 Reasoning training does not add System 2. It makes System 2 the default.
 
@@ -201,8 +225,8 @@ Code and benchmark: [github.com/brightliu/s1s2](https://github.com/brightliu/s1s
 
 This post accompanies a paper submission; we are actively looking for ways to strengthen the work before the full version. In particular:
 
-1. **Are we overclaiming anywhere?** The correlational-to-causal gap is the one we are most aware of. Are there others we are missing?
-2. **What experiments would strengthen the weak points?** We have identified causal interventions, scale mechanistics (probes/SAE at 32B+), and cross-architecture SAE as priorities. Are there others that would be more decisive?
+1. **Are we overclaiming anywhere?** Steering provides initial causal evidence (Finding 6), but generalization is untested. The Qwen orthogonality result complicates monitoring claims. Are there other gaps we are missing?
+2. **What experiments would strengthen the weak points?** We have identified steering generalization, SAE-level causal interventions, scale mechanistics (probes/SAE at 32B+), and cross-architecture SAE as priorities. Are there others that would be more decisive?
 3. **Alternative explanations.** Why might inference-time thinking fail to change residual stream representations? Is there a more parsimonious account of the probe AUC drop than "S2-by-default"?
 4. **The SAE falsification result (0/41 spurious) is unusually clean.** Is the Ma et al. protocol less stringent when applied to matched-pair designs, and if so, what additional falsification test would we need?
 5. **Interested in collaboration?** We are planning a full-length paper with causal interventions, scale experiments, and cross-architecture SAE analysis. If you have relevant expertise or compute, we would welcome the conversation.

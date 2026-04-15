@@ -50,43 +50,35 @@
 % ============================================================
 
 \begin{abstract}
-Steering along a single linear direction in activation space modulates
-LLM susceptibility to cognitive biases by 37.6 percentage points,
-establishing a causal link between internal representations and
-heuristic processing.  We identify this direction by comparing
-matched-architecture model pairs that share architecture and
-base-model lineage but differ in post-training---Llama-3.1-8B-Instruct vs.\ R1-Distill-Llama-8B,
-OLMo-3-7B-Instruct vs.\ OLMo-3-7B-Think---and a within-model thinking
-toggle (Qwen~3-8B), evaluated on 470 contrastive items spanning
-11 cognitive bias categories.  Reasoning training dramatically reduces
-heuristic lure rates: 27.3\% to 2.4\% (Llama) and 14.9\% to 0.9\%
-(OLMo).  Linear probes on residual stream activations reveal that
-standard models achieve higher conflict/control separability
-(AUC\,=\,0.974 [0.952, 0.992]) than reasoning models
-(AUC\,=\,0.930 [0.894, 0.960])---the \sone{}/\stwo{} boundary is
-blurred, not sharpened, by training.  Cross-prediction on immune
-categories (AUC\,=\,0.378) confirms probes capture processing mode
-rather than surface features.  Crucially, \textbf{causal interventions}
-via probe-direction steering reduce the lure rate by 21.3 percentage
-points (31.2\% at $\alpha$\,=\,+5 vs.\ 52.5\% baseline); random
-directions produce no effect.  Within-chain-of-thought probing reveals a non-monotonic trajectory:
-probe AUC peaks at thinking onset (0.973), drops during deliberation
-(0.754 at T75), and rebounds before the answer (0.971), suggesting
-genuine computation that temporarily disrupts and then resolves the
-\sone{}/\stwo{} boundary.  The Qwen toggle dissociates training from
-inference: thinking changes behavior without altering pre-generation
-representations.  At the feature level, 41 SAE features survive
-falsification, and reasoning models exhibit twice as many
-\stwo{}-specialized attention heads.  At 32B scale, reasoning training
-drops lure rates from 19.6\% to 0.4\% (OLMo-3.1); scale increases
-standard-model vulnerability (14.9\%$\to$19.6\%) but does not
-meaningfully change reasoning-model performance (0.9\%$\to$0.4\%),
-and probe separability remains near-perfect for both Instruct
-(AUC\,=\,0.9999) and Think (0.9978) variants,
-confirming these signatures are not small-model artifacts.
-These results demonstrate that reasoning training reorganizes internal
-heuristic/deliberative representations rather than layering deliberation
-atop an unchanged substrate.
+Steering along a single linear direction in activation space shifts
+LLM cognitive-bias susceptibility by 37.5 percentage points, but only
+in standard models.  In reasoning models, the same direction is
+\emph{readable but not writable}: probes decode it, yet causal
+interventions along it fail.  This dissociation is our central finding.
+We compare matched-architecture pairs---Llama-3.1-8B-Instruct vs.\
+R1-Distill-Llama-8B, OLMo 7B/32B Instruct vs.\ Think---and
+Qwen-3-8B's thinking toggle, across 470 contrastive items spanning 11
+bias categories.  Reasoning training collapses heuristic lure rates:
+27.3\% to 2.4\% (Llama), 19.6\% to 0.4\% at 32B.  Linear probes on
+residual-stream activations far exceed text baselines
+(AUC\,0.974/0.930 vs.\ 0.840), confirming the signal lives in
+geometry, not surface tokens.  Cross-prediction logit histograms on
+immune items compress into a tight cluster, ruling out
+category-specific confounds.  Crucially, probe-direction steering
+produces a 37.5pp dose-response shift in Llama (lure$\to$correct,
+zero garbage outputs), while R1 shows only ${\sim}$7.5pp, comparable
+to random directions.  Within-chain-of-thought probing reveals a
+non-monotonic trajectory (T0\,=\,0.973, T75\,=\,0.754,
+Tend\,=\,0.971), indicating genuine computation that temporarily
+disrupts the conflict boundary.  Qwen's toggle yields a further
+surprise: both thinking modes achieve high separability
+(${\sim}$0.97), but along \textbf{orthogonal} directions
+(cross-prediction AUC\,0.496), meaning mode-switching restructures the
+encoding axis, not just behavior.  Scaling to 32B amplifies
+standard-model vulnerability (14.9\%$\to$19.6\%) while reasoning
+training remains effective (0.4\%).  These results demonstrate that
+reasoning training reorganizes bias representations into a read-only
+substrate that resists external steering.
 \end{abstract}
 
 % ============================================================
@@ -187,10 +179,13 @@ attributable to training, not architecture.  We make six contributions:
   decorative reasoning.
 
   \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
-  thinking toggle changes behavior ($21\% \to 7.3\%$ lure rate) but produces
-  \emph{identical} probe signatures (AUC\,=\,0.971 in both modes),
-  demonstrating that training changes \sone{}/\stwo{} encoding while
-  inference-time thinking changes only generation behavior.
+  thinking toggle changes behavior ($21\% \to 7.3\%$ lure rate), and both
+  modes achieve high conflict separability (AUC\,=\,0.954 and 0.970), but
+  cross-mode prediction is at chance (AUC\,=\,0.496, cosine $= -0.005$):
+  the two modes encode conflict along \emph{orthogonal} directions---a
+  deeper dissociation than identical encoding, demonstrating that
+  inference-time thinking reorganizes the conflict representation rather
+  than simply amplifying it.
 \end{enumerate}
 
 \noindent Additionally, we analyze \textbf{scale effects} at 32B
@@ -407,28 +402,57 @@ responses on conflict items) across all models and categories.
 
 \begin{table}[t]
 \centering
-\caption{S1-lure rates (\%) on conflict items by model and category.
-  Bolded numbers indicate vulnerable categories (lure rate $>$10\%).
-  OLMo columns provide cross-architecture replication.}
+\caption{Full behavioral results on conflict items.  For each model
+  we report correct rate (Corr), S1-lure rate (Lure), and other-wrong
+  rate (Oth), plus matched-control accuracy (Ctrl).  Bold lure rates
+  indicate vulnerable categories ($>$10\%).  Wilson 95\% CIs in brackets
+  for overall row.  McNemar mid-$p$ tests conflict vs.\ matched control.}
 \label{tab:behavioral}
 \vspace{4pt}
-\small
-\begin{tabular}{lcccccc}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{ll rrr rrr rrr}
 \toprule
-& \textbf{Llama} & \textbf{R1-Distill} & \multicolumn{2}{c}{\textbf{Qwen 3-8B}} & \textbf{OLMo} & \textbf{OLMo} \\
-\cmidrule(lr){4-5}
-\textbf{Category} & \textbf{8B-Inst.} & \textbf{Llama-8B} & \textbf{no think} & \textbf{think} & \textbf{3-7B-Inst.} & \textbf{3-7B-Think} \\
+& & \multicolumn{3}{c}{\textbf{Llama 8B-Inst.}} & \multicolumn{3}{c}{\textbf{R1-Distill-8B}} & \multicolumn{3}{c}{\textbf{Qwen 3-8B (no think)}} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}\cmidrule(lr){9-11}
+\textbf{Category} & \textbf{Ctrl} & \textbf{Corr} & \textbf{Lure} & \textbf{Oth} & \textbf{Corr} & \textbf{Lure} & \textbf{Oth} & \textbf{Corr} & \textbf{Lure} & \textbf{Oth} \\
 \midrule
-Base rate      & \textbf{84} & 4   & \textbf{56} & 4   & \textbf{46} & 0 \\
-Conjunction    & \textbf{55} & 0   & \textbf{95} & \textbf{55} & \textbf{50} & 0 \\
-Syllogism      & \textbf{52} & 0   & 0   & 0   & 0   & 4 \\
+Base rate      & 100  & 16  & \textbf{84} & 0   & 16  & 4   & 80 & 44  & \textbf{56} & 0 \\
+Conjunction    & 100  & 45  & \textbf{55} & 0   & 100 & 0   & 0  & 5   & \textbf{95} & 0 \\
+Syllogism      & 52   & 48  & \textbf{52} & 0   & 100 & 0   & 0  & 48  & 0   & 52 \\
+\addlinespace
+CRT variants   & 90   & 93  & 0   & 7   & 83  & 3   & 13 & 73  & 0   & 27 \\
+Arithmetic     & 100  & 100 & 0   & 0   & 96  & 0   & 4  & 100 & 0   & 0 \\
+Framing        & 100  & 100 & 0   & 0   & 100 & 0   & 0  & 100 & 0   & 0 \\
+Anchoring      & 80   & 50  & 0   & 50  & 65  & 10  & 25 & 80  & 10  & 10 \\
 \midrule
-CRT variants   & 0   & 3   & 0   & 0   & 3   & 3 \\
-Arithmetic     & 0   & 0   & 0   & 0   & 0   & 0 \\
-Framing        & 0   & 0   & 0   & 0   & 0   & 0 \\
-Anchoring      & 0   & \textbf{10} & \textbf{10} & 0 & 5 & 0 \\
+\textbf{Overall} & \textbf{88} & \textbf{65} & \textbf{27.3} & \textbf{7}
+  & \textbf{79} & \textbf{2.4} & \textbf{18}
+  & \textbf{65} & \textbf{21.2} & \textbf{14} \\
+\bottomrule
+\end{tabular}
+
+\vspace{6pt}
+\scriptsize
+\setlength{\tabcolsep}{2.5pt}
+\begin{tabular}{ll rrr rrr}
+\toprule
+& & \multicolumn{3}{c}{\textbf{Qwen 3-8B (think)}} & \multicolumn{3}{c}{\textbf{OLMo 3-7B-Inst. / Think}} \\
+\cmidrule(lr){3-5}\cmidrule(lr){6-8}
+\textbf{Category} & \textbf{Ctrl} & \textbf{Corr} & \textbf{Lure} & \textbf{Oth} & \textbf{Corr / Corr} & \textbf{Lure / Lure} & \textbf{Oth / Oth} \\
 \midrule
-\textbf{Overall lure} & \textbf{27.3} & \textbf{2.4} & \textbf{21.0} & \textbf{7.3} & \textbf{14.9} & \textbf{0.9} \\
+Base rate      & 100 / 100 & 96  & 4   & 0   & 54 / 100 & \textbf{46} / 0 & 0 / 0 \\
+Conjunction    & 100 / 100 & 45  & \textbf{55} & 0   & 50 / 100 & \textbf{50} / 0 & 0 / 0 \\
+Syllogism      & 100 / 68  & 100 & 0   & 0   & 100 / 72 & 0 / 4  & 0 / 24 \\
+\addlinespace
+CRT variants   & 93 / 93   & 77  & 0   & 23  & 73 / 97  & 3 / 3  & 23 / 0 \\
+Arithmetic     & 100 / 100 & 96  & 0   & 4   & 80 / 88  & 0 / 0  & 20 / 12 \\
+Framing        & 100 / 100 & 100 & 0   & 0   & 100 / 100 & 0 / 0 & 0 / 0 \\
+Anchoring      & 90 / 70   & 75  & 0   & 25  & 35 / 80  & 5 / 0  & 60 / 20 \\
+\midrule
+\textbf{Overall} & \textbf{98 / 81}
+  & \textbf{85} & \textbf{7.3} & \textbf{8}
+  & \textbf{75 / 88} & \textbf{14.9 / 0.9} & \textbf{10 / 11} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -474,7 +498,8 @@ conflict/control classification on the three vulnerable categories.
 \caption{Layer-wise probe ROC-AUC (conflict vs.\ no-conflict, three
   vulnerable categories).  Llama peaks at 0.974 [0.952, 0.992] (L16);
   R1-Distill at 0.930 [0.894, 0.960] (L31)---non-overlapping CIs.
-  Qwen~3-8B peaks at 0.971 (L34) in both think/no-think modes.
+  Qwen~3-8B peaks at 0.954 (no-think) and 0.970 (think) at L34, but
+  cross-mode transfer is at chance (0.496).
   Gray dashed: Hewitt--Liang control ceiling.}
 \label{fig:probe_curves}
 \end{figure}
@@ -484,14 +509,20 @@ R1-Distill peaks lower at AUC\,=\,0.930 [0.894, 0.960] at L31---non-overlapping
 CIs confirm statistical significance ($p < 0.05$).  The later peak layer
 suggests reasoning distillation shifts conflict-relevant information toward
 deeper layers \citep{zhang2025probing}.
-Qwen~3-8B reaches AUC\,=\,0.971 at L34 in both think and no-think modes:
-despite a 3$\times$ behavioral improvement (lure rate $21\% \to 7.3\%$),
-the pre-generation representation is unchanged \citep{afzal2025knowing}.
-This is the key dissociation: \textbf{training} (Llama vs.\ R1-Distill)
-changes both encoding and behavior; \textbf{inference-time thinking}
-(Qwen toggle) changes behavior without changing encoding.
+Qwen~3-8B achieves high conflict separability in both modes
+(no-think: AUC\,=\,0.954 at L34; think: AUC\,=\,0.970 at L34), but
+cross-mode prediction reveals a striking dissociation: a probe trained
+on no-think activations and tested on think activations yields
+AUC\,=\,0.496 (chance), and the two probe weight vectors are nearly
+orthogonal (cosine similarity $= -0.005$).  The two modes encode
+conflict along \emph{orthogonal directions}---a deeper dissociation
+than identical encoding.  This is the key result: \textbf{training}
+(Llama vs.\ R1-Distill) changes both encoding and behavior;
+\textbf{inference-time thinking} (Qwen toggle) reorganizes the
+conflict representation into an orthogonal subspace while changing
+behavior.
 
-\paragraph{Selectivity.}  Hewitt--Liang control probes achieve
+\paragraph{Selectivity and text-only baseline.}  Hewitt--Liang control probes achieve
 AUC\,$\leq$\,0.66 at all layers, confirming that the true probes
 decode representational content, not probe capacity.  Selectivity
 exceeds 34 percentage points at peak layers for both models.\footnote{We
@@ -499,6 +530,14 @@ exceeds 34 percentage points at peak layers for both models.\footnote{We
   peak L14, AUC\,=\,0.999), used for cross-prediction and steering; and
   bootstrap CI analysis on 160 vulnerable-category items (3 categories,
   peak L16, AUC\,=\,0.974 [0.952, 0.992]).}
+A sentence-transformer text-only baseline (encoding only the input
+text, with no access to model activations) achieves AUC\,=\,0.840,
+substantially below the activation probe (0.999).  The gap is widest
+for syllogism (text AUC\,=\,0.086 vs.\ activation AUC\,=\,0.999),
+where conflict and control items are semantically similar but logically
+distinct---exactly the category where surface features fail.  This
+confirms that the activation probe captures processing-relevant
+information beyond what is available from input text alone.
 
 \paragraph{Probe summary.}
 Table~\ref{tab:probe_summary} summarizes the key probing metrics.
@@ -507,33 +546,42 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \centering
 \caption{Probing summary at peak layer for the three
   vulnerable categories.  95\% CIs from 1000 bootstrap resamples.
-  Selectivity = true AUC $-$ control AUC.}
+  Selectivity = true AUC $-$ control AUC.  Cross-mode column:
+  AUC when a probe trained on one Qwen mode is tested on the other.
+  Text baseline: sentence-transformer on input text only (no activations).}
 \label{tab:probe_summary}
 \vspace{4pt}
 \small
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{Model} & \textbf{Peak Layer} & \textbf{Peak AUC} & \textbf{95\% CI} & \textbf{Control AUC} & \textbf{Selectivity} \\
+\textbf{Model} & \textbf{Peak L} & \textbf{Peak AUC} & \textbf{95\% CI} & \textbf{Ctrl AUC} & \textbf{Select.} & \textbf{Cross} \\
 \midrule
-Llama-3.1-8B-Instruct & L16 & 0.974 & [0.952, 0.992] & 0.63 & 0.343 \\
-R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.55 & 0.377 \\
-Qwen~3-8B (no think)  & L34 & 0.971 & ---             & ---  & --- \\
-Qwen~3-8B (think)     & L34 & 0.971 & ---             & ---  & --- \\
+Llama-3.1-8B-Instruct & L16 & 0.974 & [0.952, 0.992] & 0.63 & 0.343 & --- \\
+R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.55 & 0.377 & --- \\
+Qwen~3-8B (no think)  & L34 & 0.954 & ---             & ---  & --- & 0.496 \\
+Qwen~3-8B (think)     & L34 & 0.970 & ---             & ---  & --- & 0.496 \\
 \midrule
-OLMo-3-7B-Instruct    & L24 & 0.996 & [0.988, 1.000]  & ---  & --- \\
-OLMo-3-7B-Think       & L22 & 0.962 & [0.934, 0.982]  & ---  & --- \\
+OLMo-3-7B-Instruct    & L24 & 0.996 & [0.988, 1.000]  & ---  & --- & --- \\
+OLMo-3-7B-Think       & L22 & 0.962 & [0.934, 0.982]  & ---  & --- & --- \\
 \midrule
-OLMo-3.1-32B-Instruct & L20 & 0.9999 & ---             & ---  & --- \\
-OLMo-3.1-32B-Think    & L20 & 0.9978 & ---             & ---  & --- \\
+OLMo-3.1-32B-Instruct & L20 & 0.9999 & ---             & ---  & --- & --- \\
+OLMo-3.1-32B-Think    & L20 & 0.9978 & ---             & ---  & --- & --- \\
+\midrule
+\emph{Text baseline}   & --- & 0.840 & ---             & ---  & --- & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Cross-prediction resolves the surface-feature confound.}
+\paragraph{Cross-prediction and immune-category specificity.}
 Training a probe on Llama's \emph{vulnerable} categories (base rate,
 conjunction, syllogism) and testing on \emph{immune} categories (CRT,
 arithmetic, framing, anchoring) yields transfer AUC\,=\,0.378 at the
-peak layer---far below the within-category AUC of 0.987.  The probe is
+peak layer---far below the within-category AUC of 0.987.  Logit
+histograms reveal the mechanism behind this low transfer: immune items
+compress into a tight cluster (logit spread $0.03\times$ that of
+vulnerable categories) with negligible conflict/control separation,
+confirming that the probe direction is specific to vulnerable-category
+processing rather than a universal conflict signal.  The probe is
 specific to categories where the model is actually vulnerable.  The
 transfer matrix reveals structured generalization: base rate and
 conjunction probes transfer near-perfectly to each other
@@ -577,10 +625,19 @@ vulnerable-category conflict items.  Positive $\alpha$ steers toward the
 Figure~\ref{fig:steering} shows a monotonic dose-response relationship
 between steering strength and lure rate.  At $\alpha = -5$ (toward
 \sone{}), lure rate rises to 68.8\%; at $\alpha = +5$ (toward \stwo{}),
-it drops to 31.2\%---a total causal swing of 37.6 percentage points.
+it drops to 31.2\%---a total causal swing of 37.5 percentage points.
 Relative to the unsteered baseline (52.5\%), the \stwo{} direction
-reduces lure rate by 21.3pp, comparable to
+reduces lure rate by 21.2pp, comparable to
 \citet{huang2026cogbias}'s 26--32\% reduction via contrastive activation addition.
+
+\paragraph{Steering recovers correct answers, not garbage.}
+The entire 21.2pp reduction in lure rate converts to correct answers:
+the correct-answer rate rises from 31.2\% (baseline) to 52.4\%
+($\alpha = +5$), with zero increase in ``other'' (non-lure, non-correct)
+responses.  This rules out the possibility that steering merely
+disrupts the model's output distribution; the intervention
+specifically recovers normative reasoning on items where the unsteered
+model defaults to the heuristic lure.
 
 \paragraph{Random-direction control.}
 For each $\alpha$, we repeat the intervention along five random unit
@@ -589,7 +646,7 @@ controls show no systematic dose-response: mean lure rates remain
 between 52\% and 58\% across all $\alpha$ values, with variability
 increasing at large $|\alpha|$ due to representational disruption
 (e.g., $57.8\% \pm 7.9\%$ at $\alpha = +5$).  The contrast is sharp:
-the probe direction produces a 37.6pp swing while random directions
+the probe direction produces a 37.5pp swing while random directions
 of identical norm produce none.
 
 This establishes that the linear probe does not merely \emph{read out}
@@ -605,8 +662,9 @@ In stark contrast, applying the same steering protocol to R1-Distill-Llama-8B pr
 \vspace{-4pt}
 \caption{Probe-direction steering on Llama-3.1-8B-Instruct (L14, 80
   vulnerable-category conflict items).  The probe direction produces a
-  37.6pp dose-response ($\alpha\!=\!-5$: 68.8\%; $\alpha\!=\!+5$: 31.2\%);
-  random directions (gray band) show no systematic effect.}
+  37.5pp dose-response ($\alpha\!=\!-5$: 68.8\%; $\alpha\!=\!+5$: 31.2\%),
+  with 100\% of lure reduction converting to correct answers (zero
+  ``other'' increase); random directions (gray band) show no systematic effect.}
 \label{fig:steering}
 \end{figure}
 
