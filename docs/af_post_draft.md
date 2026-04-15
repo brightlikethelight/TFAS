@@ -95,7 +95,7 @@ Now compare with the Llama/R1-Distill pair, where different training produces bo
 | **Training** (Llama vs. R1-Distill) | 0.044 | 24.9 pp |
 | **Inference** (Qwen think vs. no-think) | 0.000 | 14.0 pp |
 
-Training changes the residual stream representation. Inference-time CoT changes the output without touching the representation -- but it *rotates* the encoding into an orthogonal subspace. The model's initial "read" of the problem is set by the weights, full stop, but the geometry of that read depends on the inference regime.
+Training changes the representation. Inference-time CoT changes the output without touching the representation -- but *rotates* the encoding into an orthogonal subspace. The initial "read" is set by the weights; the geometry of that read depends on the inference regime.
 
 We extracted continuous lure susceptibility scores measuring how much each model's internal state favors the lure vs. the correct answer at the initial prompt representation:
 
@@ -126,7 +126,7 @@ The probe direction is readable. Is it writable? We ran activation steering on L
 
 **On lure items where Llama originally chose the lure answer: 100% flip to the correct answer.** Zero garbage outputs, zero refusals, zero off-topic responses. The steering vector acts as a clean toggle: subtract the conflict direction, and the model stops falling for the lure.
 
-This is the result the title references. The conflict/control direction is *readable* -- probes decode it with AUC 0.974 -- and it is *writable* in the narrow sense that steering along it changes answers. But "writable" overstates what we have shown. We have not demonstrated that an external system could use this direction to *reliably control* the model's reasoning in arbitrary contexts. The direction is a lever that works in our evaluation setting. Whether it generalizes to novel bias formats, adversarial inputs, or out-of-distribution prompts remains open.
+This is the result the title references. The direction is *readable* (probes decode it at AUC 0.974) and *writable* in the narrow sense that steering along it changes answers. But "writable" overstates what we have shown -- the direction is a lever that works in our evaluation setting. Whether it generalizes to novel bias formats, adversarial inputs, or out-of-distribution prompts remains open.
 
 ### Finding 7: SAE features survive falsification -- but do not transfer cross-model
 
@@ -189,17 +189,17 @@ Most models show 0% lure rates on loss aversion items. OLMo: **33%**. The vulner
 
 ## 6. Safety implications
 
-**Monitoring inference-time reasoning from internals is harder than it looks.** Thinking tokens do not change the *initial* residual stream representation (Finding 4), and worse, think vs. no-think modes encode the conflict distinction along *orthogonal* directions -- a monitor trained on one inference mode is blind to the other, even within the same weights. However, within-CoT probing (Finding 5) shows a non-monotonic trajectory (AUC 0.973 -> 0.754 -> 0.971) -- genuine intermediate computation that a mid-trajectory probe *can* detect. This is directly relevant to detecting performative reasoning: a flat trajectory would be a red flag, while a mid-CoT dip indicates real work. Monitoring CoT faithfulness requires probing *during* generation, not just before or after.
+**Monitoring is harder than it looks.** Think vs. no-think modes encode conflict along *orthogonal* directions (Finding 4) -- a monitor trained on one mode is blind to the other. Within-CoT probing (Finding 5) offers a way forward: the non-monotonic trajectory (AUC 0.973 -> 0.754 -> 0.971) detects genuine intermediate computation. A flat trajectory would flag performative reasoning. Monitoring faithfulness requires probing *during* generation, not just before or after.
 
-**Training goes deeper than prompting.** A model whose default representation points away from the lure (R1-Distill, susceptibility -0.326) is in a fundamentally different state than one whose representation points toward the lure but whose CoT sometimes overrides it. Concrete data point in the reasoning distillation vs. inference-time scaling debate.
+**Training goes deeper than prompting.** A model whose default representation points away from the lure (R1-Distill, susceptibility -0.326) is fundamentally different from one that points toward it but sometimes overrides via CoT.
 
-**Domain-specific vulnerabilities are invisible to aggregate benchmarks.** A model acing CRT under greedy decoding can fail at base rate estimation 84% of the time, and fail at CRT 36% under sampled decoding. Safety evaluations that treat "reasoning ability" as monolithic will miss these sharp failure surfaces.
+**Domain-specific vulnerabilities are invisible to aggregate benchmarks.** A model acing CRT under greedy decoding fails at base rate estimation 84% of the time. Safety evaluations that treat "reasoning ability" as monolithic miss these sharp failure surfaces.
 
-**Scaling instruct models does not scale away bias vulnerability.** OLMo-32B-Instruct is *more* susceptible than OLMo-7B-Instruct (19.6% vs. 14.9%). The assumption that scale improves robustness fails for at least this class of failure. Reasoning training, not scale, is the relevant variable.
+**Scale does not help instruct models.** OLMo-32B-Instruct is *more* susceptible than 7B (19.6% vs. 14.9%). Reasoning training, not scale, is the relevant variable.
 
-**Steering works -- but the generalization question is open.** The 100% lure-to-correct flip (Finding 6) demonstrates that the probe direction is causally relevant, not merely correlational. This is encouraging for intervention-based safety strategies. But the result is on our evaluation distribution; whether the same vector works on novel bias formats or adversarial inputs is untested. Readable-and-writable on one distribution does not guarantee writable on another.
+**Steering works -- generalization is open.** The 100% lure-to-correct flip (Finding 6) is causally encouraging but tested only on our evaluation distribution.
 
-**SAE-based monitoring: promising but fragile.** 41 features survive falsification with 74% explained variance, but the failure to transfer from Llama to R1-Distill (74% to 25% EV) means monitoring tools may not generalize even within the same architecture family.
+**SAE monitoring: promising but fragile.** 41 features survive falsification at 74% EV, but transfer from Llama to R1-Distill drops to 25% EV.
 
 ## 7. What is next
 

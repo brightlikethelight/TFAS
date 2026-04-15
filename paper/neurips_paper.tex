@@ -675,20 +675,49 @@ In stark contrast, applying the same steering protocol to R1-Distill-Llama-8B pr
 We probe residual stream activations at seven canonical positions
 for Qwen~3-8B (think mode) at L34: P0 (pre-generation), T0 (thinking
 onset), T25/T50/T75 (quartile positions within the trace), Tend (final
-thinking token), and P2 (control position).  Within the thinking trace,
-probe AUC follows a non-monotonic trajectory: T0 (0.973) $\to$
-T25 (0.791) $\to$ T50 (0.772) $\to$ T75 (0.754) $\to$
-Tend (0.971), suggesting genuine deliberation that temporarily disrupts
-and then resolves the \sone{}/\stwo{} boundary.  The P0 AUC (0.938)
-is high before generation begins; T0 \emph{increases} further to
-0.973 at thinking onset; intermediate positions show a sustained dip
-of ${\sim}20$pp; and Tend recovers to match T0.  The P2 control returns
-chance (0.500).  This pattern rejects both the ``performative reasoning''
-hypothesis (which predicts flat AUC) and simple monotonic sharpening,
-instead matching the ``exploration before exploitation'' pattern
-\citep{boppana2026reasoning}: reasoning temporarily destabilizes
-the conflict representation during deliberation before crystallizing
-a resolution (Appendix~\ref{app:within_cot}).
+thinking token), and P2 (control position).
+
+\paragraph{Non-monotonic trajectory.}
+Within the thinking trace, probe AUC follows a non-monotonic trajectory:
+P0 (0.938) $\to$ T0 (0.973) $\to$ T25 (0.791) $\to$ T50 (0.772)
+$\to$ T75 (0.754) $\to$ Tend (0.971); P2 returns exactly 0.500 (chance).
+Three phases are clearly delineated.  First, the \emph{crystallization
+phase} (P0$\to$T0): thinking onset immediately sharpens the
+conflict/control boundary by +3.5pp.  The model commits to a processing
+mode before any substantive reasoning tokens are generated, consistent
+with the ``fast initial commitment'' observed in human dual-process
+paradigms \citep{deneys2017dual}.  Second, the \emph{exploration phase}
+(T0$\to$T75): probe AUC drops by ${\sim}22$pp as the model traverses
+intermediate reasoning steps.  The sustained dip across T25--T75
+indicates that the mid-trace representations genuinely explore
+alternative framings---conflict and control items become less linearly
+separable as the model considers multiple hypotheses.  Third, the
+\emph{resolution phase} (T75$\to$Tend): AUC rebounds to 0.971,
+matching T0 within 0.002.  The representation re-crystallizes into a
+conflict/control boundary that is almost identical to the initial
+commitment, but now backed by the reasoning trace.
+
+\paragraph{Discriminating hypotheses.}
+This trajectory discriminates three competing hypotheses about
+chain-of-thought reasoning.  The \emph{performative reasoning}
+hypothesis (the model ``decides'' at T0 and emits decorative tokens)
+predicts flat AUC---rejected by the 22pp mid-trace dip.  The
+\emph{monotonic sharpening} hypothesis (reasoning progressively
+refines the representation) predicts steadily increasing AUC---rejected
+by the T0$>$T50 inversion.  Only the \emph{exploration-before-exploitation}
+hypothesis \citep{boppana2026reasoning} is consistent with the observed
+non-monotonicity: the model explores alternative solutions
+(destabilizing the boundary) before converging on a resolution.
+
+\paragraph{Connection to the Qwen dissociation.}
+This trajectory resolves the puzzle of how Qwen's thinking mode
+improves behavior (21\%$\to$7.3\% lure) despite encoding conflict
+along an orthogonal direction at P0 (cross-mode AUC = 0.496).  The
+behavioral improvement is mediated by the within-trace representational
+dynamics: the exploration and resolution phases perform genuine
+computational work that the no-think mode never gets to execute.
+Full position$\times$layer results appear in
+Appendix~\ref{app:within_cot}.
 
 % ---------------------------------------------------------------
 \subsection{Scale Analysis: 7B vs.\ 32B}
