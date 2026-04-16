@@ -1,14 +1,35 @@
 # s1s2 Session State
 
-**Last updated**: 2026-04-12 (ALL EXPERIMENTS COMPLETE — READY FOR SUBMISSION)
-**Active focus**: Submit on OpenReview (portal open today).
+**Last updated**: 2026-04-16 (REVIEWER-FEEDBACK REVISION COMPLETE, SPECIFICITY EXPERIMENT RUNNING)
+**Active focus**: Wait for Llama steering specificity to finish, then final polish.
 **Target**: NeurIPS 2026. Abstract May 4, full paper May 6, ICML workshop May 8.
 
 ---
 
 ## MORNING BRIEFING (read this first)
 
-**ALL NINE EXPERIMENT LINES ARE COMPLETE.** Every result needed for both papers now has data. OLMo-32B Think probes finished at **0.9978 AUC**. NeurIPS and ICML workshop papers are both ready. GPU is idle.
+**Day 2 of 19 until NeurIPS full paper submission (May 6).**  GPT-5.4 Pro + Gemini 3.1 Pro feedback received and largely addressed. All critical methodological fixes integrated into the paper. One GPU experiment running.
+
+### Session status (2026-04-16)
+
+- **R1 continuous steering (temporal washout test)**: COMPLETE. Result: NO coherent causal effect even under continuous intervention across full 2048-token trace. Lure at α=+5 (13.75%) is WITHIN 2σ of random-direction band (10.25%±1.9%) and in the OPPOSITE direction to Llama. Claim tightened from "7.5pp swing" to "readable but not writable, confirmed even under continuous intervention".
+- **Length confound audit**: COMPLETE. Base rate d=+3.69, conjunction d=+6.36, syllogism d=+0.02. Syllogism's balanced length + high probe AUC rules out length as primary signal. Added as appendix E.
+- **Full behavior table (GPT fix)**: INTEGRATED as appendix F with Wilson CIs + McNemar tests.
+- **Architectural L16→L31 framing (Gemini)**: INTEGRATED in §5.2 and Discussion.
+- **Inverse scaling citation (Gemini)**: INTEGRATED in §5.5.
+- **ACC/Botvinick framing (Gemini)**: INTEGRATED in §5.1.
+
+### GPU experiment in progress
+
+**Llama steering specificity + mean-diff baseline** (PID 581131, 18min+ elapsed, 34% GPU util).
+- Tests: probe direction × {conflict, control} items × 7 alphas × 2 directions (probe_coef, mean_diff)
+- cos(probe, meandiff) = 0.3144 (orthogonal enough to be methodologically distinct)
+- Expected total: ~2-3 hours
+- Output: `results/causal/steering_specificity_llama_l14.json`
+
+### Pre-revision checkpoint
+
+**Previous ALL NINE EXPERIMENT LINES ARE COMPLETE.** Every result needed for both papers has data. OLMo-32B Think probes: 0.9978 AUC.
 
 ### Experiment completion summary
 

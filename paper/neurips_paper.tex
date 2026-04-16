@@ -592,10 +592,18 @@ Probes on OLMo-3.1-32B-Instruct achieve AUC\,=\,0.9999 at L20/64; Think peaks at
 
 SAE analysis of Llama's L19 residual stream identified 41 features with
 significant conflict/control differential activation (BH-FDR $q < 0.05$),
-all surviving Ma et al.\ falsification \citep{ma2026falsification}.
-Attention entropy analysis reveals R1-Distill has nearly twice as many
-\stwo{}-specialized heads as Llama (57 vs.\ 30 of 1024; BH-FDR
-$q < 0.05$, $|r_{rb}| \geq 0.3$).  Details in
+all surviving Ma et al.\ falsification \citep{ma2026falsification}.  The
+partition is interpretable: 19 features fire exclusively on conflict
+items and trigger on words signaling stereotype-matched descriptors
+(e.g., F30094 triggers on ``only'', ``respondent'', ``professional''---
+the Linda/base-rate framing vocabulary), while 6 features fire
+exclusively on controls and trigger on words signaling the normative
+frame (e.g., F27821 triggers on ``professional'', ``random'', ``no''---
+the ``no particular selection criterion'' base-rate-control vocabulary).
+A third group (3 S2-graded features) activates more strongly on controls
+without being binary.  Attention entropy analysis reveals R1-Distill has
+nearly twice as many \stwo{}-specialized heads as Llama (57 vs.\ 30 of
+1024; BH-FDR $q < 0.05$, $|r_{rb}| \geq 0.3$).  Details in
 Appendix~\ref{app:sae_attention}.
 
 % ============================================================

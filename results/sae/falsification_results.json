@@ -1,0 +1,740 @@
+[
+  {
+    "feature_id": 30094,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "professional",
+      "One",
+      "described"
+    ],
+    "mean_activation_on_original": 0.10092458873987198,
+    "peak_activation_on_original": 0.938093900680542,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 57338,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "1000",
+      "professional",
+      "office",
+      "person",
+      "one"
+    ],
+    "mean_activation_on_original": 0.05018441751599312,
+    "peak_activation_on_original": 0.5140243768692017,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 13255,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "office",
+      "only",
+      "respondent",
+      "1000"
+    ],
+    "mean_activation_on_original": 0.02586936391890049,
+    "peak_activation_on_original": 0.4712001085281372,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 34045,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "One",
+      "described"
+    ],
+    "mean_activation_on_original": 0.02583882212638855,
+    "peak_activation_on_original": 0.2466728836297989,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 51172,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "professional",
+      "office",
+      "single"
+    ],
+    "mean_activation_on_original": 0.023563291877508163,
+    "peak_activation_on_original": 0.32190826535224915,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 27821,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "1000",
+      "respondent",
+      "random",
+      "no"
+    ],
+    "mean_activation_on_original": 0.018532784655690193,
+    "peak_activation_on_original": 0.4934370517730713,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 9124,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "single",
+      "One"
+    ],
+    "mean_activation_on_original": 0.01598508469760418,
+    "peak_activation_on_original": 0.26168811321258545,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 31321,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "single",
+      "One"
+    ],
+    "mean_activation_on_original": 0.0156768336892128,
+    "peak_activation_on_original": 0.28442075848579407,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 801,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "professional",
+      "field",
+      "large"
+    ],
+    "mean_activation_on_original": 0.011710025370121002,
+    "peak_activation_on_original": 0.18562397360801697,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 6519,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "professional",
+      "One",
+      "described"
+    ],
+    "mean_activation_on_original": 0.010393073782324791,
+    "peak_activation_on_original": 0.15412534773349762,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 25611,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "professional",
+      "One",
+      "described"
+    ],
+    "mean_activation_on_original": 0.009544153697788715,
+    "peak_activation_on_original": 0.2093193233013153,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 29214,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "more",
+      "Answer",
+      "single",
+      "her",
+      "age"
+    ],
+    "mean_activation_on_original": 0.00943493377417326,
+    "peak_activation_on_original": 0.14226913452148438,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 17670,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "One",
+      "described"
+    ],
+    "mean_activation_on_original": 0.00922380480915308,
+    "peak_activation_on_original": 0.18976297974586487,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 36179,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "single",
+      "large"
+    ],
+    "mean_activation_on_original": 0.007592883892357349,
+    "peak_activation_on_original": 0.13205797970294952,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 21280,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "respondent",
+      "random",
+      "no",
+      "information."
+    ],
+    "mean_activation_on_original": 0.007161798886954784,
+    "peak_activation_on_original": 0.20311161875724792,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 39783,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "1000",
+      "One",
+      "described"
+    ],
+    "mean_activation_on_original": 0.006861561443656683,
+    "peak_activation_on_original": 0.15492837131023407,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 23496,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "age",
+      "Which",
+      "following",
+      "statements",
+      "more"
+    ],
+    "mean_activation_on_original": 0.006681380327790976,
+    "peak_activation_on_original": 0.13616350293159485,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 24824,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "professional",
+      "single",
+      "large"
+    ],
+    "mean_activation_on_original": 0.0059084598906338215,
+    "peak_activation_on_original": 0.11445339024066925,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 45471,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "professional",
+      "One",
+      "described"
+    ],
+    "mean_activation_on_original": 0.005278384778648615,
+    "peak_activation_on_original": 0.11910226941108704,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 46955,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "randomly",
+      "selected",
+      "adult;",
+      "no",
+      "further"
+    ],
+    "mean_activation_on_original": 0.004155267961323261,
+    "peak_activation_on_original": 0.07464095205068588,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 24708,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "single",
+      "large"
+    ],
+    "mean_activation_on_original": 0.003957160748541355,
+    "peak_activation_on_original": 0.06709937006235123,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 1593,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "respondent",
+      "1000",
+      "random",
+      "no"
+    ],
+    "mean_activation_on_original": 0.01692865416407585,
+    "peak_activation_on_original": 0.15755708515644073,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 44578,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "single",
+      "large"
+    ],
+    "mean_activation_on_original": 0.03769853711128235,
+    "peak_activation_on_original": 0.5132244825363159,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 37305,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "1000",
+      "people,",
+      "person",
+      "one",
+      "professional"
+    ],
+    "mean_activation_on_original": 0.07722140103578568,
+    "peak_activation_on_original": 0.5929071307182312,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 31456,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "randomly",
+      "selected",
+      "adult;",
+      "no",
+      "further"
+    ],
+    "mean_activation_on_original": 0.008140879683196545,
+    "peak_activation_on_original": 0.15433385968208313,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 45268,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "only",
+      "respondent",
+      "professional",
+      "her",
+      "One"
+    ],
+    "mean_activation_on_original": 0.036775264889001846,
+    "peak_activation_on_original": 0.35328683257102966,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 61895,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "respondent",
+      "professional",
+      "random",
+      "no",
+      "information."
+    ],
+    "mean_activation_on_original": 0.03201119229197502,
+    "peak_activation_on_original": 0.43576204776763916,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 28138,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "1000",
+      "professional",
+      "person",
+      "one",
+      "One"
+    ],
+    "mean_activation_on_original": 0.012450571171939373,
+    "peak_activation_on_original": 0.2649843394756317,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 58280,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "respondent",
+      "random",
+      "no",
+      "information."
+    ],
+    "mean_activation_on_original": 0.014770684763789177,
+    "peak_activation_on_original": 0.28357988595962524,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 28907,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "respondent",
+      "large",
+      "survey,",
+      "respondents"
+    ],
+    "mean_activation_on_original": 0.005780575796961784,
+    "peak_activation_on_original": 0.10048416256904602,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 36984,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "respondent",
+      "large",
+      "survey,",
+      "respondents"
+    ],
+    "mean_activation_on_original": 0.0432736761868,
+    "peak_activation_on_original": 0.49427855014801025,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 40051,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "1000",
+      "professional",
+      "people,",
+      "person",
+      "one"
+    ],
+    "mean_activation_on_original": 0.0315052755177021,
+    "peak_activation_on_original": 0.4014494717121124,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 44964,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "respondent",
+      "professional",
+      "random",
+      "no",
+      "information."
+    ],
+    "mean_activation_on_original": 0.023198533803224564,
+    "peak_activation_on_original": 0.32609236240386963,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 6862,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "single",
+      "large"
+    ],
+    "mean_activation_on_original": 0.03824799507856369,
+    "peak_activation_on_original": 0.49134355783462524,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 49246,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "1000",
+      "person",
+      "one",
+      "people,",
+      "random"
+    ],
+    "mean_activation_on_original": 0.014526794664561749,
+    "peak_activation_on_original": 0.28566667437553406,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 38973,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "single",
+      "large"
+    ],
+    "mean_activation_on_original": 0.03070473112165928,
+    "peak_activation_on_original": 0.30850106477737427,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 38825,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "respondent",
+      "professional",
+      "more",
+      "likely",
+      "Answer"
+    ],
+    "mean_activation_on_original": 0.022156303748488426,
+    "peak_activation_on_original": 0.19396649301052094,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 39019,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "professional",
+      "only",
+      "respondent",
+      "more",
+      "Answer"
+    ],
+    "mean_activation_on_original": 0.07997782528400421,
+    "peak_activation_on_original": 0.34578919410705566,
+    "mean_activation_on_random": 0.0,
+    "peak_activation_on_random": 0.0,
+    "falsification_ratio": 0.0,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 30789,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "1000",
+      "professional",
+      "people,",
+      "person",
+      "one"
+    ],
+    "mean_activation_on_original": 0.14299432933330536,
+    "peak_activation_on_original": 0.55792236328125,
+    "mean_activation_on_random": 0.12138771265745163,
+    "peak_activation_on_random": 0.1256224513053894,
+    "falsification_ratio": 0.21757097518648807,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 19622,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "1000",
+      "people,",
+      "person",
+      "one",
+      "random"
+    ],
+    "mean_activation_on_original": 0.059687841683626175,
+    "peak_activation_on_original": 0.2014564573764801,
+    "mean_activation_on_random": 0.059384603053331375,
+    "peak_activation_on_random": 0.06326822936534882,
+    "falsification_ratio": 0.2947763691801347,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  },
+  {
+    "feature_id": 5402,
+    "is_spurious": false,
+    "trigger_tokens": [
+      "respondent",
+      "professional",
+      "more",
+      "Answer",
+      "single"
+    ],
+    "mean_activation_on_original": 0.24720987677574158,
+    "peak_activation_on_original": 0.5162802338600159,
+    "mean_activation_on_random": 0.24572180211544037,
+    "peak_activation_on_random": 0.2513788938522339,
+    "falsification_ratio": 0.4759465615762182,
+    "mode": "cheap",
+    "notes": "cheap mode: no model forward"
+  }
+]

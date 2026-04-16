@@ -1,0 +1,31 @@
+{
+  "config": {
+    "h5_path": "/workspace/s1s2/data/activations/llama31_8b_instruct.h5",
+    "model_key": "unsloth_Meta-Llama-3.1-8B-Instruct",
+    "layer": 19,
+    "sae_release": "Goodfire/Llama-3.1-8B-Instruct-SAE-l19",
+    "vulnerable_categories": [
+      "base_rate",
+      "conjunction",
+      "syllogism"
+    ],
+    "fdr_q": 0.05,
+    "top_k_falsify": 50,
+    "device": "cuda"
+  },
+  "fidelity": {
+    "n_samples": 470,
+    "hidden_dim": 4096,
+    "mse": 0.01060907170176506,
+    "variance": 0.04078645259141922,
+    "explained_variance": 0.7398892134377857,
+    "mean_l0": 47.88936233520508,
+    "is_poor_fit": false
+  },
+  "n_features_in_sae": 65536,
+  "n_significant_after_fdr": 41,
+  "n_falsification_candidates": 41,
+  "n_spurious": 0,
+  "n_surviving_falsification": 41,
+  "elapsed_seconds": 28.056756019592285
+}
