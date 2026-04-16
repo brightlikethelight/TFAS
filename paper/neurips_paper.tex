@@ -537,6 +537,9 @@ We extract the probe weight vector $\mathbf{w} \in \mathbb{R}^{4096}$ at layer~1
 
 Figure~\ref{fig:steering} shows a monotonic dose-response: at $\alpha = -5$ (toward \sone{}), lure rate rises to 68.8\%; at $\alpha = +5$ (toward \stwo{}), it drops to 31.2\%---a 37.5pp causal swing, comparable to \citet{huang2026cogbias}'s 26--32\% reduction.  The entire lure reduction converts to correct answers (zero increase in ``other'' responses), ruling out distributional disruption.  Random-direction controls ($5$ unit vectors per $\alpha$) show no systematic effect (52--58\% lure across all $\alpha$), confirming the probe direction is \emph{causally sufficient} to modulate bias susceptibility.
 
+\paragraph{Two steering-specificity controls.}
+Reviewer-suggested specificity tests strengthen this claim (Appendix~\ref{app:steering_specificity}).  (i)~\emph{Null effect on control items:} applying the probe-direction steering to matched \emph{non-conflict} items from the same three categories produces zero lure responses at any $\alpha \in [-5, +5]$ (the items have no lure answer to trigger); correctness stays at 100\% for $\alpha \geq 0$ and drops only modestly to 78.75\% at $\alpha = -5$ due to generic residual-stream coherence loss, with the decrement showing up as ``other'' responses, not lures.  The direction is specific to the conflict subspace, not a generic answer-perturbation.  (ii)~\emph{Mean-difference baseline:} the CogBias-style mean-difference vector $\bar{\mathbf{h}}_{\text{conflict}} - \bar{\mathbf{h}}_{\text{control}}$ is substantially different from the probe weights (cosine $= 0.314$).  It reduces lure rate from 52.5\% to 11.25\% at $\alpha\!=\!+5$ (stronger than the probe in the positive direction) but is \emph{asymmetric}: at $\alpha\!=\!-5$ lure stays at 53.75\% (essentially baseline), whereas the probe direction pushes lure to 68.75\%.  The probe-weight direction is uniquely \emph{bidirectional}---able to both worsen and improve behavior---establishing causal sufficiency in both directions, which a unidirectional intervention cannot.
+
 \paragraph{R1-Distill steering contrast.}
 We apply the same protocol to R1-Distill at L14 (probe CV AUC\,=\,0.928), with the hook active \emph{continuously} across the entire 2048-token generation (prompt\,$+$\,full $\langle$think$\rangle$ trace\,$+$\,answer), directly ruling out the ``temporal washout'' confound in which a one-shot perturbation dissipates over a long CoT.  Under this continuous intervention the probe-direction dose-response disappears: lure rate stays at baseline for negative $\alpha$ (6.25\% at $\alpha\!=\!-5$ vs.\ 6.25\% at $\alpha\!=\!0$) and \emph{rises} for positive $\alpha$ (13.75\% at $\alpha\!=\!+5$), within 2$\sigma$ of the random-direction band at $|\alpha|\!=\!5$ (11.5\,$\pm$\,5.3\% and 10.25\,$\pm$\,1.9\%) and in the \emph{opposite} direction to the Llama effect (see Figure~\ref{fig:steering}).  The S1/S2 direction that drives a 37.5pp behavioral swing in Llama produces no coherent causal effect in R1-Distill, even when perturbed at every token of the 2048-token reasoning trace.  The representation remains linearly decodable (AUC\,=\,0.930), but the causal pathway from representation to behavior has been severed by reasoning training: \emph{readable but not writable}.
 
@@ -1573,5 +1576,73 @@ on the original 330-item, 7-category subset; OLMo models run on the
 full 470 items).
 
 \input{../results/summary/full_behavior_tables}
+
+% =========================================================================
+\section{Steering Specificity Controls}
+\label{app:steering_specificity}
+
+Table~\ref{tab:steering_specificity} reports the full sweep of the
+specificity controls discussed in Section~\ref{sec:steering} for
+Llama-3.1-8B-Instruct at layer~14.  Four sweeps were run:
+(1)~probe-direction steering on the 80 vulnerable-category conflict
+items (replication of the main-text result); (2)~probe-direction
+steering on the 80 matched non-conflict items (specificity test);
+(3)~mean-difference direction $\bar{\mathbf{h}}_{\text{conflict}} - \bar{\mathbf{h}}_{\text{control}}$
+steering on the conflict items (CogBias baseline); (4)~mean-difference
+direction steering on the control items.  All use continuous steering
+(hook active across the whole 128-token generation).  The cosine
+similarity between the probe-weight vector and the mean-difference
+vector is only $0.314$, meaning they are substantially different
+directions in the 4096-dimensional residual stream despite both
+encoding conflict-vs.-control information to some degree.
+
+\begin{table}[ht]
+\centering
+\caption{Steering specificity controls on Llama-3.1-8B-Instruct, L14.
+  ``Probe'' is the logistic-regression weight vector $\mathbf{w}$;
+  ``Mean-diff'' is $\bar{\mathbf{h}}_{\text{conflict}} - \bar{\mathbf{h}}_{\text{control}}$
+  (CogBias-style).  ``Conflict'' = 80 vulnerable-category conflict items
+  (each has an S1 lure answer); ``Control'' = 80 matched non-conflict
+  items (each has a single normative answer).}
+\label{tab:steering_specificity}
+\vspace{4pt}
+\small
+\begin{tabular}{l l rrrrrrr}
+\toprule
+\textbf{Direction} & \textbf{Items} & $\alpha\!=\!-5$ & $-3$ & $-1$ & $0$ & $+1$ & $+3$ & $+5$ \\
+\midrule
+\multicolumn{9}{l}{\emph{Lure rate (\%)}} \\
+Probe        & Conflict & 68.75 & 61.25 & 56.25 & 52.50 & 48.75 & 41.25 & 31.25 \\
+Probe        & Control  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  \\
+Mean-diff    & Conflict & 53.75 & 55.00 & 55.00 & 52.50 & 36.25 & 21.25 & 11.25 \\
+Mean-diff    & Control  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  \\
+\midrule
+\multicolumn{9}{l}{\emph{Correct rate (\%)}} \\
+Probe        & Conflict & 31.25 & 38.75 & 43.75 & 47.50 & 51.25 & 58.75 & 68.75 \\
+Probe        & Control  & 78.75 & 87.50 & 98.75 & 100.00 & 100.00 & 100.00 & 100.00 \\
+Mean-diff    & Conflict & 46.25 & 45.00 & 45.00 & 47.50 & 63.75 & 78.75 & 88.75 \\
+Mean-diff    & Control  & 60.00 & 73.75 & 97.50 & 100.00 & 100.00 & 100.00 & 100.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Three observations.}
+(i) The probe direction produces \emph{zero} lure responses on control
+items at any $\alpha$: the direction is specific to the S1/S2 conflict
+subspace and does not generically perturb answers.  The small drop in
+correctness at $\alpha\!=\!-5$ on control items (78.75\%) reflects
+residual-stream coherence loss (the 21.25\% of items become ``other''
+responses, not lures), the same pattern seen with random directions
+in the main text.  (ii) The probe-weight direction is \emph{bidirectional}:
+moving toward S1 (negative $\alpha$) increases lure by 16.25pp,
+moving toward S2 (positive $\alpha$) decreases lure by 21.25pp.
+Bidirectional dose-response is stronger evidence of causal sufficiency
+than a unidirectional effect.  (iii) The mean-difference baseline is
+\emph{unidirectional}: negative $\alpha$ has essentially no effect
+(lure stays around 53--55\%), while positive $\alpha$ strongly
+reduces lure (to 11.25\% at $\alpha\!=\!+5$).  Mean-difference
+steering efficiently improves behavior but cannot test causal
+sufficiency by worsening it---a key methodological motivation for
+probe-weight steering.
 
 \end{document}

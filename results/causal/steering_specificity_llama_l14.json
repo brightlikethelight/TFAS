@@ -1,0 +1,293 @@
+{
+  "model": "unsloth/Meta-Llama-3.1-8B-Instruct",
+  "h5_model_key": "unsloth_Meta-Llama-3.1-8B-Instruct",
+  "target_layer": 14,
+  "probe_cv_auc": 0.9595312500000001,
+  "hidden_dim": 4096,
+  "vulnerable_categories": [
+    "base_rate",
+    "conjunction",
+    "syllogism"
+  ],
+  "n_conflict_items": 80,
+  "n_control_items": 80,
+  "cos_probe_meandiff": 0.3143920600414276,
+  "alphas": [
+    -5.0,
+    -3.0,
+    -1.0,
+    0.0,
+    1.0,
+    3.0,
+    5.0
+  ],
+  "sweeps": {
+    "probe_on_conflict": {
+      "-5.0": {
+        "lure_rate": 0.6875,
+        "correct_rate": 0.3125,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 55,
+        "n_correct": 25,
+        "n_other": 0
+      },
+      "-3.0": {
+        "lure_rate": 0.6125,
+        "correct_rate": 0.3875,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 49,
+        "n_correct": 31,
+        "n_other": 0
+      },
+      "-1.0": {
+        "lure_rate": 0.5625,
+        "correct_rate": 0.4375,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 45,
+        "n_correct": 35,
+        "n_other": 0
+      },
+      "0.0": {
+        "lure_rate": 0.525,
+        "correct_rate": 0.475,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 42,
+        "n_correct": 38,
+        "n_other": 0
+      },
+      "1.0": {
+        "lure_rate": 0.4875,
+        "correct_rate": 0.5125,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 39,
+        "n_correct": 41,
+        "n_other": 0
+      },
+      "3.0": {
+        "lure_rate": 0.4125,
+        "correct_rate": 0.5875,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 33,
+        "n_correct": 47,
+        "n_other": 0
+      },
+      "5.0": {
+        "lure_rate": 0.3125,
+        "correct_rate": 0.6875,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 25,
+        "n_correct": 55,
+        "n_other": 0
+      }
+    },
+    "probe_on_control": {
+      "-5.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 0.7875,
+        "other_rate": 0.2125,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 63,
+        "n_other": 17
+      },
+      "-3.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 0.875,
+        "other_rate": 0.125,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 70,
+        "n_other": 10
+      },
+      "-1.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 0.9875,
+        "other_rate": 0.0125,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 79,
+        "n_other": 1
+      },
+      "0.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 1.0,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 80,
+        "n_other": 0
+      },
+      "1.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 1.0,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 80,
+        "n_other": 0
+      },
+      "3.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 1.0,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 80,
+        "n_other": 0
+      },
+      "5.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 1.0,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 80,
+        "n_other": 0
+      }
+    },
+    "meandiff_on_conflict": {
+      "-5.0": {
+        "lure_rate": 0.5375,
+        "correct_rate": 0.4625,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 43,
+        "n_correct": 37,
+        "n_other": 0
+      },
+      "-3.0": {
+        "lure_rate": 0.55,
+        "correct_rate": 0.45,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 44,
+        "n_correct": 36,
+        "n_other": 0
+      },
+      "-1.0": {
+        "lure_rate": 0.55,
+        "correct_rate": 0.45,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 44,
+        "n_correct": 36,
+        "n_other": 0
+      },
+      "0.0": {
+        "lure_rate": 0.525,
+        "correct_rate": 0.475,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 42,
+        "n_correct": 38,
+        "n_other": 0
+      },
+      "1.0": {
+        "lure_rate": 0.3625,
+        "correct_rate": 0.6375,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 29,
+        "n_correct": 51,
+        "n_other": 0
+      },
+      "3.0": {
+        "lure_rate": 0.2125,
+        "correct_rate": 0.7875,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 17,
+        "n_correct": 63,
+        "n_other": 0
+      },
+      "5.0": {
+        "lure_rate": 0.1125,
+        "correct_rate": 0.8875,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 9,
+        "n_correct": 71,
+        "n_other": 0
+      }
+    },
+    "meandiff_on_control": {
+      "-5.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 0.6,
+        "other_rate": 0.4,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 48,
+        "n_other": 32
+      },
+      "-3.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 0.7375,
+        "other_rate": 0.2625,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 59,
+        "n_other": 21
+      },
+      "-1.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 0.975,
+        "other_rate": 0.025,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 78,
+        "n_other": 2
+      },
+      "0.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 1.0,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 80,
+        "n_other": 0
+      },
+      "1.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 1.0,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 80,
+        "n_other": 0
+      },
+      "3.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 1.0,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 80,
+        "n_other": 0
+      },
+      "5.0": {
+        "lure_rate": 0.0,
+        "correct_rate": 1.0,
+        "other_rate": 0.0,
+        "n": 80,
+        "n_lure": 0,
+        "n_correct": 80,
+        "n_other": 0
+      }
+    }
+  },
+  "config": {
+    "max_new_tokens": 128,
+    "steer_position": "continuous",
+    "seed": 0,
+    "dtype": "bfloat16",
+    "smoke_test": false
+  }
+}

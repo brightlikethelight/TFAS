@@ -879,6 +879,53 @@ on a particular model.
 
 \input{../results/summary/full_behavior_tables}
 
+% =========================================================================
+\section{Steering Specificity Controls}
+\label{app:steering_specificity_anon}
+
+Table~\ref{tab:steering_specificity_anon} reports specificity controls
+for Llama-3.1-8B-Instruct at L14.  Four sweeps: (1)~probe-direction on
+conflict items (main result); (2)~probe-direction on matched non-conflict
+control items (null-effect specificity); (3)~mean-difference direction
+on conflict items (CogBias baseline); (4)~mean-difference on control.
+cos(probe, mean-diff) $= 0.314$: the two directions differ substantially.
+
+\begin{table}[ht]
+\centering
+\caption{Steering specificity controls on Llama-3.1-8B-Instruct, L14,
+  continuous steering.  Conflict items carry an S1 lure answer;
+  control items carry only the normative answer.}
+\label{tab:steering_specificity_anon}
+\vspace{4pt}
+\small
+\begin{tabular}{l l rrrrrrr}
+\toprule
+\textbf{Direction} & \textbf{Items} & $\alpha\!=\!-5$ & $-3$ & $-1$ & $0$ & $+1$ & $+3$ & $+5$ \\
+\midrule
+\multicolumn{9}{l}{\emph{Lure rate (\%)}} \\
+Probe        & Conflict & 68.75 & 61.25 & 56.25 & 52.50 & 48.75 & 41.25 & 31.25 \\
+Probe        & Control  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  \\
+Mean-diff    & Conflict & 53.75 & 55.00 & 55.00 & 52.50 & 36.25 & 21.25 & 11.25 \\
+Mean-diff    & Control  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  & 0.00  \\
+\midrule
+\multicolumn{9}{l}{\emph{Correct rate (\%)}} \\
+Probe        & Conflict & 31.25 & 38.75 & 43.75 & 47.50 & 51.25 & 58.75 & 68.75 \\
+Probe        & Control  & 78.75 & 87.50 & 98.75 & 100.00 & 100.00 & 100.00 & 100.00 \\
+Mean-diff    & Conflict & 46.25 & 45.00 & 45.00 & 47.50 & 63.75 & 78.75 & 88.75 \\
+Mean-diff    & Control  & 60.00 & 73.75 & 97.50 & 100.00 & 100.00 & 100.00 & 100.00 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Three conclusions: (i) the probe direction produces \emph{zero} lure
+responses on control items at any $\alpha$ (specificity to the S1/S2
+conflict subspace); (ii) the probe-weight direction is \emph{bidirectional}
+($+16.25$pp worse at $\alpha\!=\!-5$; $-21.25$pp better at $\alpha\!=\!+5$);
+(iii) the mean-difference baseline is \emph{unidirectional}: negative
+$\alpha$ has essentially no effect, while positive $\alpha$ reduces lure
+strongly.  Bidirectionality is stronger evidence of causal sufficiency
+than a one-sided effect.
+
 % ============================================================
 % NeurIPS Paper Checklist (required for submission)
 % ============================================================
