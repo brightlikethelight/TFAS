@@ -1542,4 +1542,28 @@ would collapse to chance on syllogism and drag the joint AUC below
 conflict vs.\ control at high accuracy despite near-identical
 prompt lengths (93.3 vs.\ 93.2 tokens).
 
+% =========================================================================
+\section{Full Behavioral Breakdown (All Models, All Categories)}
+\label{app:full_behavior}
+
+Table~\ref{tab:behavioral-full} provides the complete behavioral
+breakdown that the main-text Table~\ref{tab:behavioral}
+summarizes.  For each of the eight evaluated
+models and each of the eleven categories, we report: conflict
+accuracy (Acc), S1-lure rate (Lure), other-response rate (Other),
+matched-control accuracy (Ctrl), and accuracy gap ($=$ Ctrl\,$-$\,Acc).
+Brackets give Wilson 95\% confidence intervals.  The final column
+reports an overall McNemar mid-$p$ test of conflict vs.\ matched-control
+accuracy, which uses the paired structure of the benchmark directly.
+
+This table addresses reviewer requests to (i)~report the full response
+distribution rather than just lure rate, (ii)~include matched-control
+accuracy and conflict--control gap for every model, and (iii)~use the
+matched-pair structure statistically.  Dashes indicate categories not
+evaluated on a particular model (e.g., Qwen and R1-Distill were run
+on the original 330-item, 7-category subset; OLMo models run on the
+full 470 items).
+
+\input{../results/summary/full_behavior_tables}
+
 \end{document}

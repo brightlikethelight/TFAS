@@ -858,6 +858,21 @@ three vulnerable categories (including length-balanced syllogism)
 implies the probe separates syllogism conflict vs.\ control despite
 near-identical prompt lengths (93.3 vs.\ 93.2 tokens).
 
+% =========================================================================
+\section{Full Behavioral Breakdown (All Models, All Categories)}
+\label{app:full_behavior_anon}
+
+Table~\ref{tab:behavioral-full} provides the complete behavioral
+breakdown for all eight evaluated models and eleven categories, with
+conflict accuracy (Acc), lure rate (Lure), other-response rate (Other),
+matched-control accuracy (Ctrl), and accuracy gap ($=$ Ctrl\,$-$\,Acc).
+Wilson 95\% CIs in brackets.  The final column reports McNemar mid-$p$
+on conflict vs.\ matched-control accuracy, leveraging the paired
+structure of the benchmark.  Dashes indicate categories not evaluated
+on a particular model.
+
+\input{../results/summary/full_behavior_tables}
+
 % ============================================================
 % NeurIPS Paper Checklist (required for submission)
 % ============================================================
