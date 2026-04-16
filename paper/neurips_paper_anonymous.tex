@@ -63,8 +63,10 @@ geometry, not surface tokens.  Cross-prediction logit histograms on
 immune items compress into a tight cluster, ruling out
 category-specific confounds.  Crucially, probe-direction steering
 produces a 37.5pp dose-response shift in Llama (lure$\to$correct,
-zero garbage outputs), while R1 shows only ${\sim}$7.5pp, comparable
-to random directions.  Within-chain-of-thought probing reveals a
+zero garbage outputs), while R1---perturbed \emph{continuously} across
+the entire 2048-token reasoning trace---shows no coherent
+dose-response (lure rate fluctuates within 2$\sigma$ of random
+directions, directly ruling out temporal washout).  Within-chain-of-thought probing reveals a
 non-monotonic trajectory (T0\,=\,0.973, T75\,=\,0.754,
 Tend\,=\,0.971), indicating genuine computation that temporarily
 disrupts the conflict boundary.  Qwen's toggle yields a further
@@ -443,8 +445,12 @@ showing higher separability in 30/32 layers.
 
 \paragraph{Implicit conflict detection.}
 Llama's first-token probability is 4.2pp lower on conflict items (0.751
-vs.\ 0.793), and entropy is 16\% higher (0.948 vs.\ 0.817), paralleling
-De~Neys' conflict-detection signatures \citep{deneys2012bias}.
+vs.\ 0.793), and entropy is 16\% higher (0.948 vs.\ 0.817)---an implicit
+``hesitation'' signature that parallels De~Neys' conflict-detection
+findings \citep{deneys2012bias} and elevated Anterior Cingulate Cortex
+(ACC) activation in humans facing dual-process conflicts
+\citep{botvinick2001conflict}.  The model \emph{detects} conflict
+pre-generation even when it subsequently fails to resolve it.
 
 \subsection{Linear Probes and Cross-Prediction}
 \label{sec:results_probes}
@@ -466,9 +472,13 @@ conflict/control classification on the three vulnerable categories.
 
 Llama peaks at AUC\,=\,0.974 (95\% CI [0.952, 0.992]) at L16;
 R1-Distill peaks lower at AUC\,=\,0.930 [0.894, 0.960] at L31---non-overlapping
-CIs confirm statistical significance ($p < 0.05$).  The later peak layer
-suggests reasoning distillation shifts conflict-relevant information toward
-deeper layers \citep{zhang2025probing}.
+CIs confirm statistical significance ($p < 0.05$).  The 15-layer shift
+(L16\,$\to$\,L31 of 32) is architecturally suggestive: Llama resolves
+conflict in the middle of the network, leaving later layers to map the
+resolution to vocabulary tokens for an immediate answer; R1-Distill pushes
+the conflict representation to the penultimate layer where its primary
+downstream operation is to initialize the chain-of-thought rollout rather
+than produce an answer directly \citep{zhang2025probing}.
 Qwen~3-8B reaches AUC\,=\,0.971 at L34 in both think and no-think modes:
 despite a 3$\times$ behavioral improvement (lure rate $21\% \to 7.3\%$),
 the pre-generation representation is unchanged \citep{afzal2025knowing}.
@@ -476,7 +486,7 @@ This is the key dissociation: \textbf{training} (Llama vs.\ R1-Distill)
 changes both encoding and behavior; \textbf{inference-time thinking}
 (Qwen toggle) changes behavior without changing encoding.
 
-\paragraph{Selectivity.}  Hewitt--Liang control probes achieve
+\paragraph{Selectivity and text-only baseline.}  Hewitt--Liang control probes achieve
 AUC\,$\leq$\,0.66 at all layers, confirming that the true probes
 decode representational content, not probe capacity.  Selectivity
 exceeds 34 percentage points at peak layers for both models.\footnote{We
@@ -484,6 +494,15 @@ exceeds 34 percentage points at peak layers for both models.\footnote{We
   peak L14, AUC\,=\,0.999), used for cross-prediction and steering; and
   bootstrap CI analysis on 160 vulnerable-category items (3 categories,
   peak L16, AUC\,=\,0.974 [0.952, 0.992]).}
+A sentence-transformer text-only baseline (all-MiniLM-L6-v2) achieves
+AUC\,=\,0.840 on the 470-item benchmark, substantially below the
+activation probe (0.999).  On syllogism specifically---where conflict
+and control items have near-identical prompt length (Cohen's
+$d\!=\!+0.02$) and high semantic similarity---text AUC collapses to
+0.086 while activation AUC remains $>$\,0.93.  This rules out prompt
+length and surface semantics as the primary probe signals: the
+16\,pp activation gap, and the $>$70\,pp gap on syllogism, must
+come from processing-mode information not extractable from the text.
 
 \paragraph{Probe summary.}
 Table~\ref{tab:probe_summary} summarizes the key probing metrics.
@@ -582,7 +601,7 @@ a correlate of bias processing---the direction it identifies is
 \emph{causally sufficient} to modulate heuristic susceptibility.
 
 \paragraph{R1-Distill steering contrast.}
-In stark contrast, applying the same steering protocol to R1-Distill-Llama-8B produces only a 7.5pp swing (10.0\% to 2.5\%), comparable to random controls.  The same representational direction that is causally active in the standard model is \emph{decoupled from behavioral control} in the reasoning model.  This dissociation---readable but not writable---provides the strongest evidence that reasoning training reorganizes the causal pathway, not just the representation: the \sone{}/\stwo{} direction remains linearly decodable (AUC\,=\,0.930), but perturbing it no longer modulates behavior.
+We apply the same protocol to R1-Distill-Llama-8B at L14 (probe CV AUC\,=\,0.928), with the hook active \emph{continuously} across the entire 2048-token generation (prompt\,$+$\,full $\langle$think$\rangle$ trace\,$+$\,answer), directly ruling out the ``temporal washout'' confound in which a one-shot perturbation dissipates over a long CoT.  Under this continuous intervention the probe-direction dose-response disappears: lure rate stays at baseline for negative $\alpha$ (6.25\% at $\alpha\!=\!-5$ vs.\ 6.25\% at $\alpha\!=\!0$) and \emph{rises} for positive $\alpha$ (13.75\% at $\alpha\!=\!+5$), within 2$\sigma$ of the random-direction band at $|\alpha|\!=\!5$ (11.5\,$\pm$\,5.3\% and 10.25\,$\pm$\,1.9\%) and in the \emph{opposite} direction to the Llama effect.  The S1/S2 direction that drives a 37.5pp behavioral swing in Llama produces no coherent causal effect in R1-Distill, even when perturbed at every token of the 2048-token reasoning trace.  The representation remains linearly decodable (AUC\,=\,0.930), but the causal pathway from representation to behavior has been severed by reasoning training: \emph{readable but not writable}.
 
 \begin{figure}[t]
 \centering
@@ -622,7 +641,12 @@ from 19.6\% to 0.4\% (only sunk cost: 6.7\%, 1/15 items).
 Critically, scale increases standard-model vulnerability
 (14.9\%$\to$19.6\%) but does not meaningfully change reasoning-model
 performance (0.9\%$\to$0.4\%), confirming that reasoning training
-provides robust protection independent of scale.  Linear probes on
+provides robust protection independent of scale.  This pattern---larger
+standard models reproducing \emph{more} human heuristic errors---mirrors
+inverse scaling phenomena \citep{mckenzie2023inverse, perez2023discovering}
+in which pre-training absorbs human biases and scale amplifies rather
+than corrects them; our contribution is to show this inverse-scaling
+effect is \emph{fully cancelled} by reasoning post-training.  Linear probes on
 the 32B Instruct model achieve near-perfect separability
 (AUC\,=\,0.9999 at L20/64), confirming the \sone{}/\stwo{} direction
 persists at larger scale.  OLMo-3.1-32B-Think's peak probe AUC is
@@ -667,10 +691,17 @@ conflict signal is no longer needed \citep{venhoff2025base}.
 \paragraph{Readable but not writable.}
 In Llama, the probe direction is both readable (AUC\,=\,0.974) and
 writable (37.6pp causal swing); in R1-Distill, it is readable
-(AUC\,=\,0.930) but not writable (7.5pp, comparable to random controls).
-This dissociation---reasoning training decouples the representational
-axis from the behavioral pathway---is direct evidence for the
-S2-by-default hypothesis \citep{hewitt2019control}.
+(AUC\,=\,0.930) but \emph{not} writable.  Critically, this was tested
+under \emph{continuous} intervention across the full 2048-token
+reasoning trace (not a one-shot prompt-position perturbation): the
+probe direction produces no coherent dose-response (lure rates at
+$\alpha\!=\!\pm5$ fall within 2$\sigma$ of random-direction controls,
+with the small residual effect in the \emph{opposite} direction of
+Llama's).  This directly rules out ``temporal washout''
+\citep{meloux2025dead}.  The dissociation---reasoning training severs
+the causal pathway from representation to behavior while preserving
+the representation itself---is direct evidence for the S2-by-default
+hypothesis \citep{evans2019reflections}.
 Qwen's think/no-think toggle reveals the converse: thinking reduces
 lure rates (21\% $\to$ 7.3\%) without changing \pzero{} encoding
 (AUC\,=\,0.971 in both modes)---training and inference-time thinking
@@ -774,6 +805,58 @@ depend only on the prompt, not on downstream sampling; and
 preserved under sampled decoding, though the magnitudes shift for
 reasoning models whose chain-of-thought is sensitive to stochastic
 token selection.
+
+% =========================================================================
+\section{Token-Length Confound Analysis}
+\label{app:length_anon}
+
+Near-perfect probe AUC (e.g., OLMo-32B at 0.9999) can in principle
+arise from trivial confounds like systematic prompt-length differences
+between conflict and control items.  Table~\ref{tab:length_anon}
+reports subword token counts per category using the Llama-3.1-8B
+tokenizer.
+
+\begin{table}[ht]
+\centering
+\caption{Prompt subword length (Llama-3.1-8B tokenizer) for
+  conflict vs.\ control items by category.  ``$d$'' is Cohen's~$d$;
+  positive values indicate conflict items are longer.}
+\label{tab:length_anon}
+\vspace{4pt}
+\small
+\begin{tabular}{lrrrr}
+\toprule
+\textbf{Category} & \textbf{Conflict} & \textbf{Control} & \textbf{Cohen's $d$} & \textbf{$p$} \\
+\midrule
+Base rate      & 98.0  & 66.7  & $+3.69$  & $<10^{-4}$ \\
+Conjunction    & 87.7  & 63.4  & $+6.36$  & $<10^{-4}$ \\
+Syllogism      & 93.3  & 93.2  & $+0.02$  & 0.953 \\
+CRT            & 47.0  & 51.8  & $-0.44$  & 0.097 \\
+Arithmetic     & 70.9  & 51.0  & $+6.21$  & $<10^{-4}$ \\
+Framing        & 97.2  & 106.2 & $-4.86$  & $<10^{-4}$ \\
+Anchoring      & 60.4  & 45.5  & $+4.62$  & $<10^{-4}$ \\
+\midrule
+\textbf{Overall} & \textbf{81.1} & \textbf{68.4} & $+0.45$ & $<10^{-4}$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Why length is not the primary signal.}
+Length differences are substantial on base rate and conjunction but
+balanced on syllogism and reversed on framing.  Three observations
+rule out length as the dominant confound.  First, a probe trained on
+syllogism alone (where length is balanced, $d\!=\!+0.02$) achieves
+within-category AUC\,=\,0.936 and transfers to base rate (0.950) and
+conjunction (0.990)---the shared direction cannot be length.  Second,
+length direction is inconsistent across categories, so a pure-length
+probe would produce anti-correlated cross-category predictions rather
+than the immune-cluster compression we observe.  Third, the text
+baseline, which has direct access to length as a feature, caps at
+0.840; the 16\,pp gap to the activation probe (0.999) cannot come from
+length.  For OLMo-32B specifically, probe AUC\,=\,0.9999 on the
+three vulnerable categories (including length-balanced syllogism)
+implies the probe separates syllogism conflict vs.\ control despite
+near-identical prompt lengths (93.3 vs.\ 93.2 tokens).
 
 % ============================================================
 % NeurIPS Paper Checklist (required for submission)

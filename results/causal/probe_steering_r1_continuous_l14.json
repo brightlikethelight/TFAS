@@ -1,0 +1,303 @@
+{
+  "model": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+  "h5_model_key": "deepseek-ai_DeepSeek-R1-Distill-Llama-8B",
+  "target_layer": 14,
+  "direction": "probe_coef",
+  "probe_train_auc": 0.92828125,
+  "hidden_dim": 4096,
+  "n_conflict_items": 80,
+  "vulnerable_categories": [
+    "base_rate",
+    "conjunction",
+    "syllogism"
+  ],
+  "alphas": {
+    "-5.0": {
+      "lure_rate": 0.0625,
+      "correct_rate": 0.6375,
+      "other_rate": 0.3,
+      "n": 80,
+      "n_lure": 5,
+      "n_correct": 51,
+      "n_other": 24
+    },
+    "-3.0": {
+      "lure_rate": 0.1,
+      "correct_rate": 0.5875,
+      "other_rate": 0.3125,
+      "n": 80,
+      "n_lure": 8,
+      "n_correct": 47,
+      "n_other": 25
+    },
+    "-1.0": {
+      "lure_rate": 0.075,
+      "correct_rate": 0.625,
+      "other_rate": 0.3,
+      "n": 80,
+      "n_lure": 6,
+      "n_correct": 50,
+      "n_other": 24
+    },
+    "-0.5": {
+      "lure_rate": 0.0625,
+      "correct_rate": 0.6375,
+      "other_rate": 0.3,
+      "n": 80,
+      "n_lure": 5,
+      "n_correct": 51,
+      "n_other": 24
+    },
+    "0.0": {
+      "lure_rate": 0.0625,
+      "correct_rate": 0.6375,
+      "other_rate": 0.3,
+      "n": 80,
+      "n_lure": 5,
+      "n_correct": 51,
+      "n_other": 24
+    },
+    "0.5": {
+      "lure_rate": 0.05,
+      "correct_rate": 0.6375,
+      "other_rate": 0.3125,
+      "n": 80,
+      "n_lure": 4,
+      "n_correct": 51,
+      "n_other": 25
+    },
+    "1.0": {
+      "lure_rate": 0.05,
+      "correct_rate": 0.6375,
+      "other_rate": 0.3125,
+      "n": 80,
+      "n_lure": 4,
+      "n_correct": 51,
+      "n_other": 25
+    },
+    "3.0": {
+      "lure_rate": 0.075,
+      "correct_rate": 0.6125,
+      "other_rate": 0.3125,
+      "n": 80,
+      "n_lure": 6,
+      "n_correct": 49,
+      "n_other": 25
+    },
+    "5.0": {
+      "lure_rate": 0.1375,
+      "correct_rate": 0.5625,
+      "other_rate": 0.3,
+      "n": 80,
+      "n_lure": 11,
+      "n_correct": 45,
+      "n_other": 24
+    }
+  },
+  "random_controls": {
+    "-5.0": {
+      "mean_lure_rate": 0.11500000000000002,
+      "std": 0.052589209919906565,
+      "mean_correct_rate": 0.5775,
+      "std_correct_rate": 0.04366062299143244,
+      "lure_rates": [
+        0.05,
+        0.1,
+        0.175,
+        0.1625,
+        0.0875
+      ],
+      "correct_rates": [
+        0.625,
+        0.6,
+        0.525,
+        0.5375,
+        0.6
+      ],
+      "n_directions": 5
+    },
+    "-3.0": {
+      "mean_lure_rate": 0.08,
+      "std": 0.014252192813739227,
+      "mean_correct_rate": 0.6174999999999999,
+      "std_correct_rate": 0.011180339887498952,
+      "lure_rates": [
+        0.0625,
+        0.075,
+        0.0875,
+        0.075,
+        0.1
+      ],
+      "correct_rates": [
+        0.625,
+        0.625,
+        0.6125,
+        0.625,
+        0.6
+      ],
+      "n_directions": 5
+    },
+    "-1.0": {
+      "mean_lure_rate": 0.075,
+      "std": 0.015309310892394866,
+      "mean_correct_rate": 0.6224999999999999,
+      "std_correct_rate": 0.01369306393762915,
+      "lure_rates": [
+        0.1,
+        0.0625,
+        0.075,
+        0.075,
+        0.0625
+      ],
+      "correct_rates": [
+        0.6,
+        0.625,
+        0.625,
+        0.625,
+        0.6375
+      ],
+      "n_directions": 5
+    },
+    "-0.5": {
+      "mean_lure_rate": 0.0625,
+      "std": 0.0,
+      "mean_correct_rate": 0.6375,
+      "std_correct_rate": 0.0,
+      "lure_rates": [
+        0.0625,
+        0.0625,
+        0.0625,
+        0.0625,
+        0.0625
+      ],
+      "correct_rates": [
+        0.6375,
+        0.6375,
+        0.6375,
+        0.6375,
+        0.6375
+      ],
+      "n_directions": 5
+    },
+    "0.0": {
+      "mean_lure_rate": 0.0625,
+      "std": 0.0,
+      "mean_correct_rate": 0.6375,
+      "std_correct_rate": 0.0,
+      "lure_rates": [
+        0.0625,
+        0.0625,
+        0.0625,
+        0.0625,
+        0.0625
+      ],
+      "correct_rates": [
+        0.6375,
+        0.6375,
+        0.6375,
+        0.6375,
+        0.6375
+      ],
+      "n_directions": 5
+    },
+    "0.5": {
+      "mean_lure_rate": 0.0625,
+      "std": 0.008838834764831842,
+      "mean_correct_rate": 0.635,
+      "std_correct_rate": 0.005590169943749455,
+      "lure_rates": [
+        0.05,
+        0.0625,
+        0.0625,
+        0.075,
+        0.0625
+      ],
+      "correct_rates": [
+        0.6375,
+        0.6375,
+        0.6375,
+        0.625,
+        0.6375
+      ],
+      "n_directions": 5
+    },
+    "1.0": {
+      "mean_lure_rate": 0.07,
+      "std": 0.011180339887498947,
+      "mean_correct_rate": 0.63,
+      "std_correct_rate": 0.011180339887498909,
+      "lure_rates": [
+        0.0625,
+        0.0625,
+        0.0875,
+        0.0625,
+        0.075
+      ],
+      "correct_rates": [
+        0.6375,
+        0.6375,
+        0.6125,
+        0.6375,
+        0.625
+      ],
+      "n_directions": 5
+    },
+    "3.0": {
+      "mean_lure_rate": 0.07749999999999999,
+      "std": 0.010458250331675942,
+      "mean_correct_rate": 0.6224999999999999,
+      "std_correct_rate": 0.010458250331675908,
+      "lure_rates": [
+        0.0875,
+        0.075,
+        0.0625,
+        0.075,
+        0.0875
+      ],
+      "correct_rates": [
+        0.6125,
+        0.625,
+        0.6375,
+        0.625,
+        0.6125
+      ],
+      "n_directions": 5
+    },
+    "5.0": {
+      "mean_lure_rate": 0.10250000000000001,
+      "std": 0.018540496217739157,
+      "mean_correct_rate": 0.595,
+      "std_correct_rate": 0.014252192813739248,
+      "lure_rates": [
+        0.125,
+        0.1125,
+        0.1,
+        0.075,
+        0.1
+      ],
+      "correct_rates": [
+        0.575,
+        0.5875,
+        0.6,
+        0.6125,
+        0.6
+      ],
+      "n_directions": 5
+    }
+  },
+  "config": {
+    "max_new_tokens": 2048,
+    "n_random_controls": 5,
+    "steer_position": "continuous",
+    "seed": 0,
+    "dtype": "bfloat16",
+    "smoke_test": false
+  },
+  "figure_path": "/workspace/s1s2/figures/fig_probe_steering_deepseek_r1_distill_llama_8b_l14.pdf",
+  "elapsed_s": {
+    "probe_training": 6.8,
+    "model_loading": 49.3,
+    "steering_sweep": 39229.1,
+    "total": 39285.2
+  }
+}
