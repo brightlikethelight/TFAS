@@ -537,8 +537,8 @@ We extract the probe weight vector $\mathbf{w} \in \mathbb{R}^{4096}$ at layer~1
 
 Figure~\ref{fig:steering} shows a monotonic dose-response: at $\alpha = -5$ (toward \sone{}), lure rate rises to 68.8\%; at $\alpha = +5$ (toward \stwo{}), it drops to 31.2\%---a 37.5pp causal swing, comparable to \citet{huang2026cogbias}'s 26--32\% reduction.  The entire lure reduction converts to correct answers (zero increase in ``other'' responses), ruling out distributional disruption.  Random-direction controls ($5$ unit vectors per $\alpha$) show no systematic effect (52--58\% lure across all $\alpha$), confirming the probe direction is \emph{causally sufficient} to modulate bias susceptibility.
 
-\paragraph{Two steering-specificity controls.}
-Reviewer-suggested specificity tests strengthen this claim (Appendix~\ref{app:steering_specificity}).  (i)~\emph{Null effect on control items:} applying the probe-direction steering to matched \emph{non-conflict} items from the same three categories produces zero lure responses at any $\alpha \in [-5, +5]$ (the items have no lure answer to trigger); correctness stays at 100\% for $\alpha \geq 0$ and drops only modestly to 78.75\% at $\alpha = -5$ due to generic residual-stream coherence loss, with the decrement showing up as ``other'' responses, not lures.  The direction is specific to the conflict subspace, not a generic answer-perturbation.  (ii)~\emph{Mean-difference baseline:} the CogBias-style mean-difference vector $\bar{\mathbf{h}}_{\text{conflict}} - \bar{\mathbf{h}}_{\text{control}}$ is substantially different from the probe weights (cosine $= 0.314$).  It reduces lure rate from 52.5\% to 11.25\% at $\alpha\!=\!+5$ (stronger than the probe in the positive direction) but is \emph{asymmetric}: at $\alpha\!=\!-5$ lure stays at 53.75\% (essentially baseline), whereas the probe direction pushes lure to 68.75\%.  The probe-weight direction is uniquely \emph{bidirectional}---able to both worsen and improve behavior---establishing causal sufficiency in both directions, which a unidirectional intervention cannot.
+\paragraph{Two specificity controls.}
+(i)~Probe steering on matched \emph{non-conflict} items produces zero lure responses at any $\alpha$, with only minor coherence loss at $|\alpha|\!=\!5$ (Appendix~\ref{app:steering_specificity}): the direction is specific to the conflict subspace.  (ii)~The CogBias-style mean-difference vector (cosine $= 0.314$ with the probe) is \emph{unidirectional}---positive $\alpha$ reduces lure (52.5\%$\to$11.25\%) but negative $\alpha$ has no effect (stays 53.75\%), whereas the probe direction is bidirectional ($+$16.25pp worse at $\alpha\!=\!-5$). Bidirectionality is a stronger causal-sufficiency test.
 
 \paragraph{R1-Distill steering contrast.}
 We apply the same protocol to R1-Distill at L14 (probe CV AUC\,=\,0.928), with the hook active \emph{continuously} across the entire 2048-token generation (prompt\,$+$\,full $\langle$think$\rangle$ trace\,$+$\,answer), directly ruling out the ``temporal washout'' confound in which a one-shot perturbation dissipates over a long CoT.  Under this continuous intervention the probe-direction dose-response disappears: lure rate stays at baseline for negative $\alpha$ (6.25\% at $\alpha\!=\!-5$ vs.\ 6.25\% at $\alpha\!=\!0$) and \emph{rises} for positive $\alpha$ (13.75\% at $\alpha\!=\!+5$), within 2$\sigma$ of the random-direction band at $|\alpha|\!=\!5$ (11.5\,$\pm$\,5.3\% and 10.25\,$\pm$\,1.9\%) and in the \emph{opposite} direction to the Llama effect (see Figure~\ref{fig:steering}).  The S1/S2 direction that drives a 37.5pp behavioral swing in Llama produces no coherent causal effect in R1-Distill, even when perturbed at every token of the 2048-token reasoning trace.  The representation remains linearly decodable (AUC\,=\,0.930), but the causal pathway from representation to behavior has been severed by reasoning training: \emph{readable but not writable}.
@@ -629,60 +629,46 @@ Reasoning distillation makes Type~2 processing \emph{autonomous}
 conflict signal is no longer needed \citep{venhoff2025base}.
 
 \paragraph{Readable but not writable.}
-In Llama, the probe direction is both readable (AUC\,=\,0.974) and
-writable (37.5pp causal swing, with 100\% of lure reduction converting to
-correct answers); in R1-Distill, it is readable (AUC\,=\,0.930) but
-\emph{not} writable.  Critically, we tested this under \emph{continuous}
-intervention across the full 2048-token reasoning trace, not a one-shot
-prompt-position perturbation: the probe direction produces no coherent
-dose-response (lure rates at $\alpha\!=\!\pm5$ fall within 2$\sigma$ of
-random-direction controls, with the small residual effect in the
-\emph{opposite} direction of Llama's) even when perturbed at every token
-of the $\langle$think$\rangle$ trace.  This directly rules out the
-``temporal washout'' objection \citep{meloux2025dead}.  The dissociation---reasoning training severs
-the causal pathway from representation to behavior while preserving the
-representation itself---is direct evidence for the S2-by-default
+In Llama, the probe direction is readable (AUC\,=\,0.974) and
+writable (37.5pp bidirectional causal swing, 100\% of reduction
+converting to correct answers); in R1-Distill, it is readable
+(AUC\,=\,0.930) but \emph{not} writable even under \emph{continuous}
+intervention across the full 2048-token reasoning trace (lure rates
+at $\alpha\!=\!\pm5$ fall within 2$\sigma$ of random-direction
+controls, with the small residual effect in the \emph{opposite}
+direction of Llama's).  This rules out the ``temporal washout''
+objection \citep{meloux2025dead}: reasoning training severs the
+causal pathway from representation to behavior while preserving the
+representation itself---direct evidence for the S2-by-default
 hypothesis \citep{evans2019reflections}.
-Qwen~3-8B's think/no-think toggle adds a further dimension: both modes
-achieve high conflict separability (AUC\,=\,0.954 and 0.970), but
-cross-mode prediction is at chance (0.496, cosine $= -0.005$).  The
-two modes encode conflict along \emph{orthogonal directions}---training
-and inference-time thinking produce mechanistically distinct conflict
-representations, not scaled versions of the same signal
+Qwen's think/no-think toggle adds a further twist: both modes achieve
+high separability (AUC\,=\,0.954 and 0.970), but cross-mode prediction
+is at chance (0.496, cosine\,$=-0.005$).  The modes encode conflict
+along \emph{orthogonal} directions---training and inference-time
+thinking produce mechanistically distinct conflict representations
 \citep{ziabari2025reasoning}.
 
 \paragraph{Non-monotonic deliberation and scale invariance.}
-Within-CoT probing reveals that reasoning is not a smooth sharpening
-process: probe AUC peaks at thinking onset (T0: 0.973), drops
-substantially during deliberation (T75: 0.754), and rebounds before
-the answer (Tend: 0.971).  This non-monotonic trajectory---consistent
-with ``exploration before exploitation'' \citep{boppana2026reasoning}---provides
-the strongest evidence against performative reasoning, since decorative
-traces would produce flat AUC.  At 32B scale, the ``conflict detection
-without resolution'' pattern intensifies: standard-model vulnerability
-\emph{increases} (14.9\%$\to$19.6\%) while reasoning training remains
-protective (0.9\%$\to$0.4\%).  Scale amplifies heuristic attractors
-in standard models but does not erode the protection conferred by
-reasoning training.
+Within-CoT probing reveals a non-monotonic trajectory (T0: 0.973,
+T75: 0.754, Tend: 0.971) consistent with ``exploration before
+exploitation'' \citep{boppana2026reasoning} and inconsistent with
+decorative traces (which would produce flat AUC).  At 32B, the
+``conflict detection without resolution'' pattern intensifies:
+standard-model lure rises (14.9\%$\to$19.6\%) while reasoning
+training remains protective (0.9\%$\to$0.4\%).
 
 \paragraph{Specificity, safeguards, and limitations.}
-Cross-prediction (AUC\,=\,0.378 on immune categories) and logit
-histograms (immune-item spread $0.03\times$ vulnerable categories)
-confirm the probe captures processing mode, not stimulus features;
-vulnerability is domain- and model-specific
-\citep{stanovich2016rationality}.  A text-only baseline
-(AUC\,=\,0.840) falls far short of the activation probe (0.999),
-with the widest gap on syllogism (0.086 vs.\ 0.999), confirming the
-probe extracts processing-relevant information beyond surface
-features.
-We apply six controls \citep{meloux2025dead, sanitychecks2026}:
-Hewitt--Liang selectivity $>$34pp, cross-prediction falsification,
-cross-model transfer (AUC\,$>$\,0.92), random-direction steering baselines
-(null effect vs.\ 37.5pp for the probe direction), text-only baseline,
-and Ma et al.\ SAE falsification (0/41 spurious).
+We apply seven controls \citep{meloux2025dead, sanitychecks2026}:
+Hewitt--Liang selectivity ($>$34pp), cross-prediction falsification
+(AUC\,=\,0.378 on immune categories; immune items compress into a
+tight logit cluster), cross-model transfer (AUC\,$>$\,0.92),
+random-direction steering baselines (null vs.\ 37.5pp probe effect),
+a text-only baseline (0.840 vs.\ 0.999; syllogism gap 0.086 vs.\ 0.999),
+token-length audit (syllogism $d\!=\!+0.02$ rules out length as the
+primary signal), and Ma et al.\ SAE falsification (0/41 spurious).
 Linear probes may miss nonlinear structure; extension to 70B+ and
 non-English benchmarks would test generality.  Multi-seed robustness
-analysis appears in Appendix~\ref{app:robustness}.
+appears in Appendix~\ref{app:robustness}.
 
 \paragraph{Acknowledgments.}
 [Redacted for anonymous review.]
