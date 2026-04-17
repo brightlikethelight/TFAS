@@ -1,14 +1,9 @@
-\begin{thebibliography}{36}
+\begin{thebibliography}{35}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
-
-\bibitem[Afzal et~al.(2025)Afzal, Matthes, Chechik, and Ziser]{afzal2025knowing}
-Anum Afzal, Florian Matthes, Gal Chechik, and Yftah Ziser.
-\newblock Knowing before saying: {LLM} representations encode information about chain-of-thought success before completion.
-\newblock In \emph{Findings of the Association for Computational Linguistics: ACL 2025}, 2025.
 
 \bibitem[Boppana et~al.(2026)Boppana, Ma, Loeffler, Sarfati, Bigelow, Geiger, Lewis, and Merullo]{boppana2026reasoning}
 Siddharth Boppana, Annabel Ma, Max Loeffler, Raphael Sarfati, Eric Bigelow, Atticus Geiger, Owen Lewis, and Jack Merullo.
