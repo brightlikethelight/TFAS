@@ -178,7 +178,7 @@ attributable to training, not architecture.  We make six contributions:
   \item \textbf{A training--inference dissociation}: Qwen~3-8B's think/no-think modes achieve similar conflict separability (AUC\,=\,0.954 and 0.970) but cross-mode probe transfer is at chance (AUC\,=\,0.496)---the two modes develop non-transferring conflict-encoding axes.
 \end{enumerate}
 
-\noindent Additionally, we analyze \textbf{scale effects} at 32B
+\noindent We also analyze \textbf{scale effects} at 32B
 (OLMo-3.1-32B-Instruct), finding that 4.5$\times$ more parameters
 \emph{increases} vulnerability (19.6\% vs.\ 14.9\% at 7B) while
 preserving near-perfect probe separability (AUC\,=\,0.9999).  We also
@@ -591,6 +591,9 @@ This establishes that the linear probe does not merely \emph{read out}
 a correlate of bias processing---the direction it identifies is
 \emph{causally sufficient} to modulate heuristic susceptibility.
 
+\paragraph{Two specificity controls.}
+(i)~Probe steering on matched \emph{non-conflict} items produces zero lure responses at any $\alpha$, with only minor coherence loss at $|\alpha|\!=\!5$ (Appendix~\ref{app:steering_specificity}): the direction is specific to the conflict subspace.  (ii)~The CogBias-style mean-difference vector (cosine $= 0.314$ with the probe) is a stronger one-sided debiasing intervention (lure 52.5\%$\to$11.25\% at $\alpha\!=\!+5$) but is \emph{unidirectional}---negative $\alpha$ has no effect (stays 53.75\%).  The probe direction is weaker for debiasing but \emph{bidirectional} ($+$16.25pp worse at $\alpha\!=\!-5$), making it better evidence of a causal boundary.
+
 \paragraph{R1-Distill steering contrast.}
 We apply the same protocol to R1-Distill-Llama-8B at L14 (probe CV AUC\,=\,0.928), with the hook active \emph{continuously} across the entire 2048-token generation (prompt\,$+$\,full $\langle$think$\rangle$ trace\,$+$\,answer), directly ruling out the ``temporal washout'' confound in which a one-shot perturbation dissipates over a long CoT.  Under this continuous intervention the probe-direction dose-response disappears: lure rate stays at baseline for negative $\alpha$ (6.25\% at $\alpha\!=\!-5$ vs.\ 6.25\% at $\alpha\!=\!0$) and \emph{rises} for positive $\alpha$ (13.75\% at $\alpha\!=\!+5$), within 2$\sigma$ of the random-direction band at $|\alpha|\!=\!5$ (11.5\,$\pm$\,5.3\% and 10.25\,$\pm$\,1.9\%) and in the \emph{opposite} direction to the Llama effect.  The S1/S2 direction that drives a 37.5pp behavioral swing in Llama produces no coherent causal effect in R1-Distill, even when perturbed at every token of the 2048-token reasoning trace.  The representation remains linearly decodable (AUC\,=\,0.930), but the representation is not stably controllable by this linear intervention after reasoning training: \emph{readable but not writable}.
 
@@ -695,9 +698,8 @@ probe direction produces no coherent dose-response (lure rates at
 $\alpha\!=\!\pm5$ fall within 2$\sigma$ of random-direction controls,
 with the small residual effect in the \emph{opposite} direction of
 Llama's).  This directly rules out ``temporal washout''
-\citep{meloux2025dead}.  The dissociation---reasoning training severs
-the causal pathway from representation to behavior while preserving
-the representation itself---is direct evidence for the S2-by-default
+\citep{meloux2025dead}.  The representation is not stably controllable by this linear intervention
+after reasoning training---direct evidence for the S2-by-default
 hypothesis \citep{evans2019reflections}.
 Qwen's think/no-think modes both achieve high separability
 (${\sim}$0.97), but cross-mode transfer is at chance (0.496),
@@ -705,9 +707,10 @@ partly reflecting different \pzero{} positional contexts
 (Section~\ref{sec:methods}).
 
 \paragraph{Specificity, safeguards, and limitations.}
-Cross-prediction (AUC\,=\,0.378 on immune categories) confirms the probe
-captures processing mode, not stimulus features; vulnerability is domain-
-and model-specific \citep{stanovich2016rationality}.
+Cross-prediction on immune categories (where ROC-AUC is ill-defined due to
+collapsed processing-mode variance) confirms the probe captures processing
+mode, not stimulus features; vulnerability is domain- and model-specific
+\citep{stanovich2016rationality}.
 We apply five controls \citep{meloux2025dead, sanitychecks2026}:
 Hewitt--Liang selectivity $>$34pp, cross-prediction falsification,
 cross-model transfer (AUC\,$>$\,0.92), and Ma et al.\ SAE falsification.
@@ -908,14 +911,24 @@ Mean-diff    & Control  & 60.00 & 73.75 & 97.50 & 100.00 & 100.00 & 100.00 & 100
 \end{tabular}
 \end{table}
 
-Three conclusions: (i) the probe direction produces \emph{zero} lure
-responses on control items at any $\alpha$ (specificity to the S1/S2
-conflict subspace); (ii) the probe-weight direction is \emph{bidirectional}
-($+16.25$pp worse at $\alpha\!=\!-5$; $-21.25$pp better at $\alpha\!=\!+5$);
-(iii) the mean-difference baseline is \emph{unidirectional}: negative
-$\alpha$ has essentially no effect, while positive $\alpha$ reduces lure
-strongly.  Bidirectionality is stronger evidence of causal sufficiency
-than a one-sided effect.
+\paragraph{Three observations.}
+(i) The probe direction produces \emph{zero} lure responses on control
+items at any $\alpha$: the direction is specific to the S1/S2 conflict
+subspace and does not generically perturb answers.  The small drop in
+correctness at $\alpha\!=\!-5$ on control items (78.75\%) reflects
+residual-stream coherence loss (the 21.25\% of items become ``other''
+responses, not lures), the same pattern seen with random directions
+in the main text.  (ii) The probe-weight direction is \emph{bidirectional}:
+moving toward S1 (negative $\alpha$) increases lure by 16.25pp,
+moving toward S2 (positive $\alpha$) decreases lure by 21.25pp.
+Bidirectional dose-response is stronger evidence of causal sufficiency
+than a unidirectional effect.  (iii) The mean-difference baseline is
+\emph{unidirectional}: negative $\alpha$ has essentially no effect
+(lure stays around 53--55\%), while positive $\alpha$ strongly
+reduces lure (to 11.25\% at $\alpha\!=\!+5$).  Mean-difference
+steering efficiently improves behavior but cannot test causal
+sufficiency by worsening it---a key methodological motivation for
+probe-weight steering.
 
 % ============================================================
 % NeurIPS Paper Checklist (required for submission)
