@@ -1,4 +1,4 @@
-\begin{thebibliography}{35}
+\begin{thebibliography}{33}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -85,11 +85,6 @@ Su~Hwan Kim, Sebastian Ziegelmayer, Felix Busch, Christian~J Mertens, Matthias K
 \newblock {LLM} reasoning does not protect against clinical cognitive biases---an evaluation using {BiasMedQA}.
 \newblock \emph{medRxiv}, 2025.
 
-\bibitem[Korznikov et~al.(2026)Korznikov, Galichin, Dontsov, Rogov, Oseledets, and Tutubalina]{sanitychecks2026}
-Anton Korznikov, Andrey Galichin, Alexey Dontsov, Oleg Rogov, Ivan Oseledets, and Elena Tutubalina.
-\newblock Sanity checks for sparse autoencoders: Do {SAEs} beat random baselines?
-\newblock \emph{arXiv preprint arXiv:2602.14111}, 2026.
-
 \bibitem[Lanham et~al.(2023)Lanham, Chen, Radhakrishnan, Steiner, Denison, Hernandez, Li, Durmus, Hubinger, Ganguli, et~al.]{lanham2023measuring}
 Tamera Lanham, Anna Chen, Ansh Radhakrishnan, Benoit Steiner, Carson Denison, Danny Hernandez, Dustin Li, Esin Durmus, Evan Hubinger, Deep Ganguli, et~al.
 \newblock Measuring faithfulness in chain-of-thought reasoning.
@@ -140,11 +135,6 @@ Nina Panickssery, Nick Gabrieli, Julian Schulz, Meg Tong, Evan Hubinger, and Ale
 Ethan Perez, Sam Ringer, Kamile Lukosiute, Karina Nguyen, Edwin Chen, Scott Heiner, Craig Pettit, Catherine Olsson, Sandipan Kundu, et~al.
 \newblock Discovering language model behaviors with model-written evaluations.
 \newblock \emph{Findings of the Association for Computational Linguistics: ACL 2023}, 2023.
-
-\bibitem[Stanovich et~al.(2016)Stanovich, West, and Toplak]{stanovich2016rationality}
-Keith~E Stanovich, Richard~F West, and Maggie~E Toplak.
-\newblock \emph{The Rationality Quotient: Toward a Test of Rational Thinking}.
-\newblock MIT Press, Cambridge, MA, 2016.
 
 \bibitem[{Team OLMo}(2025)]{olmo3}
 {Team OLMo}.
