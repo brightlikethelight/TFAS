@@ -1448,6 +1448,48 @@ The probe--behavior divergence under sampling further supports the
 path it takes during generation.
 
 % =========================================================================
+\section{Qwen Template and Tokenization Details}
+\label{app:qwen_template}
+
+For reproducibility and to document the positional divergence between
+Qwen~3-8B's thinking modes (Section~\ref{sec:methods}), we report the
+exact chat-template output using \texttt{transformers} v4.52.3 with
+\texttt{Qwen/Qwen3-8B}.
+
+\paragraph{Think mode} (\texttt{enable\_thinking=True}):
+\begin{verbatim}
+<|im_start|>user
+{prompt}<|im_end|>
+<|im_start|>assistant
+\end{verbatim}
+Token count: $N$ tokens.  \pzero{} is the \texttt{\textbackslash{}n}
+after \texttt{assistant} (position $N-1$).
+
+\paragraph{No-think mode} (\texttt{enable\_thinking=False}):
+\begin{verbatim}
+<|im_start|>user
+{prompt}<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+
+\end{verbatim}
+Token count: $N+4$ tokens.  Four extra tokens are appended:
+\texttt{<think>}, \texttt{\textbackslash{}n\textbackslash{}n},
+\texttt{</think>}, \texttt{\textbackslash{}n\textbackslash{}n}.
+\pzero{} is the final \texttt{\textbackslash{}n\textbackslash{}n}
+(position $N+3$).
+
+The two modes' \pzero{} activations therefore differ both in
+absolute position (due to the 4-token offset) and in local context
+(the no-think \pzero{} follows a \texttt{</think>} close tag).
+Measured $L_2$ distance between think and no-think \pzero{}
+activations at L34 averages 1{,}411 across the 470 benchmark items
+(hidden dimension 4{,}096), confirming that the representations are
+genuinely distinct.
+
+% =========================================================================
 \section{Token-Length Confound Analysis}
 \label{app:length}
 
