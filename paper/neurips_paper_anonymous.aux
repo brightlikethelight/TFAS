@@ -75,13 +75,13 @@
 \@writefile{toc}{\contentsline {paragraph}{Implicit conflict detection.}{5}{section*.10}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Linear Probes and Cross-Prediction}{5}{subsection.5.2}\protected@file@percent }
 \newlabel{sec:results_probes}{{5.2}{5}{Linear Probes and Cross-Prediction}{subsection.5.2}{}}
+\citation{huang2026cogbias}
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Layer-wise probe ROC-AUC (conflict vs.\ no-conflict, three vulnerable categories). Llama peaks at 0.974 [0.952, 0.992] (L16); R1-Distill at 0.930 [0.894, 0.960] (L31)---non-overlapping CIs. Qwen~3-8B peaks at 0.954 (no-think) and 0.970 (think) at L34, but cross-mode transfer is at chance (0.496). Gray dashed: Hewitt--Liang control ceiling.}}{6}{figure.1}\protected@file@percent }
 \newlabel{fig:probe_curves}{{1}{6}{Layer-wise probe ROC-AUC (conflict vs.\ no-conflict, three vulnerable categories). Llama peaks at 0.974 [0.952, 0.992] (L16); R1-Distill at 0.930 [0.894, 0.960] (L31)---non-overlapping CIs. Qwen~3-8B peaks at 0.954 (no-think) and 0.970 (think) at L34, but cross-mode transfer is at chance (0.496). Gray dashed: Hewitt--Liang control ceiling}{figure.1}{}}
 \def\@LN@column{1}
 \@writefile{toc}{\contentsline {paragraph}{Selectivity and text-only baseline.}{6}{section*.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Probe summary.}{6}{section*.12}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Cross-prediction and immune-category specificity.}{6}{section*.13}\protected@file@percent }
-\citation{huang2026cogbias}
 \citation{huang2026cogbias}
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Probing summary at peak layer for the three vulnerable categories. 95\% CIs from 1000 bootstrap resamples (conditional on the selected peak layer; layer-selection uncertainty is not propagated). Selectivity = true AUC $-$ control AUC. Cross-mode column: AUC when a probe trained on one Qwen mode is tested on the other. Text baseline: sentence-transformer on input text only (no activations).}}{7}{table.2}\protected@file@percent }
 \newlabel{tab:probe_summary}{{2}{7}{Probing summary at peak layer for the three vulnerable categories. 95\% CIs from 1000 bootstrap resamples (conditional on the selected peak layer; layer-selection uncertainty is not propagated). Selectivity = true AUC $-$ control AUC. Cross-mode column: AUC when a probe trained on one Qwen mode is tested on the other. Text baseline: sentence-transformer on input text only (no activations)}{table.2}{}}
@@ -91,12 +91,12 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Causal Evidence: Probe-Direction Steering}{7}{subsection.5.3}\protected@file@percent }
 \newlabel{sec:steering}{{5.3}{7}{Causal Evidence: Probe-Direction Steering}{subsection.5.3}{}}
 \@writefile{toc}{\contentsline {paragraph}{Random-direction control.}{7}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{R1-Distill steering contrast.}{7}{section*.17}\protected@file@percent }
 \citation{jiang2025aha,lanham2023measuring}
 \citation{mckenzie2023inverse,perez2023discovering}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Probe-direction steering on Llama-3.1-8B-Instruct (L14, 80 vulnerable-category conflict items). The probe direction produces a 37.6pp dose-response ($\alpha \!=\!-5$: 68.8\%; $\alpha \!=\!+5$: 31.2\%); random directions (gray band) show no systematic effect.}}{8}{figure.2}\protected@file@percent }
 \newlabel{fig:steering}{{2}{8}{Probe-direction steering on Llama-3.1-8B-Instruct (L14, 80 vulnerable-category conflict items). The probe direction produces a 37.6pp dose-response ($\alpha \!=\!-5$: 68.8\%; $\alpha \!=\!+5$: 31.2\%); random directions (gray band) show no systematic effect}{figure.2}{}}
 \def\@LN@column{1}
-\@writefile{toc}{\contentsline {paragraph}{R1-Distill steering contrast.}{8}{section*.17}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Within-CoT Probing}{8}{subsection.5.4}\protected@file@percent }
 \newlabel{sec:within_cot}{{5.4}{8}{Within-CoT Probing}{subsection.5.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Scale Analysis: 7B vs.\ 32B}{8}{subsection.5.5}\protected@file@percent }
@@ -115,6 +115,7 @@
 \bibcite{botvinick2001conflict}{{2}{2001}{{Botvinick et~al.}}{{Botvinick, Braver, Barch, Carter, and Cohen}}}
 \bibcite{brady2025dual}{{3}{2025}{{Brady et~al.}}{{Brady, Gantman, and Van~Bavel}}}
 \bibcite{codaforno2025dual}{{4}{2025}{{Coda-Forno et~al.}}{{Coda-Forno, Zhao, Zhang, Tamboli, Li, Fan, Zhang, Schulz, and Tseng}}}
+\bibcite{deneys2012bias}{{5}{2012}{{De~Neys}}{{}}}
 \def\@LN@column{1}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.6}SAE Features and Attention Entropy}{9}{subsection.5.6}\protected@file@percent }
 \newlabel{sec:results_sae_attention}{{5.6}{9}{SAE Features and Attention Entropy}{subsection.5.6}{}}
@@ -124,7 +125,6 @@
 \@writefile{toc}{\contentsline {paragraph}{Readable but not writable.}{9}{section*.19}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Specificity, safeguards, and limitations.}{9}{section*.20}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Acknowledgments.}{9}{section*.21}\protected@file@percent }
-\bibcite{deneys2012bias}{{5}{2012}{{De~Neys}}{{}}}
 \bibcite{deneys2017dual}{{6}{2017}{{De~Neys}}{{}}}
 \bibcite{deneys2023advancing}{{7}{2023}{{De~Neys}}{{}}}
 \bibcite{deepseekr1}{{8}{2025}{{DeepSeek-AI}}{{}}}
@@ -144,9 +144,9 @@
 \bibcite{mckenzie2023inverse}{{22}{2024}{{McKenzie et~al.}}{{McKenzie, Lyzhov, Pieler, Parrish, Mueller, Prabhu, McLean, Kirtland, Ross, Liu, et~al.}}}
 \bibcite{melnikoff2018mythical}{{23}{2018}{{Melnikoff and Bargh}}{{}}}
 \bibcite{meloux2025dead}{{24}{2025}{{M{\'e}loux et~al.}}{{M{\'e}loux, Dirupo, Portet, and Peyrard}}}
-\def\@LN@column{1}
 \bibcite{llama31}{{25}{2024}{{Meta AI}}{{}}}
 \bibcite{rimsky2024steering}{{26}{2024}{{Panickssery et~al.}}{{Panickssery, Gabrieli, Schulz, Tong, Hubinger, and Turner}}}
+\def\@LN@column{1}
 \bibcite{perez2023discovering}{{27}{2023}{{Perez et~al.}}{{Perez, Ringer, Lukosiute, Nguyen, Chen, Heiner, Pettit, Olsson, Kundu, et~al.}}}
 \bibcite{stanovich2016rationality}{{28}{2016}{{Stanovich et~al.}}{{Stanovich, West, and Toplak}}}
 \bibcite{olmo3}{{29}{2025}{{Team OLMo}}{{}}}
@@ -163,29 +163,29 @@
 \newlabel{app:scale}{{B}{11}{Scale Analysis: Full Results}{appendix.B}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {C}SAE Features and Attention Entropy}{11}{appendix.C}\protected@file@percent }
 \newlabel{app:sae_attention}{{C}{11}{SAE Features and Attention Entropy}{appendix.C}{}}
-\def\@LN@column{1}
-\@writefile{toc}{\contentsline {section}{\numberline {D}Multi-Seed Robustness}{12}{appendix.D}\protected@file@percent }
-\newlabel{app:robustness}{{D}{12}{Multi-Seed Robustness}{appendix.D}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {D.1}Exact Generation Parameters}{12}{subsection.D.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {D}Multi-Seed Robustness}{11}{appendix.D}\protected@file@percent }
+\newlabel{app:robustness}{{D}{11}{Multi-Seed Robustness}{appendix.D}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {D.1}Exact Generation Parameters}{11}{subsection.D.1}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Generation keyword arguments for all models. ``Greedy'' denotes the main-text configuration; ``Sampled'' denotes the robustness configuration used in this appendix.}}{12}{table.3}\protected@file@percent }
 \newlabel{tab:gen_kwargs}{{3}{12}{Generation keyword arguments for all models. ``Greedy'' denotes the main-text configuration; ``Sampled'' denotes the robustness configuration used in this appendix}{table.3}{}}
+\def\@LN@column{1}
 \@writefile{toc}{\contentsline {paragraph}{Vendor-recommended settings.}{12}{section*.23}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Robustness argument.}{12}{section*.24}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {E}Token-Length Confound Analysis}{12}{appendix.E}\protected@file@percent }
 \newlabel{app:length_anon}{{E}{12}{Token-Length Confound Analysis}{appendix.E}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Prompt subword length (Llama-3.1-8B tokenizer) for conflict vs.\ control items by category. ``$d$'' is Cohen's~$d$; positive values indicate conflict items are longer.}}{12}{table.4}\protected@file@percent }
 \newlabel{tab:length_anon}{{4}{12}{Prompt subword length (Llama-3.1-8B tokenizer) for conflict vs.\ control items by category. ``$d$'' is Cohen's~$d$; positive values indicate conflict items are longer}{table.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Why length is not the primary signal.}{12}{section*.25}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Complete behavioral results across models and categories. Conflict accuracy (Acc), lure rate (Lure), and other-response rate (Other) on conflict items; control accuracy (Ctrl); and accuracy gap (Gap = Ctrl $-$ Acc). Wilson 95\% CIs in brackets. McNemar mid-$p$ tests conflict vs.\ matched control accuracy.}}{13}{table.5}\protected@file@percent }
+\newlabel{tab:behavioral-full}{{5}{13}{Complete behavioral results across models and categories. Conflict accuracy (Acc), lure rate (Lure), and other-response rate (Other) on conflict items; control accuracy (Ctrl); and accuracy gap (Gap = Ctrl $-$ Acc). Wilson 95\% CIs in brackets. McNemar mid-$p$ tests conflict vs.\ matched control accuracy}{table.5}{}}
 \def\@LN@column{1}
-\@writefile{toc}{\contentsline {paragraph}{Why length is not the primary signal.}{13}{section*.25}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {F}Full Behavioral Breakdown (All Models, All Categories)}{13}{appendix.F}\protected@file@percent }
 \newlabel{app:full_behavior_anon}{{F}{13}{Full Behavioral Breakdown (All Models, All Categories)}{appendix.F}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {G}Steering Specificity Controls}{13}{appendix.G}\protected@file@percent }
 \newlabel{app:steering_specificity}{{G}{13}{Steering Specificity Controls}{appendix.G}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Complete behavioral results across models and categories. Conflict accuracy (Acc), lure rate (Lure), and other-response rate (Other) on conflict items; control accuracy (Ctrl); and accuracy gap (Gap = Ctrl $-$ Acc). Wilson 95\% CIs in brackets. McNemar mid-$p$ tests conflict vs.\ matched control accuracy.}}{14}{table.5}\protected@file@percent }
-\newlabel{tab:behavioral-full}{{5}{14}{Complete behavioral results across models and categories. Conflict accuracy (Acc), lure rate (Lure), and other-response rate (Other) on conflict items; control accuracy (Ctrl); and accuracy gap (Gap = Ctrl $-$ Acc). Wilson 95\% CIs in brackets. McNemar mid-$p$ tests conflict vs.\ matched control accuracy}{table.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Steering specificity controls on Llama-3.1-8B-Instruct, L14, continuous steering. Conflict items carry an S1 lure answer; control items carry only the normative answer.}}{14}{table.6}\protected@file@percent }
+\newlabel{tab:steering_specificity_anon}{{6}{14}{Steering specificity controls on Llama-3.1-8B-Instruct, L14, continuous steering. Conflict items carry an S1 lure answer; control items carry only the normative answer}{table.6}{}}
 \def\@LN@column{1}
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Steering specificity controls on Llama-3.1-8B-Instruct, L14, continuous steering. Conflict items carry an S1 lure answer; control items carry only the normative answer.}}{15}{table.6}\protected@file@percent }
-\newlabel{tab:steering_specificity_anon}{{6}{15}{Steering specificity controls on Llama-3.1-8B-Instruct, L14, continuous steering. Conflict items carry an S1 lure answer; control items carry only the normative answer}{table.6}{}}
 \def\@LN@column{1}
 \def\@LN@column{1}
 \def\@LN@column{1}

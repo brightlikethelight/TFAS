@@ -61,7 +61,7 @@ residual-stream activations far exceed text baselines
 (AUC\,0.974/0.930 vs.\ 0.840), confirming the signal lives in
 geometry, not surface tokens.  Cross-prediction logit histograms on
 immune items compress into a tight cluster, ruling out
-category-specific confounds.  Crucially, probe-direction steering
+category-specific confounds.  Probe-direction steering
 produces a 37.5pp dose-response shift in Llama (lure$\to$correct,
 zero garbage outputs), while R1---perturbed \emph{continuously} across
 the entire 2048-token reasoning trace---shows no coherent
@@ -94,7 +94,7 @@ is an acknowledged oversimplification---modern accounts treat this as a
 \emph{continuum} of processing intensity \citep{melnikoff2018mythical,
 evans2013dual, deneys2023advancing}---the core observation that
 cognitive systems flexibly allocate effort, with measurable consequences
-for bias susceptibility, remains robust.  Crucially, De~Neys' conflict
+for bias susceptibility, remains robust.  De~Neys' conflict
 detection paradigm \citep{deneys2012bias, deneys2017dual} demonstrates
 that humans often \emph{detect} conflicts between heuristic and
 normative responses even when they fail to override the heuristic---a
@@ -175,11 +175,7 @@ attributable to training, not architecture.  We make six contributions:
   stream activations at successive token positions within the reasoning
   trace, revealing how representations evolve during deliberation.
 
-  \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
-  thinking toggle changes behavior ($21\% \to 7.3\%$ lure rate) but produces
-  \emph{identical} probe signatures (AUC\,=\,0.971 in both modes),
-  demonstrating that training changes \sone{}/\stwo{} encoding while
-  inference-time thinking changes only generation behavior.
+  \item \textbf{A training--inference dissociation}: Qwen~3-8B's think/no-think modes achieve similar conflict separability (AUC\,=\,0.954 and 0.970) but cross-mode probe transfer is at chance (AUC\,=\,0.496)---the two modes develop non-transferring conflict-encoding axes.
 \end{enumerate}
 
 \noindent Additionally, we analyze \textbf{scale effects} at 32B
@@ -300,7 +296,7 @@ Our headline comparison exploits the architectural identity between
 \textbf{Llama-3.1-8B-Instruct} \citep{llama31} and
 \textbf{R1-Distill-Llama-8B} \citep{deepseekr1}: both have 32
 transformer layers, 32 query heads (8 KV heads via grouped-query
-attention), and 4096 hidden dimensions.  The only difference is that
+attention), and 4096 hidden dimensions.  The models differ primarily in that
 R1-Distill-Llama-8B was distilled from a reasoning-trained teacher.  We
 additionally evaluate \textbf{Qwen~3-8B} in both thinking (\texttt{/think})
 and non-thinking (\texttt{/no\_think}) modes, providing a
@@ -495,15 +491,16 @@ exceeds 34 percentage points at peak layers for both models.\footnote{We
   peak L14, AUC\,=\,0.999), used for cross-prediction and steering; and
   bootstrap CI analysis on 160 vulnerable-category items (3 categories,
   peak L16, AUC\,=\,0.974 [0.952, 0.992]).}
-A sentence-transformer text-only baseline (encoding only the input
-text, with no access to model activations) achieves AUC\,=\,0.840,
-substantially below the activation probe (0.999).  The gap is widest
-for syllogism (text AUC\,=\,0.086---active anti-prediction driven by
-deceptive surface similarity between conflict and control items---vs.\
-activation AUC\,=\,0.999), exactly the category where surface features
-fail and internal processing-mode information is essential.  This
-confirms that the activation probe captures processing-relevant
-information beyond what is available from input text alone.
+A global sentence-transformer text-only baseline (trained on all
+categories, encoding only input text with no access to model
+activations) achieves AUC\,=\,0.840, substantially below the
+activation probe (0.999).  When evaluated out-of-distribution on
+held-out syllogism items, the text baseline collapses to 0.086
+(below chance, because deceptive surface similarity between conflict
+and control syllogisms causes the text encoder to systematically
+confuse the classes), while the activation probe remains at 0.999.
+This confirms the activation probe captures processing-relevant
+information unavailable from input text alone.
 
 \paragraph{Probe summary.}
 Table~\ref{tab:probe_summary} summarizes the key probing metrics.
@@ -520,26 +517,28 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \label{tab:probe_summary}
 \vspace{4pt}
 \small
-\begin{tabular}{lccccc}
+\begin{tabular}{lcccccc}
 \toprule
-\textbf{Model} & \textbf{Peak Layer} & \textbf{Peak AUC} & \textbf{95\% CI} & \textbf{Control AUC} & \textbf{Selectivity} \\
+\textbf{Model} & \textbf{Peak L} & \textbf{Peak AUC} & \textbf{95\% CI} & \textbf{Ctrl AUC} & \textbf{Select.} & \textbf{Cross} \\
 \midrule
-Llama-3.1-8B-Instruct & L16 & 0.974 & [0.952, 0.992] & 0.63 & 0.343 \\
-R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.55 & 0.377 \\
-Qwen~3-8B (no think)  & L34 & 0.971 & ---             & ---  & --- \\
-Qwen~3-8B (think)     & L34 & 0.971 & ---             & ---  & --- \\
+Llama-3.1-8B-Instruct & L16 & 0.974 & [0.952, 0.992] & 0.63 & 0.343 & --- \\
+R1-Distill-Llama-8B   & L31 & 0.930 & [0.894, 0.960] & 0.55 & 0.377 & --- \\
+Qwen~3-8B (no think)  & L34 & 0.954 & ---             & ---  & --- & 0.496 \\
+Qwen~3-8B (think)     & L34 & 0.970 & ---             & ---  & --- & 0.496 \\
 \midrule
-OLMo-3-7B-Instruct    & L24 & 0.996 & [0.988, 1.000]  & ---  & --- \\
-OLMo-3-7B-Think       & L22 & 0.962 & [0.934, 0.982]  & ---  & --- \\
+OLMo-3-7B-Instruct    & L24 & 0.996 & [0.988, 1.000]  & ---  & --- & --- \\
+OLMo-3-7B-Think       & L22 & 0.962 & [0.934, 0.982]  & ---  & --- & --- \\
 \midrule
-OLMo-3.1-32B-Instruct & L20 & 0.9999 & ---             & ---  & --- \\
-OLMo-3.1-32B-Think    & L20 & 0.9978 & ---             & ---  & --- \\
+OLMo-3.1-32B-Instruct & L20 & 0.9999 & ---             & ---  & --- & --- \\
+OLMo-3.1-32B-Think    & L20 & 0.9978 & ---             & ---  & --- & --- \\
+\midrule
+\emph{Text baseline}   & --- & 0.840 & ---             & ---  & --- & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \paragraph{Cross-prediction and immune-category specificity.}
-Training on \emph{vulnerable} categories and testing on \emph{immune} categories yields near-chance transfer: immune items compress into a tight logit cluster (spread $0.03\times$ that of vulnerable categories), confirming the probe captures processing mode where it varies (vulnerable items) and collapses to a single pole where it does not (immune items).  The below-chance ROC-AUC (0.378) reflects active anti-prediction from a slight polarity inversion, not a meaningful directional signal.  Base rate and conjunction probes transfer near-perfectly to each other (AUC\,$>$\,0.99), while transfer to syllogism is weaker (0.59--0.63).
+Training on \emph{vulnerable} categories and testing on \emph{immune} categories yields near-chance transfer.  ROC-AUC is ill-defined here because immune items are processed equivalently regardless of the conflict label, collapsing processing-mode variance to near zero; logit histograms confirm that immune items compress into a tight cluster (spread $0.03\times$ that of vulnerable categories).  Base rate and conjunction probes transfer near-perfectly to each other (AUC\,$>$\,0.99), while transfer to syllogism is weaker (0.59--0.63).
 
 \paragraph{Cross-model probe transfer.}
 A Llama-trained probe achieves AUC\,=\,0.920 on R1-Distill (layer~23); the reverse achieves 0.954 at layer~15.  The processing-mode direction is substantially shared across models differing only in reasoning training, contrasting with \citet{huang2026cogbias}'s near-orthogonal finding across architectures.
@@ -593,7 +592,7 @@ a correlate of bias processing---the direction it identifies is
 \emph{causally sufficient} to modulate heuristic susceptibility.
 
 \paragraph{R1-Distill steering contrast.}
-We apply the same protocol to R1-Distill-Llama-8B at L14 (probe CV AUC\,=\,0.928), with the hook active \emph{continuously} across the entire 2048-token generation (prompt\,$+$\,full $\langle$think$\rangle$ trace\,$+$\,answer), directly ruling out the ``temporal washout'' confound in which a one-shot perturbation dissipates over a long CoT.  Under this continuous intervention the probe-direction dose-response disappears: lure rate stays at baseline for negative $\alpha$ (6.25\% at $\alpha\!=\!-5$ vs.\ 6.25\% at $\alpha\!=\!0$) and \emph{rises} for positive $\alpha$ (13.75\% at $\alpha\!=\!+5$), within 2$\sigma$ of the random-direction band at $|\alpha|\!=\!5$ (11.5\,$\pm$\,5.3\% and 10.25\,$\pm$\,1.9\%) and in the \emph{opposite} direction to the Llama effect.  The S1/S2 direction that drives a 37.5pp behavioral swing in Llama produces no coherent causal effect in R1-Distill, even when perturbed at every token of the 2048-token reasoning trace.  The representation remains linearly decodable (AUC\,=\,0.930), but the causal pathway from representation to behavior has been severed by reasoning training: \emph{readable but not writable}.
+We apply the same protocol to R1-Distill-Llama-8B at L14 (probe CV AUC\,=\,0.928), with the hook active \emph{continuously} across the entire 2048-token generation (prompt\,$+$\,full $\langle$think$\rangle$ trace\,$+$\,answer), directly ruling out the ``temporal washout'' confound in which a one-shot perturbation dissipates over a long CoT.  Under this continuous intervention the probe-direction dose-response disappears: lure rate stays at baseline for negative $\alpha$ (6.25\% at $\alpha\!=\!-5$ vs.\ 6.25\% at $\alpha\!=\!0$) and \emph{rises} for positive $\alpha$ (13.75\% at $\alpha\!=\!+5$), within 2$\sigma$ of the random-direction band at $|\alpha|\!=\!5$ (11.5\,$\pm$\,5.3\% and 10.25\,$\pm$\,1.9\%) and in the \emph{opposite} direction to the Llama effect.  The S1/S2 direction that drives a 37.5pp behavioral swing in Llama produces no coherent causal effect in R1-Distill, even when perturbed at every token of the 2048-token reasoning trace.  The representation remains linearly decodable (AUC\,=\,0.930), but the representation is not stably controllable by this linear intervention after reasoning training: \emph{readable but not writable}.
 
 \begin{figure}[t]
 \centering
@@ -700,10 +699,10 @@ Llama's).  This directly rules out ``temporal washout''
 the causal pathway from representation to behavior while preserving
 the representation itself---is direct evidence for the S2-by-default
 hypothesis \citep{evans2019reflections}.
-Qwen's think/no-think toggle reveals the converse: thinking reduces
-lure rates (21\% $\to$ 7.3\%) without changing \pzero{} encoding
-(AUC\,=\,0.971 in both modes)---training and inference-time thinking
-are distinct mechanisms for bias resistance \citep{ziabari2025reasoning}.
+Qwen's think/no-think modes both achieve high separability
+(${\sim}$0.97), but cross-mode transfer is at chance (0.496),
+partly reflecting different \pzero{} positional contexts
+(Section~\ref{sec:methods}).
 
 \paragraph{Specificity, safeguards, and limitations.}
 Cross-prediction (AUC\,=\,0.378 on immune categories) confirms the probe
