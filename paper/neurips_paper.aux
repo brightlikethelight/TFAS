@@ -87,12 +87,14 @@
 \@writefile{toc}{\contentsline {paragraph}{R1-Distill steering contrast.}{7}{section*.16}\protected@file@percent }
 \citation{deneys2017dual}
 \citation{boppana2026reasoning}
+\citation{mckenzie2023inverse,perez2023discovering}
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Probe-direction steering on Llama-3.1-8B-Instruct (L14, 80 vulnerable-category conflict items). The probe direction produces a 37.5pp dose-response ($\alpha \!=\!-5$: 68.8\%; $\alpha \!=\!+5$: 31.2\%), with 100\% of lure reduction converting to correct answers (zero ``other'' increase); random directions (gray band) show no systematic effect.}}{8}{figure.2}\protected@file@percent }
 \newlabel{fig:steering}{{2}{8}{Probe-direction steering on Llama-3.1-8B-Instruct (L14, 80 vulnerable-category conflict items). The probe direction produces a 37.5pp dose-response ($\alpha \!=\!-5$: 68.8\%; $\alpha \!=\!+5$: 31.2\%), with 100\% of lure reduction converting to correct answers (zero ``other'' increase); random directions (gray band) show no systematic effect}{figure.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Within-CoT Probing}{8}{subsection.5.4}\protected@file@percent }
 \newlabel{sec:within_cot}{{5.4}{8}{Within-CoT Probing}{subsection.5.4}{}}
 \@writefile{toc}{\contentsline {paragraph}{Non-monotonic trajectory.}{8}{section*.17}\protected@file@percent }
-\citation{mckenzie2023inverse,perez2023discovering}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Scale Analysis: 7B vs.\ 32B}{8}{subsection.5.5}\protected@file@percent }
+\newlabel{sec:scale}{{5.5}{8}{Scale Analysis: 7B vs.\ 32B}{subsection.5.5}{}}
 \citation{ma2026falsification}
 \citation{deneys2012bias}
 \citation{evans2019reflections}
@@ -102,8 +104,7 @@
 \citation{meloux2025dead}
 \bibstyle{plainnat}
 \bibdata{references}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Scale Analysis: 7B vs.\ 32B}{9}{subsection.5.5}\protected@file@percent }
-\newlabel{sec:scale}{{5.5}{9}{Scale Analysis: 7B vs.\ 32B}{subsection.5.5}{}}
+\bibcite{boppana2026reasoning}{{1}{2026}{{Boppana et~al.}}{{Boppana, Ma, Loeffler, Sarfati, Bigelow, Geiger, Lewis, and Merullo}}}
 \@writefile{toc}{\contentsline {paragraph}{Behavioral results.}{9}{section*.18}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Probe results at 32B.}{9}{section*.19}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.6}SAE Features and Attention Entropy}{9}{subsection.5.6}\protected@file@percent }
@@ -112,7 +113,7 @@
 \newlabel{sec:discussion}{{6}{9}{Discussion}{section.6}{}}
 \@writefile{toc}{\contentsline {paragraph}{Conflict detection without resolution.}{9}{section*.20}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Readable but not writable.}{9}{section*.21}\protected@file@percent }
-\bibcite{boppana2026reasoning}{{1}{2026}{{Boppana et~al.}}{{Boppana, Ma, Loeffler, Sarfati, Bigelow, Geiger, Lewis, and Merullo}}}
+\@writefile{toc}{\contentsline {paragraph}{Acknowledgments.}{9}{section*.22}\protected@file@percent }
 \bibcite{botvinick2001conflict}{{2}{2001}{{Botvinick et~al.}}{{Botvinick, Braver, Barch, Carter, and Cohen}}}
 \bibcite{brady2025dual}{{3}{2025}{{Brady et~al.}}{{Brady, Gantman, and Van~Bavel}}}
 \bibcite{codaforno2025dual}{{4}{2025}{{Coda-Forno et~al.}}{{Coda-Forno, Zhao, Zhang, Tamboli, Li, Fan, Zhang, Schulz, and Tseng}}}
@@ -132,7 +133,6 @@
 \bibcite{li2024inference}{{18}{2024}{{Li et~al.}}{{Li, Patel, Vi{\'e}gas, Pfister, and Wattenberg}}}
 \bibcite{ma2026falsification}{{19}{2026}{{Ma et~al.}}{{Ma, Liang, Chen, and Sojoudi}}}
 \bibcite{malberg2025cognitive}{{20}{2024}{{Malberg et~al.}}{{Malberg, Poletukhin, Schuster, and Groh}}}
-\@writefile{toc}{\contentsline {paragraph}{Acknowledgments.}{10}{section*.22}\protected@file@percent }
 \bibcite{mckenzie2023inverse}{{21}{2024}{{McKenzie et~al.}}{{McKenzie, Lyzhov, Pieler, Parrish, Mueller, Prabhu, McLean, Kirtland, Ross, Liu, et~al.}}}
 \bibcite{melnikoff2018mythical}{{22}{2018}{{Melnikoff and Bargh}}{{}}}
 \bibcite{meloux2025dead}{{23}{2025}{{M{\'e}loux et~al.}}{{M{\'e}loux, Dirupo, Portet, and Peyrard}}}
@@ -149,8 +149,8 @@
 \citation{jiang2025aha,lanham2023measuring}
 \@writefile{toc}{\contentsline {section}{\numberline {A}Within-CoT Probing Details}{11}{appendix.A}\protected@file@percent }
 \newlabel{app:within_cot}{{A}{11}{Within-CoT Probing Details}{appendix.A}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Method}{11}{subsection.A.1}\protected@file@percent }
 \citation{boppana2026reasoning}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Method}{12}{subsection.A.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Results: Qwen~3-8B Think, L34}{12}{subsection.A.2}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Within-CoT probe AUC trajectory for Qwen~3-8B (think mode) at L34, 7 positions. P0 = pre-generation (\texttt  {P0}{}); T0--Tend = positions within the \texttt  {<think>} trace; P2 = control position (chance baseline).}}{12}{table.3}\protected@file@percent }
 \newlabel{tab:within_cot_qwen}{{3}{12}{Within-CoT probe AUC trajectory for Qwen~3-8B (think mode) at L34, 7 positions. P0 = pre-generation (\pzero {}); T0--Tend = positions within the \texttt {<think>} trace; P2 = control position (chance baseline)}{table.3}{}}
@@ -174,9 +174,9 @@
 \@writefile{lot}{\contentsline {table}{\numberline {5}{Layer-wise probe AUC for OLMo-3.1-32B-Instruct (64 layers, vulnerable categories, \texttt  {P0}{} position, 5-fold CV). Mean $\pm $ std over folds. Bold indicates the peak layer. All P2 (control position) probes return AUC = 0.500 exactly.}}{14}{table.5}\protected@file@percent }
 \newlabel{tab:scale_probe_layers}{{5}{14}{Layer-wise probe AUC for OLMo-3.1-32B-Instruct (64 layers, vulnerable categories, \pzero {} position, 5-fold CV). Mean $\pm $ std over folds. Bold indicates the peak layer. All P2 (control position) probes return AUC = 0.500 exactly}{table.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Probe AUC Phase Summary}{14}{subsection.B.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Discussion: why scale increases vulnerability.}{14}{section*.26}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Phase-wise probe AUC summary for OLMo-3.1-32B-Instruct. Phases defined as: early (L0--15), mid-early (L16--31), mid-late (L32--47), final (L48--63).}}{15}{table.6}\protected@file@percent }
-\newlabel{tab:scale_phase}{{6}{15}{Phase-wise probe AUC summary for OLMo-3.1-32B-Instruct. Phases defined as: early (L0--15), mid-early (L16--31), mid-late (L32--47), final (L48--63)}{table.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Phase-wise probe AUC summary for OLMo-3.1-32B-Instruct. Phases defined as: early (L0--15), mid-early (L16--31), mid-late (L32--47), final (L48--63).}}{14}{table.6}\protected@file@percent }
+\newlabel{tab:scale_phase}{{6}{14}{Phase-wise probe AUC summary for OLMo-3.1-32B-Instruct. Phases defined as: early (L0--15), mid-early (L16--31), mid-late (L32--47), final (L48--63)}{table.6}{}}
+\@writefile{toc}{\contentsline {paragraph}{Discussion: why scale increases vulnerability.}{15}{section*.26}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Reasoning Training at 32B: OLMo-3.1-32B-Think}{15}{subsection.B.4}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Scale$\times $reasoning-training comparison across the OLMo family (overall lure rates on 235 conflict items). Reasoning training (Think) provides robust protection at both scales; scale increases standard-model vulnerability but does not degrade reasoning-model performance.}}{15}{table.7}\protected@file@percent }
 \newlabel{tab:scale_reasoning}{{7}{15}{Scale$\times $reasoning-training comparison across the OLMo family (overall lure rates on 235 conflict items). Reasoning training (Think) provides robust protection at both scales; scale increases standard-model vulnerability but does not degrade reasoning-model performance}{table.7}{}}
