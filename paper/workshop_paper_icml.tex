@@ -29,8 +29,8 @@
 \newcommand{\pzero}{\texttt{P0}}
 
 % ---------- Title ----------
-\title{What Changes When LLMs Learn to Reason?\\
-  Mechanistic Signatures of Cognitive Bias Processing}
+\title{Readable but Not Writable: Reasoning Training Decouples\\
+  Bias Directions from Behavior in LLMs}
 
 \author{Anonymous}
 
@@ -45,38 +45,28 @@
 % ============================================================
 
 \begin{abstract}
-Does reasoning training change how LLMs internally represent cognitive
-biases, or merely suppress biased outputs?  We investigate using
-matched-architecture model pairs that share identical weights and
-structure but differ in reasoning training:
-Llama-3.1-8B-Instruct vs.\ R1-Distill-Llama-8B, and
-OLMo-3-7B-Instruct vs.\ OLMo-3-7B-Think.  Behaviorally, reasoning
-training dramatically reduces heuristic lure rates across architectures:
-27.3\% to 2.4\% (Llama) and 14.9\% to 0.9\% (OLMo).  We probe
-residual stream activations with linear classifiers to separate conflict
-from no-conflict items across 235 matched pairs spanning 11 cognitive
-bias categories.  The standard Llama model achieves near-perfect
-conflict/control separability (peak AUC\,=\,0.974, 95\% CI [0.952,
-0.992]), but the reasoning model shows \emph{lower} separability
-(AUC\,=\,0.930 [0.894, 0.960]; non-overlapping CIs)---the internal
-heuristic/deliberative boundary is \emph{blurred}, not sharpened, by
-reasoning training.  Cross-prediction confirms specificity: a probe
-trained on vulnerable categories yields transfer AUC\,=\,0.378 on
-immune categories, and cross-model probe transfer (Llama$\to$R1:
-0.920; R1$\to$Llama: 0.954) shows the processing-mode direction is
-shared across reasoning-differentiated models.  First-token confidence
-analysis confirms De~Neys' conflict-detection prediction: reduced
-probability and elevated entropy on conflict items.  Attention analysis reveals the reasoning model has nearly
-twice as many \stwo{}-specialized heads (57 vs.\ 30; BH-FDR corrected),
-suggesting redistribution of deliberative computation across the
-network.  A within-model dissociation using Qwen~3-8B's thinking toggle
-sharpens the picture: inference-time thinking reduces lure rates (21\%
-to 7.3\%) without changing pre-generation probe signatures (both
-AUC\,=\,0.971).  Training changes \sone{}/\stwo{} encoding;
-inference-time thinking does not.  Finally, natural frequency
-framing---which reduces base rate neglect in humans---paradoxically
-\emph{increases} it in both models, demonstrating that ecological
-rationality does not transfer to LLMs.
+Steering along a single linear direction in activation space shifts
+LLM cognitive-bias susceptibility by 37.5 percentage points---but only
+in standard models.  In reasoning-trained models, the same direction is
+\emph{readable but not writable}: probes decode it, yet causal
+interventions along it fail.  We compare matched-architecture pairs
+(Llama-3.1-8B-Instruct vs.\ R1-Distill-Llama-8B, OLMo 7B/32B
+Instruct vs.\ Think) and Qwen-3-8B's thinking toggle across 470
+contrastive items spanning 11 bias categories.  Linear probes on
+residual-stream activations achieve AUC 0.974 (Llama) and 0.930
+(R1-Distill) with non-overlapping CIs, far exceeding a text-only
+baseline (0.840).  Probe-direction steering produces a monotonic
+37.5pp dose-response in Llama (lure$\to$correct, zero garbage), but
+R1-Distill---steered continuously across the full 2048-token reasoning
+trace---shows no coherent dose-response, with the model remaining
+fluent throughout.  Within-chain-of-thought probing reveals a
+non-monotonic trajectory (T0\,=\,0.973, T75\,=\,0.754,
+Tend\,=\,0.971), ruling out decorative reasoning.  Qwen's
+think/no-think modes both achieve high separability (${\sim}$0.97) but
+cross-mode probe transfer is at chance (0.496), indicating
+mode-specific conflict-encoding axes.  These results demonstrate that
+reasoning training reorganizes the causal pathway from bias
+representations to behavior, rendering them read-only.
 \end{abstract}
 
 % ============================================================
@@ -120,9 +110,10 @@ those correlates change when a model is trained to reason.
 
 We address this question with a natural experiment: Llama-3.1-8B-Instruct
 and DeepSeek-R1-Distill-Llama-8B share identical architectures (32
-layers, 32 attention heads, 4096 hidden dimensions) but differ in
-reasoning distillation training.  Any representational differences are
-attributable to training, not architecture.  We make five contributions:
+layers, 32 attention heads, 4096 hidden dimensions) but differ
+primarily in post-training pipeline: R1-Distill was distilled from a
+reasoning-trained teacher.  Representational differences are thus
+associated with reasoning training, not architecture.  We make five contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
