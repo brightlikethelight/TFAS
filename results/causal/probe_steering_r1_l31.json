@@ -1,0 +1,159 @@
+{
+  "model": "deepseek-ai/DeepSeek-R1-Distill-Llama-8B",
+  "h5_model_key": "deepseek-ai_DeepSeek-R1-Distill-Llama-8B",
+  "target_layer": 31,
+  "direction": "probe_coef",
+  "probe_train_auc": 0.9298437500000001,
+  "hidden_dim": 4096,
+  "n_conflict_items": 80,
+  "vulnerable_categories": [
+    "base_rate",
+    "conjunction",
+    "syllogism"
+  ],
+  "alphas": {
+    "-5.0": {
+      "lure_rate": 0.1,
+      "correct_rate": 0.9,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 8,
+      "n_correct": 72,
+      "n_other": 0
+    },
+    "-3.0": {
+      "lure_rate": 0.0625,
+      "correct_rate": 0.9375,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 5,
+      "n_correct": 75,
+      "n_other": 0
+    },
+    "-1.0": {
+      "lure_rate": 0.1,
+      "correct_rate": 0.9,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 8,
+      "n_correct": 72,
+      "n_other": 0
+    },
+    "0.0": {
+      "lure_rate": 0.1125,
+      "correct_rate": 0.8875,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 9,
+      "n_correct": 71,
+      "n_other": 0
+    },
+    "1.0": {
+      "lure_rate": 0.1,
+      "correct_rate": 0.9,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 8,
+      "n_correct": 72,
+      "n_other": 0
+    },
+    "3.0": {
+      "lure_rate": 0.0875,
+      "correct_rate": 0.9125,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 7,
+      "n_correct": 73,
+      "n_other": 0
+    },
+    "5.0": {
+      "lure_rate": 0.1125,
+      "correct_rate": 0.8875,
+      "other_rate": 0.0,
+      "n": 80,
+      "n_lure": 9,
+      "n_correct": 71,
+      "n_other": 0
+    }
+  },
+  "random_controls": {
+    "-5.0": {
+      "mean_lure_rate": NaN,
+      "std": 0.0,
+      "mean_correct_rate": NaN,
+      "std_correct_rate": 0.0,
+      "lure_rates": [],
+      "correct_rates": [],
+      "n_directions": 0
+    },
+    "-3.0": {
+      "mean_lure_rate": NaN,
+      "std": 0.0,
+      "mean_correct_rate": NaN,
+      "std_correct_rate": 0.0,
+      "lure_rates": [],
+      "correct_rates": [],
+      "n_directions": 0
+    },
+    "-1.0": {
+      "mean_lure_rate": NaN,
+      "std": 0.0,
+      "mean_correct_rate": NaN,
+      "std_correct_rate": 0.0,
+      "lure_rates": [],
+      "correct_rates": [],
+      "n_directions": 0
+    },
+    "0.0": {
+      "mean_lure_rate": NaN,
+      "std": 0.0,
+      "mean_correct_rate": NaN,
+      "std_correct_rate": 0.0,
+      "lure_rates": [],
+      "correct_rates": [],
+      "n_directions": 0
+    },
+    "1.0": {
+      "mean_lure_rate": NaN,
+      "std": 0.0,
+      "mean_correct_rate": NaN,
+      "std_correct_rate": 0.0,
+      "lure_rates": [],
+      "correct_rates": [],
+      "n_directions": 0
+    },
+    "3.0": {
+      "mean_lure_rate": NaN,
+      "std": 0.0,
+      "mean_correct_rate": NaN,
+      "std_correct_rate": 0.0,
+      "lure_rates": [],
+      "correct_rates": [],
+      "n_directions": 0
+    },
+    "5.0": {
+      "mean_lure_rate": NaN,
+      "std": 0.0,
+      "mean_correct_rate": NaN,
+      "std_correct_rate": 0.0,
+      "lure_rates": [],
+      "correct_rates": [],
+      "n_directions": 0
+    }
+  },
+  "config": {
+    "max_new_tokens": 2048,
+    "n_random_controls": 0,
+    "steer_position": "continuous",
+    "seed": 0,
+    "dtype": "bfloat16",
+    "smoke_test": false
+  },
+  "figure_path": "/workspace/s1s2/figures/fig_probe_steering_deepseek_r1_distill_llama_8b_l31.pdf",
+  "elapsed_s": {
+    "probe_training": 26.1,
+    "model_loading": 52.3,
+    "steering_sweep": 6160.5,
+    "total": 6238.9
+  }
+}
