@@ -118,38 +118,31 @@ associated with reasoning training, not architecture.  We make five contribution
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
   (235 matched conflict/control pairs) across 11 categories spanning
-  four heuristic families (representativeness, loss aversion, certainty
-  weighting, and availability), with novel isomorphs to resist
-  memorization.
+  four heuristic families, with novel isomorphs to resist memorization.
 
   \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
   overall lure rate (standard) vs.\ 2.4\% (reasoning), replicated on
-  OLMo-3-7B (14.9\% $\to$ 0.9\%), with category-level specificity
-  revealing which biases are vulnerable and model-specific vulnerability
-  profiles (e.g., loss aversion in OLMo but not Llama).  First-token
-  confidence analysis confirms De~Neys' conflict-detection prediction:
-  reduced probability and elevated entropy on conflict items.
+  OLMo-3-7B (14.9\% $\to$ 0.9\%) and at 32B scale (19.6\% $\to$ 0.4\%).
 
   \item \textbf{Probing analysis} revealing that the standard model has
-  high internal conflict/control separability (AUC\,=\,0.974, 95\% CI
-  [0.952, 0.992]) while the reasoning model \emph{blurs} this distinction
-  (AUC\,=\,0.930, 95\% CI [0.894, 0.960]; non-overlapping CIs), with
-  cross-prediction, transfer matrix, and cross-model probe transfer
-  (Llama$\to$R1: 0.920; R1$\to$Llama: 0.954) confirming specificity
-  to a shared processing-mode direction.
+  high separability (AUC\,=\,0.974) while the reasoning model renders
+  this \emph{less linearly accessible} (AUC\,=\,0.930; non-overlapping
+  CIs), far exceeding a text-only baseline (0.840).
 
-  \item \textbf{A dissociation between training and inference}: Qwen~3-8B's
-  thinking toggle changes behavior ($21\% \to 7.3\%$ lure rate) but produces
-  \emph{identical} probe signatures (AUC\,=\,0.971 in both modes),
-  demonstrating that training changes \sone{}/\stwo{} encoding while
-  inference-time thinking changes only generation behavior.
+  \item \textbf{Causal evidence via probe-direction steering}: a
+  37.5pp bidirectional dose-response in Llama (lure$\to$correct,
+  zero garbage), while R1-Distill shows no coherent dose-response at
+  \emph{any} of four layers (L14/L25/L28/L31) under continuous
+  2048-token steering: \emph{readable but not writable}.
 
-  \item \textbf{Sparse autoencoder features surviving falsification}: 41
-  SAE features show significant differential activation between conflict
-  and control items (BH-FDR $q < 0.05$), with all 41 surviving Ma et
-  al.\ falsification testing \citep{ma2026falsification}---zero spurious
-  features---grounding the probe-level findings in interpretable feature
-  directions.
+  \item \textbf{A training--inference dissociation}: Qwen~3-8B's
+  think/no-think modes both achieve high separability (${\sim}$0.97)
+  but cross-mode probe transfer is at chance (AUC\,=\,0.496),
+  indicating mode-specific conflict-encoding axes.
+
+  \item \textbf{Within-CoT probing}: non-monotonic trajectory
+  (T0\,=\,0.973, T75\,=\,0.754, Tend\,=\,0.971) ruling out
+  decorative reasoning.
 \end{enumerate}
 
 \noindent Our framing: \textbf{Same Architecture, Different Minds.}
@@ -547,15 +540,48 @@ training but share architecture and vocabulary, contrasting with
 \citet{huang2026cogbias}'s near-orthogonal finding on architecturally
 distinct models.
 
-\subsection{SAE Feature Analysis}
+\subsection{Causal Evidence: Probe-Direction Steering}
+\label{sec:results_steering}
+
+We extract the 3-category probe weight vector at L14 (CV AUC\,=\,0.960),
+normalize it, and add $\alpha \cdot \hat{\mathbf{w}}$ to the residual
+stream continuously during generation, sweeping $\alpha \in \{-5, \ldots, +5\}$
+across 80 vulnerable conflict items.
+
+\paragraph{Llama dose-response.}
+Steering produces a monotonic 37.5pp causal swing: lure rate rises to
+68.8\% at $\alpha\!=\!-5$ (toward \sone{}) and drops to 31.2\% at
+$\alpha\!=\!+5$ (toward \stwo{}).  All lure reduction converts to
+correct answers (zero ``other'' increase).  Five random-direction controls
+show no systematic effect (52--58\% lure across all $\alpha$).
+
+\paragraph{R1-Distill layer sweep.}
+We sweep four R1 layers (L14, L25, L28, L31) under continuous
+2048-token steering.  No layer produces a coherent dose-response:
+lure rate fluctuates between 6--14\% with no monotonic trend.  At
+L31 (R1's probe peak), lure is 10.0\% at $\alpha\!=\!-5$ and 11.25\%
+at $\alpha\!=\!+5$ (baseline 11.25\%)---a 1.25pp range versus Llama's
+37.5pp swing.  The model remains fluent (correct rate $\geq$86\%).
+The direction is not stably controllable in R1-Distill at any layer:
+\emph{readable but not writable}.
+
+\paragraph{Specificity controls.}
+Probe steering on matched non-conflict items produces zero lure
+responses at any $\alpha$.  The CogBias-style mean-difference vector
+(cosine $= 0.314$ with probe) is a stronger one-sided debiasing
+intervention (11.25\% lure at $\alpha\!=\!+5$) but is unidirectional;
+the probe direction is bidirectional, making it better evidence of a
+causal boundary.
+
+\subsection{SAE Features and Attention Entropy}
 \label{sec:results_sae}
 
-Sparse autoencoder analysis of Llama's layer 19 residual stream (Goodfire SAE, 65,536 features) identified 41 features with statistically significant differential activation between conflict and control items (BH-FDR $q < 0.05$). All 41 features survived Ma et al.\ falsification testing \citep{ma2026falsification}: injecting top-activating tokens into random text did not reproduce the activation pattern. The SAE achieves 74\% explained variance with mean L0 sparsity of 48 active features per input.
-
-\subsection{Attention Head Specialization}
-\label{sec:results_attention}
-
-Per-head Mann-Whitney U tests (BH-FDR $q < 0.05$) on attention entropy reveal that R1-Distill has nearly twice as many \stwo{}-specialized heads---heads with significantly higher entropy on conflict items and effect size $|r_{rb}| \geq 0.3$---as Llama (57 vs.\ 30 out of 1024 total heads, 5.6\% vs.\ 2.9\%). Reasoning training appears to increase the proportion of attention heads that behave differently on deliberation-requiring items.
+SAE analysis of Llama's L19 residual stream identified 41 features
+with significant conflict/control differential activation (BH-FDR
+$q < 0.05$), all surviving Ma et al.\ falsification
+\citep{ma2026falsification}.  Attention entropy analysis reveals
+R1-Distill has nearly twice as many \stwo{}-specialized heads as Llama
+(57 vs.\ 30 of 1024; BH-FDR $q < 0.05$, $|r_{rb}| \geq 0.3$).
 
 % ============================================================
 % 5. Discussion
@@ -661,20 +687,23 @@ confirms that this direction is shared across reasoning-differentiated
 models, not model-specific.  The probe captures how the model processes
 lures, not that lures are present.
 
+\paragraph{Readable but not writable.}
+In Llama, the probe direction is readable (AUC\,=\,0.974) and writable
+(37.5pp bidirectional causal swing); in R1-Distill, it is readable
+(AUC\,=\,0.930) but not detectably writable at any layer (L14--L31)
+under continuous intervention.  The layer sweep rules out the hypothesis
+that the writable locus simply moved deeper.  This dissociation is
+direct evidence for Evans' S2-by-default hypothesis
+\citep{evans2019reflections}.
+
 \paragraph{Relation to CogBias.}
-\citet{huang2026cogbias} showed that bias-related directions are
-\emph{steerable} (26--32\% bias reduction via activation steering);
-we show the same directions are \emph{reorganized} by reasoning training.
-This suggests a practical strategy: steer standard models along the
-directions that reasoning training blurs, approximating the reasoning
-model's robustness without chain-of-thought cost.  We extend CogBias
-methodologically via (i)~continuous lure susceptibility scores,
-(ii)~cross-category transfer analysis, (iii)~a within-model
-reasoning toggle (Qwen think/no-think), and (iv)~cross-model probe
-transfer showing the \sone{}/\stwo{} direction is shared when
-architecture is held constant (AUC\,$>$\,0.92 both directions), in
-contrast to CogBias's near-orthogonal finding across architecturally
-distinct models.
+\citet{huang2026cogbias} showed that bias directions are steerable
+(26--32\% bias reduction via mean-difference vectors); we show that
+reasoning post-training decouples the same directions from behavioral
+control.  We extend CogBias via cross-model transfer (shared direction
+when architecture is held constant, AUC\,$>$\,0.92), a within-model
+toggle (Qwen), and layer-sweep steering to establish causal
+dissociation.
 
 \paragraph{Methodological safeguards.}
 Probing can produce plausible results even on random networks

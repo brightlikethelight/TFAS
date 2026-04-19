@@ -14,15 +14,15 @@
 \citation{jiang2025aha,lanham2023measuring,boppana2026reasoning}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
 \newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
-\citation{ma2026falsification}
 \citation{deneys2012bias}
 \citation{gigerenzer1995improve}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Benchmark}{2}{section.2}\protected@file@percent }
-\newlabel{sec:benchmark}{{2}{2}{Benchmark}{section.2}{}}
 \citation{llama31}
 \citation{deepseekr1}
 \citation{olmo3}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Benchmark}{2}{section.2}\protected@file@percent }
+\newlabel{sec:benchmark}{{2}{2}{Benchmark}{section.2}{}}
 \citation{hewitt2019control}
+\citation{olmo3}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Methods}{3}{section.3}\protected@file@percent }
 \newlabel{sec:methods}{{3}{3}{Methods}{section.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Models}{3}{subsection.3.1}\protected@file@percent }
@@ -35,95 +35,99 @@
 \newlabel{sec:results}{{4}{3}{Results}{section.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Behavioral Validation}{3}{subsection.4.1}\protected@file@percent }
 \newlabel{sec:results_behavioral}{{4.1}{3}{Behavioral Validation}{subsection.4.1}{}}
-\citation{olmo3}
+\@writefile{toc}{\contentsline {paragraph}{Cross-architecture replication.}{3}{section*.4}\protected@file@percent }
 \citation{deneys2012bias}
 \citation{zhang2025probing}
+\citation{afzal2025knowing}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces S1-lure rates (\%) on conflict items by model and category. Bolded numbers indicate vulnerable categories (lure rate $>$10\%). OLMo columns provide cross-architecture replication from an independent model family. Loss aversion is vulnerable in OLMo Instruct (33\%) but immune in Llama (0\%); availability shows a Llama-specific vulnerability (13\%) absent in all other models. Natural frequency base rate framing increases lure rates (Llama: $84\% \to 100\%$; R1-Distill: $4\% \to 40\%$). --- = not yet evaluated on the expanded set.}}{4}{table.1}\protected@file@percent }
 \newlabel{tab:behavioral}{{1}{4}{S1-lure rates (\%) on conflict items by model and category. Bolded numbers indicate vulnerable categories (lure rate $>$10\%). OLMo columns provide cross-architecture replication from an independent model family. Loss aversion is vulnerable in OLMo Instruct (33\%) but immune in Llama (0\%); availability shows a Llama-specific vulnerability (13\%) absent in all other models. Natural frequency base rate framing increases lure rates (Llama: $84\% \to 100\%$; R1-Distill: $4\% \to 40\%$). --- = not yet evaluated on the expanded set}{table.1}{}}
-\@writefile{toc}{\contentsline {paragraph}{Cross-architecture replication.}{4}{section*.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Implicit conflict detection.}{4}{section*.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Layer-Wise Probe Results}{4}{subsection.4.2}\protected@file@percent }
 \newlabel{sec:results_probes}{{4.2}{4}{Layer-Wise Probe Results}{subsection.4.2}{}}
 \@writefile{toc}{\contentsline {paragraph}{Llama-3.1-8B-Instruct.}{4}{section*.6}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{R1-Distill-Llama-8B.}{4}{section*.7}\protected@file@percent }
-\citation{afzal2025knowing}
+\@writefile{toc}{\contentsline {paragraph}{Qwen~3-8B (no-think mode).}{4}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Qwen~3-8B (think mode).}{4}{section*.9}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Layer-wise probe ROC-AUC for classifying conflict vs.\ no-conflict items from residual stream activations at \texttt  {P0}{}, restricted to the three vulnerable categories. Llama-3.1-8B-Instruct (blue) peaks at AUC\,=\,0.974 [0.952, 0.992] at L16; R1-Distill-Llama-8B (red) peaks at AUC\,=\,0.930 [0.894, 0.960] at L31---non-overlapping CIs confirm statistical significance. Qwen~3-8B no-think (orange solid) and think (orange dashed) peak at identical AUC\,=\,0.971 at L34---the thinking toggle does not change pre-generation representations. Dashed gray line: Hewitt--Liang control task ceiling.}}{5}{figure.1}\protected@file@percent }
 \newlabel{fig:probe_curves}{{1}{5}{Layer-wise probe ROC-AUC for classifying conflict vs.\^^Mno-conflict items from residual stream activations at \pzero {}, restricted to the three vulnerable categories. Llama-3.1-8B-Instruct (blue) peaks at AUC\,=\,0.974 [0.952, 0.992] at L16; R1-Distill-Llama-8B (red) peaks at AUC\,=\,0.930 [0.894, 0.960] at L31---non-overlapping CIs confirm statistical significance. Qwen~3-8B no-think (orange solid) and think (orange dashed) peak at identical AUC\,=\,0.971 at L34---the thinking toggle does not change pre-generation representations. Dashed gray line: Hewitt--Liang control task ceiling}{figure.1}{}}
-\@writefile{toc}{\contentsline {paragraph}{Qwen~3-8B (no-think mode).}{5}{section*.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Qwen~3-8B (think mode).}{5}{section*.9}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Selectivity.}{5}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Immune category control.}{5}{section*.11}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Probing summary at peak layer for the three vulnerable categories. 95\% CIs from 1000 bootstrap resamples (Llama and R1-Distill). Selectivity = true AUC $-$ control AUC. Qwen think and no-think produce identical probe results despite a 3$\times $ behavioral difference. OLMo replicates the same direction: Instruct $>$ Think.}}{5}{table.2}\protected@file@percent }
 \newlabel{tab:probe_summary}{{2}{5}{Probing summary at peak layer for the three vulnerable categories. 95\% CIs from 1000 bootstrap resamples (Llama and R1-Distill). Selectivity = true AUC $-$ control AUC. Qwen think and no-think produce identical probe results despite a 3$\times $ behavioral difference. OLMo replicates the same direction: Instruct $>$ Think}{table.2}{}}
-\@writefile{toc}{\contentsline {paragraph}{Immune category control.}{5}{section*.11}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Summary of Probing Results}{5}{subsection.4.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Resolving the Surface-Feature Confound}{5}{subsection.4.4}\protected@file@percent }
 \newlabel{sec:specificity}{{4.4}{5}{Resolving the Surface-Feature Confound}{subsection.4.4}{}}
 \@writefile{toc}{\contentsline {paragraph}{Cross-prediction.}{5}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Transfer matrix.}{5}{section*.13}\protected@file@percent }
 \citation{huang2026cogbias}
 \citation{ma2026falsification}
 \citation{deneys2012bias,deneys2017dual}
 \citation{botvinick2001conflict,kerns2004anterior}
 \citation{evans2019reflections,evans2013dual}
 \citation{venhoff2025base}
-\@writefile{toc}{\contentsline {paragraph}{Transfer matrix.}{6}{section*.13}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Lure susceptibility scores.}{6}{section*.14}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Cross-model probe transfer.}{6}{section*.15}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}SAE Feature Analysis}{6}{subsection.4.5}\protected@file@percent }
-\newlabel{sec:results_sae}{{4.5}{6}{SAE Feature Analysis}{subsection.4.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Attention Head Specialization}{6}{subsection.4.6}\protected@file@percent }
-\newlabel{sec:results_attention}{{4.6}{6}{Attention Head Specialization}{subsection.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Causal Evidence: Probe-Direction Steering}{6}{subsection.4.5}\protected@file@percent }
+\newlabel{sec:results_steering}{{4.5}{6}{Causal Evidence: Probe-Direction Steering}{subsection.4.5}{}}
+\@writefile{toc}{\contentsline {paragraph}{Llama dose-response.}{6}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{R1-Distill layer sweep.}{6}{section*.17}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Specificity controls.}{6}{section*.18}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}SAE Features and Attention Entropy}{6}{subsection.4.6}\protected@file@percent }
+\newlabel{sec:results_sae}{{4.6}{6}{SAE Features and Attention Entropy}{subsection.4.6}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {5}Discussion}{6}{section.5}\protected@file@percent }
 \newlabel{sec:discussion}{{5}{6}{Discussion}{section.5}{}}
-\@writefile{toc}{\contentsline {paragraph}{Conflict detection without resolution.}{6}{section*.16}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Conflict detection without resolution.}{6}{section*.19}\protected@file@percent }
 \citation{stanovich2016rationality}
 \citation{gigerenzer1995improve}
 \citation{kolb2013brain}
 \citation{ziabari2025reasoning}
 \citation{codaforno2025dual}
+\citation{evans2019reflections}
 \citation{huang2026cogbias}
 \citation{meloux2025dead}
 \citation{sanitychecks2026}
+\@writefile{toc}{\contentsline {paragraph}{Domain-specific vulnerability.}{7}{section*.20}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Ecological rationality and format dependence.}{7}{section*.21}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Training vs.\ inference.}{7}{section*.22}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Specificity.}{7}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Readable but not writable.}{7}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Relation to CogBias.}{7}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Methodological safeguards.}{7}{section*.26}\protected@file@percent }
 \citation{burns2022discovering}
-\@writefile{toc}{\contentsline {paragraph}{Domain-specific vulnerability.}{7}{section*.17}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Ecological rationality and format dependence.}{7}{section*.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Training vs.\ inference.}{7}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Specificity.}{7}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Relation to CogBias.}{7}{section*.21}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Methodological safeguards.}{7}{section*.22}\protected@file@percent }
 \bibstyle{plainnat}
 \bibdata{references}
-\bibcite{afzal2025knowing}{{1}{2025}{{Afzal et~al.}}{{Afzal, Wies, and Shlegeris}}}
-\bibcite{olmo3}{{2}{2024}{{AI2}}{{}}}
-\bibcite{sanitychecks2026}{{3}{2026}{{Anonymous}}{{}}}
-\bibcite{boppana2026reasoning}{{4}{2026}{{Boppana et~al.}}{{}}}
-\bibcite{botvinick2001conflict}{{5}{2001}{{Botvinick et~al.}}{{Botvinick, Braver, Barch, Carter, and Cohen}}}
-\bibcite{burns2022discovering}{{6}{2022}{{Burns et~al.}}{{Burns, Ye, Klein, and Steinhardt}}}
-\bibcite{codaforno2025dual}{{7}{2025}{{Coda-Forno et~al.}}{{Coda-Forno, Binz, Akata, Botvinick, Wang, and Schulz}}}
-\bibcite{deneys2012bias}{{8}{2012}{{De~Neys}}{{}}}
-\bibcite{deneys2017dual}{{9}{2017}{{De~Neys}}{{}}}
-\bibcite{deneys2023advancing}{{10}{2023}{{De~Neys}}{{}}}
-\bibcite{deepseekr1}{{11}{2025}{{DeepSeek-AI}}{{}}}
-\bibcite{evans2019reflections}{{12}{2019}{{Evans}}{{}}}
-\bibcite{evans2013dual}{{13}{2013}{{Evans and Stanovich}}{{}}}
-\bibcite{gigerenzer1995improve}{{14}{1995}{{Gigerenzer and Hoffrage}}{{}}}
-\bibcite{hagendorff2023human}{{15}{2023}{{Hagendorff et~al.}}{{Hagendorff, Fabi, and Kosinski}}}
-\bibcite{hewitt2019control}{{16}{2019}{{Hewitt and Liang}}{{}}}
-\bibcite{huang2026cogbias}{{17}{2026}{{Huang et~al.}}{{Huang, Zhao, Li, and Hernandez}}}
-\bibcite{jiang2025aha}{{18}{2025}{{Jiang et~al.}}{{Jiang, Zhao, Pfau, and Bowman}}}
-\@writefile{toc}{\contentsline {paragraph}{Limitations.}{8}{section*.23}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{Future work.}{8}{section*.24}\protected@file@percent }
-\bibcite{kahneman2011thinking}{{19}{2011}{{Kahneman}}{{}}}
-\bibcite{kerns2004anterior}{{20}{2004}{{Kerns et~al.}}{{Kerns, Cohen, MacDonald, Cho, Stenger, and Carter}}}
-\bibcite{kolb2013brain}{{21}{2013}{{Kolb and Gibb}}{{}}}
-\bibcite{lanham2023measuring}{{22}{2023}{{Lanham et~al.}}{{Lanham, Chen, Radhakrishnan, Steiner, Denison, Hernandez, Li, Durmus, Hubinger, Ganguli, et~al.}}}
-\bibcite{ma2026falsification}{{23}{2026}{{Ma et~al.}}{{Ma, Liu, Hernandez, and Nanda}}}
-\bibcite{melnikoff2018mythical}{{24}{2018}{{Melnikoff and Bargh}}{{}}}
-\bibcite{meloux2025dead}{{25}{2025}{{Meloux and Barez}}{{}}}
-\bibcite{llama31}{{26}{2024}{{Meta AI}}{{}}}
-\bibcite{schwartz2025clinical}{{27}{2025}{{Schwartz et~al.}}{{}}}
-\bibcite{stanovich2016rationality}{{28}{2016}{{Stanovich et~al.}}{{Stanovich, West, and Toplak}}}
-\bibcite{venhoff2025base}{{29}{2025}{{Venhoff et~al.}}{{Venhoff, Motwani, Wendler, Stolfo, Jumelet, and Sachan}}}
-\bibcite{xie2025cogsci}{{30}{2025}{{Xie et~al.}}{{Xie, Feng, and Zhong}}}
-\bibcite{zhang2025probing}{{31}{2025}{{Zhang et~al.}}{{Zhang, Chen, Wang, and Li}}}
-\bibcite{ziabari2025reasoning}{{32}{2025}{{Ziabari et~al.}}{{Ziabari, Perez, and Saphra}}}
+\bibcite{afzal2025knowing}{{1}{2025}{{Afzal et~al.}}{{Afzal, Matthes, Chechik, and Ziser}}}
+\bibcite{boppana2026reasoning}{{2}{2026}{{Boppana et~al.}}{{Boppana, Ma, Loeffler, Sarfati, Bigelow, Geiger, Lewis, and Merullo}}}
+\bibcite{botvinick2001conflict}{{3}{2001}{{Botvinick et~al.}}{{Botvinick, Braver, Barch, Carter, and Cohen}}}
+\bibcite{burns2022discovering}{{4}{2022}{{Burns et~al.}}{{Burns, Ye, Klein, and Steinhardt}}}
+\bibcite{codaforno2025dual}{{5}{2025}{{Coda-Forno et~al.}}{{Coda-Forno, Zhao, Zhang, Tamboli, Li, Fan, Zhang, Schulz, and Tseng}}}
+\bibcite{deneys2012bias}{{6}{2012}{{De~Neys}}{{}}}
+\bibcite{deneys2017dual}{{7}{2017}{{De~Neys}}{{}}}
+\bibcite{deneys2023advancing}{{8}{2023}{{De~Neys}}{{}}}
+\bibcite{deepseekr1}{{9}{2025}{{DeepSeek-AI}}{{}}}
+\bibcite{evans2019reflections}{{10}{2019}{{Evans}}{{}}}
+\bibcite{evans2013dual}{{11}{2013}{{Evans and Stanovich}}{{}}}
+\bibcite{gigerenzer1995improve}{{12}{1995}{{Gigerenzer and Hoffrage}}{{}}}
+\bibcite{hagendorff2023human}{{13}{2023}{{Hagendorff et~al.}}{{Hagendorff, Fabi, and Kosinski}}}
+\bibcite{hewitt2019control}{{14}{2019}{{Hewitt and Liang}}{{}}}
+\@writefile{toc}{\contentsline {paragraph}{Limitations.}{8}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Future work.}{8}{section*.28}\protected@file@percent }
+\bibcite{huang2026cogbias}{{15}{2026}{{Huang et~al.}}{{Huang, Zhang, Kwak, and An}}}
+\bibcite{kahneman2011thinking}{{16}{2011}{{Kahneman}}{{}}}
+\bibcite{kerns2004anterior}{{17}{2004}{{Kerns et~al.}}{{Kerns, Cohen, MacDonald, Cho, Stenger, and Carter}}}
+\bibcite{schwartz2025clinical}{{18}{2025}{{Kim et~al.}}{{Kim, Ziegelmayer, Busch, Mertens, Keicher, Adams, Bressem, Braren, Makowski, Kirschke, Hedderich, and Wiestler}}}
+\bibcite{kolb2013brain}{{19}{2013}{{Kolb and Gibb}}{{}}}
+\bibcite{sanitychecks2026}{{20}{2026}{{Korznikov et~al.}}{{Korznikov, Galichin, Dontsov, Rogov, Oseledets, and Tutubalina}}}
+\bibcite{lanham2023measuring}{{21}{2023}{{Lanham et~al.}}{{Lanham, Chen, Radhakrishnan, Steiner, Denison, Hernandez, Li, Durmus, Hubinger, Ganguli, et~al.}}}
+\bibcite{ma2026falsification}{{22}{2026}{{Ma et~al.}}{{Ma, Liang, Chen, and Sojoudi}}}
+\bibcite{melnikoff2018mythical}{{23}{2018}{{Melnikoff and Bargh}}{{}}}
+\bibcite{meloux2025dead}{{24}{2025}{{M{\'e}loux et~al.}}{{M{\'e}loux, Dirupo, Portet, and Peyrard}}}
+\bibcite{llama31}{{25}{2024}{{Meta AI}}{{}}}
+\bibcite{stanovich2016rationality}{{26}{2016}{{Stanovich et~al.}}{{Stanovich, West, and Toplak}}}
+\bibcite{olmo3}{{27}{2025}{{Team OLMo}}{{}}}
+\bibcite{venhoff2025base}{{28}{2025}{{Venhoff et~al.}}{{Venhoff, Arcuschin, Torr, Conmy, and Nanda}}}
+\bibcite{xie2025cogsci}{{29}{2025}{{Xie et~al.}}{{Xie, Feng, and Zhong}}}
+\bibcite{zhang2025probing}{{30}{2025}{{Zhang et~al.}}{{Zhang, Chen, Pan, Zhao, Panda, Li, and He}}}
+\bibcite{jiang2025aha}{{31}{2025}{{Zhao et~al.}}{{Zhao, Sun, Shi, and Song}}}
+\bibcite{ziabari2025reasoning}{{32}{2025}{{Ziabari et~al.}}{{Ziabari, Ghazizadeh, Sourati, Karimi-Malekabadi, Piray, and Dehghani}}}
 \gdef \@abspage@last{9}
