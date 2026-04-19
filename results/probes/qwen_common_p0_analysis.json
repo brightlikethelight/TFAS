@@ -1,0 +1,11 @@
+{
+  "experiment": "qwen_common_p0_analysis",
+  "layer": 34,
+  "within_think_auc": 0.96234375,
+  "within_nothink_auc": 0.9590624999999999,
+  "cross_think_to_nothink": 0.4565625,
+  "cross_nothink_to_think": 0.5353125000000001,
+  "probe_weight_cosine": -0.005364855497028379,
+  "l2_distance_mean": 1411.4384307380785,
+  "note": "think P0 = last shared token (newline after assistant). nothink P0 = 4 tokens later (after </think>). Cross-prediction tests transfer across the 4-token template gap."
+}

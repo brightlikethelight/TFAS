@@ -1,0 +1,9 @@
+{
+  "experiment": "pair_difference_probe",
+  "auc_real_vs_shuffled": 0.024296875,
+  "n_pairs": 80,
+  "mean_diff_norm_real": 1.535447120666504,
+  "mean_diff_norm_shuffled": 1.535447120666504,
+  "layer": 14,
+  "model": "Llama-3.1-8B-Instruct"
+}
