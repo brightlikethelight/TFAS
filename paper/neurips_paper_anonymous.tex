@@ -1,6 +1,6 @@
 % ==============================================================================
 % NeurIPS 2026 Main Conference Paper — 9 pages + references
-% Self-contained file — does not use \input
+% Main paper file — includes result tables via \input
 % ==============================================================================
 
 \documentclass{article}
@@ -63,10 +63,10 @@ geometry, not surface tokens.  Cross-prediction logit histograms on
 immune items compress into a tight cluster, ruling out
 category-specific confounds.  Probe-direction steering
 produces a 37.5pp dose-response shift in Llama (lure$\to$correct,
-zero garbage outputs), while R1---perturbed \emph{continuously} across
-the entire 2048-token reasoning trace---shows no coherent
-dose-response (lure rate fluctuates within 2$\sigma$ of random
-directions, directly ruling out temporal washout).  Within-chain-of-thought probing reveals a
+zero garbage outputs), while R1---steered continuously across all 2048 tokens
+at four layers including its probe peak---shows no coherent
+dose-response at any layer, ruling out both temporal washout
+and a deeper writable locus.  Within-chain-of-thought probing reveals a
 non-monotonic trajectory (T0\,=\,0.973, T75\,=\,0.754,
 Tend\,=\,0.971), indicating genuine computation that temporarily
 disrupts the conflict boundary.  Qwen's toggle yields a further
@@ -108,12 +108,11 @@ human-like errors on conflict items while succeeding on matched controls
 such lures \citep{deepseekr1}, though the protection is bias-specific
 rather than universal \citep{schwartz2025clinical}.  A growing literature
 documents these parallels \citep{xie2025cogsci, codaforno2025dual,
-ziabari2025reasoning}, and \citet{huang2026cogbias} showed that linear
-probes can detect and steer cognitive biases via internal representations.
-Prior work showed that bias-relevant directions are probeable and
-steerable \citep{huang2026cogbias}.  We ask a different question: what
-does reasoning post-training change about the \emph{decodability}, layer
-location, and \emph{behavioral writability} of those directions?
+ziabari2025reasoning}, and \citet{huang2026cogbias} showed that
+bias-relevant directions are probeable and steerable.  We ask a
+different question: what does reasoning post-training change about the
+\emph{decodability}, layer location, and \emph{behavioral writability}
+of those directions?
 
 Yet behavior alone cannot distinguish genuine processing-mode differences
 from surface mimicry---chain-of-thought traces are often unfaithful,
@@ -141,8 +140,9 @@ correlation.
 We address this question with a natural experiment: Llama-3.1-8B-Instruct
 and DeepSeek-R1-Distill-Llama-8B share identical architectures (32
 layers, 32 attention heads, 4096 hidden dimensions) but differ in
-reasoning distillation training.  Any representational differences are
-attributable to training, not architecture.  We make six contributions:
+reasoning distillation training.  Representational differences are
+thus primarily attributable to the post-training pipeline, not
+architecture.  We make six contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
@@ -594,8 +594,40 @@ a correlate of bias processing---the direction it identifies is
 \paragraph{Two specificity controls.}
 (i)~Probe steering on matched \emph{non-conflict} items produces zero lure responses at any $\alpha$, with only minor coherence loss at $|\alpha|\!=\!5$ (Appendix~\ref{app:steering_specificity}): the direction is specific to the conflict subspace.  (ii)~The CogBias-style mean-difference vector (cosine $= 0.314$ with the probe) is a stronger one-sided debiasing intervention (lure 52.5\%$\to$11.25\% at $\alpha\!=\!+5$) but is \emph{unidirectional}---negative $\alpha$ has no effect (stays 53.75\%).  The probe direction is weaker for debiasing but \emph{bidirectional} ($+$16.25pp worse at $\alpha\!=\!-5$), making it better evidence of a causal boundary.
 
-\paragraph{R1-Distill steering contrast.}
-We apply the same protocol to R1-Distill-Llama-8B at L14 (probe CV AUC\,=\,0.928), with the hook active \emph{continuously} across the entire 2048-token generation (prompt\,$+$\,full $\langle$think$\rangle$ trace\,$+$\,answer), directly ruling out the ``temporal washout'' confound in which a one-shot perturbation dissipates over a long CoT.  Under this continuous intervention the probe-direction dose-response disappears: lure rate stays at baseline for negative $\alpha$ (6.25\% at $\alpha\!=\!-5$ vs.\ 6.25\% at $\alpha\!=\!0$) and \emph{rises} for positive $\alpha$ (13.75\% at $\alpha\!=\!+5$), within 2$\sigma$ of the random-direction band at $|\alpha|\!=\!5$ (11.5\,$\pm$\,5.3\% and 10.25\,$\pm$\,1.9\%) and in the \emph{opposite} direction to the Llama effect.  The S1/S2 direction that drives a 37.5pp behavioral swing in Llama produces no coherent causal effect in R1-Distill, even when perturbed at every token of the 2048-token reasoning trace.  The representation remains linearly decodable (AUC\,=\,0.930), but the representation is not stably controllable by this linear intervention after reasoning training: \emph{readable but not writable}.
+\paragraph{R1-Distill steering contrast: layer sweep.}
+We sweep four layers in R1-Distill (L14, L25, L28, L31) under continuous
+steering across the full 2048-token generation, directly addressing the
+objection that steering at L14 (Llama's peak) may miss a deeper writable
+locus in R1 (whose probe peaks at L31).  Table~\ref{tab:r1_layer_sweep_anon}
+shows the result: \emph{no layer produces a coherent dose-response.}
+Lure rate fluctuates between 6--14\% with no monotonic trend at any
+layer.  At L31 (R1's probe peak, AUC\,=\,0.930), lure is 10.0\% at
+$\alpha\!=\!-5$ and 11.25\% at $\alpha\!=\!+5$, compared to a baseline
+of 11.25\%---a 1.25pp range, versus Llama's 37.5pp swing.  The model
+remains fluent at all layers and all $\alpha$ (correct rate $\geq 86\%$).
+The direction that is causally active in Llama is not stably controllable
+in R1-Distill at \emph{any} layer: \emph{readable but not writable.}
+
+\begin{table}[t]
+\centering
+\caption{R1-Distill layer-sweep steering (continuous, 80 vulnerable
+  conflict items).  Lure rate (\%) at each $\alpha$; no layer
+  shows a monotonic dose-response.  Compare Llama L14: 68.8\% at
+  $\alpha\!=\!-5$ $\to$ 31.2\% at $\alpha\!=\!+5$ (37.5pp swing).}
+\label{tab:r1_layer_sweep_anon}
+\vspace{4pt}
+\small
+\begin{tabular}{l rrrrrrr}
+\toprule
+\textbf{Layer} & $-5$ & $-3$ & $-1$ & $0$ & $+1$ & $+3$ & $+5$ \\
+\midrule
+L14 & 6.2 & 10.0 & 7.5 & 6.2 & 5.0 & 7.5 & 13.8 \\
+L25 & 6.2 & 6.2 & 8.8 & 11.2 & 10.0 & 13.8 & 8.8 \\
+L28 & 8.8 & 6.2 & 10.0 & 11.2 & 7.5 & 11.2 & 10.0 \\
+L31 & 10.0 & 10.0 & 11.2 & 11.2 & 10.0 & 8.8 & 11.2 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{figure}[t]
 \centering
@@ -689,17 +721,13 @@ Reasoning distillation makes Type~2 processing \emph{autonomous}
 conflict signal is no longer needed \citep{venhoff2025base}.
 
 \paragraph{Readable but not writable.}
-In Llama, the probe direction is both readable (AUC\,=\,0.974) and
-writable (37.6pp causal swing); in R1-Distill, it is readable
-(AUC\,=\,0.930) but \emph{not} writable.  Critically, this was tested
-under \emph{continuous} intervention across the full 2048-token
-reasoning trace (not a one-shot prompt-position perturbation): the
-probe direction produces no coherent dose-response (lure rates at
-$\alpha\!=\!\pm5$ fall within 2$\sigma$ of random-direction controls,
-with the small residual effect in the \emph{opposite} direction of
-Llama's).  This directly rules out ``temporal washout''
-\citep{meloux2025dead}.  The representation is not stably controllable by this linear intervention
-after reasoning training---direct evidence for the S2-by-default
+In Llama, the probe direction is readable (AUC\,=\,0.974) and
+writable (37.5pp bidirectional causal swing); in R1-Distill, it is
+readable (AUC\,=\,0.930) but not detectably writable at \emph{any}
+layer (L14, L25, L28, L31) under continuous intervention across the
+full 2048-token reasoning trace.  The layer sweep rules out the
+hypothesis that the writable locus simply moved deeper with reasoning
+training---direct evidence for the S2-by-default
 hypothesis \citep{evans2019reflections}.
 Qwen's think/no-think modes both achieve high separability
 (${\sim}$0.97), but cross-mode transfer is at chance (0.496),

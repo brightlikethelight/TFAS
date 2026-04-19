@@ -1,6 +1,6 @@
 % ==============================================================================
 % NeurIPS 2026 Main Conference Paper — 9 pages + references
-% Self-contained file — does not use \input
+% Main paper file — includes result tables via \input
 % ==============================================================================
 
 \documentclass{article}
@@ -111,12 +111,11 @@ human-like errors on conflict items while succeeding on matched controls
 such lures \citep{deepseekr1}, though the protection is bias-specific
 rather than universal \citep{schwartz2025clinical}.  A growing literature
 documents these parallels \citep{xie2025cogsci, codaforno2025dual,
-ziabari2025reasoning}, and \citet{huang2026cogbias} showed that linear
-probes can detect and steer cognitive biases via internal representations.
-Prior work showed that bias-relevant directions are probeable and
-steerable \citep{huang2026cogbias}.  We ask a different question: what
-does reasoning post-training change about the \emph{decodability}, layer
-location, and \emph{behavioral writability} of those directions?
+ziabari2025reasoning}, and \citet{huang2026cogbias} showed that
+bias-relevant directions are probeable and steerable.  We ask a
+different question: what does reasoning post-training change about the
+\emph{decodability}, layer location, and \emph{behavioral writability}
+of those directions?
 
 Yet behavior alone cannot distinguish genuine processing-mode differences
 from surface mimicry---chain-of-thought traces are often unfaithful,
@@ -137,8 +136,9 @@ mechanistic?
 We address this question with a natural experiment: Llama-3.1-8B-Instruct
 and DeepSeek-R1-Distill-Llama-8B share identical architectures (32
 layers, 32 attention heads, 4096 hidden dimensions) but differ in
-reasoning distillation training.  Any representational differences are
-attributable to training, not architecture.  We make six contributions:
+reasoning distillation training.  Representational differences are
+thus primarily attributable to the post-training pipeline, not
+architecture.  We make six contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
@@ -435,7 +435,7 @@ Anchoring      & 90 / 70   & 75  & 0   & 25  & 35 / 80  & 5 / 0  & 60 / 20 \\
 \end{table}
 
 Four findings emerge.  First, the behavioral gap is dramatic: Llama produces heuristic lures at 27.3\%; R1-Distill reduces this to 2.4\%.  Second, vulnerability is \emph{category-specific}: base rate neglect, conjunction fallacy, and syllogisms are susceptible, while CRT, arithmetic, framing, and anchoring are largely immune.  Third, different models show distinct vulnerability profiles (Qwen: 95\% conjunction but 0\% syllogism lure), suggesting model-specific rather than universal biases.  Fourth, Qwen's within-model thinking toggle reduces lure rate from 21\% to 7.3\%.
-OLMo-3-7B \citep{olmo3} independently replicates the pattern (14.9\% $\to$ 0.9\% lure rate).  Llama's first-token probability is 4.2pp lower on conflict items (0.751 vs.\ 0.793), an implicit ``hesitation'' signature that parallels De~Neys' conflict-detection findings \citep{deneys2012bias} and the elevated Anterior Cingulate Cortex (ACC) activation observed in humans facing dual-process conflicts \citep{botvinick2001conflict}---the model \emph{detects} conflict pre-generation even when it subsequently fails to resolve it.
+OLMo-3-7B \citep{olmo3} independently replicates the pattern (14.9\% $\to$ 0.9\% lure rate).  Llama's first-token probability is 4.2pp lower on conflict items (0.751 vs.\ 0.793), paralleling the ``hesitation'' signatures that De~Neys documents in human dual-process conflicts \citep{deneys2012bias, botvinick2001conflict}.  The model \emph{detects} conflict pre-generation even when it subsequently fails to resolve it.
 
 \subsection{Linear Probes and Cross-Prediction}
 \label{sec:results_probes}
@@ -457,7 +457,7 @@ conflict/control classification on the three vulnerable categories.
 \end{figure}
 
 Llama peaks at AUC\,=\,0.974 [0.952, 0.992] at L16;
-R1-Distill peaks at 0.930 [0.894, 0.960] at L31---non-overlapping CIs.  The 15-layer shift (L16\,$\to$\,L31 of 32) is architecturally suggestive: Llama resolves conflict in the middle of the network where the remaining layers can map the resolution to vocabulary tokens for an immediate answer, whereas R1-Distill pushes the conflict representation to the penultimate layer where its primary downstream operation is to initialize the long chain-of-thought rollout rather than to produce an answer directly.  Reasoning distillation does not merely shift representations deeper \citep{zhang2025probing}; it relocates them to the point in the computation where the CoT-initiating hidden state is set.
+R1-Distill peaks at 0.930 [0.894, 0.960] at L31---non-overlapping CIs.  The 15-layer shift (L16\,$\to$\,L31 of 32) is architecturally suggestive.  Llama resolves conflict mid-network, leaving later layers to map the resolution to output tokens.  R1-Distill pushes the conflict representation to the penultimate layer, where the primary downstream operation is to set the hidden state for the chain-of-thought rollout \citep{zhang2025probing}.
 Qwen~3-8B achieves high separability in both modes (no-think: 0.954; think: 0.970; both at L34), but cross-mode probe transfer is at chance (AUC\,=\,0.496, cosine $= -0.005$): probes trained in one mode do not generalize to the other.  Because the two modes' \pzero{} tokens occupy different sequence positions (Section~\ref{sec:methods}), this non-transferability reflects both the positional context shift and any mode-specific encoding reorganization.  The finding that within-mode separability is high (${\sim}$0.97) while cross-mode transfer fails shows that each mode develops its own conflict-encoding axis.
 
 \paragraph{Selectivity and text-only baseline.}  Hewitt--Liang control probes achieve
