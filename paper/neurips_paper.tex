@@ -553,7 +553,7 @@ Llama's mean \pzero{} logit score for the S1-lure answer is $+0.422$ (lure favor
 
 We extract the probe weight vector $\mathbf{w} \in \mathbb{R}^{4096}$ from a logistic-regression probe trained on the three vulnerable categories at layer~14 (3-category CV AUC\,=\,0.960), normalize to $\hat{\mathbf{w}}$, and add $\alpha \cdot \hat{\mathbf{w}}$ to the residual stream at inference time, sweeping $\alpha \in \{-5, \ldots, +5\}$ across the 80 vulnerable-category conflict items.
 
-Figure~\ref{fig:steering} shows a monotonic dose-response: at $\alpha = -5$ (toward \sone{}), lure rate rises to 68.8\%; at $\alpha = +5$ (toward \stwo{}), it drops to 31.2\%---a 37.5pp causal swing, comparable to \citet{huang2026cogbias}'s 26--32\% reduction.  The entire lure reduction converts to correct answers (zero increase in ``other'' responses), ruling out distributional disruption.  Random-direction controls ($5$ unit vectors per $\alpha$) show no systematic effect (52--58\% lure across all $\alpha$), confirming the probe direction is \emph{causally sufficient} to modulate bias susceptibility.
+Figure~\ref{fig:steering} shows a monotonic dose-response: at $\alpha = -5$ (toward \sone{}), lure rate rises to 68.8\%; at $\alpha = +5$ (toward \stwo{}), it drops to 31.2\%---a 37.5pp causal swing, comparable to \citet{huang2026cogbias}'s 26--32\% reduction.  The entire lure reduction converts to correct answers (zero increase in ``other'' responses), ruling out distributional disruption.  Random-direction controls (50 unit vectors per $\alpha$) show no systematic effect (mean lure 52--57\%, $\sigma \leq 8.7$pp), placing the probe's 37.5pp swing at $>$4$\sigma$ from the random band.
 
 \paragraph{Two specificity controls.}
 (i)~Probe steering on matched \emph{non-conflict} items produces zero lure responses at any $\alpha$, with only minor coherence loss at $|\alpha|\!=\!5$ (Appendix~\ref{app:steering_specificity}): the direction is specific to the conflict subspace.  (ii)~The CogBias-style mean-difference vector (cosine $= 0.314$ with the probe) is a stronger one-sided debiasing intervention (lure 52.5\%$\to$11.25\% at $\alpha\!=\!+5$) but is \emph{unidirectional}---negative $\alpha$ has no effect (stays 53.75\%).  The probe direction is weaker for debiasing but \emph{bidirectional} ($+$16.25pp worse at $\alpha\!=\!-5$), making it better evidence of a causal boundary.
@@ -602,7 +602,7 @@ L31 & 10.0 & 10.0 & 11.2 & 11.2 & 10.0 & 8.8 & 11.2 \\
   vulnerable-category conflict items).  The probe direction produces a
   37.5pp dose-response ($\alpha\!=\!-5$: 68.8\%; $\alpha\!=\!+5$: 31.2\%),
   with 100\% of lure reduction converting to correct answers (zero
-  ``other'' increase); random directions (gray band) show no systematic effect.}
+  ``other'' increase); 50 random directions (gray band) show no systematic effect.}
 \label{fig:steering}
 \end{figure}
 
