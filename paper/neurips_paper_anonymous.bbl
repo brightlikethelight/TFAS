@@ -1,4 +1,4 @@
-\begin{thebibliography}{35}
+\begin{thebibliography}{34}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -160,11 +160,6 @@ Alexander~Matt Turner, Lisa Thiergart, Gavin Leech, David Udell, Juan~J Vazquez,
 Constantin Venhoff, Iv{\'a}n Arcuschin, Philip Torr, Arthur Conmy, and Neel Nanda.
 \newblock Base models know how to reason, thinking models learn when.
 \newblock \emph{arXiv preprint arXiv:2510.07364}, 2025.
-
-\bibitem[Xie et~al.(2025)Xie, Feng, and Zhong]{xie2025cogsci}
-Jiayi Xie, Yifan Feng, and Yizhou Zhong.
-\newblock Are large language models rational? {A} dual-process perspective.
-\newblock In \emph{Proceedings of the 47th Annual Meeting of the Cognitive Science Society}, 2025.
 
 \bibitem[Zhang et~al.(2025)Zhang, Chen, Pan, Zhao, Panda, Li, and He]{zhang2025probing}
 Anqi Zhang, Yulin Chen, Jane Pan, Chen Zhao, Aurojit Panda, Jinyang Li, and He~He.

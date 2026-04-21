@@ -9,7 +9,7 @@
 \citation{hagendorff2023human}
 \citation{deepseekr1}
 \citation{schwartz2025clinical}
-\citation{xie2025cogsci,codaforno2025dual,ziabari2025reasoning}
+\citation{codaforno2025dual,ziabari2025reasoning}
 \citation{huang2026cogbias}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
 \newlabel{sec:intro}{{1}{1}{Introduction}{section.1}{}}
@@ -141,10 +141,9 @@
 \bibcite{olmo3}{{27}{2025}{{Team OLMo}}{{}}}
 \bibcite{turner2023activation}{{28}{2023}{{Turner et~al.}}{{Turner, Thiergart, Leech, Udell, Vazquez, Mini, and MacDiarmid}}}
 \bibcite{venhoff2025base}{{29}{2025}{{Venhoff et~al.}}{{Venhoff, Arcuschin, Torr, Conmy, and Nanda}}}
-\bibcite{xie2025cogsci}{{30}{2025}{{Xie et~al.}}{{Xie, Feng, and Zhong}}}
-\bibcite{zhang2025probing}{{31}{2025}{{Zhang et~al.}}{{Zhang, Chen, Pan, Zhao, Panda, Li, and He}}}
-\bibcite{jiang2025aha}{{32}{2025}{{Zhao et~al.}}{{Zhao, Sun, Shi, and Song}}}
-\bibcite{ziabari2025reasoning}{{33}{2025}{{Ziabari et~al.}}{{Ziabari, Ghazizadeh, Sourati, Karimi-Malekabadi, Piray, and Dehghani}}}
+\bibcite{zhang2025probing}{{30}{2025}{{Zhang et~al.}}{{Zhang, Chen, Pan, Zhao, Panda, Li, and He}}}
+\bibcite{jiang2025aha}{{31}{2025}{{Zhao et~al.}}{{Zhao, Sun, Shi, and Song}}}
+\bibcite{ziabari2025reasoning}{{32}{2025}{{Ziabari et~al.}}{{Ziabari, Ghazizadeh, Sourati, Karimi-Malekabadi, Piray, and Dehghani}}}
 \citation{jiang2025aha,lanham2023measuring}
 \@writefile{toc}{\contentsline {section}{\numberline {A}Within-CoT Probing Details}{11}{appendix.A}\protected@file@percent }
 \newlabel{app:within_cot}{{A}{11}{Within-CoT Probing Details}{appendix.A}{}}
@@ -161,6 +160,7 @@
 \@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces S1-lure rates (\%) on conflict items: OLMo-3-7B-Instruct vs.\ OLMo-3.1-32B-Instruct (all 11 categories, 235 conflict items). Bold indicates vulnerability (lure rate $>$10\%). ``$\Delta $'' = 32B $-$ 7B; positive values indicate increased vulnerability at scale.}}{13}{table.5}\protected@file@percent }
 \newlabel{tab:scale_behavioral}{{5}{13}{S1-lure rates (\%) on conflict items: OLMo-3-7B-Instruct vs.\ OLMo-3.1-32B-Instruct (all 11 categories, 235 conflict items). Bold indicates vulnerability (lure rate $>$10\%). ``$\Delta $'' = 32B $-$ 7B; positive values indicate increased vulnerability at scale}{table.5}{}}
 \@writefile{toc}{\contentsline {paragraph}{Key findings.}{13}{section*.26}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Per-Layer Probe AUC (OLMo-3.1-32B-Instruct, 64 Layers)}{13}{subsection.B.2}\protected@file@percent }
 \gdef \LT@i {\LT@entry 
     {1}{37.44983pt}\LT@entry 
     {4}{39.50002pt}\LT@entry 
@@ -169,13 +169,12 @@
     {4}{34.50002pt}\LT@entry 
     {1}{35.0576pt}}
 \citation{deneys2012bias}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.2}Per-Layer Probe AUC (OLMo-3.1-32B-Instruct, 64 Layers)}{14}{subsection.B.2}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {6}{Layer-wise probe AUC for OLMo-3.1-32B-Instruct (64 layers, vulnerable categories, \texttt  {P0}{} position, 5-fold CV). Mean $\pm $ std over folds. Bold indicates the peak layer. All P2 (control position) probes return AUC = 0.500 exactly.}}{14}{table.6}\protected@file@percent }
 \newlabel{tab:scale_probe_layers}{{6}{14}{Layer-wise probe AUC for OLMo-3.1-32B-Instruct (64 layers, vulnerable categories, \pzero {} position, 5-fold CV). Mean $\pm $ std over folds. Bold indicates the peak layer. All P2 (control position) probes return AUC = 0.500 exactly}{table.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {B.3}Probe AUC Phase Summary}{14}{subsection.B.3}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Phase-wise probe AUC summary for OLMo-3.1-32B-Instruct. Phases defined as: early (L0--15), mid-early (L16--31), mid-late (L32--47), final (L48--63).}}{14}{table.7}\protected@file@percent }
 \newlabel{tab:scale_phase}{{7}{14}{Phase-wise probe AUC summary for OLMo-3.1-32B-Instruct. Phases defined as: early (L0--15), mid-early (L16--31), mid-late (L32--47), final (L48--63)}{table.7}{}}
-\@writefile{toc}{\contentsline {paragraph}{Discussion: why scale increases vulnerability.}{15}{section*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Discussion: why scale increases vulnerability.}{14}{section*.27}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {B.4}Reasoning Training at 32B: OLMo-3.1-32B-Think}{15}{subsection.B.4}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Scale$\times $reasoning-training comparison across the OLMo family (overall lure rates on 235 conflict items). Reasoning training (Think) provides robust protection at both scales; scale increases standard-model vulnerability but does not degrade reasoning-model performance.}}{15}{table.8}\protected@file@percent }
 \newlabel{tab:scale_reasoning}{{8}{15}{Scale$\times $reasoning-training comparison across the OLMo family (overall lure rates on 235 conflict items). Reasoning training (Think) provides robust protection at both scales; scale increases standard-model vulnerability but does not degrade reasoning-model performance}{table.8}{}}
@@ -183,9 +182,9 @@
 \@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Peak probe AUC across scale$\times $training recipe (OLMo family). The representational gap (Instruct $-$ Think) \emph  {shrinks} from 0.034 at 7B to 0.0021 at 32B, even as the behavioral gap widens.}}{15}{table.9}\protected@file@percent }
 \newlabel{tab:scale_probe_comparison}{{9}{15}{Peak probe AUC across scale$\times $training recipe (OLMo family). The representational gap (Instruct $-$ Think) \emph {shrinks} from 0.034 at 7B to 0.0021 at 32B, even as the behavioral gap widens}{table.9}{}}
 \@writefile{toc}{\contentsline {paragraph}{Key finding: asymmetric scale effect.}{15}{section*.29}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Diverging behavioral and representational gaps.}{15}{section*.30}\protected@file@percent }
 \citation{ma2026falsification}
 \citation{meloux2025dead}
-\@writefile{toc}{\contentsline {paragraph}{Diverging behavioral and representational gaps.}{16}{section*.30}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {C}SAE Features and Attention Entropy}{16}{appendix.C}\protected@file@percent }
 \newlabel{app:sae_attention}{{C}{16}{SAE Features and Attention Entropy}{appendix.C}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {C.1}SAE Reconstruction Fidelity}{16}{subsection.C.1}\protected@file@percent }
@@ -194,16 +193,16 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {C.2}Significant Features}{16}{subsection.C.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {C.3}Ma et al.\ Falsification Protocol}{16}{subsection.C.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Protocol.}{16}{section*.31}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces SAE falsification results (Llama-3.1-8B-Instruct, L19).}}{17}{table.11}\protected@file@percent }
-\newlabel{tab:app_sae_falsification}{{11}{17}{SAE falsification results (Llama-3.1-8B-Instruct, L19)}{table.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces SAE falsification results (Llama-3.1-8B-Instruct, L19).}}{16}{table.11}\protected@file@percent }
+\newlabel{tab:app_sae_falsification}{{11}{16}{SAE falsification results (Llama-3.1-8B-Instruct, L19)}{table.11}{}}
 \@writefile{toc}{\contentsline {paragraph}{Trigger token analysis.}{17}{section*.32}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {C.4}Attention Entropy: Full Head-Level Analysis}{17}{subsection.C.4}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces Summary of head-level attention entropy tests (32 layers $\times $ 32 heads = 1{,}024 total per model). Significance assessed via rank-biserial correlation ($r_{rb}$) between conflict and control items, BH-FDR corrected at $q < 0.05$. S2-like{}-specialized heads additionally require $|r_{rb}| \geq 0.3$.}}{17}{table.12}\protected@file@percent }
 \newlabel{tab:app_attention_summary}{{12}{17}{Summary of head-level attention entropy tests (32 layers $\times $ 32 heads = 1{,}024 total per model). Significance assessed via rank-biserial correlation ($r_{rb}$) between conflict and control items, BH-FDR corrected at $q < 0.05$. \stwo {}-specialized heads additionally require $|r_{rb}| \geq 0.3$}{table.12}{}}
 \@writefile{toc}{\contentsline {paragraph}{Key findings.}{17}{section*.33}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Layer-wise entropy gap.}{17}{section*.34}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {D}Multi-Seed Robustness}{18}{appendix.D}\protected@file@percent }
-\newlabel{app:robustness}{{D}{18}{Multi-Seed Robustness}{appendix.D}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Multi-Seed Robustness}{17}{appendix.D}\protected@file@percent }
+\newlabel{app:robustness}{{D}{17}{Multi-Seed Robustness}{appendix.D}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {D.1}Exact Generation Parameters}{18}{subsection.D.1}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Generation keyword arguments for all models. ``Greedy'' denotes the main-text configuration; ``Sampled'' denotes the robustness configuration used in this appendix.}}{18}{table.13}\protected@file@percent }
 \newlabel{tab:gen_kwargs}{{13}{18}{Generation keyword arguments for all models. ``Greedy'' denotes the main-text configuration; ``Sampled'' denotes the robustness configuration used in this appendix}{table.13}{}}
@@ -212,9 +211,9 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {D.2}Overall Stability}{18}{subsection.D.2}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Multi-seed overall lure rates (11 categories, 235 conflict items per seed, sampled decoding at $T = 0.7$). Main-text greedy results are shown for comparison. ``$\sigma $'' = standard deviation across seeds in percentage points.}}{18}{table.14}\protected@file@percent }
 \newlabel{tab:robustness_overall}{{14}{18}{Multi-seed overall lure rates (11 categories, 235 conflict items per seed, sampled decoding at $T = 0.7$). Main-text greedy results are shown for comparison. ``$\sigma $'' = standard deviation across seeds in percentage points}{table.14}{}}
-\@writefile{toc}{\contentsline {paragraph}{Llama stability.}{19}{section*.37}\protected@file@percent }
-\@writefile{toc}{\contentsline {paragraph}{R1-Distill: greedy vs.\ sampled divergence.}{19}{section*.38}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {D.3}Per-Category Profiles Under Sampling}{19}{subsection.D.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Llama stability.}{18}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{R1-Distill: greedy vs.\ sampled divergence.}{18}{section*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {D.3}Per-Category Profiles Under Sampling}{18}{subsection.D.3}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces Per-category lure rates (\%) under sampled decoding ($T = 0.7$, mean $\pm $ $\sigma $ across 3 seeds). ``$\Delta $ vs.\ greedy'' = sampled mean $-$ greedy. Categories marked with $\dagger $ show instability ($\sigma > 10$pp).}}{19}{table.15}\protected@file@percent }
 \newlabel{tab:robustness_percategory}{{15}{19}{Per-category lure rates (\%) under sampled decoding ($T = 0.7$, mean $\pm $ $\sigma $ across 3 seeds). ``$\Delta $ vs.\ greedy'' = sampled mean $-$ greedy. Categories marked with $\dagger $ show instability ($\sigma > 10$pp)}{table.15}{}}
 \@writefile{toc}{\contentsline {paragraph}{Category profile shifts.}{19}{section*.39}\protected@file@percent }
@@ -223,24 +222,24 @@
 \@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Generation strategy comparison. Greedy results represent the maximum-probability decoding path; sampled results represent the distributional expectation.}}{19}{table.16}\protected@file@percent }
 \newlabel{tab:gen_strategy}{{16}{19}{Generation strategy comparison. Greedy results represent the maximum-probability decoding path; sampled results represent the distributional expectation}{table.16}{}}
 \@writefile{toc}{\contentsline {paragraph}{Implications.}{19}{section*.40}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {D.5}Probe Invariance to Generation Strategy}{20}{subsection.D.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {D.5}Probe Invariance to Generation Strategy}{19}{subsection.D.5}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {E}Qwen Template and Tokenization Details}{20}{appendix.E}\protected@file@percent }
 \newlabel{app:qwen_template}{{E}{20}{Qwen Template and Tokenization Details}{appendix.E}{}}
 \@writefile{toc}{\contentsline {paragraph}{Think mode}{20}{section*.41}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{No-think mode}{20}{section*.42}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {F}Token-Length Confound Analysis}{20}{appendix.F}\protected@file@percent }
 \newlabel{app:length}{{F}{20}{Token-Length Confound Analysis}{appendix.F}{}}
-\@writefile{toc}{\contentsline {paragraph}{Per-category length statistics.}{21}{section*.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Per-category length statistics.}{20}{section*.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Why length is not the primary signal.}{20}{section*.44}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces Prompt subword length (Llama-3.1-8B tokenizer) for conflict vs.\ control items by category. ``$d$'' is Cohen's~$d$; positive values indicate conflict items are longer; $p$ is from Welch's $t$-test.}}{21}{table.17}\protected@file@percent }
 \newlabel{tab:length_confound}{{17}{21}{Prompt subword length (Llama-3.1-8B tokenizer) for conflict vs.\ control items by category. ``$d$'' is Cohen's~$d$; positive values indicate conflict items are longer; $p$ is from Welch's $t$-test}{table.17}{}}
-\@writefile{toc}{\contentsline {paragraph}{Why length is not the primary signal.}{21}{section*.44}\protected@file@percent }
 \@writefile{toc}{\contentsline {paragraph}{Specific OLMo-32B audit.}{21}{section*.45}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {G}Full Behavioral Breakdown (All Models, All Categories)}{21}{appendix.G}\protected@file@percent }
 \newlabel{app:full_behavior}{{G}{21}{Full Behavioral Breakdown (All Models, All Categories)}{appendix.G}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {H}Steering Specificity Controls}{21}{appendix.H}\protected@file@percent }
+\newlabel{app:steering_specificity}{{H}{21}{Steering Specificity Controls}{appendix.H}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Complete behavioral results across models and categories. Conflict accuracy (Acc), lure rate (Lure), and other-response rate (Other) on conflict items; control accuracy (Ctrl); and accuracy gap (Gap = Ctrl $-$ Acc). Wilson 95\% CIs in brackets. McNemar mid-$p$ tests conflict vs.\ matched control accuracy.}}{22}{table.18}\protected@file@percent }
 \newlabel{tab:behavioral-full}{{18}{22}{Complete behavioral results across models and categories. Conflict accuracy (Acc), lure rate (Lure), and other-response rate (Other) on conflict items; control accuracy (Ctrl); and accuracy gap (Gap = Ctrl $-$ Acc). Wilson 95\% CIs in brackets. McNemar mid-$p$ tests conflict vs.\ matched control accuracy}{table.18}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {H}Steering Specificity Controls}{22}{appendix.H}\protected@file@percent }
-\newlabel{app:steering_specificity}{{H}{22}{Steering Specificity Controls}{appendix.H}{}}
 \@writefile{toc}{\contentsline {paragraph}{Three observations.}{22}{section*.46}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {19}{\ignorespaces Steering specificity controls on Llama-3.1-8B-Instruct, L14. ``Probe'' is the logistic-regression weight vector $\mathbf  {w}$; ``Mean-diff'' is $\bar  {\mathbf  {h}}_{\text  {conflict}} - \bar  {\mathbf  {h}}_{\text  {control}}$ (CogBias-style). ``Conflict'' = 80 vulnerable-category conflict items (each has an S1 lure answer); ``Control'' = 80 matched non-conflict items (each has a single normative answer).}}{23}{table.19}\protected@file@percent }
 \newlabel{tab:steering_specificity}{{19}{23}{Steering specificity controls on Llama-3.1-8B-Instruct, L14. ``Probe'' is the logistic-regression weight vector $\mathbf {w}$; ``Mean-diff'' is $\bar {\mathbf {h}}_{\text {conflict}} - \bar {\mathbf {h}}_{\text {control}}$ (CogBias-style). ``Conflict'' = 80 vulnerable-category conflict items (each has an S1 lure answer); ``Control'' = 80 matched non-conflict items (each has a single normative answer)}{table.19}{}}

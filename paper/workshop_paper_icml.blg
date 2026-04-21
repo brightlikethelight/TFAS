@@ -3,44 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: workshop_paper_icml.aux
 The style file: plainnat.bst
 Database file #1: references.bib
-You've used 32 entries,
+You've used 31 entries,
             2773 wiz_defined-function locations,
-            761 strings with 10901 characters,
-and the built_in function-call counts, 15725 in all, are:
-= -- 1284
-> -- 1214
+            757 strings with 10709 characters,
+and the built_in function-call counts, 15282 in all, are:
+= -- 1250
+> -- 1184
 < -- 14
-+ -- 410
-- -- 378
-* -- 1327
-:= -- 2530
-add.period$ -- 96
-call.type$ -- 32
-change.case$ -- 217
-chr.to.int$ -- 32
-cite$ -- 64
-duplicate$ -- 665
-empty$ -- 1125
-format.name$ -- 420
-if$ -- 3193
++ -- 400
+- -- 369
+* -- 1292
+:= -- 2463
+add.period$ -- 93
+call.type$ -- 31
+change.case$ -- 211
+chr.to.int$ -- 31
+cite$ -- 62
+duplicate$ -- 641
+empty$ -- 1084
+format.name$ -- 410
+if$ -- 3099
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 35
-newline$ -- 168
-num.names$ -- 129
-pop$ -- 451
+missing$ -- 34
+newline$ -- 163
+num.names$ -- 125
+pop$ -- 435
 preamble$ -- 1
-purify$ -- 189
+purify$ -- 184
 quote$ -- 0
-skip$ -- 533
+skip$ -- 518
 stack$ -- 0
-substring$ -- 316
-swap$ -- 46
+substring$ -- 314
+swap$ -- 44
 text.length$ -- 1
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 332
+type$ -- 321
 warning$ -- 0
-while$ -- 116
+while$ -- 113
 width$ -- 0
-write$ -- 405
+write$ -- 393

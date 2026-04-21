@@ -62,7 +62,7 @@ We used AI coding assistants (Claude Code) for implementation, experiment orches
 ### Compute Resources
 
 - Primary: RunPod B200 GPU instances
-- Estimated total compute: [TO BE FILLED before submission]
+- Estimated total compute: ~120 GPU-hours (B200), ~50 CPU-hours (analysis/probing)
 
 ## Conflicts of Interest
 
@@ -80,14 +80,13 @@ We used AI coding assistants (Claude Code) for implementation, experiment orches
 ### Author 1
 
 - **Name:** Bright Liu
-- **Email:** [TO BE FILLED]
+- **Email:** brightliu@college.harvard.edu
 - **Affiliation:** Harvard University
 - **Role:** Lead author
 
 ### Co-authors
 
-- **Status:** TO BE FINALIZED before submission
-- [ADD co-authors here with name, email, affiliation, and OpenReview profile URL]
+- **Status:** Pending advisor confirmation (add before May 4 abstract deadline)
 
 ---
 
