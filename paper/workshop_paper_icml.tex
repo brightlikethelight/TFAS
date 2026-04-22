@@ -152,7 +152,7 @@ simultaneously reduces internal \sone{}/\stwo{} separability from
 AUC 0.974 to 0.930 (non-overlapping 95\% CIs).  The OLMo-3-7B family
 independently replicates this pattern (14.9\% $\to$ 0.9\%), confirming
 generality across architectures.  Qwen~3-8B reveals the converse: thinking mode
-changes behavior ($21\% \to 7.3\%$) without changing the pre-generation
+changes behavior ($21.2\% \to 7.3\%$) without changing the pre-generation
 representation (AUC\,=\,0.971 in both modes).  The model that resists
 biases is, paradoxically, the one where the internal
 heuristic/deliberative boundary is \emph{less} distinct---and that
@@ -321,7 +321,7 @@ Arithmetic     & 0   & 0   & 0   & 0   & 0   & 0 \\
 Framing        & 0   & 0   & 0   & 0   & 0   & 0 \\
 Anchoring      & 0   & 0   & 0   & 0   & 5   & 0 \\
 \midrule
-\textbf{Overall lure} & \textbf{27.3} & \textbf{2.4} & \textbf{21.0} & \textbf{7.3} & \textbf{14.9} & \textbf{0.9} \\
+\textbf{Overall lure} & \textbf{27.3} & \textbf{2.4} & \textbf{21.2} & \textbf{7.3} & \textbf{14.9} & \textbf{0.9} \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -337,7 +337,7 @@ profile---95\% conjunction lure rate but 0\% syllogism lure
 rate---suggesting different models encode different heuristic biases
 rather than a universal ``System~1.''  Fourth, the within-model Qwen
 toggle is informative: enabling thinking mode on the \emph{same weights}
-reduces the overall lure rate from 21\% to 7.3\%, with a striking
+reduces the overall lure rate from 21.2\% to 7.3\%, with a striking
 asymmetry across categories.  Base rate neglect drops from 56\% to 4\%
 (near-complete correction), while conjunction fallacy drops only from
 95\% to 55\% (still majority-susceptible).  This dissociation suggests
@@ -420,14 +420,14 @@ deeper layers.
 \paragraph{Qwen~3-8B (no-think mode).}  Probes on Qwen~3-8B no-think
 activations reach peak AUC\,=\,0.971 at layer~34 on the vulnerable
 categories, intermediate between Llama (0.974) and R1-Distill (0.930)
-and consistent with its intermediate behavioral vulnerability (21\% lure
+and consistent with its intermediate behavioral vulnerability (21.2\% lure
 rate).
 
 \paragraph{Qwen~3-8B (think mode).}  Probes on Qwen~3-8B think-mode
 activations---extracted at the same \pzero{} position before the
 \texttt{<think>} block begins---reach \emph{identical} peak
 AUC\,=\,0.971 at layer~34.  Despite a 3$\times$ behavioral improvement
-(lure rate $21\% \to 7.3\%$), the pre-generation representation is
+(lure rate $21.2\% \to 7.3\%$), the pre-generation representation is
 unchanged---consistent with \citet{afzal2025knowing}, who showed probes
 can predict chain-of-thought success before the first token is generated.
 This is the key dissociation: training (Llama vs.\ R1-Distill)
@@ -658,7 +658,7 @@ across all bias categories and models.
 
 \paragraph{Training vs.\ inference.}
 Qwen's think/no-think result is the sharpest finding: thinking mode
-reduces lure rates from 21\% to 7.3\% on the same weights, yet probes
+reduces lure rates from 21.2\% to 7.3\% on the same weights, yet probes
 are identical in both modes (AUC\,=\,0.971 at L34).  The toggle
 changes what the model \emph{does} during generation, not what it
 \emph{encodes} at \pzero{}.  Combined with the Llama/R1-Distill comparison

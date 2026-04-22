@@ -384,7 +384,7 @@ responses on conflict items) across all models and categories.
   we report correct rate (Corr), S1-lure rate (Lure), and other-wrong
   rate (Oth), plus matched-control accuracy (Ctrl).  Bold lure rates
   indicate vulnerable categories ($>$10\%).  ``Overall'' is a
-  \emph{macro-average} across the displayed categories (not item-weighted).
+  \emph{micro-average} (total lures / total conflict items) across the displayed categories.
   Wilson 95\% CIs in brackets for overall row.  McNemar mid-$p$ tests
   conflict vs.\ matched control.}
 \label{tab:behavioral}
@@ -437,7 +437,7 @@ Anchoring      & 90 / 70   & 75  & 0   & 25  & 35 / 80  & 5 / 0  & 60 / 20 \\
 \end{tabular}
 \end{table}
 
-Four findings emerge.  First, the behavioral gap is dramatic: Llama produces heuristic lures at 27.3\%; R1-Distill reduces this to 2.4\%.  Second, vulnerability is \emph{category-specific}: base rate neglect, conjunction fallacy, and syllogisms are susceptible, while CRT, arithmetic, framing, and anchoring are largely immune.  Third, different models show distinct vulnerability profiles (Qwen: 95\% conjunction but 0\% syllogism lure), suggesting model-specific rather than universal biases.  Fourth, Qwen's within-model thinking toggle reduces lure rate from 21\% to 7.3\%.
+Four findings emerge.  First, the behavioral gap is dramatic: Llama produces heuristic lures at 27.3\%; R1-Distill reduces this to 2.4\% under greedy decoding (12.1\% under vendor-recommended sampled decoding; Appendix~\ref{app:robustness}).  Second, vulnerability is \emph{category-specific}: base rate neglect, conjunction fallacy, and syllogisms are susceptible, while CRT, arithmetic, framing, and anchoring are largely immune.  Third, different models show distinct vulnerability profiles (Qwen: 95\% conjunction but 0\% syllogism lure), suggesting model-specific rather than universal biases.  Fourth, Qwen's within-model thinking toggle reduces lure rate from 21.2\% to 7.3\%.
 OLMo-3-7B \citep{olmo3} independently replicates the pattern (14.9\% $\to$ 0.9\% lure rate).  Llama's first-token probability is 4.2pp lower on conflict items (0.751 vs.\ 0.793), paralleling the ``hesitation'' signatures that De~Neys documents in human dual-process conflicts \citep{deneys2012bias, botvinick2001conflict}.  The model \emph{detects} conflict pre-generation even when it subsequently fails to resolve it.
 
 \subsection{Linear Probes and Cross-Prediction}
@@ -504,9 +504,11 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \begin{table}[t]
 \centering
 \caption{Probing summary at peak layer for the three
-  vulnerable categories.  95\% CIs from 1000 bootstrap resamples
-  (conditional on the selected peak layer; layer-selection uncertainty
-  is not propagated).
+  vulnerable categories.  95\% CIs: bootstrap (1000 resamples) for
+  Llama/R1/OLMo-7B rows; CV-fold $\pm 1.96\sigma$ for OLMo-32B rows
+  (${}^\dagger$; per-sample predictions not cached for bootstrap).
+  Qwen CIs omitted (only layer-level aggregates stored).
+  Layer-selection uncertainty is not propagated in any row.
   Selectivity = true AUC $-$ control AUC.  Cross-mode column:
   AUC when a probe trained on one Qwen mode is tested on the other.
   Text baseline: sentence-transformer on input text only (no activations).}
@@ -525,8 +527,8 @@ Qwen~3-8B (think)     & L34 & 0.970 & ---             & ---  & --- & 0.496 \\
 OLMo-3-7B-Instruct    & L24 & 0.996 & [0.988, 1.000]  & ---  & --- & --- \\
 OLMo-3-7B-Think       & L22 & 0.962 & [0.934, 0.982]  & ---  & --- & --- \\
 \midrule
-OLMo-3.1-32B-Instruct & L20 & 0.9999 & ---             & ---  & --- & --- \\
-OLMo-3.1-32B-Think    & L20 & 0.9978 & ---             & ---  & --- & --- \\
+OLMo-3.1-32B-Instruct & L20 & 0.9999 & $[0.9997, 1.000]^\dagger$ & --- & --- & --- \\
+OLMo-3.1-32B-Think    & L20 & 0.9978 & $[0.9960, 0.9996]^\dagger$ & --- & --- & --- \\
 \midrule
 \emph{Text baseline}   & --- & 0.840 & ---             & ---  & --- & --- \\
 \bottomrule
@@ -670,9 +672,10 @@ when the heuristic prevails.
 The reasoning model shows \emph{less} distinct encoding (AUC\,=\,0.930)
 yet dramatically better resolution (2.4\%), replicated in OLMo
 (AUC 0.996 $\to$ 0.962; lure 14.9\% $\to$ 0.9\%).
-Reasoning distillation makes Type~2 processing \emph{autonomous}
-\citep{evans2019reflections}---internalized so thoroughly that a sharp
-conflict signal is no longer needed \citep{venhoff2025base}.
+The pattern is consistent with reasoning distillation automating
+Type~2 processing \citep{evans2019reflections}: the correct response
+may be internalized so thoroughly that a sharp conflict signal is no
+longer behaviorally necessary \citep{venhoff2025base}.
 
 \paragraph{Readable but not writable.}
 In Llama, the probe direction is readable (AUC\,=\,0.974) and
