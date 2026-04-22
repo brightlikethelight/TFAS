@@ -56,12 +56,12 @@ contrastive items spanning 11 bias categories.  Linear probes on
 residual-stream activations achieve AUC 0.974 (Llama) and 0.930
 (R1-Distill) with non-overlapping CIs, far exceeding a text-only
 baseline (0.840).  Probe-direction steering produces a monotonic
-37.5pp dose-response in Llama (lure$\to$correct, zero garbage), but
+37.5pp dose-response in Llama (lure$\to$correct, 100\% converting to correct), but
 R1-Distill---steered continuously across the full 2048-token reasoning
 trace---shows no coherent dose-response, with the model remaining
 fluent throughout.  Within-chain-of-thought probing reveals a
 non-monotonic trajectory (T0\,=\,0.973, T75\,=\,0.754,
-Tend\,=\,0.971), ruling out decorative reasoning.  Qwen's
+Tend\,=\,0.971), indicating the trace is not representationally flat.  Qwen's
 think/no-think modes both achieve high separability (${\sim}$0.97) but
 cross-mode probe transfer is at chance (0.496), indicating
 mode-specific conflict-encoding axes.  These results demonstrate that
@@ -131,7 +131,7 @@ associated with reasoning training, not architecture.  We make five contribution
 
   \item \textbf{Causal evidence via probe-direction steering}: a
   37.5pp bidirectional dose-response in Llama (lure$\to$correct,
-  zero garbage), while R1-Distill shows no coherent dose-response at
+  100\% converting to correct), while R1-Distill shows no coherent dose-response at
   \emph{any} of four layers (L14/L25/L28/L31) under continuous
   2048-token steering: \emph{readable but not writable}.
 
