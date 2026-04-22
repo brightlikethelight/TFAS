@@ -61,7 +61,7 @@ geometry, not surface tokens.  Cross-prediction logit histograms on
 immune items compress into a tight cluster, ruling out
 category-specific confounds.  Probe-direction steering
 produces a 37.5pp dose-response shift in Llama (lure$\to$correct,
-zero garbage outputs), while R1---steered continuously across all 2048 tokens
+100\% of lure reduction converting to correct answers), while R1---steered continuously across all 2048 tokens
 at four layers including its probe peak---shows no coherent
 dose-response at any layer, ruling out both temporal washout
 and a deeper writable locus.  Within-chain-of-thought probing reveals a
@@ -169,9 +169,7 @@ architecture.  We make six contributions:
   that the probe direction is \emph{causally} linked to bias
   susceptibility, not merely correlational.
 
-  \item \textbf{Within-chain-of-thought probing}: we probe residual
-  stream activations at successive token positions within the reasoning
-  trace, revealing how representations evolve during deliberation.
+  \item \textbf{Within-CoT probing}: probe AUC follows a non-monotonic trajectory---peaking at onset (0.973), dropping during deliberation (0.754), rebounding before the answer (0.971)---indicating the trace is not representationally flat.
 
   \item \textbf{A training--inference dissociation}: Qwen~3-8B's think/no-think modes achieve similar conflict separability (AUC\,=\,0.954 and 0.970) but cross-mode probe transfer is at chance (AUC\,=\,0.496)---the two modes develop non-transferring conflict-encoding axes.
 \end{enumerate}
@@ -395,6 +393,7 @@ responses on conflict items) across all models and categories.
 \centering
 \caption{S1-lure rates (\%) on conflict items by model and category.
   Bolded numbers indicate vulnerable categories (lure rate $>$10\%).
+  ``Overall'' is a \emph{macro-average} across the displayed categories (not item-weighted).
   OLMo columns provide cross-architecture replication.}
 \label{tab:behavioral}
 \vspace{4pt}
@@ -499,9 +498,6 @@ and control syllogisms causes the text encoder to systematically
 confuse the classes), while the activation probe remains at 0.999.
 This confirms the activation probe captures processing-relevant
 information unavailable from input text alone.
-A pair-difference control (distinguishing real from shuffled
-conflict/control pairings) achieves AUC\,=\,0.024 (at chance),
-confirming the signal is population-level, not a per-item artifact.
 
 \paragraph{Probe summary.}
 Table~\ref{tab:probe_summary} summarizes the key probing metrics.
@@ -648,9 +644,7 @@ L31 & 10.0 & 10.0 & 11.2 & 11.2 & 10.0 & 8.8 & 11.2 \\
 We probe residual stream activations at 10 evenly-spaced positions within
 the \texttt{<think>...\allowbreak</think>} trace for R1-Distill and
 Qwen~3-8B (think mode), training conflict/control probes at each
-position.  If probe AUC increases across the chain, the reasoning process
-performs genuine computational work on the conflict representation rather
-than being decorative \citep{jiang2025aha, lanham2023measuring}.
+position.  This trajectory is inconsistent with flat-AUC ``performative reasoning'' (rejected by the 22pp dip) and with monotonic sharpening (rejected by the T0$>$T50 inversion), but consistent with ``exploration before exploitation'' \citep{boppana2026reasoning}.  We note that representational reorganization during the trace does not by itself establish that specific CoT tokens are causally used \citep{jiang2025aha}; step-level interventions would be needed for that stronger claim.
 Full within-CoT trajectories are reported in Appendix~\ref{app:within_cot}.
 
 % ---------------------------------------------------------------
