@@ -158,12 +158,7 @@ architecture.  We make six contributions:
   transfer (AUC\,$>$\,0.92) confirming specificity to a shared
   processing-mode direction.
 
-  \item \textbf{Causal evidence via probe-direction steering}: we extract
-  the linear probe's weight vector as a steering direction and apply
-  activation patching at inference time.  Steering along the \stwo{}
-  direction reduces lure rates on vulnerable categories, establishing
-  that the probe direction is \emph{causally} linked to bias
-  susceptibility, not merely correlational.
+  \item \textbf{Causal evidence via probe-direction steering and the \emph{readable but not writable} dissociation}: in Llama, steering along the probe weight vector produces a 37.5pp bidirectional causal swing, establishing the direction as causally active; in R1-Distill, the same direction is linearly decodable (AUC\,=\,0.930) but \emph{not stably controllable} at any of four layers (L14/L25/L28/L31) under continuous 2048-token intervention.
 
   \item \textbf{Within-CoT probing}: probe AUC follows a non-monotonic trajectory---peaking at onset (0.973), dropping during deliberation (0.754), rebounding before the answer (0.971)---indicating the trace is not representationally flat.
 
