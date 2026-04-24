@@ -1,0 +1,39 @@
+{
+  "experiment": "text_baselines_vulnerable_categories",
+  "n_items": 160,
+  "n_conflict": 80,
+  "n_control": 80,
+  "categories": [
+    "base_rate",
+    "conjunction",
+    "syllogism"
+  ],
+  "cv_folds": 5,
+  "tfidf_ngram_12": {
+    "auc_mean": 0.8195,
+    "auc_std": 0.0345,
+    "description": "TF-IDF (unigram+bigram), max_features=10000, sublinear_tf, LR C=1.0"
+  },
+  "length_only": {
+    "auc_mean": 0.8625,
+    "auc_std": 0.0236,
+    "description": "Prompt word count only, StandardScaler + LR"
+  },
+  "sentence_transformer": {
+    "auc_mean": 0.84,
+    "description": "Global sentence-transformer baseline (from existing results)"
+  },
+  "per_category_tfidf": {
+    "base_rate": {
+      "auc": 1.0
+    },
+    "conjunction": {
+      "auc": 1.0
+    },
+    "syllogism": {
+      "auc": 0.04,
+      "note": "below-chance anti-prediction, syllogism conflict/control are surface-matched"
+    }
+  },
+  "note": "All three text baselines cluster 0.82-0.86; activation probe achieves 0.999. Length-only is competitive with richer encoders because base_rate (d=+3.69) and conjunction (d=+6.36) have large length differences. Syllogism (d=+0.02) produces below-chance AUC for all text baselines."
+}

@@ -467,16 +467,17 @@ exceeds 34 percentage points at peak layers for both models.\footnote{We
   peak L14, AUC\,=\,0.999), used for cross-prediction and steering; and
   bootstrap CI analysis on 160 vulnerable-category items (3 categories,
   peak L16, AUC\,=\,0.974 [0.952, 0.992]).}
-A global sentence-transformer text-only baseline (trained on all
-categories, encoding only input text with no access to model
-activations) achieves AUC\,=\,0.840 on all categories (identical on the 3-category vulnerable subset, confirming text features are equally accessible in both settings), substantially below the
-activation probe (0.999).  When evaluated out-of-distribution on
-held-out syllogism items, the text baseline collapses to 0.086
-(below chance, because deceptive surface similarity between conflict
-and control syllogisms causes the text encoder to systematically
-confuse the classes), while the activation probe remains at 0.999.
-This confirms the activation probe captures processing-relevant
-information unavailable from input text alone.
+Three text-only baselines cluster in a narrow band: a
+length-only probe (word count, 5-fold CV) achieves AUC\,=\,0.863,
+a TF-IDF unigram+bigram logistic regression achieves 0.820, and a
+global sentence-transformer baseline achieves 0.840---all substantially
+below the activation probe (0.999).  All three per-category syllogism
+results collapse to below chance ($\leq$0.086), because
+conflict and control syllogisms are surface-matched in length ($d\!=\!+0.02$)
+and vocabulary; the activation probe remains at 0.999.  The
+narrow 0.82--0.86 text-baseline band confirms the \textasciitilde16pp
+gap to the activation probe reflects information absent from input
+text, regardless of text-encoding method.
 
 \paragraph{Token-length confound check.}
 Prompt token lengths differ between conflict and control items in two
