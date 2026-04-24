@@ -624,33 +624,47 @@ L31 & 10.0 & 6.2 & 10.0 & 11.2 & 10.0 & 8.8 & 11.2 \\
 \subsection{Within-CoT Probing}
 \label{sec:within_cot}
 
-We probe residual stream activations at 10 evenly-spaced positions within
-the \texttt{<think>...\allowbreak</think>} trace for R1-Distill and
-Qwen~3-8B (think mode), training conflict/control probes at each
-position.  This trajectory is inconsistent with flat-AUC ``performative reasoning'' (rejected by the 22pp dip) and with monotonic sharpening (rejected by the T0$>$T50 inversion), but consistent with ``exploration before exploitation'' \citep{boppana2026reasoning}.  We note that representational reorganization during the trace does not by itself establish that specific CoT tokens are causally used \citep{jiang2025aha}; step-level interventions would be needed for that stronger claim.
-Full within-CoT trajectories are reported in Appendix~\ref{app:within_cot}.
+\begin{figure}[t]
+\centering
+\vspace{-6pt}
+\includegraphics[width=0.78\linewidth]{../figures/fig_within_cot_trajectory.pdf}
+\vspace{-6pt}
+\caption{Within-CoT probe AUC for Qwen~3-8B (think mode) at L34.
+  Three phases: \emph{crystallization} (P0$\to$T0, +3.5pp),
+  \emph{exploration} (T0$\to$T75, $-$22pp dip),
+  \emph{resolution} (T75$\to$Tend, full rebound to 0.971).
+  P2 (control) = 0.500.}
+\label{fig:within_cot}
+\end{figure}
+
+We probe residual stream activations at seven canonical positions
+for Qwen~3-8B (think mode) at L34 (Figure~\ref{fig:within_cot}).
+Probe AUC follows a non-monotonic U-shape: P0 (0.938) $\to$ T0 (0.973)
+$\to$ T75 (0.754) $\to$ Tend (0.971); P2 = 0.500 (chance).
+Three phases: \emph{crystallization} (thinking onset sharpens by +3.5pp
+before substantive reasoning); \emph{exploration} (AUC drops ${\sim}22$pp
+as mid-trace representations explore alternative framings); \emph{resolution}
+(rebound to 0.971 before answer generation).
+This rules out flat ``performative reasoning'' (22pp dip) and monotonic
+sharpening (T0$>$T50 inversion) \citep{boppana2026reasoning,jiang2025aha}.
+Full trajectories in Appendix~\ref{app:within_cot}.
 
 % ---------------------------------------------------------------
 \subsection{Scale Analysis: 7B vs.\ 32B}
 \label{sec:scale}
 
-We evaluate OLMo-3.1-32B-Instruct and OLMo-3.1-32B-Think
-(4.5$\times$ more parameters than the 7B variants) to test whether
-scale mitigates cognitive bias vulnerability.
-In the OLMo family, the 32B Instruct checkpoint does not resolve vulnerability: overall lure rate rises from 14.9\% (7B) to 19.6\% (32B), with base rate neglect nearly doubling (46\%$\to$74.3\%) and framing emerging as a new vulnerability (0\%$\to$30\%).  (We note that OLMo-3.1-32B uses an updated training recipe, so this comparison is not a pure size ablation.)  Meanwhile, some biases are resolved at scale (loss aversion: 33\%$\to$0\%), and conjunction fallacy is scale-invariant (50\% at both sizes).
-At 32B, reasoning training drops lure rates from 19.6\% to 0.4\%.  The OLMo family exhibits an \emph{asymmetric scale effect}: 4.5$\times$ more parameters increases standard-model vulnerability by +4.7pp while leaving reasoning-model performance essentially unchanged ($-$0.5pp).  This pattern---larger standard models reproducing \emph{more} human heuristic errors---mirrors inverse scaling phenomena \citep{mckenzie2023inverse, perez2023discovering}
-in which pre-training absorbs human biases and scale amplifies rather
-than corrects them.  Our contribution is to show that this inverse-scaling
-effect is \emph{fully cancelled} by reasoning post-training, even as absolute encoding fidelity of the bias direction itself continues to rise with scale.  Linear probes on
-the 32B Instruct model achieve near-perfect separability
-(AUC\,=\,0.9999 at L20/64), confirming the \sone{}/\stwo{} direction
-persists at larger scale.  OLMo-3.1-32B-Think's peak probe AUC is
-0.9978 at layer~20---only 0.0021 below Instruct (0.9999).  The behavioral
-gap widens with scale (19.2pp at 32B vs.\ 14.0pp at 7B), but the
-representational gap \emph{shrinks} (0.0021 vs.\ 0.0055), suggesting the
-vulnerability encoding becomes \emph{more} persistent at larger scale.
-Full
-per-category breakdowns appear in Appendix~\ref{app:scale}.
+OLMo-3.1-32B-Instruct shows \emph{more} vulnerability than the 7B
+(19.6\% vs.\ 14.9\% lure rate), mirroring inverse-scaling
+phenomena \citep{mckenzie2023inverse, perez2023discovering} in which
+scale amplifies absorbed biases.  (OLMo-3.1-32B uses an updated
+training recipe, so this is not a pure size ablation.)
+OLMo-3.1-32B-Think collapses lure rates to 0.4\%.  Representationally,
+the behavioral gap \emph{widens} with scale (19.2pp at 32B vs.\ 14.0pp
+at 7B) while the probe-AUC gap \emph{shrinks} (0.0021 vs.\ 0.0055),
+showing both models encode conflict with near-identical fidelity at 32B
+but only Think translates this into correct responses---further evidence
+for readable but not writable.  Full breakdowns in
+Appendix~\ref{app:scale}.
 
 % ---------------------------------------------------------------
 \subsection{SAE Features and Attention Entropy}

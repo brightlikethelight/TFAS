@@ -613,16 +613,41 @@ L31 & 10.0 & 6.2 & 10.0 & 11.2 & 10.0 & 8.8 & 11.2 \\
 We probe residual stream activations at seven canonical positions
 for Qwen~3-8B (think mode) at L34: P0 (pre-generation), T0 (thinking
 onset), T25/T50/T75 (quartile positions within the trace), Tend (final
-thinking token), and P2 (control position).
+thinking token), and P2 (control position).  Figure~\ref{fig:within_cot}
+plots the resulting AUC trajectory.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.82\linewidth]{../figures/fig_within_cot_trajectory.pdf}
+\vspace{-4pt}
+\caption{Within-CoT probe AUC trajectory for Qwen~3-8B (think mode)
+  at L34.  Three phases: \emph{crystallization} (P0$\to$T0, +3.5pp),
+  \emph{exploration} (T0$\to$T75, $-$22pp), and \emph{resolution}
+  (T75$\to$Tend, +21.7pp rebound).  P2 (post-answer control) returns
+  exactly 0.500.  Error bars: 5-fold CV standard deviation.}
+\label{fig:within_cot}
+\end{figure}
 
 \paragraph{Non-monotonic trajectory.}
-Probe AUC follows a non-monotonic trajectory:
+Probe AUC follows a non-monotonic trajectory (Figure~\ref{fig:within_cot}):
 P0 (0.938) $\to$ T0 (0.973) $\to$ T25 (0.791) $\to$ T50 (0.772)
 $\to$ T75 (0.754) $\to$ Tend (0.971); P2 returns exactly 0.500 (chance).
-Three phases emerge: (i) \emph{crystallization} (P0$\to$T0): thinking onset sharpens the boundary by +3.5pp before any substantive reasoning tokens, consistent with ``fast initial commitment'' \citep{deneys2017dual}; (ii) \emph{exploration} (T0$\to$T75): AUC drops ${\sim}22$pp as mid-trace representations explore alternative framings; (iii) \emph{resolution} (T75$\to$Tend): AUC rebounds to 0.971, re-crystallizing the boundary.
+Three phases emerge: (i) \emph{crystallization} (P0$\to$T0): thinking onset sharpens the boundary by +3.5pp \emph{before} any substantive reasoning tokens, consistent with a fast initial commitment locking in the conflict representation \citep{deneys2017dual}; (ii) \emph{exploration} (T0$\to$T75): AUC drops ${\sim}22$pp as mid-trace representations explore alternative framings---the linear boundary temporarily dissolves as the model weighs competing interpretations; (iii) \emph{resolution} (T75$\to$Tend): AUC rebounds sharply to 0.971, re-crystallizing the conflict/control boundary just before the answer token is generated.
 
-This trajectory is inconsistent with flat-AUC ``performative reasoning'' (rejected by the 22pp dip) and with monotonic sharpening (rejected by the T0$>$T50 inversion), but consistent with ``exploration before exploitation'' \citep{boppana2026reasoning}.  We note that representational reorganization during the trace does not by itself establish that specific CoT tokens are causally used \citep{jiang2025aha}; step-level interventions would be needed for that stronger claim.
-Full position$\times$layer results appear in Appendix~\ref{app:within_cot}.
+This trajectory is inconsistent with two degenerate hypotheses.
+Flat AUC (``performative reasoning'') is rejected by the 22pp dip:
+mid-trace tokens are not merely decorative.  Monotonic sharpening is
+rejected by the T0\,$>$\,T50 inversion: the model does not simply
+accrue certainty over the trace.  Instead, the U-shape is consistent
+with ``exploration before exploitation'' \citep{boppana2026reasoning},
+in which intermediate deliberation genuinely disrupts then reconverges
+the representational boundary.  We note that representational
+reorganization during the trace does not by itself establish that
+specific CoT tokens are causally used \citep{jiang2025aha}; the
+P2\,=\,0.500 control confirms the probe captures position-specific
+content, but step-level causal interventions would be needed for the
+stronger claim.  Full position$\times$layer results appear in
+Appendix~\ref{app:within_cot}.
 
 % ---------------------------------------------------------------
 \subsection{Scale Analysis: 7B vs.\ 32B}
