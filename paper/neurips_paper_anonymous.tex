@@ -54,28 +54,24 @@ We compare matched-architecture pairs---Llama-3.1-8B-Instruct vs.\
 R1-Distill-Llama-8B, OLMo 7B/32B Instruct vs.\ Think---and
 Qwen-3-8B's thinking toggle, across 470 contrastive items spanning 11
 bias categories.  Reasoning training collapses heuristic lure rates:
-27.3\% to 2.4\% (Llama), 19.6\% to 0.4\% at 32B.  Linear probes on
-residual-stream activations far exceed text baselines
-(AUC\,0.974/0.930 vs.\ text baseline 0.840, evaluated on the same vulnerable-category items), confirming the signal lives in
-geometry, not surface tokens.  Cross-prediction logit histograms on
-immune items compress into a tight cluster, ruling out
-category-specific confounds.  Probe-direction steering
-produces a 37.5pp dose-response shift in Llama (lure$\to$correct,
-100\% of lure reduction converting to correct answers), while R1---steered continuously across all 2048 tokens
-at four layers including its probe peak---shows no coherent
-dose-response at any layer, ruling out both temporal washout
-and a deeper writable locus.  Within-chain-of-thought probing reveals a
-non-monotonic trajectory (T0\,=\,0.973, T75\,=\,0.754,
-Tend\,=\,0.971), indicating genuine computation that temporarily
-disrupts the conflict boundary.  Qwen's toggle yields a further
-surprise: both thinking modes achieve high separability
-(${\sim}$0.97), but cross-mode probe transfer is at chance
-(AUC\,0.496), indicating the two modes' conflict-encoding axes do not
-align.  Scaling to 32B amplifies
-standard-model vulnerability (14.9\%$\to$19.6\%) while reasoning
-training remains effective (0.4\%).  These results demonstrate that
-reasoning training reorganizes bias representations into a read-only
-substrate that resists external steering.
+27.3\% to 2.4\% (Llama), 19.6\% to 0.4\% at 32B.  Activation probes far exceed text baselines
+(AUC\,0.974/0.930 vs.\ 0.840 on the same items), confirming the signal
+lives in geometry, not surface tokens.  Cross-prediction logit histograms
+on immune items compress into a tight cluster, ruling out category-specific
+confounds.  Probe-direction steering produces a 37.5pp dose-response in
+Llama (lure$\to$correct, 100\% converting to correct), while R1---steered
+continuously across 2048 tokens at four layers including its probe
+peak---shows no coherent dose-response, ruling out temporal washout and a
+deeper writable locus.  Within-chain-of-thought probing reveals a
+non-monotonic trajectory (T0\,=\,0.973, T75\,=\,0.754, Tend\,=\,0.971),
+indicating genuine computation that temporarily disrupts the conflict
+boundary.  Qwen's thinking toggle yields a further dissociation: both modes
+achieve high separability (${\sim}$0.97) yet cross-mode probe transfer is
+at chance (AUC\,0.496).  Scaling to 32B amplifies standard-model
+vulnerability (14.9\%$\to$19.6\%) while reasoning training remains
+effective (0.4\%).  These results show that reasoning training reorganizes
+bias representations into a read-only substrate that resists external
+steering.
 \end{abstract}
 
 % ============================================================
