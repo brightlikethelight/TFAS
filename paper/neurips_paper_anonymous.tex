@@ -537,7 +537,7 @@ OLMo-3.1-32B-Think    & L20 & 0.9978 & $[0.9960, 0.9996]^\dagger$ & --- & --- & 
 Training on \emph{vulnerable} categories and testing on \emph{immune} categories yields near-chance transfer.  ROC-AUC is ill-defined here because immune items are processed equivalently regardless of the conflict label, collapsing processing-mode variance to near zero; logit histograms confirm that immune items compress into a tight cluster (spread $0.03\times$ that of vulnerable categories).  Base rate and conjunction probes transfer near-perfectly to each other (AUC\,$>$\,0.99), while transfer to syllogism is weaker (0.59--0.63).
 
 \paragraph{Cross-model probe transfer.}
-A Llama-trained probe achieves AUC\,=\,0.920 on R1-Distill (layer~23); the reverse achieves 0.954 at layer~15.  The processing-mode direction is substantially shared across models differing only in reasoning training, contrasting with \citet{huang2026cogbias}'s near-orthogonal finding across architectures.
+A Llama-trained probe achieves AUC\,=\,0.920 on R1-Distill (layer~23, the peak transfer layer from a full 32-layer sweep); the reverse achieves 0.954 at layer~15 (also the peak transfer layer from a full sweep).  The processing-mode direction is substantially shared across models differing only in reasoning training, contrasting with \citet{huang2026cogbias}'s near-orthogonal finding across architectures.
 
 \paragraph{Lure susceptibility scores.}
 Llama's mean \pzero{} logit score for the S1-lure answer is $+0.422$
@@ -578,8 +578,9 @@ locus in R1 (whose probe peaks at L31).  Table~\ref{tab:r1_layer_sweep_anon}
 shows the result: \emph{no layer produces a coherent dose-response.}
 Lure rate fluctuates between 6--14\% with no monotonic trend at any
 layer.  At L31 (R1's probe peak, AUC\,=\,0.930), lure is 10.0\% at
-$\alpha\!=\!-5$ and 11.25\% at $\alpha\!=\!+5$, compared to a baseline
-of 11.25\%---a 1.25pp range, versus Llama's 37.5pp swing.  The model
+$\alpha\!=\!-5$ and 11.25\% at $\alpha\!=\!+5$ (endpoint-to-endpoint
+swing of 1.25pp; full sweep range 5.0pp), compared to Llama's 37.5pp
+endpoint swing (Figure~\ref{fig:steering}).  The model
 remains fluent at all layers and all $\alpha$ (correct rate $\geq 86\%$,
 ``other'' rate $\leq 14\%$, and $\leq 0\%$ at L31); the other-response rate provides an upper bound on incoherent or bypassed outputs.
 The direction that is causally active in Llama is not stably controllable
@@ -589,8 +590,10 @@ in R1-Distill at \emph{any} layer: \emph{readable but not writable.}
 \centering
 \caption{R1-Distill layer-sweep steering (continuous, 80 vulnerable
   conflict items).  Lure rate (\%) at each $\alpha$; no layer
-  shows a monotonic dose-response.  Compare Llama L14: 68.8\% at
-  $\alpha\!=\!-5$ $\to$ 31.2\% at $\alpha\!=\!+5$ (37.5pp swing).}
+  shows a monotonic dose-response (full-sweep ranges: L14\,=\,8.8pp,
+  L25\,=\,7.6pp, L28\,=\,5.0pp, L31\,=\,5.0pp; endpoint swing at
+  L31: $10.0\%\to11.25\%=1.25$pp).  Compare Llama L14: 68.8\%$\to$31.2\%
+  (37.5pp endpoint swing).}
 \label{tab:r1_layer_sweep_anon}
 \vspace{4pt}
 \small
@@ -608,12 +611,16 @@ L31 & 10.0 & 6.2 & 10.0 & 11.2 & 10.0 & 8.8 & 11.2 \\
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.75\linewidth]{../figures/fig_causal_steering.pdf}
+\includegraphics[width=\linewidth]{../figures/fig_steering_llama_r1_comparison.pdf}
 \vspace{-4pt}
-\caption{Probe-direction steering on Llama-3.1-8B-Instruct (L14, 80
-  vulnerable-category conflict items).  The probe direction produces a
-  37.5pp dose-response ($\alpha\!=\!-5$: 68.8\%; $\alpha\!=\!+5$: 31.2\%);
-  random directions (gray band) show no systematic effect.}
+\caption{Probe-direction steering (80 vulnerable-category conflict items).
+  \emph{Left}: Llama-3.1-8B-Instruct (L14) shows a 37.5pp dose-response
+  ($\alpha\!=\!-5$: 68.8\% lure; $\alpha\!=\!+5$: 31.2\%),  with 100\% of
+  lure reduction converting to correct answers (other rate stays 0);
+  50 random directions (gray band, $n\!=\!50$) show no systematic effect.
+  \emph{Right}: R1-Distill-Llama-8B (L31, its probe-peak layer) shows
+  no coherent dose-response (5.0pp range, compared to Llama's 37.5pp):
+  the probe direction is readable but not writable.}
 \label{fig:steering}
 \end{figure}
 
