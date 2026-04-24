@@ -54,8 +54,8 @@ interventions along it fail.  We compare matched-architecture pairs
 Instruct vs.\ Think) and Qwen-3-8B's thinking toggle across 470
 contrastive items spanning 11 bias categories.  Linear probes on
 residual-stream activations achieve AUC 0.974 (Llama) and 0.930
-(R1-Distill) with non-overlapping CIs, far exceeding a text-only
-baseline (0.840).  Probe-direction steering produces a monotonic
+(R1-Distill) with non-overlapping CIs, far exceeding text-only
+baselines (0.820--0.863).  Probe-direction steering produces a monotonic
 37.5pp dose-response in Llama (lure$\to$correct, 100\% converting to correct), but
 R1-Distill---steered continuously across the full 2048-token reasoning
 trace---shows no coherent dose-response, with the model remaining
