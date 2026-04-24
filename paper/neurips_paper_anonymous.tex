@@ -506,7 +506,7 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
   Layer-selection uncertainty is not propagated in any row.
   Selectivity = true AUC $-$ control AUC.  Cross-mode column:
   AUC when a probe trained on one Qwen mode is tested on the other.
-  Text baseline: sentence-transformer on input text only (no activations).}
+  Text baselines: three methods on input text only (no activations)---see range in last row.}
 \label{tab:probe_summary}
 \vspace{4pt}
 \small
@@ -525,7 +525,7 @@ OLMo-3-7B-Think       & L22 & 0.962 & [0.934, 0.982]  & ---  & --- & --- \\
 OLMo-3.1-32B-Instruct & L20 & 0.9999 & $[0.9997, 1.000]^\dagger$ & --- & --- & --- \\
 OLMo-3.1-32B-Think    & L20 & 0.9978 & $[0.9960, 0.9996]^\dagger$ & --- & --- & --- \\
 \midrule
-\emph{Text baseline}   & --- & 0.840 & ---             & ---  & --- & --- \\
+\emph{Text baselines}  & --- & 0.820--0.863 & ---         & ---  & --- & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
