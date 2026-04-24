@@ -83,7 +83,7 @@ is an acknowledged oversimplification---modern accounts treat this as a
 \emph{continuum} of processing intensity \citep{melnikoff2018mythical,
 evans2013dual, deneys2023advancing}---the core observation that
 cognitive systems flexibly allocate effort, with measurable consequences
-for bias susceptibility, remains robust.  Crucially, De~Neys' conflict
+for bias susceptibility, remains robust.  De~Neys' conflict
 detection paradigm \citep{deneys2012bias, deneys2017dual} demonstrates
 that humans often \emph{detect} conflicts between heuristic and
 normative responses even when they fail to override the heuristic---a
@@ -352,7 +352,7 @@ reproduces the core vulnerability pattern: 46\% base rate and 50\%
 conjunction lure rates, with an overall rate of 14.9\%.  OLMo Think
 reduces this to 0.9\%---near-complete elimination, even more effective
 than R1-Distill (2.4\%).  The pattern replicates across two independent
-architecture families.  Notably, OLMo Instruct reveals a
+architecture families.  OLMo Instruct also reveals a
 \emph{model-specific} vulnerability: 33.3\% lure rate on loss aversion
 items, where Llama showed 0\%.  Different training data and procedures
 expose different biases, consistent with the view that bias
@@ -560,8 +560,8 @@ We sweep four R1 layers (L14, L25, L28, L31) under continuous
 2048-token steering.  No layer produces a coherent dose-response:
 lure rate fluctuates between 6--14\% with no monotonic trend.  At
 L31 (R1's probe peak), lure is 10.0\% at $\alpha\!=\!-5$ and 11.25\%
-at $\alpha\!=\!+5$ (baseline 11.25\%)---a 1.25pp range versus Llama's
-37.5pp swing.  The model remains fluent (correct rate $\geq$86\%).
+at $\alpha\!=\!+5$ (baseline 11.25\%)---a 1.25pp endpoint swing (full
+sweep range 5.0pp) versus Llama's 37.5pp endpoint swing.  The model remains fluent (correct rate $\geq$86\%).
 The direction is not stably controllable in R1-Distill at any layer:
 \emph{readable but not writable}.
 
