@@ -692,9 +692,11 @@ In Llama, the probe direction is readable (AUC\,=\,0.974) and writable
 (37.5pp bidirectional causal swing); in R1-Distill, it is readable
 (AUC\,=\,0.930) but not detectably writable at any layer (L14--L31)
 under continuous intervention.  The layer sweep rules out the hypothesis
-that the writable locus simply moved deeper.  This dissociation is
-direct evidence for Evans' S2-by-default hypothesis
-\citep{evans2019reflections}.
+that the writable locus simply moved deeper.  The bias direction in
+R1-Distill is in this sense \emph{vestigial}---an echo of pre-training
+representations that reasoning distillation has decoupled from the
+behavioral output pathway.  This dissociation is direct evidence for
+Evans' S2-by-default hypothesis \citep{evans2019reflections}.
 
 \paragraph{Relation to CogBias.}
 \citet{huang2026cogbias} showed that bias directions are steerable

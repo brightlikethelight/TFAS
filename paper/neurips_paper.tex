@@ -692,6 +692,9 @@ steering vector becomes geometrically misaligned with the evolving
 CoT subspace.  The \pzero{} direction is read-only because reasoning
 models defer conflict resolution to a dynamically evolving CoT
 workspace rather than mapping \pzero{} directly to output logits.
+In this sense, the bias direction in R1-Distill is \emph{vestigial}---an
+echo of pre-training representations that reasoning distillation has
+decoupled from the behavioral output pathway.
 Qwen's think/no-think modes both achieve high separability
 (${\sim}$0.97), but cross-mode transfer is at chance (0.496),
 partly reflecting different \pzero{} positional contexts
