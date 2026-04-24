@@ -1603,10 +1603,10 @@ is inconsistent across categories: conjunction/base rate have
 $d\!>\!0$ while framing/certainty effect have $d\!<\!0$, so a
 pure-length probe would produce maximally anti-correlated cross-category
 predictions, not the ``immune-cluster compression'' pattern we
-observe in the logit-histogram analysis (Section~\ref{sec:results_probes}).  Third, the sentence-transformer
-text baseline, which has direct access to length as a feature,
-caps at 0.840; the 16pp gap to the activation probe (0.999) is
-information not extractable from the prompt text alone.
+observe in the logit-histogram analysis (Section~\ref{sec:results_probes}).  Third, text-only baselines including a raw word-count probe (0.863), TF-IDF
+logistic regression (0.820), and a sentence-transformer (0.840) all cap below 0.87;
+the $>$13pp gap to the activation probe (0.999) is
+information not extractable from prompt text alone, regardless of encoder.
 
 \paragraph{Specific OLMo-32B audit.}
 OLMo-3.1-32B-Instruct achieves probe AUC\,=\,0.9999 on the vulnerable
