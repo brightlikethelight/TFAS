@@ -151,8 +151,8 @@ architecture.  We make six contributions:
 
   \item \textbf{Probing analysis} revealing that the standard model has
   high internal conflict/control separability (AUC\,=\,0.974) while the
-  reasoning model renders this distinction \emph{less linearly accessible} (AUC\,=\,0.930;
-  non-overlapping CIs), with cross-prediction and cross-model probe
+  reasoning model renders this distinction \emph{less linearly accessible} (AUC\,=\,0.930),
+  with cross-prediction and cross-model probe
   transfer (AUC\,$>$\,0.92) confirming specificity to a shared
   processing-mode direction.
 
@@ -448,7 +448,7 @@ conflict/control classification on the three vulnerable categories.
 \vspace{-4pt}
 \caption{Layer-wise probe ROC-AUC (conflict vs.\ no-conflict, three
   vulnerable categories).  Llama peaks at 0.974 [0.952, 0.992] (L16);
-  R1-Distill at 0.930 [0.894, 0.960] (L31)---non-overlapping CIs.
+  R1-Distill at 0.930 [0.894, 0.960] (L31).
   Qwen~3-8B peaks at 0.954 (no-think) and 0.970 (think) at L34, but
   cross-mode transfer is at chance (0.496).
   Gray dashed: Hewitt--Liang control ceiling.}
@@ -456,7 +456,8 @@ conflict/control classification on the three vulnerable categories.
 \end{figure}
 
 Llama peaks at AUC\,=\,0.974 [0.952, 0.992] at L16;
-R1-Distill peaks at 0.930 [0.894, 0.960] at L31---non-overlapping CIs.  The 15-layer shift (L16\,$\to$\,L31 of 32) is architecturally suggestive.  Llama resolves conflict mid-network, leaving later layers to map the resolution to output tokens.  R1-Distill pushes the conflict representation to the penultimate layer, where the primary downstream operation is to set the hidden state for the chain-of-thought rollout \citep{zhang2025probing}.
+R1-Distill peaks at 0.930 [0.894, 0.960] at L31 (CIs overlap slightly but
+point estimates differ by 0.044).  The 15-layer shift (L16\,$\to$\,L31 of 32) is architecturally suggestive.  Llama resolves conflict mid-network, leaving later layers to map the resolution to output tokens.  R1-Distill pushes the conflict representation to the penultimate layer, where the primary downstream operation is to set the hidden state for the chain-of-thought rollout \citep{zhang2025probing}.
 Qwen~3-8B achieves high separability in both modes (no-think: 0.954; think: 0.970; both at L34), but cross-mode probe transfer is at chance (AUC\,=\,0.496, cosine $= -0.005$): probes trained in one mode do not generalize to the other.  Because the no-think template injects four tokens before \pzero{} (Section~\ref{sec:methods}), the two modes' \pzero{} positions differ in both absolute index and local context, guaranteeing a geometric subspace rotation via RoPE and attention to the injected tokens.  The non-transferability is therefore an expected consequence of the template difference.  The scientifically interesting observation is that each mode independently achieves high within-mode separability (${\sim}$0.97), yet the model must use the CoT to navigate from the think-mode subspace to the correct answer.
 
 \paragraph{Selectivity and text-only baseline.}  Hewitt--Liang control probes achieve
@@ -564,7 +565,7 @@ $\alpha\!=\!-5$ and 11.25\% at $\alpha\!=\!+5$ (endpoint-to-endpoint
 swing of 1.25pp; full sweep range 5.0pp), compared to Llama's 37.5pp
 endpoint swing (Figure~\ref{fig:steering}).  The model
 remains fluent at all layers and all $\alpha$ (correct rate $\geq 86\%$,
-``other'' rate $\leq 14\%$, and $\leq 0\%$ at L31); the other-response rate provides an upper bound on incoherent or bypassed outputs.  The direction that is causally active in
+``other'' rate $\leq 14\%$, dropping to exactly 0\% at L31); the other-response rate provides an upper bound on incoherent or bypassed outputs.  The direction that is causally active in
 Llama is not stably controllable in R1-Distill at \emph{any} layer, even
 under continuous intervention: \emph{readable but not writable.}
 

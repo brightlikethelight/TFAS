@@ -141,8 +141,8 @@ architecture.  We make six contributions:
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
   (235 matched conflict/control pairs) across 11 categories spanning
-  four heuristic families (representativeness, loss aversion, certainty
-  weighting, and availability), with novel isomorphs to resist
+  four heuristic families (representativeness, cognitive reflection,
+  decision framing, and loss/availability), with novel isomorphs to resist
   memorization.
 
   \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
@@ -153,8 +153,8 @@ architecture.  We make six contributions:
 
   \item \textbf{Probing analysis} revealing that the standard model has
   high internal conflict/control separability (AUC\,=\,0.974) while the
-  reasoning model renders this distinction \emph{less linearly accessible} (AUC\,=\,0.930;
-  non-overlapping CIs), with cross-prediction and cross-model probe
+  reasoning model renders this distinction \emph{less linearly accessible} (AUC\,=\,0.930),
+  with cross-prediction and cross-model probe
   transfer (AUC\,$>$\,0.92) confirming specificity to a shared
   processing-mode direction.
 
@@ -450,7 +450,7 @@ conflict/control classification on the three vulnerable categories.
 \vspace{-4pt}
 \caption{Layer-wise probe ROC-AUC (conflict vs.\ no-conflict, three
   vulnerable categories).  Llama peaks at 0.974 [0.952, 0.992] (L16);
-  R1-Distill at 0.930 [0.894, 0.960] (L31)---non-overlapping CIs.
+  R1-Distill at 0.930 [0.894, 0.960] (L31).
   Qwen~3-8B peaks at 0.954 (no-think) and 0.970 (think) at L34, but
   cross-mode transfer is at chance (0.496).
   Gray dashed: Hewitt--Liang control ceiling.}
@@ -458,8 +458,8 @@ conflict/control classification on the three vulnerable categories.
 \end{figure}
 
 Llama peaks at AUC\,=\,0.974 (95\% CI [0.952, 0.992]) at L16;
-R1-Distill peaks lower at AUC\,=\,0.930 [0.894, 0.960] at L31---non-overlapping
-CIs confirm statistical significance ($p < 0.05$).  The 15-layer shift
+R1-Distill peaks lower at AUC\,=\,0.930 [0.894, 0.960] at L31 (CIs
+overlap slightly but point estimates differ by 0.044).  The 15-layer shift
 (L16\,$\to$\,L31 of 32) is architecturally suggestive: Llama resolves
 conflict in the middle of the network, leaving later layers to map the
 resolution to vocabulary tokens for an immediate answer; R1-Distill pushes
@@ -578,7 +578,7 @@ $\alpha\!=\!-5$ and 11.25\% at $\alpha\!=\!+5$ (endpoint-to-endpoint
 swing of 1.25pp; full sweep range 5.0pp), compared to Llama's 37.5pp
 endpoint swing (Figure~\ref{fig:steering}).  The model
 remains fluent at all layers and all $\alpha$ (correct rate $\geq 86\%$,
-``other'' rate $\leq 14\%$, and $\leq 0\%$ at L31); the other-response rate provides an upper bound on incoherent or bypassed outputs.
+``other'' rate $\leq 14\%$, dropping to exactly 0\% at L31); the other-response rate provides an upper bound on incoherent or bypassed outputs.
 The direction that is causally active in Llama is not stably controllable
 in R1-Distill at \emph{any} layer: \emph{readable but not writable.}
 
@@ -760,13 +760,57 @@ will be released publicly upon acceptance.
 
 \section{Within-CoT Probing Details}
 \label{app:within_cot}
-Full within-chain-of-thought probe trajectories for R1-Distill-Llama-8B
-and Qwen~3-8B (think mode) will be reported here.
+
+This appendix details the within-chain-of-thought probing protocol
+for Qwen~3-8B (think mode).  For each model--item pair, we extract
+residual stream activations at five canonical positions within the
+\texttt{<think>...\allowbreak</think>} trace: T0 (first token), T25,
+T50, T75, and Tend (final token before \texttt{</think>}).  We train
+independent $\ell_2$-regularized logistic regression probes (5-fold
+stratified CV) at each (layer, position) combination on the conflict
+vs.\ no-conflict classification ($n = 160$).
+
+\begin{table}[ht]
+\centering
+\caption{Within-CoT probe AUC trajectory for Qwen~3-8B (think mode)
+  at L34, 7 positions.}
+\label{tab:within_cot_qwen}
+\vspace{4pt}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Position} & \textbf{Description} & \textbf{Probe AUC} \\
+\midrule
+P0   & Pre-generation          & 0.938 \\
+T0   & Thinking onset          & \textbf{0.973} \\
+T25  & 25\% of trace           & 0.791 \\
+T50  & Midpoint                & 0.772 \\
+T75  & 75\% of trace           & 0.754 \\
+Tend & Final thinking token    & 0.971 \\
+P2   & Control (chance)        & 0.500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The U-shaped trajectory (T0 peak, T25--T75 dip, Tend rebound) rules
+out both performative reasoning (flat AUC) and monotonic sharpening.
+The orthogonal \pzero{} directions between Qwen's think/no-think modes
+(cross-mode AUC\,=\,0.496) combined with genuine representational work
+during the trace show that training and inference-time thinking are
+mechanistically distinct: training reorganizes the encoding, while
+thinking operates within an orthogonal encoding to resolve conflicts
+during generation.
 
 \section{Scale Analysis: Full Results}
 \label{app:scale}
-Per-category lure rates and layer-wise probe curves for
-OLMo-3.1-32B-Instruct appear here.
+
+OLMo-3.1-32B-Instruct/Think (64 layers, 5120 hidden dims) were evaluated
+on the full 470-item benchmark.  Lure rate rises from 14.9\% (7B) to
+19.6\% (32B Instruct), with base rate neglect doubling (46\%$\to$74.3\%).
+Reasoning training at 32B drops lure to 0.4\%.  Probes achieve
+AUC\,=\,0.9999 (Instruct L20) and 0.9978 (Think L20): the behavioral gap
+widens (19.2pp at 32B vs.\ 14.0pp at 7B) while the representational gap
+shrinks (0.0021 vs.\ 0.0055).
 
 \section{SAE Features and Attention Entropy}
 \label{app:sae_attention}
