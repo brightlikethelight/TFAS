@@ -60,7 +60,7 @@ R1-Distill-Llama-8B, OLMo 7B/32B Instruct vs.\ Think---and
 Qwen-3-8B's thinking toggle, across 470 contrastive items spanning 11
 bias categories.  Reasoning training collapses heuristic lure rates:
 27.3\% to 2.4\% (Llama), 19.6\% to 0.4\% at 32B.  Activation probes far exceed text baselines
-(AUC\,0.974/0.930 vs.\ 0.820--0.863 across three text methods), confirming the signal
+(AUC\,0.974/0.930 vs.\ 0.820--0.863 across three text methods); the signal
 lives in geometry, not surface tokens.  Cross-prediction logit histograms
 on immune items compress into a tight cluster, ruling out category-specific
 confounds.  Probe-direction steering produces a 37.5pp dose-response in
@@ -153,7 +153,7 @@ architecture.  We make six contributions:
   high internal conflict/control separability (AUC\,=\,0.974) while the
   reasoning model renders this distinction \emph{less linearly accessible} (AUC\,=\,0.930),
   with cross-prediction and cross-model probe
-  transfer (AUC\,$>$\,0.92) confirming specificity to a shared
+  transfer (AUC\,$>$\,0.92) demonstrating specificity to a shared
   processing-mode direction.
 
   \item \textbf{Causal evidence via probe-direction steering and the \emph{readable but not writable} dissociation}: in Llama, steering along the probe weight vector produces a 37.5pp bidirectional causal swing, establishing the direction as causally active; in R1-Distill, the same direction is linearly decodable (AUC\,=\,0.930) but \emph{not stably controllable} at any of four layers (L14/L25/L28/L31) under continuous 2048-token intervention.
@@ -461,7 +461,7 @@ point estimates differ by 0.044).  The 15-layer shift (L16\,$\to$\,L31 of 32) is
 Qwen~3-8B achieves high separability in both modes (no-think: 0.954; think: 0.970; both at L34), but cross-mode probe transfer is at chance (AUC\,=\,0.496, cosine $= -0.005$): probes trained in one mode do not generalize to the other.  Because the no-think template injects four tokens before \pzero{} (Section~\ref{sec:methods}), the two modes' \pzero{} positions differ in both absolute index and local context, guaranteeing a geometric subspace rotation via RoPE and attention to the injected tokens.  The non-transferability is therefore an expected consequence of the template difference.  The scientifically interesting observation is that each mode independently achieves high within-mode separability (${\sim}$0.97), yet the model must use the CoT to navigate from the think-mode subspace to the correct answer.
 
 \paragraph{Selectivity and text-only baseline.}  Hewitt--Liang control probes achieve
-AUC\,$\leq$\,0.66 at all layers, confirming that the true probes
+AUC\,$\leq$\,0.66 at all layers, indicating that the true probes
 decode representational content, not probe capacity.  Selectivity
 exceeds 34 percentage points at peak layers for both models.\footnote{We
   train probes in two settings: 5-fold CV on all 350 items (7 categories,
@@ -476,7 +476,7 @@ below the activation probe (0.999).  All three per-category syllogism
 results collapse to below chance ($\leq$0.086), because
 conflict and control syllogisms are surface-matched in length ($d\!=\!+0.02$)
 and vocabulary; the activation probe remains at 0.999.  The
-narrow 0.82--0.86 text-baseline band confirms the \textasciitilde16pp
+narrow 0.82--0.86 text-baseline band shows the \textasciitilde16pp
 gap to the activation probe reflects information absent from input
 text, regardless of text-encoding method.
 

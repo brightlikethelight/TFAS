@@ -84,14 +84,14 @@ steering.
 Kahneman's dual-process framework distinguishes fast, heuristic
 processing (``System~1'') from slow, deliberative processing
 (``System~2'') \citep{kahneman2011thinking}.  While the binary framing
-is an acknowledged oversimplification---modern accounts treat this as a
+is an acknowledged oversimplification (modern accounts treat this as a
 \emph{continuum} of processing intensity \citep{melnikoff2018mythical,
-evans2013dual, deneys2023advancing}---the core observation that
+evans2013dual, deneys2023advancing}), the core observation that
 cognitive systems flexibly allocate effort, with measurable consequences
 for bias susceptibility, remains robust.  De~Neys' conflict
 detection paradigm \citep{deneys2012bias, deneys2017dual} demonstrates
 that humans often \emph{detect} conflicts between heuristic and
-normative responses even when they fail to override the heuristic---a
+normative responses even when they fail to override the heuristic, a
 dissociation between conflict \emph{monitoring} and conflict
 \emph{resolution} with clear neural correlates in the anterior cingulate
 cortex \citep{botvinick2001conflict}.
@@ -109,7 +109,7 @@ different question: what does reasoning post-training change about the
 of those directions?
 
 Yet behavior alone cannot distinguish genuine processing-mode differences
-from surface mimicry---chain-of-thought traces are often unfaithful,
+from surface mimicry: chain-of-thought traces are often unfaithful,
 with only ${\sim}2.3$\% of reasoning steps causally influencing the
 final answer \citep{jiang2025aha, lanham2023measuring,
 boppana2026reasoning}.  The critical question is whether fast/slow modes
@@ -119,7 +119,7 @@ those correlates change when a model is trained to reason.
 Recent work on activation steering \citep{turner2023activation,
 rimsky2024steering} has demonstrated that targeted interventions on
 internal representations can modulate model behavior in a causally
-specific manner---adding or subtracting ``steering vectors'' from
+specific manner, adding or subtracting ``steering vectors'' from
 residual stream activations shifts outputs along interpretable
 dimensions (e.g., truthfulness, sycophancy, refusal).  This raises a
 natural question for the dual-process setting: if linear probes identify
@@ -183,8 +183,8 @@ in LLMs, finding that instruction-tuned models reproduce
 representativeness and anchoring effects that vanish in later ChatGPT
 versions.  \citet{codaforno2025dual} applied psychometric methods to show
 that heuristic and deliberative prompts elicit shared early-layer
-representations but diverge in later layers---a suggestive but purely
-behavioral result.  \citet{ziabari2025reasoning} positioned reasoning
+representations but diverge in later layers (a suggestive but purely
+behavioral result).  \citet{ziabari2025reasoning} positioned reasoning
 along a continuous spectrum rather than a binary, examining how reasoning
 training shifts the balance between fast and slow processing modes.
 \citet{brady2025dual} provide a comprehensive review in \emph{Nature
@@ -226,8 +226,8 @@ Our theoretical framework draws on De~Neys' conflict detection paradigm
 \citep{deneys2012bias, deneys2017dual}, which demonstrates that humans
 detect heuristic--normative conflicts even when they fail to override the
 heuristic response.  \citet{evans2013dual} refined the Type~1/Type~2
-taxonomy, emphasizing that the distinction is graded rather than binary---a
-framing we adopt for LLMs.  \citet{botvinick2001conflict}'s conflict
+taxonomy, emphasizing that the distinction is graded rather than binary,
+a framing we adopt for LLMs.  \citet{botvinick2001conflict}'s conflict
 monitoring theory provides the computational account: the anterior
 cingulate cortex signals response conflict, triggering increased cognitive
 control.  We test the LLM analogue of this account: do models show
@@ -431,7 +431,7 @@ showing higher separability in 30/32 layers.
 
 \paragraph{Implicit conflict detection.}
 Llama's first-token probability is 4.2pp lower on conflict items (0.751
-vs.\ 0.793), and entropy is 16\% higher (0.948 vs.\ 0.817)---an implicit
+vs.\ 0.793), and entropy is 16\% higher (0.948 vs.\ 0.817), an implicit
 ``hesitation'' signature that parallels De~Neys' conflict-detection
 findings \citep{deneys2012bias} and elevated Anterior Cingulate Cortex
 (ACC) activation in humans facing dual-process conflicts
@@ -479,7 +479,7 @@ exceeds 34 percentage points at peak layers for both models.\footnote{We
 Three text-only baselines cluster in a narrow band: a
 length-only probe (word count, 5-fold CV) achieves AUC\,=\,0.863,
 a TF-IDF unigram+bigram logistic regression achieves 0.820, and a
-global sentence-transformer baseline achieves 0.840---all substantially
+global sentence-transformer baseline achieves 0.840, all substantially
 below the activation probe (0.999).  All three per-category syllogism
 results collapse to below chance ($\leq$0.086), because
 conflict and control syllogisms are surface-matched in length ($d\!=\!+0.02$)
@@ -662,7 +662,7 @@ OLMo-3.1-32B-Think collapses lure rates to 0.4\%.  Representationally,
 the behavioral gap \emph{widens} with scale (19.2pp at 32B vs.\ 14.0pp
 at 7B) while the probe-AUC gap \emph{shrinks} (0.0021 vs.\ 0.0055),
 showing both models encode conflict with near-identical fidelity at 32B
-but only Think translates this into correct responses---further evidence
+but only Think translates this into correct responses, further evidence
 for readable but not writable.  Full breakdowns in
 Appendix~\ref{app:scale}.
 

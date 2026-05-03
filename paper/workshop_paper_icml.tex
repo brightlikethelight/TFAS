@@ -54,7 +54,7 @@ interventions along it fail.  We compare matched-architecture pairs
 Instruct vs.\ Think) and Qwen-3-8B's thinking toggle across 470
 contrastive items spanning 11 bias categories.  Linear probes on
 residual-stream activations achieve AUC 0.974 (Llama) and 0.930
-(R1-Distill) with non-overlapping CIs, far exceeding text-only
+(R1-Distill), far exceeding text-only
 baselines (0.820--0.863).  Probe-direction steering produces a monotonic
 37.5pp dose-response in Llama (lure$\to$correct, 100\% converting to correct), but
 R1-Distill---steered continuously across the full 2048-token reasoning
@@ -126,8 +126,8 @@ associated with reasoning training, not architecture.  We make six contributions
 
   \item \textbf{Probing analysis} revealing that the standard model has
   high separability (AUC\,=\,0.974) while the reasoning model renders
-  this \emph{less linearly accessible} (AUC\,=\,0.930; non-overlapping
-  CIs), far exceeding text-only baselines (length-only: 0.863, TF-IDF: 0.820, sentence-transformer: 0.840).
+  this \emph{less linearly accessible} (AUC\,=\,0.930),
+  far exceeding text-only baselines (length-only: 0.863, TF-IDF: 0.820, sentence-transformer: 0.840).
 
   \item \textbf{Causal evidence via probe-direction steering}: a
   37.5pp bidirectional dose-response in Llama (lure$\to$correct,
@@ -149,11 +149,11 @@ associated with reasoning training, not architecture.  We make six contributions
 The Llama pair shares every architectural parameter, yet reasoning
 training drops cognitive bias susceptibility from 27\% to 2\% and
 simultaneously reduces internal \sone{}/\stwo{} separability from
-AUC 0.974 to 0.930 (non-overlapping 95\% CIs).  The OLMo-3-7B family
+AUC 0.974 to 0.930.  The OLMo-3-7B family
 independently replicates this pattern (14.9\% $\to$ 0.9\%), confirming
 generality across architectures.  Qwen~3-8B reveals the converse: thinking mode
 changes behavior ($21.2\% \to 7.3\%$) without changing the pre-generation
-representation (AUC\,=\,0.971 in both modes).  The model that resists
+representation (AUC\,=\,0.954 no-think, 0.970 think).  The model that resists
 biases is, paradoxically, the one where the internal
 heuristic/deliberative boundary is \emph{less} distinct---and that
 distinction is set by training, not inference strategy.
@@ -385,10 +385,10 @@ conflict/control classification on the three vulnerable categories.
   restricted to the three vulnerable categories.  Llama-3.1-8B-Instruct
   (blue) peaks at AUC\,=\,0.974 [0.952, 0.992] at L16;
   R1-Distill-Llama-8B (red) peaks at AUC\,=\,0.930 [0.894, 0.960] at
-  L31---non-overlapping CIs confirm statistical significance.  Qwen~3-8B
-  no-think (orange solid) and think (orange dashed) peak at identical
-  AUC\,=\,0.971 at L34---the thinking toggle does not change
-  pre-generation representations.
+  L31 (CIs overlap slightly but point estimates differ by 0.044).
+  Qwen~3-8B no-think (orange solid) peaks at AUC\,=\,0.954 and think
+  (orange dashed) at 0.970, both at L34, but cross-mode transfer is
+  at chance (0.496).
   Dashed gray line: Hewitt--Liang control task ceiling.}
 \label{fig:probe_curves}
 \end{figure}
@@ -409,18 +409,19 @@ that reasoning distillation shifts conflict-relevant information toward
 deeper layers.
 
 \paragraph{Qwen~3-8B (no-think mode).}  Probes on Qwen~3-8B no-think
-activations reach peak AUC\,=\,0.971 at layer~34 on the vulnerable
+activations reach peak AUC\,=\,0.954 at layer~34 on the vulnerable
 categories, intermediate between Llama (0.974) and R1-Distill (0.930)
 and consistent with its intermediate behavioral vulnerability (21.2\% lure
 rate).
 
 \paragraph{Qwen~3-8B (think mode).}  Probes on Qwen~3-8B think-mode
-activations---extracted at the same \pzero{} position before the
-\texttt{<think>} block begins---reach \emph{identical} peak
-AUC\,=\,0.971 at layer~34.  Despite a 3$\times$ behavioral improvement
-(lure rate $21.2\% \to 7.3\%$), the pre-generation representation is
-unchanged---consistent with \citet{afzal2025knowing}, who showed probes
-can predict chain-of-thought success before the first token is generated.
+activations, extracted at \pzero{} before the
+\texttt{<think>} block begins, reach peak
+AUC\,=\,0.970 at layer~34.  Despite a 3$\times$ behavioral improvement
+(lure rate $21.2\% \to 7.3\%$), cross-mode probe transfer is at chance
+(AUC\,=\,0.496, cosine\,=\,$-0.005$), consistent with
+\citet{afzal2025knowing}, who showed probes can predict
+chain-of-thought success before the first token is generated.
 This is the key dissociation: training (Llama vs.\ R1-Distill)
 changes both encoding and behavior; inference-time thinking (Qwen no-think
 vs.\ think) changes behavior without changing encoding.
@@ -469,11 +470,11 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \midrule
 Llama-8B-Inst.        & L16 & .974 & [.952, .992] & .63 & .343 \\
 R1-Dist.-Llama-8B     & L31 & .930 & [.894, .960] & .55 & .377 \\
-Qwen~3-8B (no think)  & L34 & .971 & ---          & --- & --- \\
-Qwen~3-8B (think)     & L34 & .971 & ---          & --- & --- \\
+Qwen~3-8B (no think)  & L34 & .954 & ---          & --- & 0.496 \\
+Qwen~3-8B (think)     & L34 & .970 & ---          & --- & 0.496 \\
 \midrule
-OLMo-3-7B-Inst.       & L21 & .998 & ---          & --- & --- \\
-OLMo-3-7B-Think       & L28 & .993 & ---          & --- & --- \\
+OLMo-3-7B-Inst.       & L24 & .996 & [.988, 1.000] & --- & --- \\
+OLMo-3-7B-Think       & L22 & .962 & [.934, .982]  & --- & --- \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -602,7 +603,7 @@ before chain-of-thought unfolds.
 The reasoning model shows \emph{less} distinct conflict encoding
 (AUC\,=\,0.930) yet dramatically better resolution (2.4\% lure rate)---a
 pattern confirmed both behaviorally and mechanistically in the OLMo
-family (14.9\% $\to$ 0.9\% lure rate; AUC 0.998 $\to$ 0.993, higher
+family (14.9\% $\to$ 0.9\% lure rate; AUC 0.996 $\to$ 0.962, higher
 in 30/32 layers), establishing this as a general phenomenon across
 architectures.
 If reasoning training simply added a ``System~2 module'' that overrides
@@ -650,7 +651,7 @@ across all bias categories and models.
 \paragraph{Training vs.\ inference.}
 Qwen's think/no-think result is the sharpest finding: thinking mode
 reduces lure rates from 21.2\% to 7.3\% on the same weights, yet probes
-are identical in both modes (AUC\,=\,0.971 at L34).  The toggle
+reach similar peak AUC in both modes (0.954 no-think, 0.970 think at L34) yet cross-mode transfer is at chance.  The toggle
 changes what the model \emph{does} during generation, not what it
 \emph{encodes} at \pzero{}.  Combined with the Llama/R1-Distill comparison
 (where training \emph{does} change encoding: 0.974 $\to$ 0.930), this
