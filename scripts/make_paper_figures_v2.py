@@ -378,6 +378,8 @@ def set_paper_theme() -> None:
     """Apply publication-quality rcParams. Target: 8pt body, serif, clean."""
     sns.set_style("ticks")
     plt.rcParams.update({
+        "pdf.fonttype": 42,  # TrueType — required for NeurIPS (no Type 3)
+        "ps.fonttype": 42,
         "font.family": "serif",
         "font.serif": ["Times New Roman", "DejaVu Serif", "serif"],
         "font.size": 8,

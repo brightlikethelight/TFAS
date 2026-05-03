@@ -17,6 +17,8 @@ import matplotlib.patches as mpatches
 import numpy as np
 
 matplotlib.use("Agg")  # non-interactive backend
+plt.rcParams["pdf.fonttype"] = 42  # TrueType — required for NeurIPS
+plt.rcParams["ps.fonttype"] = 42
 
 # ---------------------------------------------------------------------------
 # Paths

@@ -34,6 +34,8 @@ FIGURES_DIR.mkdir(exist_ok=True)
 # ---------------------------------------------------------------------------
 
 mpl.rcParams.update({
+    "pdf.fonttype": 42,  # TrueType — required for NeurIPS
+    "ps.fonttype": 42,
     "font.size": 8,
     "axes.titlesize": 9,
     "axes.labelsize": 8,
