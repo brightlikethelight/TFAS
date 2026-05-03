@@ -113,7 +113,7 @@ and DeepSeek-R1-Distill-Llama-8B share identical architectures (32
 layers, 32 attention heads, 4096 hidden dimensions) but differ
 primarily in post-training pipeline: R1-Distill was distilled from a
 reasoning-trained teacher.  Representational differences are thus
-associated with reasoning training, not architecture.  We make five contributions:
+associated with reasoning training, not architecture.  We make six contributions:
 
 \begin{enumerate}[leftmargin=*,itemsep=2pt]
   \item A \textbf{contrastive cognitive bias benchmark} of 470 items
@@ -122,7 +122,7 @@ associated with reasoning training, not architecture.  We make five contribution
 
   \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
   overall lure rate (standard) vs.\ 2.4\% (reasoning), replicated on
-  OLMo-3-7B (14.9\% $\to$ 0.9\%) and at 32B scale (19.6\% $\to$ 0.4\%).
+  OLMo-3-7B (14.9\% $\to$ 0.9\%).
 
   \item \textbf{Probing analysis} revealing that the standard model has
   high separability (AUC\,=\,0.974) while the reasoning model renders
@@ -298,7 +298,7 @@ responses on conflict items) across all models and categories.
   Llama-specific vulnerability (13\%) absent in all other models.
   Natural frequency base rate framing increases lure rates
   (Llama: $84\% \to 100\%$; R1-Distill: $4\% \to 40\%$).
-  --- = not yet evaluated on the expanded set.}
+  --- = category not included in this model's evaluation set.}
 \label{tab:behavioral}
 \vspace{4pt}
 \footnotesize
@@ -379,16 +379,7 @@ conflict/control classification on the three vulnerable categories.
 
 \begin{figure}[t]
 \centering
-% \includegraphics[width=\linewidth]{figures/probe_layer_curves.pdf}
-\fbox{\parbox{0.95\linewidth}{\centering\vspace{1.5cm}
-  \textbf{Figure 1: Layer-wise probe AUC}\\[4pt]
-  \scriptsize X-axis: layer (0--31 Llama/R1/OLMo, 0--35 Qwen). Y-axis: ROC-AUC.\\[2pt]
-  \textcolor{blue}{Blue}: Llama (peak 0.974, L16).
-  \textcolor{red}{Red}: R1-Distill (peak 0.930, L31).\\
-  \textcolor{orange}{Orange}: Qwen no-think (0.971, L34).
-  \textcolor{orange}{Orange dash}: Qwen think (0.971, L34).\\
-  Gray dashed: Hewitt--Liang control ceiling.
-\vspace{1.5cm}}}
+\includegraphics[width=\linewidth]{../figures/fig1_probe_auc_curves.pdf}
 \caption{Layer-wise probe ROC-AUC for classifying conflict vs.\
   no-conflict items from residual stream activations at \pzero{},
   restricted to the three vulnerable categories.  Llama-3.1-8B-Instruct
