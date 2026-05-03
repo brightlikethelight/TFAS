@@ -55,7 +55,7 @@ R1-Distill-Llama-8B, OLMo 7B/32B Instruct vs.\ Think---and
 Qwen-3-8B's thinking toggle, across 470 contrastive items spanning 11
 bias categories.  Reasoning training collapses heuristic lure rates:
 27.3\% to 2.4\% (Llama), 19.6\% to 0.4\% at 32B.  Activation probes far exceed text baselines
-(AUC\,0.974/0.930 vs.\ 0.820--0.863 across three text methods), confirming the signal
+(AUC\,0.974/0.930 vs.\ 0.820--0.863 across three text methods); the signal
 lives in geometry, not surface tokens.  Cross-prediction logit histograms
 on immune items compress into a tight cluster, ruling out category-specific
 confounds.  Probe-direction steering produces a 37.5pp dose-response in
@@ -145,7 +145,7 @@ architecture.  We make six contributions:
   decision framing, and loss/availability), with novel isomorphs to resist
   memorization.
 
-  \item \textbf{Behavioral validation} showing a dramatic gap: 27.3\%
+  \item \textbf{Behavioral validation} showing a large gap: 27.3\%
   overall lure rate (standard) vs.\ 2.4\% (reasoning), replicated on
   OLMo-3-7B (14.9\% $\to$ 0.9\%), with category-level specificity
   revealing which biases are vulnerable and model-specific vulnerability
@@ -155,7 +155,7 @@ architecture.  We make six contributions:
   high internal conflict/control separability (AUC\,=\,0.974) while the
   reasoning model renders this distinction \emph{less linearly accessible} (AUC\,=\,0.930),
   with cross-prediction and cross-model probe
-  transfer (AUC\,$>$\,0.92) confirming specificity to a shared
+  transfer (AUC\,$>$\,0.92) demonstrating specificity to a shared
   processing-mode direction.
 
   \item \textbf{Causal evidence via probe-direction steering and the \emph{readable but not writable} dissociation}: in Llama, steering along the probe weight vector produces a 37.5pp bidirectional causal swing, establishing the direction as causally active; in R1-Distill, the same direction is linearly decodable (AUC\,=\,0.930) but \emph{not stably controllable} at any of four layers (L14/L25/L28/L31) under continuous 2048-token intervention.
@@ -406,8 +406,8 @@ Anchoring      & 0   & \textbf{10} & \textbf{10} & 0 & 5 & 0 \\
 \end{tabular}
 \end{table}
 
-Four findings emerge.  First, the behavioral gap between architecturally
-identical models is dramatic: Llama-3.1-8B-Instruct produces heuristic
+The behavioral results show four patterns.  First, the gap between architecturally
+identical models is large: Llama-3.1-8B-Instruct produces heuristic
 lures at a 27.3\% rate; R1-Distill-Llama-8B reduces this to 2.4\% under
 greedy decoding (12.1\% under vendor-recommended sampled decoding;
 Appendix~\ref{app:robustness}).  Second, vulnerability is
@@ -424,7 +424,7 @@ from 56\% to 4\% while conjunction fallacy drops only from 95\% to 55\%.
 
 \paragraph{Cross-architecture replication.}
 OLMo-3-7B-Instruct/Think \citep{olmo3} independently replicate the
-pattern: 14.9\% $\to$ 0.9\% lure rate.  Probing confirms the mechanistic
+pattern: 14.9\% $\to$ 0.9\% lure rate.  Probing shows the same mechanistic
 direction: OLMo Instruct AUC\,=\,0.996 at L24, OLMo Think
 AUC\,=\,0.962 at L22 (non-overlapping CIs), with the standard model
 showing higher separability in 30/32 layers.
@@ -466,10 +466,10 @@ resolution to vocabulary tokens for an immediate answer; R1-Distill pushes
 the conflict representation to the penultimate layer where its primary
 downstream operation is to initialize the chain-of-thought rollout rather
 than produce an answer directly \citep{zhang2025probing}.
-Qwen~3-8B achieves high separability in both modes (no-think: 0.954; think: 0.970; both at L34), but cross-mode probe transfer is at chance (AUC\,=\,0.496, cosine $= -0.005$): probes trained in one mode do not generalize to the other.  Because the no-think template injects four tokens before \pzero{} (Section~\ref{sec:methods}), the two modes' \pzero{} positions differ in both absolute index and local context, guaranteeing a geometric subspace rotation via RoPE and attention to the injected tokens.  The non-transferability is therefore an expected consequence of the template difference.  The scientifically interesting observation is that each mode independently achieves high within-mode separability (${\sim}$0.97), yet the model must use the CoT to navigate from the think-mode subspace to the correct answer.
+Qwen~3-8B achieves high separability in both modes (no-think: 0.954; think: 0.970; both at L34), but cross-mode probe transfer is at chance (AUC\,=\,0.496, cosine $= -0.005$): probes trained in one mode do not generalize to the other.  Because the no-think template injects four tokens before \pzero{} (Section~\ref{sec:methods}), the two modes' \pzero{} positions differ in both absolute index and local context, guaranteeing a geometric subspace rotation via RoPE and attention to the injected tokens.  The non-transferability is therefore an expected consequence of the template difference.  Each mode independently achieves high within-mode separability (${\sim}$0.97), yet the model must use the CoT to navigate from the think-mode subspace to the correct answer.
 
 \paragraph{Selectivity and text-only baseline.}  Hewitt--Liang control probes achieve
-AUC\,$\leq$\,0.66 at all layers, confirming that the true probes
+AUC\,$\leq$\,0.66 at all layers, indicating that the true probes
 decode representational content, not probe capacity.  Selectivity
 exceeds 34 percentage points at peak layers for both models.\footnote{We
   train probes in two settings: 5-fold CV on all 350 items (7 categories,
@@ -484,7 +484,7 @@ below the activation probe (0.999).  All three per-category syllogism
 results collapse to below chance ($\leq$0.086), because
 conflict and control syllogisms are surface-matched in length ($d\!=\!+0.02$)
 and vocabulary; the activation probe remains at 0.999.  The
-narrow 0.82--0.86 text-baseline band confirms the \textasciitilde16pp
+narrow 0.82--0.86 text-baseline band shows the \textasciitilde16pp
 gap to the activation probe reflects information absent from input
 text, regardless of text-encoding method.
 
@@ -697,7 +697,7 @@ to resolve it (27.3\% lure rate), paralleling De~Neys' finding
 \citep{deneys2012bias} that human conflict monitoring often occurs even
 when the heuristic prevails.
 The reasoning model shows \emph{less} distinct encoding (AUC\,=\,0.930)
-yet dramatically better resolution (2.4\%), replicated in OLMo
+yet much better resolution (2.4\%), replicated in OLMo
 (AUC 0.996 $\to$ 0.962; lure 14.9\% $\to$ 0.9\%).
 The pattern is consistent with reasoning distillation automating
 Type~2 processing \citep{evans2019reflections}: the correct response
