@@ -1,25 +1,26 @@
 # NeurIPS 2026 OpenReview Submission Metadata
 
-Prepared: 2026-04-12
-Submission deadline: TBD (typically mid-May)
+Prepared: 2026-05-03 (updated)
+Abstract deadline: May 4, 2026 AOE
+Full paper deadline: May 6, 2026 AOE
 
 ---
 
 ## Title
 
-What Changes When LLMs Learn to Reason? Causal Mechanistic Signatures of Cognitive Bias Processing
+Readable but Not Writable: Reasoning Training Decouples Bias Directions from Behavior in LLMs
 
 ## Abstract
 
-Steering along a single linear direction in activation space modulates LLM susceptibility to cognitive biases by 37.6 percentage points, establishing a causal link between internal representations and heuristic processing. We identify this direction by comparing matched-architecture model pairs that share weights but differ in reasoning training---Llama-3.1-8B-Instruct vs. R1-Distill-Llama-8B, OLMo-3-7B-Instruct vs. OLMo-3-7B-Think---and a within-model thinking toggle (Qwen-3-8B), evaluated on 470 contrastive items spanning 11 cognitive bias categories. Reasoning training dramatically reduces heuristic lure rates: 27.3% to 2.4% (Llama) and 14.9% to 0.9% (OLMo). Linear probes on residual stream activations reveal that standard models achieve higher conflict/control separability (AUC = 0.974 [0.952, 0.992]) than reasoning models (AUC = 0.930 [0.894, 0.960])---the S1-like/S2-like boundary is blurred, not sharpened, by training. Cross-prediction on immune categories (AUC = 0.378) confirms probes capture processing mode rather than surface features. Crucially, causal interventions via probe-direction steering reduce the lure rate by 21 percentage points (31.2% at alpha=+5 vs. 52.5% baseline); random directions produce no effect. Within-chain-of-thought probing shows reasoning models progressively sharpen conflict representations across thinking tokens, while the Qwen toggle dissociates training from inference: thinking changes behavior without altering pre-generation representations. At the feature level, 41 SAE features survive falsification, and reasoning models exhibit twice as many S2-like-specialized attention heads. We evaluate at scales up to 32B parameters, finding the same training-induced blurring pattern. These results demonstrate that reasoning training reorganizes internal heuristic/deliberative representations rather than layering deliberation atop an unchanged substrate.
+Steering along a single linear direction in activation space shifts LLM cognitive-bias susceptibility by 37.5 percentage points, but only in standard models. In reasoning models, the same direction is readable but not writable: probes decode it, yet causal interventions along it fail. This dissociation is our central finding. We compare matched-architecture pairs---Llama-3.1-8B-Instruct vs. R1-Distill-Llama-8B, OLMo 7B/32B Instruct vs. Think---and Qwen-3-8B's thinking toggle, across 470 contrastive items spanning 11 bias categories. Reasoning training collapses heuristic lure rates: 27.3% to 2.4% (Llama), 19.6% to 0.4% at 32B. Activation probes far exceed text baselines (AUC 0.974/0.930 vs. 0.820--0.863 across three text methods), confirming the signal lives in geometry, not surface tokens. Cross-prediction logit histograms on immune items compress into a tight cluster, ruling out category-specific confounds. Probe-direction steering produces a 37.5pp dose-response in Llama (lure to correct, 100% converting to correct), while R1---steered continuously across 2048 tokens at four layers including its probe peak---shows no coherent dose-response, ruling out temporal washout and a deeper writable locus. Within-chain-of-thought probing reveals a non-monotonic trajectory (T0=0.973, T75=0.754, Tend=0.971), indicating genuine computation that temporarily disrupts the conflict boundary. Qwen's thinking toggle yields a further dissociation: both modes achieve high separability (~0.97) yet cross-mode probe transfer is at chance (AUC 0.496). Scaling to 32B amplifies standard-model vulnerability (14.9% to 19.6%) while reasoning training remains effective (0.4%). These results show that reasoning training reorganizes bias representations into a read-only substrate that resists external steering.
 
-**Word count: 239**
+**Word count: 243**
 
 ## TL;DR
 
-Probe-direction steering causally modulates cognitive bias susceptibility in LLMs (37.5pp swing), and reasoning training decouples this direction from behavioral control.
+Probe-direction steering shifts cognitive bias susceptibility by 37.5pp in standard LLMs but fails in reasoning models—the bias direction is readable but not writable after reasoning training.
 
-**Character count: 159**
+**Character count: 193**
 
 ## Keywords
 
