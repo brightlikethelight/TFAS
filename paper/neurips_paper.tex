@@ -121,9 +121,9 @@ boppana2026reasoning}.  The critical question is whether fast/slow modes
 have \emph{mechanistic correlates} in internal representations, and how
 those correlates change when a model is trained to reason.
 
-Activation steering \citep{turner2023activation, rimsky2024steering}
-shows that adding steering vectors to residual stream activations can
-modulate behavior along interpretable dimensions.  This raises a natural
+Activation steering \citep{turner2023activation, rimsky2024steering,
+cox2026decoding} shows that adding steering vectors to residual stream
+activations can modulate behavior along interpretable dimensions.  This raises a natural
 question: if linear probes identify a direction separating \sone{}-like
 from \stwo{}-like processing, can steering along it \emph{causally}
 modulate bias susceptibility---moving findings from correlational to
@@ -185,9 +185,10 @@ representations but diverge in later layers---a suggestive but purely
 behavioral result.  \citet{ziabari2025reasoning} positioned reasoning
 along a continuous spectrum rather than a binary, examining how reasoning
 training shifts the balance between fast and slow processing modes.
-\citet{brady2025dual} provide a comprehensive review in \emph{Nature
-Reviews Psychology}, arguing that dual-process theory offers a productive
-(if imperfect) lens for AI cognition research.
+\citet{brady2025dual} review the dual-process lens for LLM
+decision-making in \emph{Nature Reviews Psychology}, noting that LLMs
+mimic both System~1- and System~2-like responses but through mechanisms
+distinct from human cognition.
 Our work moves beyond behavioral characterization: we test whether the
 \sone{}/\stwo{} distinction has a \emph{mechanistic} counterpart in
 model internals.

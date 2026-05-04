@@ -117,11 +117,10 @@ have \emph{mechanistic correlates} in internal representations, and how
 those correlates change when a model is trained to reason.
 
 Recent work on activation steering \citep{turner2023activation,
-rimsky2024steering} has demonstrated that targeted interventions on
-internal representations can modulate model behavior in a causally
-specific manner, adding or subtracting ``steering vectors'' from
-residual stream activations shifts outputs along interpretable
-dimensions (e.g., truthfulness, sycophancy, refusal).  This raises a
+rimsky2024steering, cox2026decoding} has shown that targeted
+interventions on internal representations modulate behavior causally,
+with pre-CoT probes achieving $>$0.9 AUC and answer-flipping rates
+above 50\% on instruction-tuned models \citep{cox2026decoding}.  This raises a
 natural question for the dual-process setting: if linear probes identify
 a direction in activation space that separates \sone{}-like from
 \stwo{}-like processing, can steering along that direction
@@ -187,9 +186,10 @@ representations but diverge in later layers (a suggestive but purely
 behavioral result).  \citet{ziabari2025reasoning} positioned reasoning
 along a continuous spectrum rather than a binary, examining how reasoning
 training shifts the balance between fast and slow processing modes.
-\citet{brady2025dual} provide a comprehensive review in \emph{Nature
-Reviews Psychology}, arguing that dual-process theory offers a productive
-(if imperfect) lens for AI cognition research.
+\citet{brady2025dual} review the dual-process lens for LLM
+decision-making in \emph{Nature Reviews Psychology}, noting that LLMs
+mimic both System~1- and System~2-like responses but through mechanisms
+distinct from human cognition.
 Our work moves beyond behavioral characterization: we test whether the
 System~1/System~2 distinction has a \emph{mechanistic} counterpart in
 model internals.
