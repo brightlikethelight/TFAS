@@ -1,6 +1,6 @@
 # Master Action Plan — Pre-Deadline Sprint
 
-Generated: 2026-05-03, ~20:00
+Generated: 2026-05-03 (updated after Phase 2-4 agent completion)
 Project: P1 (Readable but Not Writable)
 Venues: NeurIPS 2026 Main (May 4/6), ICML MechInterp Workshop (May 8)
 
@@ -64,9 +64,36 @@ The paper is **submission-ready** for both venues after 22 rounds of fixes. All 
 
 ---
 
-## Resolved Issues (Rounds 14-22)
+## New Findings from Phase 2 Agents (Round 23)
 
-22 rounds of fixes resolved all critical and major formatting/content issues:
+| Finding | Source | Severity | Status |
+|---|---|---|---|
+| supplementary.tex contains "Bright Liu" + "Harvard" | Agent A | **BLOCKER** | **FIXED** Round 23 |
+| Workshop probe table 41pt overfull hbox | Agent A | major | **FIXED** Round 23 |
+| Workshop claims within-CoT as contribution but missing from Results | Agent B | major | **FIXED** Round 23 (added §4.7) |
+| Abstract lacks "why this matters" motivation sentence | Agent B | major | OPEN — tight on space |
+| Both abstracts read as results dumps, not motivation-first | Agent B | major | OPEN — rework if time |
+| R1 steering underpowered (floor effect, N=80, 6% baseline) | Agent F | major | Add power analysis caveat |
+| No CoT prompting baseline for Llama | Agent F | major | GPU needed |
+| Probe detects stimulus type, not processing mode | Agent F | major | Reframe or add behavioral-outcome probe |
+| Qwen cross-mode should be demoted from "finding" to "observation" | Agent F | minor | Consider for rebuttal |
+| NeurIPS intro paragraph 1 too long (11 lines of cog-sci) | Agent B | minor | Tight on 9pp |
+
+## Simulated Review Scores
+
+| Venue | Reviewer | Score | Key concern |
+|---|---|---|---|
+| NeurIPS | R1 (Senior Empiricist) | 5/10 | Steering floor effect, held-in eval |
+| NeurIPS | R2 (Theory Skeptic) | 4/10 | Probe = stimulus type, not mode |
+| NeurIPS | R3 (Domain Student) | 7/10 | No CoT prompting baseline |
+| Workshop | WR1 (Circuits) | 5/10 | No circuit analysis |
+| Workshop | WR2 (Safety) | 7/10 | Monitoring implications undeveloped |
+
+**Consensus estimate**: Borderline (NeurIPS), Weak Accept (Workshop)
+
+## Resolved Issues (Rounds 14-23)
+
+23 rounds of fixes resolved all critical and major formatting/content issues:
 - False "non-overlapping CIs" claim → removed (Rounds 17, 19, 22)
 - Type 3 fonts → eliminated (Round 20)
 - AI-writing markers → reduced to score ~1.5/10 (Rounds 18-19)
