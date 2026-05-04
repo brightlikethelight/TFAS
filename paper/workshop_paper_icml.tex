@@ -464,9 +464,10 @@ Table~\ref{tab:probe_summary} summarizes the key probing metrics.
 \label{tab:probe_summary}
 \vspace{4pt}
 \scriptsize
+\resizebox{\columnwidth}{!}{%
 \begin{tabular}{lccccc}
 \toprule
-\textbf{Model} & \textbf{Pk.\ L} & \textbf{AUC} & \textbf{95\% CI} & \textbf{Ctrl} & \textbf{Sel.} \\
+\textbf{Model} & \textbf{Pk.\ L} & \textbf{AUC} & \textbf{95\% CI} & \textbf{Ctrl} & \textbf{Cross} \\
 \midrule
 Llama-8B-Inst.        & L16 & .974 & [.952, .992] & .63 & .343 \\
 R1-Dist.-Llama-8B     & L31 & .930 & [.894, .960] & .55 & .377 \\
@@ -476,7 +477,7 @@ Qwen~3-8B (think)     & L34 & .970 & ---          & --- & 0.496 \\
 OLMo-3-7B-Inst.       & L24 & .996 & [.988, 1.000] & --- & --- \\
 OLMo-3-7B-Think       & L22 & .962 & [.934, .982]  & --- & --- \\
 \bottomrule
-\end{tabular}
+\end{tabular}}% end resizebox
 \end{table}
 
 \subsection{Resolving the Surface-Feature Confound}
@@ -574,6 +575,17 @@ $q < 0.05$), all surviving Ma et al.\ falsification
 \citep{ma2026falsification}.  Attention entropy analysis reveals
 R1-Distill has nearly twice as many \stwo{}-specialized heads as Llama
 (57 vs.\ 30 of 1024; BH-FDR $q < 0.05$, $|r_{rb}| \geq 0.3$).
+
+\subsection{Within-CoT Probing}
+\label{sec:within_cot}
+
+Probing Qwen~3-8B (think mode) at seven positions within the
+\texttt{<think>} trace at L34 reveals a non-monotonic trajectory:
+P0 (0.938) $\to$ T0 (0.973) $\to$ T75 (0.754) $\to$ Tend (0.971);
+P2 = 0.500 (chance).  The 22pp mid-trace dip rules out decorative
+reasoning (flat AUC) and monotonic sharpening (T0$>$T50), consistent
+with genuine exploration before convergence
+\citep{boppana2026reasoning}.
 
 % ============================================================
 % 5. Discussion
