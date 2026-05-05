@@ -695,52 +695,37 @@ Appendix~\ref{app:sae_attention}.
 
 \paragraph{Conflict detection without resolution.}
 The standard model \emph{detects} conflict (AUC\,=\,0.974) yet fails
-to resolve it (27.3\% lure rate), paralleling De~Neys' finding
-\citep{deneys2012bias} that human conflict monitoring often occurs even
-when the heuristic prevails.
+to resolve it (27.3\% lure rate), paralleling De~Neys'
+\citep{deneys2012bias} finding that human conflict monitoring occurs
+even when the heuristic prevails.
 The reasoning model shows \emph{less} distinct encoding (AUC\,=\,0.930)
 yet much better resolution (2.4\%), replicated in OLMo
-(AUC 0.996 $\to$ 0.962; lure 14.9\% $\to$ 0.9\%).
-The pattern is consistent with reasoning distillation automating
-Type~2 processing \citep{evans2019reflections}: the correct response
-may be internalized so thoroughly that a sharp conflict signal is no
-longer behaviorally necessary \citep{venhoff2025base}.
+(AUC 0.996 $\to$ 0.962; lure 14.9\% $\to$ 0.9\%), consistent with
+reasoning distillation automating Type~2 processing
+\citep{evans2019reflections, venhoff2025base}.
 
 \paragraph{Readable but not writable.}
-In Llama, the probe direction is readable (AUC\,=\,0.974) and
-writable (37.5pp bidirectional causal swing); in R1-Distill, it is
-readable (AUC\,=\,0.930) but not detectably writable at \emph{any}
-layer (L14, L25, L28, L31) under continuous intervention across the
-full 2048-token reasoning trace.  The within-CoT trajectory
-(Section~\ref{sec:within_cot}) provides a mechanistic explanation:
-because the conflict representation actively rotates during the
-exploration phase (AUC drops to 0.754 at T75), a static \pzero{}
-steering vector becomes geometrically misaligned with the evolving
-CoT subspace.  The \pzero{} direction is read-only because reasoning
-models defer conflict resolution to a dynamically evolving CoT
-workspace rather than mapping \pzero{} directly to output logits.
-In this sense, the bias direction in R1-Distill is \emph{vestigial}---an
-echo of pre-training representations that reasoning distillation has
-decoupled from the behavioral output pathway.
-Qwen's think/no-think modes both achieve high separability
-(${\sim}$0.97), but cross-mode transfer is at chance (0.496),
-partly reflecting different \pzero{} positional contexts
-(Section~\ref{sec:methods}).
-At 32B, standard-model lure rises while reasoning training remains
-protective (0.4\%).  Seven controls against artifacts appear in
-Appendix~\ref{app:robustness}.
+In Llama, the probe direction is readable (AUC\,=\,0.974) and writable
+(37.5pp causal swing); in R1-Distill, it is readable (AUC\,=\,0.930)
+but not detectably writable at any of four layers under continuous
+2048-token intervention.  The within-CoT trajectory
+(Section~\ref{sec:within_cot}) offers a mechanistic explanation: the
+conflict representation rotates during deliberation (AUC drops to 0.754
+at T75), so a static \pzero{} steering vector becomes misaligned with
+the evolving CoT subspace.  The bias direction in R1-Distill is in
+this sense \emph{vestigial}: an echo of pre-training representations
+that reasoning distillation has decoupled from the behavioral output
+pathway.  At 32B, standard-model lure rises while reasoning training
+remains protective (0.4\%).
 
-\paragraph{Specificity, safeguards, and limitations.}
-Cross-prediction on immune categories (where ROC-AUC is ill-defined due to
-collapsed processing-mode variance) confirms the probe captures processing
-mode, not stimulus features; vulnerability is domain- and model-specific
-\citep{stanovich2016rationality}.
-We apply five controls \citep{meloux2025dead, sanitychecks2026}:
-Hewitt--Liang selectivity $>$34pp, cross-prediction falsification,
-cross-model transfer (AUC\,$>$\,0.92), and Ma et al.\ SAE falsification.
-Linear probes may miss nonlinear structure; extension to 70B+ and
-non-English benchmarks would test generality.  Multi-seed robustness
-analysis appears in Appendix~\ref{app:robustness}.
+\paragraph{Limitations.}
+Linear probes may miss nonlinear structure; we test a single steering
+direction per model; extension to 70B+ and non-English benchmarks would
+test generality.  Five controls guard against artifacts
+\citep{meloux2025dead, sanitychecks2026}: Hewitt--Liang selectivity
+$>$34pp, cross-prediction falsification, cross-model transfer
+(AUC\,$>$\,0.92), and Ma et al.\ SAE falsification.
+Multi-seed robustness analysis appears in Appendix~\ref{app:robustness}.
 
 \begin{ack}
 An anonymized reproduction package (code, benchmark, and analysis scripts)
