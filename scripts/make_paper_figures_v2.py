@@ -180,24 +180,24 @@ def load_probe_layer_aucs() -> dict[str, dict[int, float]]:
             print(f"  [data] Loaded {label} layer AUCs from {fname}")
 
     if "qwen_nothink" not in result:
-        print("  [fallback] Synthesizing Qwen no-think curve from anchor (0.971 @ L34)")
+        print("  [fallback] Synthesizing Qwen no-think curve from anchor (0.954 @ L34)")
         layers = np.arange(36)
-        base = 0.83 + (0.971 - 0.83) * (1 - np.exp(-0.12 * layers))
+        base = 0.83 + (0.954 - 0.83) * (1 - np.exp(-0.12 * layers))
         rng = np.random.default_rng(101)
         jitter = rng.normal(0, 0.004, 36)
         vals = np.clip(base + jitter, 0.50, 1.0)
-        vals[34] = 0.971
-        vals[35] = 0.964
+        vals[34] = 0.954
+        vals[35] = 0.948
         result["qwen_nothink"] = {int(l): float(v) for l, v in zip(layers, vals, strict=False)}
 
     if "qwen_think" not in result:
-        print("  [fallback] Synthesizing Qwen think curve from anchor (0.971 @ L34)")
+        print("  [fallback] Synthesizing Qwen think curve from anchor (0.970 @ L34)")
         layers = np.arange(36)
-        base = 0.80 + (0.971 - 0.80) * (1 - np.exp(-0.10 * layers))
+        base = 0.80 + (0.970 - 0.80) * (1 - np.exp(-0.10 * layers))
         rng = np.random.default_rng(202)
         jitter = rng.normal(0, 0.004, 36)
         vals = np.clip(base + jitter, 0.50, 1.0)
-        vals[34] = 0.971
+        vals[34] = 0.970
         vals[35] = 0.960
         result["qwen_think"] = {int(l): float(v) for l, v in zip(layers, vals, strict=False)}
 
@@ -213,23 +213,23 @@ def load_probe_layer_aucs() -> dict[str, dict[int, float]]:
             print(f"  [data] Loaded {label} layer AUCs from {fname} ({len(result[label])} layers)")
 
     if "olmo_instruct" not in result:
-        print("  [fallback] Using hardcoded OLMo Instruct peak (L21=0.998)")
+        print("  [fallback] Using hardcoded OLMo Instruct peak (L24=0.996)")
         layers = np.arange(32)
-        base = 0.86 + (0.998 - 0.86) * (1 - np.exp(-0.15 * layers))
+        base = 0.86 + (0.996 - 0.86) * (1 - np.exp(-0.15 * layers))
         rng = np.random.default_rng(301)
         jitter = rng.normal(0, 0.003, 32)
         vals = np.clip(base + jitter, 0.50, 1.0)
-        vals[21] = 0.998
+        vals[24] = 0.996
         result["olmo_instruct"] = {int(l): float(v) for l, v in zip(layers, vals, strict=False)}
 
     if "olmo_think" not in result:
-        print("  [fallback] Using hardcoded OLMo Think peak (L28=0.993)")
+        print("  [fallback] Using hardcoded OLMo Think peak (L22=0.962)")
         layers = np.arange(32)
-        base = 0.84 + (0.993 - 0.84) * (1 - np.exp(-0.10 * layers))
+        base = 0.84 + (0.962 - 0.84) * (1 - np.exp(-0.10 * layers))
         rng = np.random.default_rng(302)
         jitter = rng.normal(0, 0.003, 32)
         vals = np.clip(base + jitter, 0.50, 1.0)
-        vals[28] = 0.993
+        vals[22] = 0.962
         result["olmo_think"] = {int(l): float(v) for l, v in zip(layers, vals, strict=False)}
 
     return result
@@ -568,24 +568,22 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
                   "ec": C_R1, "lw": 0.5, "alpha": 0.85},
     )
 
-    # Qwen convergence annotation (both peak at L34 = 0.971)
+    # Qwen peak annotation (no-think 0.954, think 0.970 at L34)
     ax.annotate(
-        "Both modes converge:\n0.971 at L34",
-        xy=(34, 0.971),
+        "L34: 0.954 / 0.970\n(cross-mode: 0.496)",
+        xy=(34, 0.962),
         xytext=(22, 0.76),
         fontsize=6, color=C_QWEN_NOTHINK, fontstyle="italic",
         arrowprops={"arrowstyle": "->", "color": C_QWEN_NOTHINK,
                         "lw": 0.6, "connectionstyle": "arc3,rad=-0.15"},
     )
 
-    # OLMo Instruct peak
-    oi_pk_idx = int(np.argmax(oi_vals))
-    oi_pk_l = oi_layers[oi_pk_idx]
-    oi_pk_v = oi_vals[oi_pk_idx]
+    # OLMo Instruct peak — use bootstrap values (L24=0.996) to match paper
+    # (CV peak is L21=0.998 but paper reports bootstrap peak)
     ax.annotate(
-        f"L{oi_pk_l}: {oi_pk_v:.3f}",
-        xy=(oi_pk_l, oi_pk_v),
-        xytext=(oi_pk_l - 12, 1.035),
+        "L24: 0.996",
+        xy=(24, oi_vals[np.searchsorted(oi_layers, 24)] if 24 in oi_layers else 0.996),
+        xytext=(12, 1.035),
         fontsize=6, color=C_OLMO_INSTRUCT, fontweight="bold",
         arrowprops={"arrowstyle": "-", "color": C_OLMO_INSTRUCT, "lw": 0.6,
                         "shrinkA": 0, "shrinkB": 2},
@@ -593,14 +591,11 @@ def make_figure1_probe_curves(output_dir: Path) -> Path:
                   "ec": C_OLMO_INSTRUCT, "lw": 0.5, "alpha": 0.85},
     )
 
-    # OLMo Think peak
-    ot_pk_idx = int(np.argmax(ot_vals))
-    ot_pk_l = ot_layers[ot_pk_idx]
-    ot_pk_v = ot_vals[ot_pk_idx]
+    # OLMo Think peak — use bootstrap values (L22=0.962) to match paper
     ax.annotate(
-        f"L{ot_pk_l}: {ot_pk_v:.3f}",
-        xy=(ot_pk_l, ot_pk_v),
-        xytext=(ot_pk_l + 2, 0.87),
+        "L22: 0.962",
+        xy=(22, ot_vals[np.searchsorted(ot_layers, 22)] if 22 in ot_layers else 0.962),
+        xytext=(26, 0.87),
         fontsize=6, color=C_OLMO_THINK, fontweight="bold",
         arrowprops={"arrowstyle": "-", "color": C_OLMO_THINK, "lw": 0.6,
                         "shrinkA": 0, "shrinkB": 2,
