@@ -530,13 +530,6 @@ Training on \emph{vulnerable} categories and testing on \emph{immune} categories
 \paragraph{Cross-model probe transfer.}
 A Llama-trained probe achieves AUC\,=\,0.920 on R1-Distill (layer~23, the peak transfer layer from a full 32-layer sweep); the reverse achieves 0.954 at layer~15 (also the peak transfer layer from a full sweep).  The processing-mode direction is substantially shared across models differing only in reasoning training, contrasting with \citet{huang2026cogbias}'s near-orthogonal finding across architectures.
 
-\paragraph{Lure susceptibility scores.}
-Llama's mean \pzero{} logit score for the S1-lure answer is $+0.422$
-(the lure answer is favored in the pre-generation representation),
-while R1-Distill's mean is $-0.326$ (the correct answer is favored).
-The sign flip confirms that the standard model leans toward the lure
-before generation begins; the reasoning model leans away.
-
 % ---------------------------------------------------------------
 \subsection{Causal Evidence: Probe-Direction Steering}
 \label{sec:steering}
@@ -701,11 +694,12 @@ conflict representation rotates during deliberation (AUC drops to 0.754
 at T75), so a static \pzero{} steering vector becomes misaligned with
 the evolving CoT subspace.  The bias direction in R1-Distill is in
 this sense \emph{vestigial}: decoupled from the behavioral output pathway.
-Limitations include reliance on linear probes (which may miss nonlinear
-structure), a single steering direction per model, and restriction to
-$\leq$32B English-language models.  Five controls
-\citep{meloux2025dead, sanitychecks2026} guard against artifacts
-(Appendix~\ref{app:robustness}).
+
+\paragraph{Limitations.}
+Linear probes may miss nonlinear structure; we test one steering direction
+per model; and results are restricted to $\leq$32B English-language models.
+Five controls \citep{meloux2025dead, sanitychecks2026} guard against
+artifacts (Appendix~\ref{app:robustness}).
 
 % ============================================================
 % References
