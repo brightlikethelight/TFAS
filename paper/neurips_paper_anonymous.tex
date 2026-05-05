@@ -50,14 +50,12 @@ but we show it fails in reasoning-trained models.  Cognitive-bias
 directions in activation space are \emph{readable but not writable}
 after reasoning training: linearly decodable by probes, yet causally
 inert under steering.
-
 We compare matched-architecture pairs (Llama-3.1-8B-Instruct vs.\
 R1-Distill-Llama-8B, OLMo-3 7B/32B Instruct vs.\ Think) and
 Qwen-3-8B's thinking toggle, across 470 contrastive items spanning 11
 bias categories (base-rate neglect, conjunction fallacy, framing, and
 others).  Reasoning training collapses lure rates: 27.3\% to 2.4\%
 (Llama), 19.6\% to 0.4\% at 32B.
-
 Three results establish the dissociation.  First, probe-direction
 steering on the three vulnerable categories produces a monotonic 37.5pp
 dose-response in Llama (lure rates span 31\% at $\alpha$=+5 to 69\%
@@ -69,7 +67,6 @@ AUC yet cross-mode transfer is at chance (0.496), showing the decodable
 direction is mode-specific.  Third, scaling to 32B amplifies
 standard-model vulnerability (14.9\%$\to$19.6\%) while reasoning
 training remains protective (0.4\% lure rate).
-
 These results suggest that activation-steering safety interventions may
 not transfer to reasoning models, and that reasoning training
 reorganizes bias representations rather than layering deliberation atop
@@ -704,12 +701,11 @@ conflict representation rotates during deliberation (AUC drops to 0.754
 at T75), so a static \pzero{} steering vector becomes misaligned with
 the evolving CoT subspace.  The bias direction in R1-Distill is in
 this sense \emph{vestigial}: decoupled from the behavioral output pathway.
-
-\paragraph{Limitations.}
-Linear probes may miss nonlinear structure; we test one steering direction
-per model; extension to 70B+ models and non-English benchmarks would test
-generality.  Five controls \citep{meloux2025dead, sanitychecks2026} guard
-against artifacts (Appendix~\ref{app:robustness}).
+Limitations include reliance on linear probes (which may miss nonlinear
+structure), a single steering direction per model, and restriction to
+$\leq$32B English-language models.  Five controls
+\citep{meloux2025dead, sanitychecks2026} guard against artifacts
+(Appendix~\ref{app:robustness}).
 
 % ============================================================
 % References
