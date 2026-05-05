@@ -655,18 +655,13 @@ Full trajectories in Appendix~\ref{app:within_cot}.
 \subsection{Scale Analysis: 7B vs.\ 32B}
 \label{sec:scale}
 
-OLMo-3.1-32B-Instruct shows \emph{more} vulnerability than the 7B
-(19.6\% vs.\ 14.9\% lure rate), mirroring inverse-scaling
-phenomena \citep{mckenzie2023inverse, perez2023discovering} in which
-scale amplifies absorbed biases.  (OLMo-3.1-32B uses an updated
-training recipe, so this is not a pure size ablation.)
-OLMo-3.1-32B-Think collapses lure rates to 0.4\%.  Representationally,
-the behavioral gap \emph{widens} with scale (19.2pp at 32B vs.\ 14.0pp
-at 7B) while the probe-AUC gap \emph{shrinks} (0.0021 vs.\ 0.0055),
-showing both models encode conflict with near-identical fidelity at 32B
-but only Think translates this into correct responses, further evidence
-for readable but not writable.  Full breakdowns in
-Appendix~\ref{app:scale}.
+OLMo-3.1-32B-Instruct shows \emph{more} vulnerability than 7B
+(19.6\% vs.\ 14.9\%), mirroring inverse-scaling phenomena
+\citep{mckenzie2023inverse, perez2023discovering}; Think collapses
+lure to 0.4\%.  The behavioral gap \emph{widens} with scale (19.2pp
+at 32B vs.\ 14.0pp at 7B) while the probe-AUC gap \emph{shrinks}
+(0.0021 vs.\ 0.0055), further evidence for readable but not writable.
+Full breakdowns in Appendix~\ref{app:scale}.
 
 % ---------------------------------------------------------------
 \subsection{SAE Features and Attention Entropy}
@@ -674,15 +669,10 @@ Appendix~\ref{app:scale}.
 
 SAE analysis of Llama's L19 residual stream identified 41 features with
 significant conflict/control differential activation (BH-FDR $q < 0.05$),
-all surviving Ma et al.\ falsification \citep{ma2026falsification}.  The
-partition is interpretable: 19 features fire exclusively on conflict
-items (e.g., F30094 triggers on ``only''/``respondent''/``professional''
----the stereotype-match framing vocabulary); 6 features fire exclusively
-on controls (e.g., F27821 triggers on ``professional''/``random''/``no''
----the normative ``no particular selection criterion'' frame); 3 additional
-features activate graded more strongly on controls without being binary.
-Attention entropy analysis reveals R1-Distill has nearly twice as many
-\stwo{}-specialized heads as Llama (57 vs.\ 30 of 1024; BH-FDR
+all surviving Ma et al.\ falsification \citep{ma2026falsification}: 19
+fire exclusively on conflict items, 6 on controls, with interpretable
+token-level triggers.  R1-Distill has nearly twice as many
+\stwo{}-specialized attention heads (57 vs.\ 30 of 1024; BH-FDR
 $q < 0.05$, $|r_{rb}| \geq 0.3$).  Details in
 Appendix~\ref{app:sae_attention}.
 
@@ -713,25 +703,13 @@ but not detectably writable at any of four layers under continuous
 conflict representation rotates during deliberation (AUC drops to 0.754
 at T75), so a static \pzero{} steering vector becomes misaligned with
 the evolving CoT subspace.  The bias direction in R1-Distill is in
-this sense \emph{vestigial}: an echo of pre-training representations
-that reasoning distillation has decoupled from the behavioral output
-pathway.  At 32B, standard-model lure rises while reasoning training
-remains protective (0.4\%).
+this sense \emph{vestigial}: decoupled from the behavioral output pathway.
 
 \paragraph{Limitations.}
-Linear probes may miss nonlinear structure; we test a single steering
-direction per model; extension to 70B+ and non-English benchmarks would
-test generality.  Five controls guard against artifacts
-\citep{meloux2025dead, sanitychecks2026}: Hewitt--Liang selectivity
-$>$34pp, cross-prediction falsification, cross-model transfer
-(AUC\,$>$\,0.92), and Ma et al.\ SAE falsification.
-Multi-seed robustness analysis appears in Appendix~\ref{app:robustness}.
-
-\begin{ack}
-An anonymized reproduction package (code, benchmark, and analysis scripts)
-is included with this submission; full activation data and model outputs
-will be released publicly upon acceptance.
-\end{ack}
+Linear probes may miss nonlinear structure; we test one steering direction
+per model; extension to 70B+ models and non-English benchmarks would test
+generality.  Five controls \citep{meloux2025dead, sanitychecks2026} guard
+against artifacts (Appendix~\ref{app:robustness}).
 
 % ============================================================
 % References
